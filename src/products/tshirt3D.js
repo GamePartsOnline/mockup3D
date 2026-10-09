@@ -24,17 +24,15 @@ export const tshirt3DProduct = {
       metalness: 0.05 
     });
 
-    const decalMaterial = new THREE.MeshStandardMaterial({
+    const decalMaterial = new THREE.MeshBasicMaterial({
       color: 0xffffff,
-      roughness: 0.9,
-      metalness: 0.05,
       transparent: true,
       depthTest: true,
       depthWrite: false,
       polygonOffset: true,
       polygonOffsetFactor: -4,
       polygonOffsetUnits: -4,
-      alphaTest: 0.01
+      alphaTest: 0.5
     });
 
     const loader = new OBJLoader();
@@ -87,7 +85,6 @@ export const tshirt3DProduct = {
           mainMesh.add(decalsGroup);
       }
       
-      // Utiliser la texture passée ou bien configurer le nouveau CanvasTexture
       const frontTex = new THREE.CanvasTexture(canvas);
       frontTex.colorSpace = THREE.SRGBColorSpace;
       frontTex.anisotropy = 4;
