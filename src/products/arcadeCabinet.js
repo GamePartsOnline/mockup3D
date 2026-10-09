@@ -134,7 +134,7 @@ export const arcadeCabinetProduct = {
     const screen = createPlaneGroup(pScreenB, pScreenT, 0, 0);
     const marquee = createPlaneGroup(pMarqueeB, pMarqueeT, 2, 1);
 
-    const innerBodyGeo = new THREE.BoxGeometry(0.3, 1.60, 0.64);
+    const innerBodyGeo = new THREE.BoxGeometry(0.3, 1.60, 0.56);
     const innerBody = new THREE.Mesh(innerBodyGeo, baseMaterial);
     innerBody.position.set(0.15, 0.80, 0);
 
