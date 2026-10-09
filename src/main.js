@@ -26,6 +26,10 @@ import { coasterRoundProduct } from './products/coasterRound.js';
 import { pencilCaseProduct } from './products/pencilCase.js';
 import { cushionProduct } from './products/cushion.js';
 import { arcadeCabinetProduct } from './products/arcadeCabinet.js';
+if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+  const localBadge = document.querySelector('#localBadge');
+  if (localBadge) localBadge.style.display = 'none';
+}
 
 const viewer = document.querySelector('#viewer');
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
