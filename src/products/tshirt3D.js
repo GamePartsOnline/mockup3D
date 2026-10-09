@@ -29,6 +29,7 @@ export const tshirt3DProduct = {
       roughness: 0.8,
       metalness: 0.1,
       transparent: true,
+      premultipliedAlpha: true,
       depthTest: true,
       depthWrite: false,
       polygonOffset: true,

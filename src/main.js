@@ -450,7 +450,7 @@ function buildTexture() {
   }
   texture?.dispose(); texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace; texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
   if (product.type === '3d-decal') {
-    texture.premultiplyAlpha = false;
+    // texture.premultiplyAlpha = false;
     texture.needsUpdate = true;
     if (product.applyDecals) product.applyDecals(texture, isTwoSided, canvas);
   } else {
