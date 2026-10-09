@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&family=Cinzel:wght@700&family=Dancing+Script:wght@700&family=Great+Vibes&family=Lobster&family=Montserrat:ital,wght@0,400;0,700;1,400&family=Oswald:wght@600&family=Pacifico&family=Playfair+Display:ital,wght@0,700;1,700&family=Righteous&family=Roboto:wght@400;700&family=Satisfy&display=swap" rel="stylesheet">
   <title>MockUp3D C3</title>
-  <script type="module" crossorigin src="/assets/index-DXFabWbp.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-B7g9q82k.css">
+  <script type="module" crossorigin src="/assets/index-C5wCQvqu.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BK24SKYR.css">
 </head>
 <body>
   <div id="app">
@@ -185,6 +185,7 @@
         <div id="emptyHint" class="empty-hint"><strong>Votre visuel apparaîtra ici</strong><span>Importez une image pour personnaliser le tapis.</span></div>
         <div class="viewer-tools"><button id="viewFaceA" class="secondary" title="Voir Face A (Avant)"><span style="font-weight:900;margin-right:4px;">A</span> Face A</button><button id="viewFaceB" class="secondary" title="Voir Face B (Arrière)"><span style="font-weight:900;margin-right:4px;">B</span> Face B</button>
           <button id="zoomOut" title="Dézoomer" aria-label="Dézoomer">−</button><button id="zoomIn" title="Zoomer" aria-label="Zoomer">+</button><button id="resetView" title="Réinitialiser la vue" aria-label="Réinitialiser la vue">⌂</button>
+          <button id="toggleRightSidebar" title="Masquer/Afficher le panneau de droite" style="font-size:14px;">▶</button>
         </div>
         <div class="drag-hint">↔ Faites glisser pour tourner</div>
         <div id="wrapPreviewWidget" class="wrap-preview-widget" hidden>
@@ -213,8 +214,12 @@
             <label><input id="sceneColor" type="color" value="#e9edf0"><span>Fond</span></label>
             <label id="handleColorWrap" hidden><input id="handleColor" type="color" value="#ffffff"><span>Anse</span></label>
             <label id="innerColorWrap" hidden><input id="innerColor" type="color" value="#ffffff"><span>Intérieur</span></label>
-            <label id="joystickColorWrap" hidden><input id="joystickColor" type="color" value="#ff0000"><span>Manettes</span></label>
-            <label id="buttonColorWrap" hidden><input id="buttonColor" type="color" value="#0055ff"><span>Boutons</span></label>
+            <div id="arcadeControlsWrap" hidden style="margin-top:8px; display:grid; grid-template-columns:1fr 1fr; gap:4px; font-size:12px;">
+              <label>J1 Joy: <select id="j1Color" class="custom-select" style="padding:2px; border-radius:4px;"><option value="#0055ff">Bleu</option><option value="#ff0000" selected>Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
+              <label>J2 Joy: <select id="j2Color" class="custom-select" style="padding:2px; border-radius:4px;"><option value="#0055ff" selected>Bleu</option><option value="#ff0000">Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
+              <label>J1 Btn: <select id="b1Color" class="custom-select" style="padding:2px; border-radius:4px;"><option value="#0055ff" selected>Bleu</option><option value="#ff0000">Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
+              <label>J2 Btn: <select id="b2Color" class="custom-select" style="padding:2px; border-radius:4px;"><option value="#0055ff">Bleu</option><option value="#ff0000" selected>Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
+            </div>
           </div>
           <div id="arcadeGlowWrap" hidden style="margin-top:8px; margin-bottom:8px;">
             <label class="option-check mini-check"><input id="arcadeGlow" type="checkbox"> Boutons/Manettes lumineux</label>

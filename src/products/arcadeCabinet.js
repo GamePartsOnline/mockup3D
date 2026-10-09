@@ -21,52 +21,14 @@ export const arcadeCabinetProduct = {
     const baseMaterial = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.9 });
     const topMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.6, metalness: 0.1 });
     
-    const screenCanvas = document.createElement('canvas');
-    screenCanvas.width = 1024;
-    screenCanvas.height = 1024;
-    const screenCtx = screenCanvas.getContext('2d');
-    screenCtx.fillStyle = '#050505'; // Gros cadre noir
-    screenCtx.fillRect(0, 0, 1024, 1024);
-    
-    // Background sky
-    screenCtx.fillStyle = '#4ea1d3';
-    screenCtx.fillRect(100, 200, 824, 624);
-    // Ground
-    screenCtx.fillStyle = '#6e7e60';
-    screenCtx.fillRect(100, 500, 824, 324);
-    
-    // Health bars
-    screenCtx.fillStyle = '#e52b2b';
-    screenCtx.fillRect(140, 240, 320, 20);
-    screenCtx.fillRect(564, 240, 320, 20);
-    screenCtx.fillStyle = '#f7d825';
-    screenCtx.fillRect(140, 240, 280, 20);
-    screenCtx.fillRect(604, 240, 280, 20);
-    
-    // KO text
-    screenCtx.fillStyle = '#e52b2b';
-    screenCtx.font = 'bold 50px sans-serif';
-    screenCtx.fillText('K.O.', 460, 280);
-    
-    // Ryu (white gi)
-    screenCtx.fillStyle = '#eeeeee';
-    screenCtx.fillRect(250, 350, 90, 180);
-    screenCtx.fillStyle = '#ffcc99'; // head
-    screenCtx.fillRect(270, 300, 50, 50);
-    
-    // Ken (red gi)
-    screenCtx.fillStyle = '#d11141';
-    screenCtx.fillRect(650, 350, 90, 180);
-    screenCtx.fillStyle = '#ffcc99'; // head
-    screenCtx.fillRect(670, 300, 50, 50);
-    
-    // Scanlines
-    screenCtx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-    for(let y = 200; y < 824; y += 4) { screenCtx.fillRect(100, y, 824, 2); }
-    
-    const screenTexture = new THREE.CanvasTexture(screenCanvas);
-    screenTexture.colorSpace = THREE.SRGBColorSpace;
-    const screenMaterial = new THREE.MeshStandardMaterial({ map: screenTexture, roughness: 0.2, metalness: 0.8 });
+    const screenMaterial = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.2, metalness: 0.8 });
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load('/ryu-vs-ryu.avif', (texture) => {
+        texture.colorSpace = THREE.SRGBColorSpace;
+        screenMaterial.map = texture;
+        screenMaterial.color.set(0xffffff); // On remet la couleur blanche pour que la texture s'affiche bien
+        screenMaterial.needsUpdate = true;
+    });
     
     function normalizeAndMapUV(geometry, minX, maxX, minY, maxY, col, row, flipHorizontal=false) {
         const uv = geometry.attributes.uv;
@@ -157,37 +119,55 @@ export const arcadeCabinetProduct = {
 
     // Define points for planes (x = depth from back, y = height)
     // The front door goes from y=0 to y=0.9731 (connecting to the panel tip seamlessly)
-    const pFrontDoorB = { x: 0.5128, y: 0.0 };
-    const pFrontDoorT = { x: 0.5618, y: 0.9731 };
+    // Recessing front door by 3cm (0.03)
+    const pFrontDoorB = { x: 0.5128 - 0.03, y: 0.0 };
+    const pFrontDoorT = { x: 0.5618 - 0.03, y: 0.9731 };
     
     const pPanelTip = { x: 0.5618, y: 0.9731 };
-    const pPanelBack = { x: 0.3406, y: 1.1034 }; 
+    // Flatten panel but keep it long enough for joysticks
+    const pPanelBack = { x: 0.4800, y: 0.9850 }; 
     
-    const pScreenB = pPanelBack;
-    const pScreenT = { x: 0.3355, y: 1.4964 };
+    // Ajustement de la profondeur de l'écran pour éviter qu'il ne dépasse
+    // La courbe du panneau latéral est concave, une ligne droite couperait à l'extérieur.
+    const pScreenB = { x: 0.3500, y: 1.0500 }; 
+    const pScreenT = { x: 0.1500, y: 1.3500 };
     
-    const pMarqueeB = pScreenT;
+    const pMarqueeB = { x: 0.3360, y: 1.5000 };
     const pMarqueeT = { x: 0.3147, y: 1.6665 };
+
+    const pRoofB = { x: 0.0, y: 1.6222 }; // Back top corner
+    const pBottomBack = { x: 0.0, y: 0.0 }; // Back bottom corner
 
     // Create plane groups (width = 0.58)
     const frontDoor = createPlaneGroup(pFrontDoorB, pFrontDoorT, 2, 0);
+    const panelUnderside = createPlaneGroup(pFrontDoorT, pPanelTip, null, null, baseMaterial);
     const panelGraphic = createPlaneGroup(pPanelTip, pPanelBack, null, null, baseMaterial);
     
-    const joystickMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000, roughness: 0.3, metalness: 0.1 });
-    const buttonMaterial = new THREE.MeshStandardMaterial({ color: 0x0055ff, roughness: 0.3, metalness: 0.1 });
+    // The screen and speaker panel
+    const screenShelf = createPlaneGroup(pPanelBack, pScreenB, null, null, baseMaterial);
+    const speakerPanel = createPlaneGroup(pScreenT, pMarqueeB, null, null, baseMaterial);
+    const topRoof = createPlaneGroup(pMarqueeT, pRoofB, null, null, baseMaterial);
+    const bottomFloor = createPlaneGroup(pBottomBack, pFrontDoorB, null, null, baseMaterial);
+    const backPanel = createPlaneGroup(pRoofB, pBottomBack, null, null, baseMaterial);
     
-    function addPlayerControls(group, zOffset) {
+    const joystick1Material = new THREE.MeshStandardMaterial({ color: 0xff0000, roughness: 0.3, metalness: 0.1 });
+    const button1Material = new THREE.MeshStandardMaterial({ color: 0x0055ff, roughness: 0.3, metalness: 0.1 });
+    
+    const joystick2Material = new THREE.MeshStandardMaterial({ color: 0x0055ff, roughness: 0.3, metalness: 0.1 });
+    const button2Material = new THREE.MeshStandardMaterial({ color: 0xff0000, roughness: 0.3, metalness: 0.1 });
+    
+    function addPlayerControls(group, zOffset, jMat, bMat) {
         // Joystick shaft (metal)
         const shaftMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.4, metalness: 0.8 });
         const shaftGeo = new THREE.CylinderGeometry(0.005, 0.005, 0.05, 16);
         const shaft = new THREE.Mesh(shaftGeo, shaftMat);
         shaft.rotation.z = -Math.PI / 2; // Point normal is +X, so rotate cylinder (which is along Y) to along X
-        shaft.position.set(0.025, -0.03, zOffset + 0.12);
+        shaft.position.set(0.025, 0.01, zOffset + 0.12);
         
         // Joystick ball (plastic)
         const ballGeo = new THREE.SphereGeometry(0.015, 32, 32);
-        const ball = new THREE.Mesh(ballGeo, joystickMaterial);
-        ball.position.set(0.05, -0.03, zOffset + 0.12);
+        const ball = new THREE.Mesh(ballGeo, jMat);
+        ball.position.set(0.05, 0.01, zOffset + 0.12);
         
         group.add(shaft, ball);
         
@@ -197,12 +177,12 @@ export const arcadeCabinetProduct = {
         const btnBaseMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.8 });
         
         const btnPositions = [
-            {y: -0.02, z: zOffset + 0.04}, {y: -0.01, z: zOffset - 0.00}, {y: -0.02, z: zOffset - 0.04},
-            {y: -0.06, z: zOffset + 0.03}, {y: -0.05, z: zOffset - 0.01}, {y: -0.06, z: zOffset - 0.05}
+            {y: 0.02, z: zOffset + 0.04}, {y: 0.03, z: zOffset - 0.00}, {y: 0.02, z: zOffset - 0.04},
+            {y: -0.02, z: zOffset + 0.03}, {y: -0.01, z: zOffset - 0.01}, {y: -0.02, z: zOffset - 0.05}
         ];
         
         btnPositions.forEach(pos => {
-            const btn = new THREE.Mesh(btnGeo, buttonMaterial);
+            const btn = new THREE.Mesh(btnGeo, bMat);
             btn.rotation.z = -Math.PI / 2;
             btn.position.set(0.0025, pos.y, pos.z);
             
@@ -214,17 +194,13 @@ export const arcadeCabinetProduct = {
         });
     }
     
-    addPlayerControls(panelGraphic, 0.05); // Player 1 (Left, +Z)
-    addPlayerControls(panelGraphic, -0.19); // Player 2 (Right, -Z)
+    addPlayerControls(panelGraphic, 0.05, joystick1Material, button1Material); // Player 1 (Left, +Z)
+    addPlayerControls(panelGraphic, -0.19, joystick2Material, button2Material); // Player 2 (Right, -Z)
 
     const screen = createPlaneGroup(pScreenB, pScreenT, null, null, screenMaterial);
     const marquee = createPlaneGroup(pMarqueeB, pMarqueeT, 2, 1);
 
-    const innerBodyGeo = new THREE.BoxGeometry(0.3, 1.60, 0.56);
-    const innerBody = new THREE.Mesh(innerBodyGeo, baseMaterial);
-    innerBody.position.set(0.15, 0.80, 0);
-
-    group.add(leftMesh, rightMesh, frontDoor, panelGraphic, screen, marquee, innerBody);
+    group.add(leftMesh, rightMesh, frontDoor, panelUnderside, panelGraphic, screenShelf, screen, speakerPanel, marquee, topRoof, bottomFloor, backPanel);
     group.position.set(-0.3, -0.8, 0); // Center the cabinet
     group.rotation.y = Math.PI / 6;
 
@@ -232,8 +208,10 @@ export const arcadeCabinetProduct = {
       group, 
       topMaterial, 
       baseMaterial, 
-      joystickMaterial,
-      buttonMaterial,
+      joystick1Material,
+      button1Material,
+      joystick2Material,
+      button2Material,
       type: 'arcade',
       zones: this.zones,
       twoSided: false

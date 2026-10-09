@@ -529,10 +529,8 @@ document.querySelector('#productSelect').onchange = e => {
   document.querySelector('#innerColorWrap').hidden = !isMug;
   document.querySelector('#quickPalette').hidden = !isMug;
   
-  const joystickColorWrap = document.querySelector('#joystickColorWrap');
-  if (joystickColorWrap) joystickColorWrap.hidden = !isArcade;
-  const buttonColorWrap = document.querySelector('#buttonColorWrap');
-  if (buttonColorWrap) buttonColorWrap.hidden = !isArcade;
+  const arcadeControlsWrap = document.querySelector('#arcadeControlsWrap');
+  if (arcadeControlsWrap) arcadeControlsWrap.hidden = !isArcade;
   const arcadeGlowWrap = document.querySelector('#arcadeGlowWrap');
   if (arcadeGlowWrap) arcadeGlowWrap.hidden = !isArcade;
 
@@ -542,8 +540,10 @@ document.querySelector('#productSelect').onchange = e => {
     document.querySelector('#innerColor').value = '#ffffff';
   }
   if (isArcade) {
-    if (document.querySelector('#joystickColor')) document.querySelector('#joystickColor').value = '#ff0000';
-    if (document.querySelector('#buttonColor')) document.querySelector('#buttonColor').value = '#0055ff';
+    if (document.querySelector('#j1Color')) document.querySelector('#j1Color').value = '#ff0000';
+    if (document.querySelector('#j2Color')) document.querySelector('#j2Color').value = '#0055ff';
+    if (document.querySelector('#b1Color')) document.querySelector('#b1Color').value = '#0055ff';
+    if (document.querySelector('#b2Color')) document.querySelector('#b2Color').value = '#ff0000';
     if (document.querySelector('#arcadeGlow')) document.querySelector('#arcadeGlow').checked = false;
   }
   
@@ -715,49 +715,41 @@ document.querySelector('#baseColor').oninput = e => { product.baseMaterial.color
 document.querySelector('#handleColor').oninput = e => { if (product.handleMaterial) { product.handleMaterial.color.set(e.target.value); product.handleMaterial.needsUpdate = true; } };
 document.querySelector('#innerColor').oninput = e => { if (product.innerMaterial) { product.innerMaterial.color.set(e.target.value); product.innerMaterial.needsUpdate = true; } };
 
-if (document.querySelector('#joystickColor')) {
-  document.querySelector('#joystickColor').oninput = e => {
-    if (product.joystickMaterial) {
-      product.joystickMaterial.color.set(e.target.value);
-      if (document.querySelector('#arcadeGlow').checked) {
-         product.joystickMaterial.emissive.set(e.target.value);
+['j1Color', 'j2Color', 'b1Color', 'b2Color'].forEach(id => {
+  const el = document.querySelector('#' + id);
+  if (el) {
+    el.addEventListener('change', e => {
+      let mat = null;
+      if (id === 'j1Color') mat = product.joystick1Material;
+      if (id === 'j2Color') mat = product.joystick2Material;
+      if (id === 'b1Color') mat = product.button1Material;
+      if (id === 'b2Color') mat = product.button2Material;
+      
+      if (mat) {
+        mat.color.set(e.target.value);
+        if (document.querySelector('#arcadeGlow').checked) {
+           mat.emissive.set(e.target.value);
+        }
+        mat.needsUpdate = true;
       }
-      product.joystickMaterial.needsUpdate = true;
-    }
-  };
-}
-if (document.querySelector('#buttonColor')) {
-  document.querySelector('#buttonColor').oninput = e => {
-    if (product.buttonMaterial) {
-      product.buttonMaterial.color.set(e.target.value);
-      if (document.querySelector('#arcadeGlow').checked) {
-         product.buttonMaterial.emissive.set(e.target.value);
-      }
-      product.buttonMaterial.needsUpdate = true;
-    }
-  };
-}
+    });
+  }
+});
 if (document.querySelector('#arcadeGlow')) {
   document.querySelector('#arcadeGlow').onchange = e => {
     const isGlowing = e.target.checked;
-    if (product.joystickMaterial) {
-      if (isGlowing) {
-        product.joystickMaterial.emissive.copy(product.joystickMaterial.color);
-        product.joystickMaterial.emissiveIntensity = 0.8;
-      } else {
-        product.joystickMaterial.emissive.setHex(0x000000);
+    const mats = [product.joystick1Material, product.joystick2Material, product.button1Material, product.button2Material];
+    mats.forEach(mat => {
+      if (mat) {
+        if (isGlowing) {
+          mat.emissive.copy(mat.color);
+          mat.emissiveIntensity = 0.8;
+        } else {
+          mat.emissive.setHex(0x000000);
+        }
+        mat.needsUpdate = true;
       }
-      product.joystickMaterial.needsUpdate = true;
-    }
-    if (product.buttonMaterial) {
-      if (isGlowing) {
-        product.buttonMaterial.emissive.copy(product.buttonMaterial.color);
-        product.buttonMaterial.emissiveIntensity = 0.8;
-      } else {
-        product.buttonMaterial.emissive.setHex(0x000000);
-      }
-      product.buttonMaterial.needsUpdate = true;
-    }
+    });
   };
 }
 
@@ -1352,3 +1344,18 @@ function animate(now = performance.now()) {
 animate();
 
 setTimeout(() => document.querySelector('#productSelect').dispatchEvent(new Event('change')), 100);
+
+
+// Toggle right sidebar
+const toggleRightSidebarBtn = document.getElementById('toggleRightSidebar');
+if (toggleRightSidebarBtn) {
+  toggleRightSidebarBtn.addEventListener('click', () => {
+    document.querySelector('.workspace').classList.toggle('right-collapsed');
+    if (document.querySelector('.workspace').classList.contains('right-collapsed')) {
+      toggleRightSidebarBtn.textContent = '◀';
+    } else {
+      toggleRightSidebarBtn.textContent = '▶';
+    }
+    setTimeout(() => { if (window.onWindowResize) window.onWindowResize(); }, 300); // Trigger resize for 3D canvas
+  });
+}
