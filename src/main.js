@@ -48,7 +48,8 @@ viewer.append(renderer.domElement);
 const scene = new THREE.Scene(); scene.background = new THREE.Color(0xe9edf0);
 const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100); camera.position.set(3.4, 2.8, 3.8);
 scene.add(camera);
-let sceneWatermarkTexture = null;\nlet bgImageObj = null;
+let sceneWatermarkTexture = null;
+let bgImageObj = null;
 let backgroundTexture = null;
 
 function updateSceneBackground() {

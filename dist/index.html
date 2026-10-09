@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&family=Cinzel:wght@700&family=Dancing+Script:wght@700&family=Great+Vibes&family=Lobster&family=Montserrat:ital,wght@0,400;0,700;1,400&family=Oswald:wght@600&family=Pacifico&family=Playfair+Display:ital,wght@0,700;1,700&family=Righteous&family=Roboto:wght@400;700&family=Satisfy&display=swap" rel="stylesheet">
   <title>MockUp3D C3</title>
-  <script type="module" crossorigin src="/assets/index-CZr69ePp.js"></script>
+  <script type="module" crossorigin src="/assets/index-BevxsuIj.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-BK24SKYR.css">
 </head>
 <body>
@@ -168,7 +168,8 @@
         </section>
       </aside>
       <section class="viewer-wrap">
-        <div id="viewer" aria-label="Aperçu 3D interactif"></div>
+        <div id="bgLayer" style="position:absolute; inset:0; background-size: cover; background-position: center; z-index: 0; pointer-events: none;"></div>
+        <div id="viewer" aria-label="Aperçu 3D interactif" style="position:relative; z-index: 1;"></div>
         <svg id="transformOverlay" aria-label="Cadre d’ajustement du visuel" hidden>
           <polygon id="transformBox"></polygon>
           <line id="rotateStem"></line>
@@ -246,6 +247,7 @@
           <label class="rotation-mode"><span>Sens de rotation</span><select id="rotationMode"><option value="horizontal">Horizontal</option><option value="vertical">Vertical</option><option value="diagonal">Diagonal</option><option value="swing">Va-et-vient</option></select></label>
           <label class="option-check"><input id="reverse" type="checkbox"> Sens inverse</label>
           <div class="background-actions"><label for="bgInput" class="secondary">Ajouter une image de fond</label><button id="clearBg" class="secondary">Effacer le fond</button></div><input id="bgInput" type="file" accept="image/png,image/jpeg">
+          <label class="control" id="bgOpacityControl" hidden><span>Opacité du fond <output id="bgOpacityValue">100 %</output></span><input id="bgOpacity" type="range" min="0" max="100" value="100"></label>
         </section>
         <section>
           <p class="eyebrow">ANIMATION</p>
