@@ -24,8 +24,10 @@ export const tshirt3DProduct = {
       metalness: 0.05 
     });
 
-    const decalMaterial = new THREE.MeshBasicMaterial({
+    const decalMaterial = new THREE.MeshStandardMaterial({
       color: 0xffffff,
+      roughness: 0.9,
+      metalness: 0.05,
       transparent: true,
       depthTest: true,
       depthWrite: false,

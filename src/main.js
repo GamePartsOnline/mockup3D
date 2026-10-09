@@ -307,7 +307,7 @@ function buildTexture() {
   }
 
   const showWatermark = document.querySelector('#showWatermark')?.checked ?? true;
-  if (showWatermark && isWatermarkLoaded && watermarkImg.width > 0) {
+  if (showWatermark && isWatermarkLoaded && watermarkImg.width > 0 && product.type !== '3d-decal') {
     ctx.save();
     const wmCanvas = document.createElement('canvas');
     wmCanvas.width = watermarkImg.width;
