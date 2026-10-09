@@ -314,7 +314,11 @@ function buildTexture() {
   }
   document.querySelector('#emptyHint').hidden = true;
   const surfaceColor = document.querySelector('#topColor')?.value || '#ffffff';
+  
+  const isTwoSided = !!product.twoSided;
   const isMultiZone = !!product.zones;
+  const canvas = document.createElement('canvas');
+  
   canvas.width = isMultiZone ? 3072 : (isTwoSided ? 3200 : 1600);
   canvas.height = isMultiZone ? 2048 : Math.round(1600 / product.printAspect);
   const ctx = canvas.getContext('2d'); 

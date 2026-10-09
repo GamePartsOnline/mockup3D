@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { profilePoints } from './arcadeProfile.js';
 
 export const arcadeCabinetProduct = {
   id: 'arcade-cabinet',
@@ -9,8 +10,8 @@ export const arcadeCabinetProduct = {
   printAspect: 1, 
   twoSided: false,
   zones: [
-    { id: 'left', label: 'Côté Gauche', col: 0, row: 1, aspect: 770 / 1700 }, 
-    { id: 'right', label: 'Côté Droit', col: 1, row: 1, aspect: 770 / 1700 },
+    { id: 'left', label: 'Côté Gauche', col: 0, row: 1, aspect: 561.8 / 1670.9 }, 
+    { id: 'right', label: 'Côté Droit', col: 1, row: 1, aspect: 561.8 / 1670.9 },
     { id: 'marquee', label: 'Fronton (Haut)', col: 2, row: 1, aspect: 600 / 200 },
     { id: 'screen', label: 'Écran', col: 0, row: 0, aspect: 600 / 500 },
     { id: 'panel', label: 'Panel', col: 1, row: 0, aspect: 600 / 250 },
@@ -19,9 +20,7 @@ export const arcadeCabinetProduct = {
   create() {
     const group = new THREE.Group();
     
-    // Matériau pour les tranches et l'intérieur
     const baseMaterial = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.9 });
-    // Matériau pour le covering imprimable
     const topMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.6, metalness: 0.1 });
     
     function normalizeAndMapUV(geometry, minX, maxX, minY, maxY, col, row, flipHorizontal=false) {
@@ -62,7 +61,7 @@ export const arcadeCabinetProduct = {
         const length = Math.hypot(dx, dy);
         const angle = Math.atan2(dy, dx);
         
-        const mesh = createPlane(0.65, length, col, row);
+        const mesh = createPlane(0.58, length, col, row);
         const group = new THREE.Group();
         group.add(mesh);
         
@@ -75,62 +74,62 @@ export const arcadeCabinetProduct = {
     }
 
     const shape = new THREE.Shape();
-    shape.moveTo(-0.02, 0);
-    shape.lineTo(-0.02, 1.62);
-    shape.lineTo(0.43, 1.62);
-    shape.lineTo(0.45, 1.58);
-    shape.lineTo(0.32, 1.40);
-    shape.lineTo(0.10, 0.97);
-    shape.lineTo(0.12, 0.93);
-    shape.lineTo(0.72, 0.86);
-    shape.lineTo(0.67, 0.80);
-    shape.lineTo(0.62, 0);
-    shape.lineTo(-0.02, 0);
+    if (profilePoints.length > 0) {
+      shape.moveTo(profilePoints[0][0], profilePoints[0][1]);
+      for(let i=1; i<profilePoints.length; i++) {
+        shape.lineTo(profilePoints[i][0], profilePoints[i][1]);
+      }
+    } else {
+      shape.moveTo(0,0); shape.lineTo(0,1); shape.lineTo(1,1); shape.lineTo(1,0); shape.lineTo(0,0);
+    }
 
     const extrudeSettings = { depth: 0.018, bevelEnabled: true, bevelSegments: 2, bevelSize: 0.002, bevelThickness: 0.002 };
     
+    // Calculate bounds for UV mapping
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    profilePoints.forEach(p => {
+      if(p[0] < minX) minX = p[0];
+      if(p[0] > maxX) maxX = p[0];
+      if(p[1] < minY) minY = p[1];
+      if(p[1] > maxY) maxY = p[1];
+    });
+
     const leftGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-    leftGeo.translate(0, 0, 0.325);
-    normalizeAndMapUV(leftGeo, -0.02, 0.72, 0, 1.62, 0, 1, false);
+    // Left panel inner face at +0.285 (57cm interior width / 2)
+    leftGeo.translate(0, 0, 0.285);
+    normalizeAndMapUV(leftGeo, minX, maxX, minY, maxY, 0, 1, false);
     const leftMesh = new THREE.Mesh(leftGeo, [topMaterial, baseMaterial]);
     leftMesh.castShadow = true;
     
     const rightGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-    rightGeo.translate(0, 0, -0.343); // -0.325 - 0.018
-    normalizeAndMapUV(rightGeo, -0.02, 0.72, 0, 1.62, 1, 1, true);
+    // Right panel inner face at -0.285 (extrudes +0.018, so start at -0.303)
+    rightGeo.translate(0, 0, -0.303);
+    normalizeAndMapUV(rightGeo, minX, maxX, minY, maxY, 1, 1, true);
     const rightMesh = new THREE.Mesh(rightGeo, [topMaterial, baseMaterial]);
     rightMesh.castShadow = true;
 
     // Define points for planes (x = depth from back, y = height)
-    const pFrontDoorB = { x: 0.60, y: 0.00 };
-    const pFrontDoorT = { x: 0.65, y: 0.80 };
+    // Points extracted directly from the SVG profile Douglas-Peucker simplification
+    const pFrontDoorB = { x: 0.5128, y: 0.2537 };
+    const pFrontDoorT = { x: 0.5613, y: 0.9521 };
     
-    const pPanelTip = { x: 0.70, y: 0.85 };
-    const pPanelBack = { x: 0.453, y: 0.891 }; // 25cm graphic part
-    const pPanelDeep = { x: 0.10, y: 0.95 }; // Blank part behind graphic
+    const pPanelTip = { x: 0.5618, y: 0.9731 };
+    const pPanelBack = { x: 0.3406, y: 1.1034 }; 
     
-    const pScreenB = pPanelDeep;
-    const pScreenT = { x: 0.30, y: 1.40 };
+    // The screen connects the back of the panel to the bottom of the marquee
+    const pScreenB = pPanelBack;
+    const pScreenT = { x: 0.3355, y: 1.4964 };
     
     const pMarqueeB = pScreenT;
-    const pMarqueeT = { x: 0.42, y: 1.56 };
+    const pMarqueeT = { x: 0.3147, y: 1.6665 };
 
-    // Create plane groups
+    // Create plane groups (width = 0.58 to fit inside the 0.57 spacing while embedding slightly into the side panels to prevent gaps)
     const frontDoor = createPlaneGroup(pFrontDoorB, pFrontDoorT, 2, 0);
-    const panelGraphic = createPlaneGroup(pPanelBack, pPanelTip, 1, 0);
+    // Panel graphic goes from the tip (closer to user) to the back (near screen)
+    const panelGraphic = createPlaneGroup(pPanelTip, pPanelBack, 1, 0);
     
-    // Create blank panel part (no texture, uses baseMaterial)
-    const blankPanelDx = pPanelDeep.x - pPanelBack.x;
-    const blankPanelDy = pPanelDeep.y - pPanelBack.y;
-    const blankPanelLen = Math.hypot(blankPanelDx, blankPanelDy);
-    const blankPanelAngle = Math.atan2(blankPanelDy, blankPanelDx);
-    const blankPanelGeo = new THREE.PlaneGeometry(0.65, blankPanelLen);
-    const blankPanelMesh = new THREE.Mesh(blankPanelGeo, baseMaterial);
-    blankPanelMesh.rotation.y = Math.PI / 2;
-    const blankPanel = new THREE.Group();
-    blankPanel.add(blankPanelMesh);
-    blankPanel.position.set(pPanelBack.x + blankPanelDx/2, pPanelBack.y + blankPanelDy/2, 0);
-    blankPanel.rotation.z = blankPanelAngle - Math.PI/2;
+    // Blank panel isn't needed anymore if the graphic covers the whole slope
+    // But if we want it, we can keep it empty or remove it. We'll remove it.
 
     const screen = createPlaneGroup(pScreenB, pScreenT, 0, 0);
     const marquee = createPlaneGroup(pMarqueeB, pMarqueeT, 2, 1);
@@ -139,7 +138,7 @@ export const arcadeCabinetProduct = {
     const innerBody = new THREE.Mesh(innerBodyGeo, baseMaterial);
     innerBody.position.set(0.15, 0.80, 0);
 
-    group.add(leftMesh, rightMesh, frontDoor, panelGraphic, blankPanel, screen, marquee, innerBody);
+    group.add(leftMesh, rightMesh, frontDoor, panelGraphic, screen, marquee, innerBody);
     group.position.set(-0.3, -0.8, 0); // Center the cabinet
     group.rotation.y = Math.PI / 6;
 
