@@ -25,6 +25,7 @@ import { coasterProduct } from './products/coaster.js';
 import { coasterRoundProduct } from './products/coasterRound.js';
 import { pencilCaseProduct } from './products/pencilCase.js';
 import { cushionProduct } from './products/cushion.js';
+import { arcadeCabinetProduct } from './products/arcadeCabinet.js';
 
 const viewer = document.querySelector('#viewer');
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
@@ -122,7 +123,8 @@ const productDefinitions = {
   coaster: coasterProduct,
   coasterRound: coasterRoundProduct,
   pencilCase: pencilCaseProduct,
-  cushion: cushionProduct
+  cushion: cushionProduct,
+  arcadeCabinet: arcadeCabinetProduct
 };
 const defaultProductKey = document.querySelector('#productSelect')?.value || 'mug11oz';
 let currentProductKey = defaultProductKey, product = productDefinitions[defaultProductKey].create(); scene.add(product.group);
@@ -214,11 +216,15 @@ function renderImagesList() {
     info.innerHTML = `<span class="image-item-name">${item.name}</span><small class="image-item-meta">Calque #${index + 1} • ${Math.round(item.scale * 100)}%</small>`;
     const sideSelect = document.createElement('select');
     sideSelect.className = 'layer-side-select';
-    sideSelect.innerHTML = '<option value="both">Deux faces</option><option value="A">Face A</option><option value="B">Face B</option>';
+    if (product.zones) {
+      sideSelect.innerHTML = '<option value="both">Toutes zones</option>' + product.zones.map(z => `<option value="${z.id}">${z.label}</option>`).join('');
+    } else {
+      sideSelect.innerHTML = '<option value="both">Deux faces</option><option value="A">Face A</option><option value="B">Face B</option>';
+    }
     sideSelect.value = item.side || 'both';
     sideSelect.onclick = e => e.stopPropagation();
     sideSelect.onchange = e => { item.side = e.target.value; buildTexture(); };
-    if (product.twoSided) {
+    if (product.twoSided || product.zones) {
       info.append(sideSelect);
     }
 
@@ -295,10 +301,9 @@ function buildTexture() {
   }
   document.querySelector('#emptyHint').hidden = true;
   const surfaceColor = document.querySelector('#topColor')?.value || '#ffffff';
-  const isTwoSided = !!product.twoSided;
-  const canvas = document.createElement('canvas'); 
-  canvas.width = isTwoSided ? 3200 : 1600; 
-  canvas.height = Math.round(1600 / product.printAspect);
+  const isMultiZone = !!product.zones;
+  canvas.width = isMultiZone ? 3072 : (isTwoSided ? 3200 : 1600);
+  canvas.height = isMultiZone ? 2048 : Math.round(1600 / product.printAspect);
   const ctx = canvas.getContext('2d'); 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (product.type !== '3d-decal') {
@@ -342,55 +347,73 @@ function buildTexture() {
     const sx = item.scaleX ?? item.scale ?? 1;
     const sy = item.scaleY ?? item.scale ?? 1;
     const imageRatio = item.img.width / item.img.height;
-    const singleWidth = isTwoSided ? 1600 : canvas.width;
-    const surfaceRatio = singleWidth / canvas.height;
     
-    let w, h;
-    if (item.fitMode === 'fill') {
-      w = singleWidth;
-      h = canvas.height;
-    } else if ((item.fitMode === 'contain') === (imageRatio > surfaceRatio)) {
-      w = singleWidth;
-      h = w / imageRatio;
+    let targetZones = [];
+    if (product.zones) {
+      targetZones = (item.side === 'both' || !item.side) ? product.zones : product.zones.filter(z => z.id === item.side);
     } else {
-      h = canvas.height;
-      w = h * imageRatio;
+      const sides = !isTwoSided ? [0] : (item.side === 'A' ? [0] : (item.side === 'B' ? [1] : [0, 1]));
+      targetZones = sides.map(s => ({ col: s, row: 0, width: 1600, height: canvas.height }));
     }
-    w *= sx;
-    h *= sy;
-    
-    const sides = !isTwoSided ? [0] : (item.side === 'A' ? [0] : (item.side === 'B' ? [1] : [0, 1]));
-    
-    sides.forEach(sideIndex => {
-        const xOffset = sideIndex * 1600;
-        const x = xOffset + singleWidth / 2 + item.x * singleWidth * 0.5;
-        const y = canvas.height / 2 - item.y * canvas.height * 0.5;
-        
-        ctx.save();
-        ctx.beginPath();
-        ctx.rect(xOffset, 0, singleWidth, canvas.height);
-        ctx.clip();
-        
-        ctx.translate(x, y);
-        ctx.rotate(-item.rotation * Math.PI / 180);
-        ctx.drawImage(item.img, -w / 2, -h / 2, w, h);
-        ctx.restore();
+
+    targetZones.forEach(zone => {
+      const zoneWidth = isMultiZone ? 1024 : 1600;
+      const zoneHeight = isMultiZone ? 1024 : canvas.height;
+      const xOffset = zone.col * zoneWidth;
+      const yOffset = (zone.row || 0) * zoneHeight;
+      const surfaceRatio = isMultiZone ? (zone.aspect || 1) : (zoneWidth / zoneHeight);
+      
+      let w, h;
+      if (item.fitMode === 'fill') {
+        w = zoneWidth;
+        h = zoneHeight;
+      } else if ((item.fitMode === 'contain') === (imageRatio > surfaceRatio)) {
+        w = zoneWidth;
+        h = isMultiZone ? (zoneWidth / imageRatio / surfaceRatio) : (w / imageRatio);
+      } else {
+        h = zoneHeight;
+        w = isMultiZone ? (zoneHeight * imageRatio * surfaceRatio) : (h * imageRatio);
+      }
+      w *= sx;
+      h *= sy;
+      
+      const x = xOffset + zoneWidth / 2 + item.x * zoneWidth * 0.5;
+      const y = yOffset + zoneHeight / 2 - item.y * zoneHeight * 0.5;
+      
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(xOffset, yOffset, zoneWidth, zoneHeight);
+      ctx.clip();
+      
+      ctx.translate(x, y);
+      ctx.rotate(-item.rotation * Math.PI / 180);
+      ctx.drawImage(item.img, -w / 2, -h / 2, w, h);
+      ctx.restore();
     });
   });
 
   if (hasText) {
-    const textSides = !isTwoSided ? [0] : (textParams.side === 'A' ? [0] : (textParams.side === 'B' ? [1] : [0, 1]));
-    const singleWidth = isTwoSided ? 1600 : canvas.width;
-    textSides.forEach(sideIndex => {
+    let targetZones = [];
+    if (product.zones) {
+      targetZones = (textParams.side === 'both' || !textParams.side) ? product.zones : product.zones.filter(z => z.id === textParams.side);
+    } else {
+      const sides = !isTwoSided ? [0] : (textParams.side === 'A' ? [0] : (textParams.side === 'B' ? [1] : [0, 1]));
+      targetZones = sides.map(s => ({ col: s, row: 0, width: 1600, height: canvas.height }));
+    }
+
+    targetZones.forEach(zone => {
       ctx.save();
-      const xOffset = sideIndex * singleWidth;
+      const zoneWidth = isMultiZone ? 1024 : 1600;
+      const zoneHeight = isMultiZone ? 1024 : canvas.height;
+      const xOffset = zone.col * zoneWidth;
+      const yOffset = (zone.row || 0) * zoneHeight;
       
       ctx.beginPath();
-      ctx.rect(xOffset, 0, singleWidth, canvas.height);
+      ctx.rect(xOffset, yOffset, zoneWidth, zoneHeight);
       ctx.clip();
       
-      const tx = xOffset + singleWidth / 2 + textParams.x * singleWidth * 0.5;
-      const ty = canvas.height / 2 - textParams.y * canvas.height * 0.5;
+      const tx = xOffset + zoneWidth / 2 + textParams.x * zoneWidth * 0.5;
+      const ty = yOffset + zoneHeight / 2 - textParams.y * zoneHeight * 0.5;
       ctx.translate(tx, ty);
       ctx.rotate(-textParams.rotation * Math.PI / 180);
       const fontStyle = `${textParams.italic ? 'italic ' : ''}${textParams.bold ? 'bold ' : 'normal '}${textParams.size}px ${textParams.font}`;
@@ -491,12 +514,26 @@ document.querySelector('#productSelect').onchange = e => {
   }
   
   const isTwoSided = !!product.twoSided;
+  const hasZones = !!product.zones;
+  
   const viewFaceA = document.querySelector('#viewFaceA');
   const viewFaceB = document.querySelector('#viewFaceB');
-  if (viewFaceA) viewFaceA.style.display = isTwoSided ? 'inline-block' : 'none';
-  if (viewFaceB) viewFaceB.style.display = isTwoSided ? 'inline-block' : 'none';
+  if (viewFaceA) viewFaceA.style.display = (isTwoSided || hasZones) ? 'inline-block' : 'none';
+  if (viewFaceB) viewFaceB.style.display = (isTwoSided || hasZones) ? 'inline-block' : 'none';
+  
+  // Custom labels for view buttons if zones
+  if (viewFaceA) viewFaceA.innerHTML = hasZones ? '<span style="font-weight:900;margin-right:4px;">A</span> Face Avant' : '<span style="font-weight:900;margin-right:4px;">A</span> Face A';
+  if (viewFaceB) viewFaceB.innerHTML = hasZones ? '<span style="font-weight:900;margin-right:4px;">B</span> Côtés' : '<span style="font-weight:900;margin-right:4px;">B</span> Face B';
+
   const textSideSelect = document.querySelector('#textSideSelect');
-  if (textSideSelect) textSideSelect.style.display = isTwoSided ? 'inline-block' : 'none';
+  if (textSideSelect) {
+    textSideSelect.style.display = (isTwoSided || hasZones) ? 'inline-block' : 'none';
+    if (hasZones) {
+      textSideSelect.innerHTML = '<option value="both">Toutes zones</option>' + product.zones.map(z => `<option value="${z.id}">${z.label}</option>`).join('');
+    } else {
+      textSideSelect.innerHTML = '<option value="both">2 faces</option><option value="A">Face A</option><option value="B">Face B</option>';
+    }
+  }
   
   updateLayersList();
   if (imagesList.length > 0 || textParams.text.trim()) buildTexture(); 
@@ -605,6 +642,9 @@ const homeView = () => {
   } else if (currentProductKey.startsWith('tshirt')) {
     camera.position.set(0, 0.35, 1.6);
     controls.target.set(0, 0.35, 0);
+  } else if (currentProductKey === 'arcadeCabinet') {
+    camera.position.set(2.8, 1.2, 2.8);
+    controls.target.set(0, 0.85, 0);
   } else {
     camera.position.set(3.4, 2.8, 3.8);
     controls.target.set(0, -.04, 0);
@@ -613,12 +653,18 @@ const homeView = () => {
 };
 document.querySelector('#resetView')?.addEventListener('click', homeView);
 document.querySelector('#viewFaceA')?.addEventListener('click', () => {
-  homeView(); // sets target and camera to Face A
+  homeView();
+  if (currentProductKey === 'arcadeCabinet') {
+    camera.position.set(2.6, 1.2, 1.5);
+    controls.update();
+  }
 });
 document.querySelector('#viewFaceB')?.addEventListener('click', () => {
   homeView();
   if (currentProductKey === 'mug11oz') {
     camera.position.set(-0.8, 2.5, -6.5);
+  } else if (currentProductKey === 'arcadeCabinet') {
+    camera.position.set(1.5, 1.2, -2.6);
   } else {
     camera.position.z = -Math.abs(camera.position.z);
   }
