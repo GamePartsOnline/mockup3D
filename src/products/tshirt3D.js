@@ -24,7 +24,7 @@ export const tshirt3DProduct = {
       metalness: 0.05 
     });
 
-    const decalMaterial = new THREE.MeshStandardMaterial({
+    const decalMaterial = new THREE.MeshBasicMaterial({
       color: 0xffffff,
       transparent: true,
       depthTest: true,
@@ -32,9 +32,7 @@ export const tshirt3DProduct = {
       polygonOffset: true,
       polygonOffsetFactor: -4,
       polygonOffsetUnits: -4,
-      alphaTest: 0.05,
-      roughness: 0.9,
-      metalness: 0.05
+      alphaTest: 0.05
     });
 
     const loader = new OBJLoader();
@@ -85,12 +83,10 @@ export const tshirt3DProduct = {
       
       const frontTex = new THREE.CanvasTexture(canvas);
       frontTex.colorSpace = THREE.SRGBColorSpace;
-      frontTex.anisotropy = 4;
       frontTex.needsUpdate = true;
       
       const backTex = new THREE.CanvasTexture(canvas);
       backTex.colorSpace = THREE.SRGBColorSpace;
-      backTex.anisotropy = 4;
       backTex.needsUpdate = true;
 
       if (isTwoSided) {
@@ -102,9 +98,13 @@ export const tshirt3DProduct = {
       
       const frontMat = decalMaterial.clone();
       frontMat.map = frontTex;
+      frontMat.transparent = true;
+      frontMat.alphaTest = 0.05;
       
       const backMat = decalMaterial.clone();
       backMat.map = backTex;
+      backMat.transparent = true;
+      backMat.alphaTest = 0.05;
       
       group.updateMatrixWorld(true);
 
