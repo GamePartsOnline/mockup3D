@@ -33,7 +33,7 @@ if (window.location.hostname !== 'localhost' && window.location.hostname !== '12
   const pSelect = document.querySelector('#productSelect');
   if (pSelect) {
     Array.from(pSelect.options).forEach(opt => {
-      if (opt.value === 'tshirt3D' || opt.value === 'arcadeCabinet') {
+      if (opt.value === 'tshirt3D') {
         opt.remove();
       }
     });

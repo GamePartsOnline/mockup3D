@@ -27,10 +27,41 @@ export const arcadeCabinetProduct = {
     const screenCtx = screenCanvas.getContext('2d');
     screenCtx.fillStyle = '#050505'; // Gros cadre noir
     screenCtx.fillRect(0, 0, 1024, 1024);
-    screenCtx.fillStyle = '#1e3a8a'; // Écran bleu
+    
+    // Background sky
+    screenCtx.fillStyle = '#4ea1d3';
     screenCtx.fillRect(100, 200, 824, 624);
-    // Petit effet de brillance/scanlines optionnel
-    screenCtx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+    // Ground
+    screenCtx.fillStyle = '#6e7e60';
+    screenCtx.fillRect(100, 500, 824, 324);
+    
+    // Health bars
+    screenCtx.fillStyle = '#e52b2b';
+    screenCtx.fillRect(140, 240, 320, 20);
+    screenCtx.fillRect(564, 240, 320, 20);
+    screenCtx.fillStyle = '#f7d825';
+    screenCtx.fillRect(140, 240, 280, 20);
+    screenCtx.fillRect(604, 240, 280, 20);
+    
+    // KO text
+    screenCtx.fillStyle = '#e52b2b';
+    screenCtx.font = 'bold 50px sans-serif';
+    screenCtx.fillText('K.O.', 460, 280);
+    
+    // Ryu (white gi)
+    screenCtx.fillStyle = '#eeeeee';
+    screenCtx.fillRect(250, 350, 90, 180);
+    screenCtx.fillStyle = '#ffcc99'; // head
+    screenCtx.fillRect(270, 300, 50, 50);
+    
+    // Ken (red gi)
+    screenCtx.fillStyle = '#d11141';
+    screenCtx.fillRect(650, 350, 90, 180);
+    screenCtx.fillStyle = '#ffcc99'; // head
+    screenCtx.fillRect(670, 300, 50, 50);
+    
+    // Scanlines
+    screenCtx.fillStyle = 'rgba(0, 0, 0, 0.2)';
     for(let y = 200; y < 824; y += 4) { screenCtx.fillRect(100, y, 824, 2); }
     
     const screenTexture = new THREE.CanvasTexture(screenCanvas);
@@ -117,14 +148,12 @@ export const arcadeCabinetProduct = {
     leftGeo.translate(0, 0, 0.285);
     normalizeAndMapUV(leftGeo, minX, maxX, minY, maxY, 0, 1, false);
     const leftMesh = new THREE.Mesh(leftGeo, [topMaterial, baseMaterial]);
-    leftMesh.castShadow = true;
     
     const rightGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
     // Right panel inner face at -0.285 (extrudes +0.018, so start at -0.303)
     rightGeo.translate(0, 0, -0.303);
     normalizeAndMapUV(rightGeo, minX, maxX, minY, maxY, 1, 1, true);
     const rightMesh = new THREE.Mesh(rightGeo, [topMaterial, baseMaterial]);
-    rightMesh.castShadow = true;
 
     // Define points for planes (x = depth from back, y = height)
     // The front door goes from y=0 to y=0.9731 (connecting to the panel tip seamlessly)
