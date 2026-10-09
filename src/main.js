@@ -29,6 +29,15 @@ import { arcadeCabinetProduct } from './products/arcadeCabinet.js';
 if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
   const localBadge = document.querySelector('#localBadge');
   if (localBadge) localBadge.style.display = 'none';
+  
+  const pSelect = document.querySelector('#productSelect');
+  if (pSelect) {
+    Array.from(pSelect.options).forEach(opt => {
+      if (opt.value === 'tshirt3D' || opt.value === 'arcadeCabinet') {
+        opt.remove();
+      }
+    });
+  }
 }
 
 const viewer = document.querySelector('#viewer');
@@ -647,8 +656,8 @@ const homeView = () => {
     camera.position.set(0, 0.35, 1.6);
     controls.target.set(0, 0.35, 0);
   } else if (currentProductKey === 'arcadeCabinet') {
-    camera.position.set(2.8, 1.2, 2.8);
-    controls.target.set(0, 0.85, 0);
+    camera.position.set(2.8, 0.5, 2.8);
+    controls.target.set(0, 0, 0);
   } else {
     camera.position.set(3.4, 2.8, 3.8);
     controls.target.set(0, -.04, 0);
@@ -659,7 +668,7 @@ document.querySelector('#resetView')?.addEventListener('click', homeView);
 document.querySelector('#viewFaceA')?.addEventListener('click', () => {
   homeView();
   if (currentProductKey === 'arcadeCabinet') {
-    camera.position.set(2.6, 1.2, 1.5);
+    camera.position.set(2.6, 0.5, 1.5);
     controls.update();
   }
 });
@@ -668,7 +677,7 @@ document.querySelector('#viewFaceB')?.addEventListener('click', () => {
   if (currentProductKey === 'mug11oz') {
     camera.position.set(-0.8, 2.5, -6.5);
   } else if (currentProductKey === 'arcadeCabinet') {
-    camera.position.set(1.5, 1.2, -2.6);
+    camera.position.set(1.5, 0.5, -2.6);
   } else {
     camera.position.z = -Math.abs(camera.position.z);
   }

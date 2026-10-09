@@ -9,8 +9,8 @@ export const arcadeCabinetProduct = {
   printAspect: 1, 
   twoSided: false,
   zones: [
-    { id: 'left', label: 'Joue Gauche (Côté 1)', col: 0, row: 1, aspect: 770 / 1700 }, 
-    { id: 'right', label: 'Joue Droite (Côté 2)', col: 1, row: 1, aspect: 770 / 1700 },
+    { id: 'left', label: 'Côté Gauche', col: 0, row: 1, aspect: 770 / 1700 }, 
+    { id: 'right', label: 'Côté Droit', col: 1, row: 1, aspect: 770 / 1700 },
     { id: 'marquee', label: 'Fronton (Haut)', col: 2, row: 1, aspect: 600 / 200 },
     { id: 'screen', label: 'Écran', col: 0, row: 0, aspect: 600 / 500 },
     { id: 'panel', label: 'Panel', col: 1, row: 0, aspect: 600 / 250 },
@@ -28,7 +28,7 @@ export const arcadeCabinetProduct = {
         const uv = geometry.attributes.uv;
         const pos = geometry.attributes.position;
         const uOffset = col * (1/3);
-        const vOffset = row * 0.5;
+        const vOffset = (1 - row) * 0.5;
         for (let i = 0; i < uv.count; i++) {
             const x = pos.getX(i);
             const y = pos.getY(i);
@@ -45,7 +45,7 @@ export const arcadeCabinetProduct = {
         const mat = topMaterial;
         const uv = geo.attributes.uv;
         const uOffset = col * (1/3);
-        const vOffset = row * 0.5;
+        const vOffset = (1 - row) * 0.5;
         for (let i = 0; i < uv.count; i++) {
             let u = uv.getX(i);
             let v = uv.getY(i);
@@ -56,80 +56,92 @@ export const arcadeCabinetProduct = {
         return mesh;
     }
 
-    const shape = new THREE.Shape();
-    shape.moveTo(-0.35, 0);       
-    shape.lineTo(0.3, 0);         
-    shape.lineTo(0.3, 0.8);       
-    shape.lineTo(0.42, 0.82);     
-    shape.lineTo(0.25, 0.97);     
-    shape.lineTo(0.12, 1.45);     
-    shape.lineTo(0.28, 1.55);     
-    shape.lineTo(0.2, 1.7);       
-    shape.lineTo(-0.35, 1.7);     
-    shape.lineTo(-0.35, 0);       
+    function createPlaneGroup(p1, p2, col, row) {
+        const dx = p2.x - p1.x;
+        const dy = p2.y - p1.y;
+        const length = Math.hypot(dx, dy);
+        const angle = Math.atan2(dy, dx);
+        
+        const mesh = createPlane(0.65, length, col, row);
+        const group = new THREE.Group();
+        group.add(mesh);
+        
+        const cx = p1.x + dx/2;
+        const cy = p1.y + dy/2;
+        group.position.set(cx, cy, 0);
+        group.rotation.z = angle - Math.PI/2;
+        
+        return group;
+    }
 
-    const extrudeSettings = { depth: 0.015, bevelEnabled: true, bevelSegments: 2, bevelSize: 0.002, bevelThickness: 0.002 };
+    const shape = new THREE.Shape();
+    shape.moveTo(-0.02, 0);
+    shape.lineTo(-0.02, 1.62);
+    shape.lineTo(0.43, 1.62);
+    shape.lineTo(0.45, 1.58);
+    shape.lineTo(0.32, 1.40);
+    shape.lineTo(0.10, 0.97);
+    shape.lineTo(0.12, 0.93);
+    shape.lineTo(0.72, 0.86);
+    shape.lineTo(0.67, 0.80);
+    shape.lineTo(0.62, 0);
+    shape.lineTo(-0.02, 0);
+
+    const extrudeSettings = { depth: 0.018, bevelEnabled: true, bevelSegments: 2, bevelSize: 0.002, bevelThickness: 0.002 };
     
     const leftGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-    leftGeo.translate(0, 0, 0.285);
-    normalizeAndMapUV(leftGeo, -0.35, 0.42, 0, 1.7, 0, 1, false);
+    leftGeo.translate(0, 0, 0.325);
+    normalizeAndMapUV(leftGeo, -0.02, 0.72, 0, 1.62, 0, 1, false);
     const leftMesh = new THREE.Mesh(leftGeo, [topMaterial, baseMaterial]);
     leftMesh.castShadow = true;
     
     const rightGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-    rightGeo.translate(0, 0, -0.3);
-    normalizeAndMapUV(rightGeo, -0.35, 0.42, 0, 1.7, 1, 1, true);
+    rightGeo.translate(0, 0, -0.343); // -0.325 - 0.018
+    normalizeAndMapUV(rightGeo, -0.02, 0.72, 0, 1.62, 1, 1, true);
     const rightMesh = new THREE.Mesh(rightGeo, [topMaterial, baseMaterial]);
     rightMesh.castShadow = true;
 
-    const frontBase = createPlane(0.57, 0.8, 2, 0);
-    frontBase.position.set(0.301, 0.4, 0);
+    // Define points for planes (x = depth from back, y = height)
+    const pFrontDoorB = { x: 0.60, y: 0.00 };
+    const pFrontDoorT = { x: 0.65, y: 0.80 };
     
-    const dxP = 0.25 - 0.42;
-    const dyP = 0.97 - 0.82;
-    const lengthP = Math.hypot(dxP, dyP);
-    const angleP = Math.atan2(dyP, dxP);
-    const panel = createPlane(0.57, lengthP, 1, 0);
-    panel.position.set(0.42 + dxP/2, 0.82 + dyP/2, 0);
-    // rotate around Z after it was rotated on Y
-    // wait, createPlane does rotate.y = Math.PI/2.
-    // So its local X axis is actually world -Z.
-    // If we want to tilt it along World Z, we can rotate around world Z.
-    // Let's just create a group for each plane.
-    const panelGroup = new THREE.Group();
-    panelGroup.add(panel);
-    panelGroup.position.set(0.42 + dxP/2, 0.82 + dyP/2, 0);
-    panelGroup.rotation.z = angleP;
-    panel.position.set(0,0,0);
-
-    const dxS = 0.12 - 0.25;
-    const dyS = 1.45 - 0.97;
-    const lengthS = Math.hypot(dxS, dyS);
-    const angleS = Math.atan2(dyS, dxS);
-    const screen = createPlane(0.57, lengthS, 0, 0);
-    const screenGroup = new THREE.Group();
-    screenGroup.add(screen);
-    screenGroup.position.set(0.25 + dxS/2, 0.97 + dyS/2, 0);
-    screenGroup.rotation.z = angleS;
-    screen.position.set(0,0,0);
+    const pPanelTip = { x: 0.70, y: 0.85 };
+    const pPanelBack = { x: 0.453, y: 0.891 }; // 25cm graphic part
+    const pPanelDeep = { x: 0.10, y: 0.95 }; // Blank part behind graphic
     
-    const dxM = 0.2 - 0.28;
-    const dyM = 1.7 - 1.55;
-    const lengthM = Math.hypot(dxM, dyM);
-    const angleM = Math.atan2(dyM, dxM);
-    const marquee = createPlane(0.57, lengthM, 2, 1);
-    const marqueeGroup = new THREE.Group();
-    marqueeGroup.add(marquee);
-    marqueeGroup.position.set(0.28 + dxM/2, 1.55 + dyM/2, 0);
-    marqueeGroup.rotation.z = angleM;
-    marquee.position.set(0,0,0);
+    const pScreenB = pPanelDeep;
+    const pScreenT = { x: 0.30, y: 1.40 };
+    
+    const pMarqueeB = pScreenT;
+    const pMarqueeT = { x: 0.42, y: 1.56 };
 
-    const innerBodyGeo = new THREE.BoxGeometry(0.5, 1.68, 0.56);
+    // Create plane groups
+    const frontDoor = createPlaneGroup(pFrontDoorB, pFrontDoorT, 2, 0);
+    const panelGraphic = createPlaneGroup(pPanelBack, pPanelTip, 1, 0);
+    
+    // Create blank panel part (no texture, uses baseMaterial)
+    const blankPanelDx = pPanelDeep.x - pPanelBack.x;
+    const blankPanelDy = pPanelDeep.y - pPanelBack.y;
+    const blankPanelLen = Math.hypot(blankPanelDx, blankPanelDy);
+    const blankPanelAngle = Math.atan2(blankPanelDy, blankPanelDx);
+    const blankPanelGeo = new THREE.PlaneGeometry(0.65, blankPanelLen);
+    const blankPanelMesh = new THREE.Mesh(blankPanelGeo, baseMaterial);
+    blankPanelMesh.rotation.y = Math.PI / 2;
+    const blankPanel = new THREE.Group();
+    blankPanel.add(blankPanelMesh);
+    blankPanel.position.set(pPanelBack.x + blankPanelDx/2, pPanelBack.y + blankPanelDy/2, 0);
+    blankPanel.rotation.z = blankPanelAngle - Math.PI/2;
+
+    const screen = createPlaneGroup(pScreenB, pScreenT, 0, 0);
+    const marquee = createPlaneGroup(pMarqueeB, pMarqueeT, 2, 1);
+
+    const innerBodyGeo = new THREE.BoxGeometry(0.3, 1.60, 0.64);
     const innerBody = new THREE.Mesh(innerBodyGeo, baseMaterial);
-    innerBody.position.set(-0.1, 0.84, 0);
+    innerBody.position.set(0.15, 0.80, 0);
 
-    group.add(leftMesh, rightMesh, frontBase, panelGroup, screenGroup, marqueeGroup, innerBody);
-    group.rotation.y = Math.PI / 6; // slightly angled
+    group.add(leftMesh, rightMesh, frontDoor, panelGraphic, blankPanel, screen, marquee, innerBody);
+    group.position.set(-0.3, -0.8, 0); // Center the cabinet
+    group.rotation.y = Math.PI / 6;
 
     return { 
       group, 
