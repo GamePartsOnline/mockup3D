@@ -118,7 +118,7 @@ watermarkImg.onload = () => {
   if (imagesList.length > 0 || textParams.text.trim()) buildTexture();
 };
 
-const wrapPreview = new THREE.Sprite(new THREE.SpriteMaterial({ transparent: false, depthTest: false, depthWrite: false }));
+const wrapPreview = new THREE.Sprite(new THREE.SpriteMaterial({ transparent: true, depthTest: false, depthWrite: false }));
 wrapPreview.position.set(0, -1.28, -5); wrapPreview.visible = false; wrapPreview.renderOrder = 20;
 const controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = false; controls.autoRotate = false; controls.minDistance = 2.2; controls.maxDistance = 8; controls.target.set(0, -.04, 0);
 scene.add(new THREE.HemisphereLight(0xffffff, 0x607080, 2.2));
