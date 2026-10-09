@@ -143,6 +143,52 @@ export const arcadeCabinetProduct = {
     // Create plane groups (width = 0.58)
     const frontDoor = createPlaneGroup(pFrontDoorB, pFrontDoorT, 2, 0);
     const panelGraphic = createPlaneGroup(pPanelTip, pPanelBack, null, null, baseMaterial);
+    
+    // Add joysticks and buttons
+    const controlsMaterial = new THREE.MeshStandardMaterial({ color: 0xdd1111, roughness: 0.3, metalness: 0.1 }); // Plastique
+    const controlsMaterialP2 = new THREE.MeshStandardMaterial({ color: 0x1133dd, roughness: 0.3, metalness: 0.1 });
+    
+    function addPlayerControls(group, zOffset, mat) {
+        // Joystick shaft (metal)
+        const shaftMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.4, metalness: 0.8 });
+        const shaftGeo = new THREE.CylinderGeometry(0.005, 0.005, 0.05, 16);
+        const shaft = new THREE.Mesh(shaftGeo, shaftMat);
+        shaft.rotation.z = -Math.PI / 2; // Point normal is +X, so rotate cylinder (which is along Y) to along X
+        shaft.position.set(0.025, -0.03, zOffset + 0.12);
+        
+        // Joystick ball (plastic)
+        const ballGeo = new THREE.SphereGeometry(0.015, 32, 32);
+        const ball = new THREE.Mesh(ballGeo, mat);
+        ball.position.set(0.05, -0.03, zOffset + 0.12);
+        
+        group.add(shaft, ball);
+        
+        // Buttons (6 buttons)
+        const btnGeo = new THREE.CylinderGeometry(0.012, 0.012, 0.005, 32);
+        const btnBaseGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.002, 32);
+        const btnBaseMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.8 });
+        
+        const btnPositions = [
+            {y: -0.02, z: zOffset + 0.04}, {y: -0.01, z: zOffset - 0.00}, {y: -0.02, z: zOffset - 0.04},
+            {y: -0.06, z: zOffset + 0.03}, {y: -0.05, z: zOffset - 0.01}, {y: -0.06, z: zOffset - 0.05}
+        ];
+        
+        btnPositions.forEach(pos => {
+            const btn = new THREE.Mesh(btnGeo, mat);
+            btn.rotation.z = -Math.PI / 2;
+            btn.position.set(0.0025, pos.y, pos.z);
+            
+            const btnBase = new THREE.Mesh(btnBaseGeo, btnBaseMat);
+            btnBase.rotation.z = -Math.PI / 2;
+            btnBase.position.set(0.001, pos.y, pos.z);
+            
+            group.add(btn, btnBase);
+        });
+    }
+    
+    addPlayerControls(panelGraphic, 0.05, controlsMaterial); // Player 1 (Left, +Z)
+    addPlayerControls(panelGraphic, -0.19, controlsMaterialP2); // Player 2 (Right, -Z)
+
     const screen = createPlaneGroup(pScreenB, pScreenT, null, null, screenMaterial);
     const marquee = createPlaneGroup(pMarqueeB, pMarqueeT, 2, 1);
 
