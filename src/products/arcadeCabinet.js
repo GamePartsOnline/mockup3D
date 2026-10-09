@@ -66,6 +66,23 @@ export const arcadeCabinetProduct = {
         return mesh;
     }
 
+    function fixInnerFace(geo, innerZDir) {
+        geo.clearGroups();
+        const pos = geo.attributes.position;
+        const norm = geo.attributes.normal;
+        for (let i = 0; i < pos.count; i+=3) {
+            // Check normal of the first vertex of the face
+            const nz = norm.getZ(i);
+            const isSide = Math.abs(nz) < 0.5;
+            const isInner = Math.sign(nz) === innerZDir;
+            if (isSide || isInner) {
+                geo.addGroup(i * 3, 3, 1); // baseMaterial
+            } else {
+                geo.addGroup(i * 3, 3, 0); // topMaterial
+            }
+        }
+    }
+
     function createPlaneGroup(p1, p2, col, row, customMaterial=null) {
         const dx = p2.x - p1.x;
         const dy = p2.y - p1.y;
@@ -109,12 +126,14 @@ export const arcadeCabinetProduct = {
     // Left panel inner face at +0.285 (57cm interior width / 2)
     leftGeo.translate(0, 0, 0.285);
     normalizeAndMapUV(leftGeo, minX, maxX, minY, maxY, 0, 1, false);
+    fixInnerFace(leftGeo, -1); // Inner face points towards -Z
     const leftMesh = new THREE.Mesh(leftGeo, [topMaterial, baseMaterial]);
     
     const rightGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
     // Right panel inner face at -0.285 (extrudes +0.018, so start at -0.303)
     rightGeo.translate(0, 0, -0.303);
     normalizeAndMapUV(rightGeo, minX, maxX, minY, maxY, 1, 1, true);
+    fixInnerFace(rightGeo, 1); // Inner face points towards +Z
     const rightMesh = new THREE.Mesh(rightGeo, [topMaterial, baseMaterial]);
 
     // Define points for planes (x = depth from back, y = height)
@@ -200,8 +219,11 @@ export const arcadeCabinetProduct = {
     const screen = createPlaneGroup(pScreenB, pScreenT, null, null, screenMaterial);
     const marquee = createPlaneGroup(pMarqueeB, pMarqueeT, 2, 1);
 
-    group.add(leftMesh, rightMesh, frontDoor, panelUnderside, panelGraphic, screenShelf, screen, speakerPanel, marquee, topRoof, bottomFloor, backPanel);
-    group.position.set(-0.3, -0.8, 0); // Center the cabinet
+    const wrapper = new THREE.Group();
+    wrapper.add(leftMesh, rightMesh, frontDoor, panelUnderside, panelGraphic, screenShelf, screen, speakerPanel, marquee, topRoof, bottomFloor, backPanel);
+    wrapper.position.set(-0.3, -0.8, 0); // Center the cabinet's geometries
+
+    group.add(wrapper);
     group.rotation.y = Math.PI / 6;
 
     return { 

@@ -1,0 +1,1 @@
+const fs = require('fs'); let code = fs.readFileSync('src/main.js', 'utf8'); code = code.replace(/'cushion': '17,00 €'/g, 'cushion': '17,00 €',\n    'arcadeCabinet': '2090,00 €'); fs.writeFileSync('src/main.js', code);
