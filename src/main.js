@@ -386,10 +386,10 @@ function buildTexture() {
         h = zoneHeight;
       } else if ((item.fitMode === 'contain') === (imageRatio > surfaceRatio)) {
         w = zoneWidth;
-        h = isMultiZone ? (zoneWidth / imageRatio / surfaceRatio) : (w / imageRatio);
+        h = isMultiZone ? (zoneWidth * surfaceRatio / imageRatio) : (w / imageRatio);
       } else {
         h = zoneHeight;
-        w = isMultiZone ? (zoneHeight * imageRatio * surfaceRatio) : (h * imageRatio);
+        w = isMultiZone ? (zoneHeight * imageRatio / surfaceRatio) : (h * imageRatio);
       }
       w *= sx;
       h *= sy;
@@ -477,7 +477,7 @@ document.querySelector('#imageInput').addEventListener('change', async e => {
           y: 0,
           rotation: 0,
           fitMode: 'cover',
-          side: 'both'
+          side: product.zones ? product.zones[0].id : 'both'
         });
         URL.revokeObjectURL(url);
         resolve();
