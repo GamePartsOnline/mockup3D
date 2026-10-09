@@ -20,7 +20,22 @@ export const arcadeCabinetProduct = {
     
     const baseMaterial = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.9 });
     const topMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.6, metalness: 0.1 });
-    const screenMaterial = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.2, metalness: 0.8 });
+    
+    const screenCanvas = document.createElement('canvas');
+    screenCanvas.width = 1024;
+    screenCanvas.height = 1024;
+    const screenCtx = screenCanvas.getContext('2d');
+    screenCtx.fillStyle = '#050505'; // Gros cadre noir
+    screenCtx.fillRect(0, 0, 1024, 1024);
+    screenCtx.fillStyle = '#1e3a8a'; // Écran bleu
+    screenCtx.fillRect(100, 200, 824, 624);
+    // Petit effet de brillance/scanlines optionnel
+    screenCtx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+    for(let y = 200; y < 824; y += 4) { screenCtx.fillRect(100, y, 824, 2); }
+    
+    const screenTexture = new THREE.CanvasTexture(screenCanvas);
+    screenTexture.colorSpace = THREE.SRGBColorSpace;
+    const screenMaterial = new THREE.MeshStandardMaterial({ map: screenTexture, roughness: 0.2, metalness: 0.8 });
     
     function normalizeAndMapUV(geometry, minX, maxX, minY, maxY, col, row, flipHorizontal=false) {
         const uv = geometry.attributes.uv;
