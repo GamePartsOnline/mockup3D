@@ -1,0 +1,328 @@
+/* Styles pour les sections repliables de la colonne gauche */
+.section-title-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  user-select: none;
+  border-radius: 6px;
+  transition: opacity .15s ease;
+}
+
+.section-title-btn:hover {
+  opacity: .85;
+}
+
+.section-title-btn .section-title {
+  margin-bottom: 0;
+}
+
+.collapse-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  color: #7b8792;
+  font-size: 13px;
+  transition: transform .2s ease, background-color .15s ease;
+}
+
+.section-title-btn:hover .collapse-icon {
+  background: #edf0f2;
+  color: #192129;
+}
+
+.collapsible-section.collapsed .collapse-icon {
+  transform: rotate(-90deg);
+}
+
+.collapsible-section .section-content {
+  margin-top: 14px;
+  display: block;
+}
+
+.collapsible-section.collapsed .section-content {
+  display: none;
+}
+
+/* Styles pour la liste multi-images */
+.images-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.image-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8fafb;
+  border: 1px solid #dfe4e7;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.image-item:hover {
+  background: #f0f7f5;
+  border-color: #a8dfd2;
+}
+
+.image-item.active {
+  background: #edf7f4;
+  border-color: #18a985;
+  box-shadow: 0 0 0 1px #18a985;
+}
+
+.image-item-thumb {
+  width: 38px;
+  height: 38px;
+  border-radius: 5px;
+  object-fit: cover;
+  background: #fff;
+  border: 1px solid #dfe4e7;
+  flex-shrink: 0;
+}
+
+.image-item-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-item-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #192129;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.image-item-meta {
+  font-size: 10px;
+  color: #7b8792;
+  margin-top: 1px;
+}
+
+.image-item-remove {
+  background: transparent;
+  border: 0;
+  color: #9aa6ac;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.image-item-remove:hover {
+  color: #e53e3e;
+  background: #fee2e2;
+}
+
+.layer-header {
+  font-size: 12px;
+  font-weight: 700;
+  color: #18a985;
+  background: #edf7f4;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Harmonisation du panneau droit (.actions) avec le fond blanc du panneau gauche */
+.actions {
+  background: #ffffff !important;
+  color: #192129 !important;
+  border-left: 1px solid #dce1e5 !important;
+}
+
+.actions section {
+  border-color: #e5e8eb !important;
+}
+
+.actions .eyebrow {
+  color: #7b8792 !important;
+}
+
+.actions .color-grid label {
+  color: #27323a;
+}
+
+.actions .option-check {
+  color: #27323a;
+}
+
+.actions .angle-title {
+  color: #7b8792 !important;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.actions .angles button {
+  border: 1px solid #dfe4e7 !important;
+  background: #f8fafb !important;
+  color: #27323a !important;
+  border-radius: 4px;
+  transition: background .15s ease, border-color .15s ease;
+}
+
+.actions .angles button:hover {
+  background: #edf0f2 !important;
+  border-color: #cbd2d7 !important;
+}
+
+.actions .control span {
+  color: #27323a;
+}
+
+.actions .control output {
+  color: #63717c;
+}
+
+.actions .rotation-mode span {
+  color: #27323a !important;
+}
+
+.actions .rotation-mode select {
+  background: #f8fafb !important;
+  border: 1px solid #dfe4e7 !important;
+  color: #192129 !important;
+  border-radius: 6px;
+}
+
+.actions .secondary {
+  background: #f8fafb !important;
+  border: 1px solid #dfe4e7 !important;
+  color: #27323a !important;
+  border-radius: 8px;
+  transition: background .15s ease, border-color .15s ease;
+}
+
+.actions .secondary:hover {
+  background: #edf0f2 !important;
+  border-color: #cbd2d7 !important;
+}
+
+/* Bloc animation discret et clair */
+.actions > section:nth-child(2) {
+  background: #f0fdf9 !important;
+  border: 1px solid #a7f3d0 !important;
+  border-radius: 9px;
+  padding: 14px;
+  margin-bottom: 18px;
+}
+
+.actions .animation-switch strong {
+  color: #064e3b !important;
+}
+
+.actions .animation-switch small {
+  color: #047857 !important;
+}
+
+@media(min-width:851px){
+  .workspace {
+    grid-template-columns: 294px minmax(420px,1fr) 370px;
+    grid-template-rows: 1fr;
+  }
+  .panel {
+    grid-column: 1;
+    grid-row: 1;
+    background: #fff;
+    color: #192129;
+    border-right: 1px solid #dce1e5;
+  }
+  .viewer-wrap {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .actions {
+    grid-column: 3;
+    grid-row: 1;
+    padding-top: 24px;
+  }
+  .panel section {
+    border-color: #e5e8eb;
+  }
+  .panel .product-card,
+  .panel .upload {
+    background: #f8fafb;
+    border-color: #dfe4e7;
+    color: #27323a;
+  }
+  .panel .segmented {
+    background: #edf0f2;
+  }
+  .panel .segmented button {
+    color: #27323a;
+  }
+  .panel .segmented button.active {
+    background: #fff;
+    color: #192129;
+  }
+  .panel .text-button {
+    background: #fff;
+    border-color: #d5dce0;
+    color: #192129;
+  }
+  .panel .eyebrow {
+    color: #7b8792;
+  }
+}
+
+/* Styles pour le sélecteur de résolution PNG dans la topbar */
+.export-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.topbar-select {
+  background: #24272a;
+  color: #e5e8eb;
+  border: 1px solid #4a5157;
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: border-color .15s ease, background .15s ease;
+}
+
+.topbar-select:hover,
+.topbar-select:focus {
+  border-color: #18a985;
+  background: #2c3136;
+}
+
+.mug-views-btn {
+  background: #1f364d !important;
+  border: 1px solid #3b536b !important;
+}
+
+.mug-views-btn:hover {
+  background: #2c4a68 !important;
+  border-color: #527599 !important;
+}
+.layer-side-select { margin-top: 4px; padding: 2px; font-size: 11px; background: #28313a; color: #fff; border: 1px solid #425260; border-radius: 3px; }

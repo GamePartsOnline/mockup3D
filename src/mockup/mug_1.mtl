@@ -1,0 +1,16 @@
+newmtl mug_1_Mat
+Ni 1.500
+Ka 0 0 0
+Pm 0
+d 1.0
+Ke 0.0
+Kd 0.812 0.751 0.687
+adobe_map_normal mug_1/mug_1_normal.png
+Tr 0
+illum 7
+Ks 1 1 1
+adobe_map_roughness mug_1/mug_1_roughness.png
+adobe_interior_color 1.0 1.0 1.0
+adobe_density 0
+Ns 16
+adobe_translucence 0

@@ -1,0 +1,10 @@
+.logo-card{display:grid;place-items:center;width:72px;height:44px;padding:3px 6px;background:#fff;border-radius:7px;overflow:hidden}.logo-card img{display:block;width:100%;height:100%;object-fit:contain}.brand{gap:10px}.brand strong{font-size:17px}
+.topbar-actions{display:flex;align-items:center;gap:10px}
+.topbar-btn{width:auto!important;padding:8px 16px!important;font-size:12px!important;border-radius:6px!important;cursor:pointer;white-space:nowrap;transition:background .15s ease}
+.topbar-btn.primary{background:#253443}
+.topbar-btn.primary:hover{background:#35495e}
+.topbar-btn.mp4{background:#18a985}
+.topbar-btn.mp4:hover{background:#13896b}
+.topbar-btn:disabled{opacity:.55;cursor:not-allowed}
+.topbar-status{font-size:11px;color:#8e9ba7;margin-left:4px}
+@media(max-width:850px){.topbar-status{display:none}}

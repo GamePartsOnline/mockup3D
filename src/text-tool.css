@@ -1,0 +1,79 @@
+#textSection .control input[type="text"],
+#textSection .control textarea,
+#textSection select {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  padding: 8px 10px;
+  border-radius: 8px;
+  transition: border-color .15s, box-shadow .15s;
+}
+#textSection .control textarea {
+  resize: vertical;
+  min-height: 54px;
+}
+#textSection .control input[type="text"]:focus,
+#textSection .control textarea:focus,
+#textSection select:focus {
+  outline: none;
+  border-color: #18a985;
+  box-shadow: 0 0 0 2px rgba(24, 169, 133, 0.2);
+}
+.panel #textSection input[type="text"],
+.panel #textSection textarea,
+.panel #textSection select {
+  background: #f8fafb;
+  border: 1px solid #dfe4e7;
+  color: #192129;
+}
+.text-format-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 10px;
+}
+.segmented-mini {
+  display: flex;
+  background: #edf0f2;
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+}
+.segmented-mini button {
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #55626d;
+}
+.segmented-mini button.active {
+  background: #ffffff;
+  color: #111820;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+.mini-check {
+  font-size: 11px;
+  margin: 0;
+  cursor: pointer;
+}
+.panel #textSection .color-grid {
+  grid-template-columns: 1fr 1fr;
+  margin: 8px 0 12px;
+}
+.panel #textSection .color-grid label {
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+@media (max-width: 850px) {
+  .panel #textSection input[type="text"],
+  .panel #textSection textarea,
+  .panel #textSection select {
+    background: #24272a;
+    border-color: #60666a;
+    color: #fff;
+  }
+}

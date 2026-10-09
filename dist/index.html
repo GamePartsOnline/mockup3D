@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Présentez vos visuels sur un objet 3D, localement." />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='11' width='52' height='42' rx='10' fill='%2310151d'/%3E%3Cpath d='M13 18h38v25H13z' rx='5' fill='%2369e0c1'/%3E%3Cpath d='M19 37l8-10 7 7 6-8 7 11z' fill='white'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&family=Cinzel:wght@700&family=Dancing+Script:wght@700&family=Great+Vibes&family=Lobster&family=Montserrat:ital,wght@0,400;0,700;1,400&family=Oswald:wght@600&family=Pacifico&family=Playfair+Display:ital,wght@0,700;1,700&family=Righteous&family=Roboto:wght@400;700&family=Satisfy&display=swap" rel="stylesheet">
+  <title>MockUp3D C3</title>
+  <script type="module" crossorigin src="/assets/index-pfl5b48O.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-B7g9q82k.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand"><span class="logo-card"><img src="/logo-graph2print.png" alt="Graph2Print"></span><div><strong>MockUp3D</strong><small>Présentation produit locale</small></div></div>
+      <div class="topbar-actions">
+        <div class="export-group">
+          <select id="exportResolution" class="topbar-select" title="Résolution de l'export">
+            <option value="1">Standard (Écran)</option>
+            <option value="2" selected>HD (Catalogue 2×)</option>
+            <option value="3">Ultra HD (Impression 3×)</option>
+          </select>
+          <button id="exportAll" class="topbar-btn primary mega-export" type="button" title="Exporter le PNG, la vidéo MP4 et les vues du mug en une fois">Tout Exporter</button>
+          <button id="exportPng" class="topbar-btn secondary" type="button">PNG</button>
+          <button id="exportMugViews" class="topbar-btn secondary mug-views-btn" type="button" title="Exporter automatiquement les 3 vues du mug">3 faces (Mug)</button>
+          <button id="exportMp4" class="topbar-btn secondary mp4" type="button">MP4</button>
+        </div>
+        <span id="exportStatus" class="topbar-status">Prêt</span>
+      </div>
+      <div class="privacy"><span></span> Vos images restent sur cet ordinateur</div>
+    </header>
+    <main class="workspace">
+      <aside class="panel">
+        <section id="sectionProduct" class="collapsible-section" data-section="1">
+          <button type="button" class="section-title-btn" aria-expanded="true">
+            <div class="section-title"><span>1</span><h2>Choix du produit</h2></div>
+            <span class="collapse-icon">▾</span>
+          </button>
+          <div class="section-content">
+            <div class="product-card">
+              <div class="product-icon" id="productIcon">▰</div>
+              <label>
+                <span>Objet 3D</span>
+                <select id="productSelect">
+                  <option value="mousePad">Tapis de souris</option>
+                  <option value="mug11oz" selected>Mug blanc 11 oz</option>
+                  <option value="keychainRect">Porte-clés rectangle Unisub</option>
+                  <option value="keychainRound">Porte-clés rond Unisub</option>
+                  <option value="keychainHeart">Porte-clés Cœur Unisub</option>
+                  <option value="tshirt3D">T-shirt 3D</option>
+                  <option value="puzzle">Puzzle 120 pièces (28x19.5 cm)</option>
+                  <option value="coaster">Sous-verre carré</option>
+                  <option value="coasterRound">Sous-verre rond</option>
+                  <option value="pencilCase">Trousse</option>
+                  <option value="cushion">Housse de coussin</option>
+                </select>
+                <small id="productDimensions">Taille L (Poitrine 280 à 350 mm)</small><br><div style="margin-top: 6px; font-size: 13px; font-weight: 600; color: #4ade80; background: #16202a; padding: 4px 8px; border-radius: 4px; display: inline-block;">Prix de vente TTC : <span id="productPrice">13,00 €</span></div>
+              </label>
+            </div>
+          </div>
+        </section>
+        <section id="sectionImages" class="collapsible-section" data-section="2">
+          <button type="button" class="section-title-btn" aria-expanded="true">
+            <div class="section-title"><span>2</span><h2>Vos visuels</h2></div>
+            <span class="collapse-icon">▾</span>
+          </button>
+          <div class="section-content">
+            <label class="upload" for="imageInput">
+              <strong>Importer des images</strong>
+              <small>PNG ou JPG (sélectionnez une ou plusieurs)</small>
+            </label>
+            <input id="imageInput" type="file" accept="image/png,image/jpeg" multiple />
+            <div id="imagesList" class="images-list"></div>
+          </div>
+        </section>
+        <section id="adjustments" class="collapsible-section disabled" data-section="3">
+          <button type="button" class="section-title-btn" aria-expanded="true">
+            <div class="section-title"><span>3</span><h2>Ajuster</h2></div>
+            <span class="collapse-icon">▾</span>
+          </button>
+          <div class="section-content">
+            <div class="layer-header" id="activeImageLabel">Aucune image active</div>
+            <div class="segmented" role="group" aria-label="Mode d’ajustement">
+              <button data-fit="contain">Image entière</button><button class="active" data-fit="cover">Remplir la surface</button><button data-fit="fill">Plein wrap (Étirer)</button>
+            </div>
+            <label class="frame-option"><input id="showTransformFrame" type="checkbox"> Afficher le cadre de sélection</label>
+            <label class="frame-option"><input id="showWatermark" type="checkbox" checked> Filigrane sous le visuel (en fond)</label>
+            <label class="control"><span>Taille <output id="scaleValue">100 %</output></span><input id="scale" type="range" min="20" max="250" value="100" /></label>
+            <label class="control"><span>Position horizontale <output id="posXValue">0 %</output></span><input id="posX" type="range" min="-100" max="100" value="0" /></label>
+            <label class="control"><span>Position verticale <output id="posYValue">0 %</output></span><input id="posY" type="range" min="-100" max="100" value="0" /></label>
+            <label class="control"><span>Rotation <output id="rotationValue">0°</output></span><input id="rotation" type="range" min="-180" max="180" value="0" /></label>
+            <button id="resetImage" class="text-button">Réinitialiser l'image active</button>
+          </div>
+        </section>
+        <section id="textSection" class="collapsible-section" data-section="4">
+          <button type="button" class="section-title-btn" aria-expanded="true">
+            <div class="section-title"><span>4</span><h2>Texte personnalisé</h2></div>
+            <span class="collapse-icon">▾</span>
+          </button>
+          <div class="section-content">
+            <label class="control">
+              <span>Texte (multiligne)</span><select id="textSideSelect" style="margin-left:10px; font-size:11px; padding:2px; background:#28313a; color:#fff; border:1px solid #425260;"><option value="both">2 faces</option><option value="A">Face A</option><option value="B">Face B</option></select>
+              <textarea id="customText" rows="3" placeholder="Votre texte ici…" autocomplete="off"></textarea>
+            </label>
+            <div class="text-format-bar">
+              <div class="segmented segmented-mini" role="group" aria-label="Alignement du texte">
+                <button type="button" class="align-btn active" data-align="center" title="Centré">≡</button>
+                <button type="button" class="align-btn" data-align="left" title="Aligné à gauche">⇤</button>
+                <button type="button" class="align-btn" data-align="right" title="Aligné à droite">⇥</button>
+              </div>
+              <label class="option-check mini-check">
+                <input id="textBold" type="checkbox"> <strong>Gras</strong>
+              </label>
+              <label class="option-check mini-check">
+                <input id="textItalic" type="checkbox"> <em>Italique</em>
+              </label>
+            </div>
+            <div class="color-grid">
+              <label><input id="textColor" type="color" value="#111820"><span>Couleur</span></label>
+              <label>
+                <span>Police</span>
+                <select id="textFont">
+                  <optgroup label="Sans-Serif & Modernes">
+                    <option value="Inter, sans-serif">Inter</option>
+                    <option value="Montserrat, sans-serif">Montserrat</option>
+                    <option value="Roboto, sans-serif">Roboto</option>
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="'Trebuchet MS', sans-serif">Trebuchet</option>
+                  </optgroup>
+                  <optgroup label="Titres & Impact">
+                    <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
+                    <option value="Oswald, sans-serif">Oswald</option>
+                    <option value="Impact, sans-serif">Impact</option>
+                    <option value="Righteous, cursive">Righteous</option>
+                  </optgroup>
+                  <optgroup label="Manuscrites & Calligraphie">
+                    <option value="'Dancing Script', cursive">Dancing Script</option>
+                    <option value="Pacifico, cursive">Pacifico</option>
+                    <option value="'Great Vibes', cursive">Great Vibes</option>
+                    <option value="Caveat, cursive">Caveat</option>
+                    <option value="Satisfy, cursive">Satisfy</option>
+                    <option value="Lobster, cursive">Lobster</option>
+                    <option value="'Comic Sans MS', cursive">Comic Sans</option>
+                  </optgroup>
+                  <optgroup label="Serif & Élégance">
+                    <option value="'Playfair Display', serif">Playfair Display</option>
+                    <option value="Cinzel, serif">Cinzel</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="'Times New Roman', serif">Times</option>
+                    <option value="'Courier New', monospace">Courier</option>
+                  </optgroup>
+                </select>
+              </label>
+            </div>
+            <label class="control">
+              <span>Taille <output id="textSizeValue">60 px</output></span>
+              <input id="textSize" type="range" min="16" max="220" value="60" />
+            </label>
+            <label class="control"><span>Position horizontale <output id="textPosXValue">0 %</output></span><input id="textPosX" type="range" min="-100" max="100" value="0" /></label>
+            <label class="control"><span>Position verticale <output id="textPosYValue">0 %</output></span><input id="textPosY" type="range" min="-100" max="100" value="0" /></label>
+            <label class="control"><span>Rotation <output id="textRotationValue">0°</output></span><input id="textRotation" type="range" min="-180" max="180" value="0" /></label>
+            <button id="resetText" class="text-button" type="button">Effacer le texte</button>
+          </div>
+        </section>
+      </aside>
+      <section class="viewer-wrap">
+        <div id="viewer" aria-label="Aperçu 3D interactif"></div>
+        <svg id="transformOverlay" aria-label="Cadre d’ajustement du visuel" hidden>
+          <polygon id="transformBox"></polygon>
+          <line id="rotateStem"></line>
+          <circle id="rotateHandle" r="7"></circle>
+          <circle class="edge-handle" data-edge="0" r="6" title="Ajuster la hauteur (haut)"></circle>
+          <circle class="edge-handle" data-edge="1" r="6" title="Ajuster la largeur (droite)"></circle>
+          <circle class="edge-handle" data-edge="2" r="6" title="Ajuster la hauteur (bas)"></circle>
+          <circle class="edge-handle" data-edge="3" r="6" title="Ajuster la largeur (gauche)"></circle>
+          <circle class="resize-handle" data-corner="0" r="7" title="Coin haut-gauche"></circle>
+          <circle class="resize-handle" data-corner="1" r="7" title="Coin haut-droit"></circle>
+          <circle class="resize-handle" data-corner="2" r="7" title="Coin bas-droit"></circle>
+          <circle class="resize-handle" data-corner="3" r="7" title="Coin bas-gauche"></circle>
+        </svg>
+        <div id="emptyHint" class="empty-hint"><strong>Votre visuel apparaîtra ici</strong><span>Importez une image pour personnaliser le tapis.</span></div>
+        <div class="viewer-tools"><button id="viewFaceA" class="secondary" title="Voir Face A (Avant)"><span style="font-weight:900;margin-right:4px;">A</span> Face A</button><button id="viewFaceB" class="secondary" title="Voir Face B (Arrière)"><span style="font-weight:900;margin-right:4px;">B</span> Face B</button>
+          <button id="zoomOut" title="Dézoomer" aria-label="Dézoomer">−</button><button id="zoomIn" title="Zoomer" aria-label="Zoomer">+</button><button id="resetView" title="Réinitialiser la vue" aria-label="Réinitialiser la vue">⌂</button>
+        </div>
+        <div class="drag-hint">↔ Faites glisser pour tourner</div>
+        <div id="wrapPreviewWidget" class="wrap-preview-widget" hidden>
+          <button id="toggleWrapPreview" class="wrap-preview-tab" type="button" title="Aperçu à plat (Wrap)">
+            <span>Aperçu Wrap (à plat)</span>
+            <span class="wrap-preview-arrow">▾</span>
+          </button>
+          <div id="wrapPreviewContent" class="wrap-preview-content">
+            <div class="wrap-preview-header">
+              <small id="wrapDimensions">Visuel déroulé (210 × 95 mm)</small>
+              <button id="downloadWrapBtn" class="wrap-download-btn" type="button" title="Télécharger le fichier wrap d'impression">Télécharger PNG</button>
+            </div>
+            <div class="wrap-preview-img-box">
+              <div class="wrap-start-indicator" title="Départ du visuel wrap côté anse"></div>
+              <img id="wrapPreviewImg" alt="Aperçu wrap à plat" />
+            </div>
+          </div>
+        </div>
+      </section>
+      <aside class="actions">
+        <section class="reference-options">
+          <p class="eyebrow">APPARENCE</p>
+          <div class="color-grid">
+            <label><input id="topColor" type="color" value="#ffffff"><span>Surface</span></label>
+            <label><input id="baseColor" type="color" value="#101318"><span>Base</span></label>
+            <label><input id="sceneColor" type="color" value="#e9edf0"><span>Fond</span></label>
+            <label id="handleColorWrap" hidden><input id="handleColor" type="color" value="#ffffff"><span>Anse</span></label>
+            <label id="innerColorWrap" hidden><input id="innerColor" type="color" value="#ffffff"><span>Intérieur</span></label>
+          </div>
+          <div id="quickPalette" class="quick-palette" hidden>
+            <span class="quick-palette-title">Palette mug rapide :</span>
+            <div class="quick-palette-colors">
+              <button type="button" class="swatch" data-color="#ffffff" style="background:#ffffff" title="Blanc"></button>
+              <button type="button" class="swatch" data-color="#000000" style="background:#000000" title="Noir"></button>
+              <button type="button" class="swatch" data-color="#df1212" style="background:#df1212" title="Rouge"></button>
+              <button type="button" class="swatch" data-color="#7a0205" style="background:#7a0205" title="Bordeaux"></button>
+              <button type="button" class="swatch" data-color="#f86900" style="background:#f86900" title="Orange"></button>
+              <button type="button" class="swatch" data-color="#edd900" style="background:#edd900" title="Jaune"></button>
+              <button type="button" class="swatch" data-color="#075103" style="background:#075103" title="Vert"></button>
+              <button type="button" class="swatch" data-color="#1d85d0" style="background:#1d85d0" title="Bleu"></button>
+              <button type="button" class="swatch" data-color="#270e68" style="background:#270e68" title="Marine"></button>
+              <button type="button" class="swatch" data-color="#ffc2c2" style="background:#ffc2c2" title="Rose"></button>
+            </div>
+          </div>
+          <label class="option-check"><input id="showGrid" type="checkbox"> Afficher la grille</label>
+          <div class="angle-title">Angles de vue</div><div class="angles"><button data-angle="45">45°</button><button data-angle="90">90°</button><button data-angle="135">135°</button><button data-angle="225">225°</button><button data-angle="270">270°</button><button data-angle="315">315°</button></div>
+          <label class="control"><span>Angle personnalisé <output id="angleValue">45°</output></span><input id="viewAngle" type="range" min="0" max="360" value="45"></label>
+          <label class="control"><span>Vitesse d’animation <output id="speedValue">1×</output></span><input id="speed" type="range" min="2" max="30" value="12"></label>
+          <label class="rotation-mode"><span>Sens de rotation</span><select id="rotationMode"><option value="horizontal">Horizontal</option><option value="vertical">Vertical</option><option value="diagonal">Diagonal</option><option value="swing">Va-et-vient</option></select></label>
+          <label class="option-check"><input id="reverse" type="checkbox"> Sens inverse</label>
+          <div class="background-actions"><label for="bgInput" class="secondary">Ajouter une image de fond</label><button id="clearBg" class="secondary">Effacer le fond</button></div><input id="bgInput" type="file" accept="image/png,image/jpeg">
+        </section>
+        <section>
+          <p class="eyebrow">ANIMATION</p>
+          <label class="switch-row animation-switch"><span><strong>Animer le produit</strong><small>Active ou arrête la rotation</small></span><input id="autoRotate" type="checkbox" /><i></i></label>
+          <button id="resetViewSide" class="secondary">Réinitialiser la vue</button>
+        </section>
+
+      </aside>
+    </main>
+    <div id="toast" role="status"></div>
+  </div>
+</body>
+</html>
+
+

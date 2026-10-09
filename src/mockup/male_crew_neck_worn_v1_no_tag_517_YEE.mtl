@@ -1,0 +1,17 @@
+newmtl Male_Crew_Neck_Worn
+Ni 1.600
+Ka 0 0 0
+Pm 0
+d 1.0
+Ke 0.0
+Kd 0 0 0
+adobe_map_normal male_crew_neck_worn_v1_no_tag_517_YEE/T_Shirt_Worn_Normal.png
+map_Kd male_crew_neck_worn_v1_no_tag_517_YEE/T_Shirt_Worn_Diffuse.png
+Tr 0
+illum 7
+Ks 1 1 1
+adobe_map_roughness male_crew_neck_worn_v1_no_tag_517_YEE/Male_Crew_Neck_Worn_roughness.png
+adobe_interior_color 1.0 1.0 1.0
+adobe_density 0
+Ns 16
+adobe_translucence 0

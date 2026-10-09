@@ -1,0 +1,97 @@
+/* Styles pour la section Exports & Rendus dans la colonne de droite */
+.export-options-section {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid #4a5157;
+}
+
+.sidebar-exports {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-select {
+  width: 100%;
+  background: #24272a;
+  color: #ffffff;
+  border: 1px solid #555c62;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  outline: none;
+}
+
+.sidebar-select:focus {
+  border-color: #20b18f;
+}
+
+.sidebar-export-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-btn-export {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  border: 1px solid transparent;
+  text-align: center;
+}
+
+.sidebar-btn-export:not(.mug-highlight-btn):not(.mp4-btn) {
+  background: #17212a;
+  color: #ffffff;
+  border-color: #3e4851;
+}
+
+.sidebar-btn-export:not(.mug-highlight-btn):not(.mp4-btn):hover {
+  background: #23313d;
+  border-color: #55626d;
+}
+
+.sidebar-btn-export.mug-highlight-btn {
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  color: #ffffff;
+  border: 1px solid #2dd4bf;
+  box-shadow: 0 2px 8px rgba(20, 184, 166, 0.25);
+  font-weight: 700;
+}
+
+.sidebar-btn-export.mug-highlight-btn:hover {
+  background: linear-gradient(135deg, #115e59, #0d9488);
+  box-shadow: 0 3px 12px rgba(20, 184, 166, 0.4);
+}
+
+.sidebar-btn-export.mp4-btn {
+  background: #1e293b;
+  color: #6ee7b7;
+  border: 1px solid #334155;
+}
+
+.sidebar-btn-export.mp4-btn:hover {
+  background: #334155;
+  color: #a7f3d0;
+}
+
+.sidebar-btn-export:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.sidebar-status {
+  font-size: 11px;
+  color: #8e9ba7;
+  text-align: center;
+  line-height: 1.3;
+}
