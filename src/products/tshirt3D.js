@@ -112,15 +112,18 @@ export const tshirt3DProduct = {
       const center = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3());
 
+      const projHeight = size.y * 0.85;
+      const projWidth = projHeight * (40 / 70); // Match printAspect
+
       const pFront = center.clone();
-      pFront.z += size.z * 0.4; // Déplacer le projecteur vers l'avant
+      pFront.z += size.z * 0.5; // Placer le projecteur devant
       const oFront = new THREE.Euler(0, 0, 0); 
-      const sFront = new THREE.Vector3(size.x * 0.5, size.y * 0.7, size.z * 0.5);
+      const sFront = new THREE.Vector3(projWidth, projHeight, size.z * 3.0);
 
       const pBack = center.clone();
-      pBack.z -= size.z * 0.4; // Déplacer le projecteur vers l'arrière
+      pBack.z -= size.z * 0.5; // Placer le projecteur derrière
       const oBack = new THREE.Euler(0, Math.PI, 0);
-      const sBack = new THREE.Vector3(size.x * 0.5, size.y * 0.7, size.z * 0.5);
+      const sBack = new THREE.Vector3(projWidth, projHeight, size.z * 3.0);
 
       try {
           const frontGeometry = new DecalGeometry(mainMesh, pFront, oFront, sFront);
