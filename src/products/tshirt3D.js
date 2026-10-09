@@ -24,15 +24,18 @@ export const tshirt3DProduct = {
       metalness: 0.05 
     });
 
-    const decalMaterial = new THREE.MeshBasicMaterial({
+    const decalMaterial = new THREE.MeshStandardMaterial({
       color: 0xffffff,
+      roughness: 0.8,
+      metalness: 0.1,
       transparent: true,
       depthTest: true,
       depthWrite: false,
       polygonOffset: true,
       polygonOffsetFactor: -4,
       polygonOffsetUnits: -4,
-      alphaTest: 0.05
+      alphaTest: 0.01,
+      blending: THREE.NormalBlending
     });
 
     const loader = new OBJLoader();
@@ -83,9 +86,11 @@ export const tshirt3DProduct = {
       // On utilise directement la texture passée en paramètre, qui est 100% valide
       const frontMat = decalMaterial.clone();
       frontMat.map = texture;
+      frontMat.needsUpdate = true;
       
       const backMat = decalMaterial.clone();
       backMat.map = texture;
+      backMat.needsUpdate = true;
       
       group.updateMatrixWorld(true);
 

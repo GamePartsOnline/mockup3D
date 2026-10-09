@@ -450,6 +450,8 @@ function buildTexture() {
   }
   texture?.dispose(); texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace; texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
   if (product.type === '3d-decal') {
+    texture.premultiplyAlpha = false;
+    texture.needsUpdate = true;
     if (product.applyDecals) product.applyDecals(texture, isTwoSided, canvas);
   } else {
     product.topMaterial.map = texture; product.topMaterial.color.set(0xffffff); product.topMaterial.needsUpdate = true;
@@ -521,13 +523,28 @@ document.querySelector('#productSelect').onchange = e => {
   if (priceEl) priceEl.textContent = priceMap[currentProductKey] || '-- €';
   
   const isMug = currentProductKey === 'mug11oz';
+  const isArcade = currentProductKey === 'arcadeCabinet';
+  
   document.querySelector('#handleColorWrap').hidden = !isMug;
   document.querySelector('#innerColorWrap').hidden = !isMug;
   document.querySelector('#quickPalette').hidden = !isMug;
+  
+  const joystickColorWrap = document.querySelector('#joystickColorWrap');
+  if (joystickColorWrap) joystickColorWrap.hidden = !isArcade;
+  const buttonColorWrap = document.querySelector('#buttonColorWrap');
+  if (buttonColorWrap) buttonColorWrap.hidden = !isArcade;
+  const arcadeGlowWrap = document.querySelector('#arcadeGlowWrap');
+  if (arcadeGlowWrap) arcadeGlowWrap.hidden = !isArcade;
+
   document.querySelector('#baseColor').value = '#ffffff'; document.querySelector('#topColor').value = '#ffffff';
   if (isMug) {
     document.querySelector('#handleColor').value = '#ffffff';
     document.querySelector('#innerColor').value = '#ffffff';
+  }
+  if (isArcade) {
+    if (document.querySelector('#joystickColor')) document.querySelector('#joystickColor').value = '#ff0000';
+    if (document.querySelector('#buttonColor')) document.querySelector('#buttonColor').value = '#0055ff';
+    if (document.querySelector('#arcadeGlow')) document.querySelector('#arcadeGlow').checked = false;
   }
   
   const isTwoSided = !!product.twoSided;
@@ -697,6 +714,52 @@ document.querySelector('#topColor').oninput = e => {
 document.querySelector('#baseColor').oninput = e => { product.baseMaterial.color.set(e.target.value); product.baseMaterial.needsUpdate = true; };
 document.querySelector('#handleColor').oninput = e => { if (product.handleMaterial) { product.handleMaterial.color.set(e.target.value); product.handleMaterial.needsUpdate = true; } };
 document.querySelector('#innerColor').oninput = e => { if (product.innerMaterial) { product.innerMaterial.color.set(e.target.value); product.innerMaterial.needsUpdate = true; } };
+
+if (document.querySelector('#joystickColor')) {
+  document.querySelector('#joystickColor').oninput = e => {
+    if (product.joystickMaterial) {
+      product.joystickMaterial.color.set(e.target.value);
+      if (document.querySelector('#arcadeGlow').checked) {
+         product.joystickMaterial.emissive.set(e.target.value);
+      }
+      product.joystickMaterial.needsUpdate = true;
+    }
+  };
+}
+if (document.querySelector('#buttonColor')) {
+  document.querySelector('#buttonColor').oninput = e => {
+    if (product.buttonMaterial) {
+      product.buttonMaterial.color.set(e.target.value);
+      if (document.querySelector('#arcadeGlow').checked) {
+         product.buttonMaterial.emissive.set(e.target.value);
+      }
+      product.buttonMaterial.needsUpdate = true;
+    }
+  };
+}
+if (document.querySelector('#arcadeGlow')) {
+  document.querySelector('#arcadeGlow').onchange = e => {
+    const isGlowing = e.target.checked;
+    if (product.joystickMaterial) {
+      if (isGlowing) {
+        product.joystickMaterial.emissive.copy(product.joystickMaterial.color);
+        product.joystickMaterial.emissiveIntensity = 0.8;
+      } else {
+        product.joystickMaterial.emissive.setHex(0x000000);
+      }
+      product.joystickMaterial.needsUpdate = true;
+    }
+    if (product.buttonMaterial) {
+      if (isGlowing) {
+        product.buttonMaterial.emissive.copy(product.buttonMaterial.color);
+        product.buttonMaterial.emissiveIntensity = 0.8;
+      } else {
+        product.buttonMaterial.emissive.setHex(0x000000);
+      }
+      product.buttonMaterial.needsUpdate = true;
+    }
+  };
+}
 
 document.querySelectorAll('.quick-palette .swatch').forEach(swatch => {
   swatch.addEventListener('click', () => {

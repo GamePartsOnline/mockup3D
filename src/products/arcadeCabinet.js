@@ -144,11 +144,10 @@ export const arcadeCabinetProduct = {
     const frontDoor = createPlaneGroup(pFrontDoorB, pFrontDoorT, 2, 0);
     const panelGraphic = createPlaneGroup(pPanelTip, pPanelBack, null, null, baseMaterial);
     
-    // Add joysticks and buttons
-    const controlsMaterial = new THREE.MeshStandardMaterial({ color: 0xdd1111, roughness: 0.3, metalness: 0.1 }); // Plastique
-    const controlsMaterialP2 = new THREE.MeshStandardMaterial({ color: 0x1133dd, roughness: 0.3, metalness: 0.1 });
+    const joystickMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000, roughness: 0.3, metalness: 0.1 });
+    const buttonMaterial = new THREE.MeshStandardMaterial({ color: 0x0055ff, roughness: 0.3, metalness: 0.1 });
     
-    function addPlayerControls(group, zOffset, mat) {
+    function addPlayerControls(group, zOffset) {
         // Joystick shaft (metal)
         const shaftMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.4, metalness: 0.8 });
         const shaftGeo = new THREE.CylinderGeometry(0.005, 0.005, 0.05, 16);
@@ -158,7 +157,7 @@ export const arcadeCabinetProduct = {
         
         // Joystick ball (plastic)
         const ballGeo = new THREE.SphereGeometry(0.015, 32, 32);
-        const ball = new THREE.Mesh(ballGeo, mat);
+        const ball = new THREE.Mesh(ballGeo, joystickMaterial);
         ball.position.set(0.05, -0.03, zOffset + 0.12);
         
         group.add(shaft, ball);
@@ -174,7 +173,7 @@ export const arcadeCabinetProduct = {
         ];
         
         btnPositions.forEach(pos => {
-            const btn = new THREE.Mesh(btnGeo, mat);
+            const btn = new THREE.Mesh(btnGeo, buttonMaterial);
             btn.rotation.z = -Math.PI / 2;
             btn.position.set(0.0025, pos.y, pos.z);
             
@@ -186,8 +185,8 @@ export const arcadeCabinetProduct = {
         });
     }
     
-    addPlayerControls(panelGraphic, 0.05, controlsMaterial); // Player 1 (Left, +Z)
-    addPlayerControls(panelGraphic, -0.19, controlsMaterialP2); // Player 2 (Right, -Z)
+    addPlayerControls(panelGraphic, 0.05); // Player 1 (Left, +Z)
+    addPlayerControls(panelGraphic, -0.19); // Player 2 (Right, -Z)
 
     const screen = createPlaneGroup(pScreenB, pScreenT, null, null, screenMaterial);
     const marquee = createPlaneGroup(pMarqueeB, pMarqueeT, 2, 1);
@@ -204,6 +203,8 @@ export const arcadeCabinetProduct = {
       group, 
       topMaterial, 
       baseMaterial, 
+      joystickMaterial,
+      buttonMaterial,
       type: 'arcade',
       zones: this.zones,
       twoSided: false
