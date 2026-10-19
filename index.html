@@ -237,16 +237,18 @@
             </div>
           </div>
           <label class="option-check"><input id="showGrid" type="checkbox"> Afficher la grille</label>
+          <label class="option-check"><input id="showShadow" type="checkbox" checked> Afficher l'ombre au sol</label>
           <div class="angle-title">Angles de vue</div><div class="angles"><button data-angle="45">45°</button><button data-angle="90">90°</button><button data-angle="135">135°</button><button data-angle="225">225°</button><button data-angle="270">270°</button><button data-angle="315">315°</button></div>
           <label class="control"><span>Angle personnalisé <output id="angleValue">45°</output></span><input id="viewAngle" type="range" min="0" max="360" value="45"></label>
           <label class="control"><span>Vitesse d’animation <output id="speedValue">1×</output></span><input id="speed" type="range" min="2" max="30" value="12"></label>
           <label class="rotation-mode"><span>Sens de rotation</span><select id="rotationMode"><option value="horizontal">Horizontal</option><option value="vertical">Vertical</option><option value="diagonal">Diagonal</option><option value="swing">Va-et-vient</option></select></label>
           <label class="option-check"><input id="reverse" type="checkbox"> Sens inverse</label>
           <div class="background-actions"><label for="bgInput" class="secondary">Ajouter une image de fond</label><button id="clearBg" class="secondary">Effacer le fond</button></div><input id="bgInput" type="file" accept="image/png,image/jpeg">
-          <div class="background-actions" style="margin-top:6px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px;">
-            <button id="bgPresetPodium" class="secondary" type="button" style="background:#fff1f2; border-color:#fecdd3; color:#9f1239; font-weight:700; font-size:10px; padding:6px 2px;" title="Podium coloré studio pour le mug">Podium (Mug)</button>
-            <button id="bgPresetMug" class="secondary" type="button" style="background:#f1f5f9; border-color:#cbd5e1; color:#334155; font-weight:600; font-size:10px; padding:6px 2px;" title="Cuisine moderne pour le mug">Cuisine (Mug)</button>
-            <button id="bgPresetSalon" class="secondary" type="button" style="background:#f0fdf9; border-color:#a7f3d0; color:#065f46; font-weight:600; font-size:10px; padding:6px 2px;" title="Salon moderne pour la borne">Salon (Arcade)</button>
+          <div class="background-actions" style="margin-top:6px; display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+            <button id="bgPresetPodium" class="secondary" type="button" style="background:#fff1f2; border-color:#fecdd3; color:#9f1239; font-weight:700; font-size:11px; padding:6px 4px;" title="Podium coloré studio pour le mug">Podium (Mug)</button>
+            <button id="bgPresetMug" class="secondary" type="button" style="background:#f1f5f9; border-color:#cbd5e1; color:#334155; font-weight:600; font-size:11px; padding:6px 4px;" title="Cuisine moderne pour le mug">Cuisine (Mug)</button>
+            <button id="bgPresetBureau" class="secondary" type="button" style="background:#eff6ff; border-color:#bfdbfe; color:#1e40af; font-weight:600; font-size:11px; padding:6px 4px;" title="Bureau moderne avec ordi pour le tapis de souris">Bureau (Tapis)</button>
+            <button id="bgPresetSalon" class="secondary" type="button" style="background:#f0fdf9; border-color:#a7f3d0; color:#065f46; font-weight:600; font-size:11px; padding:6px 4px;" title="Salon moderne pour la borne">Salon (Arcade)</button>
           </div>
           <label class="control" id="bgOpacityControl" hidden><span>Opacité du fond <output id="bgOpacityValue">100 %</output></span><input id="bgOpacity" type="range" min="0" max="100" value="100"></label>
         </section>

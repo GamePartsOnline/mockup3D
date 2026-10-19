@@ -774,6 +774,10 @@ document.querySelectorAll('.quick-palette .swatch').forEach(swatch => {
 });
 document.querySelector('#sceneColor').oninput = () => updateSceneBackground();
 document.querySelector('#showGrid').onchange = e => grid.visible = e.target.checked;
+document.querySelector('#showShadow')?.addEventListener('change', e => {
+  floor.visible = e.target.checked;
+  showToast(e.target.checked ? 'Ombre au sol activée' : 'Ombre au sol masquée');
+});
 document.querySelector('#showWatermark')?.addEventListener('change', () => {
   updateSceneBackground();
   buildTexture();
@@ -804,13 +808,21 @@ function setBackgroundImageFromUrl(url, label) {
 document.querySelector('#bgPresetPodium')?.addEventListener('click', () => {
   setBackgroundImageFromUrl('/background-podium.jpg', 'Studio podium coloré appliqué');
   if (currentProductKey === 'mug11oz') {
-    camera.position.set(0, 2.7, 6.2);
-    controls.target.set(0, 0.68, 0);
+    camera.position.set(0, 1.85, 4.8);
+    controls.target.set(0, 0.05, 0);
     controls.update();
   }
 });
 document.querySelector('#bgPresetMug')?.addEventListener('click', () => {
   setBackgroundImageFromUrl('/background-mug.jpg', 'Mise en scène cuisine moderne appliquée');
+});
+document.querySelector('#bgPresetBureau')?.addEventListener('click', () => {
+  setBackgroundImageFromUrl('/background-bureau.jpg', 'Mise en scène bureau avec ordi appliquée');
+  if (currentProductKey === 'mousePad') {
+    camera.position.set(0, 3.1, 3.4);
+    controls.target.set(0, -0.05, 0.15);
+    controls.update();
+  }
 });
 document.querySelector('#bgPresetSalon')?.addEventListener('click', () => {
   setBackgroundImageFromUrl('/background-salon.jpg', 'Simulation salon moderne appliquée');
