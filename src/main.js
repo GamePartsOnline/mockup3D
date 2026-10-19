@@ -317,9 +317,8 @@ function buildTexture() {
   const hasText = textParams.text.trim().length > 0;
   const hasImages = imagesList.length > 0;
   if (!hasImages && !hasText) {
-    texture?.dispose(); texture = null; product.topMaterial.map = null; product.topMaterial.needsUpdate = true; wrapPreview.material.map = null; wrapPreview.material.needsUpdate = true; document.querySelector('#emptyHint').hidden = false; updateWrapPreviewWidget(null); return;
+    texture?.dispose(); texture = null; product.topMaterial.map = null; product.topMaterial.needsUpdate = true; wrapPreview.material.map = null; wrapPreview.material.needsUpdate = true; updateWrapPreviewWidget(null); return;
   }
-  document.querySelector('#emptyHint').hidden = true;
   const surfaceColor = document.querySelector('#topColor')?.value || '#ffffff';
   
   const isTwoSided = !!product.twoSided;
@@ -803,7 +802,7 @@ function setBackgroundImageFromUrl(url, label) {
   img.src = url;
 }
 document.querySelector('#bgPresetMug')?.addEventListener('click', () => {
-  setBackgroundImageFromUrl('/background-mug.jpg', 'Mise en scène table de café appliquée');
+  setBackgroundImageFromUrl('/background-mug.jpg', 'Mise en scène comptoir moderne appliquée');
 });
 document.querySelector('#bgPresetSalon')?.addEventListener('click', () => {
   setBackgroundImageFromUrl('/background-salon.jpg', 'Simulation salon moderne appliquée');
