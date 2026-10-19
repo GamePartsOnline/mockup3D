@@ -577,6 +577,8 @@ document.querySelector('#productSelect').onchange = e => {
     }
   }
   
+  floor.position.y = isArcade ? -0.80 : -0.09;
+  
   renderImagesList();
   if (imagesList.length > 0 || textParams.text.trim()) buildTexture(); 
   homeView(); setOverlayVisible(document.querySelector('#showTransformFrame').checked); 
@@ -789,10 +791,23 @@ function applyExportPose(progress, startPosition) {
 }
 function setViewAngle(degrees) { const radius = Math.hypot(camera.position.x - controls.target.x, camera.position.z - controls.target.z); const angle = THREE.MathUtils.degToRad(degrees); camera.position.x = controls.target.x + Math.cos(angle) * radius; camera.position.z = controls.target.z + Math.sin(angle) * radius; camera.lookAt(controls.target); controls.update(); document.querySelector('#viewAngle').value = degrees; document.querySelector('#angleValue').value = `${degrees}°`; }
 document.querySelectorAll('[data-angle]').forEach(button => button.onclick = () => setViewAngle(Number(button.dataset.angle)));
-document.querySelector('#viewAngle').oninput = e => setViewAngle(Number(e.target.value));
-document.querySelector('#bgInput').onchange = e => { const file = e.target.files[0]; if (!file) return; const url = URL.createObjectURL(file); const img = new Image(); img.onload = () => { bgImageObj = img; const opCtrl = document.getElementById('bgOpacityControl'); if (opCtrl) opCtrl.hidden = false; updateSceneBackground(); URL.revokeObjectURL(url); showToast('Image de fond appliquée'); }; img.src = url; };
+function setBackgroundImageFromUrl(url, label) {
+  const img = new Image();
+  img.onload = () => {
+    bgImageObj = img;
+    const opCtrl = document.getElementById('bgOpacityControl');
+    if (opCtrl) opCtrl.hidden = false;
+    updateSceneBackground();
+    showToast(label || 'Image de fond appliquée');
+  };
+  img.src = url;
+}
+document.querySelector('#bgPresetSalon')?.addEventListener('click', () => {
+  setBackgroundImageFromUrl('/background-salon.jpg', 'Simulation salon moderne appliquée');
+});
+document.querySelector('#bgInput').onchange = e => { const file = e.target.files[0]; if (!file) return; const url = URL.createObjectURL(file); setBackgroundImageFromUrl(url, 'Image de fond appliquée'); };
 if (document.querySelector('#bgOpacity')) { document.querySelector('#bgOpacity').oninput = e => { document.querySelector('#bgOpacityValue').value = `${e.target.value} %`; updateSceneBackground(); }; }
-document.querySelector("#clearBg").onclick = () => { bgImageObj = null; document.querySelector("#bgOpacity").oninput = e => { document.querySelector("#bgOpacityValue").value = e.target.value + " %"; updateSceneBackground(); }; document.getElementById("bgOpacityControl").hidden = true; updateSceneBackground(); document.querySelector("#bgInput").value = ""; };
+document.querySelector("#clearBg").onclick = () => { bgImageObj = null; backgroundTexture?.dispose(); backgroundTexture = null; const opCtrl = document.getElementById("bgOpacityControl"); if (opCtrl) opCtrl.hidden = true; updateSceneBackground(); document.querySelector("#bgInput").value = ""; };
 // Synchronisation de la résolution d'export entre topbar et sidebar
 const resSelectTop = document.querySelector('#exportResolution');
 const resSelectSide = document.querySelector('#exportResolutionSide');
