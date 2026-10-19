@@ -668,8 +668,8 @@ document.querySelectorAll('.collapsible-section .section-title-btn').forEach(btn
 
 const homeView = () => {
   if (currentProductKey === 'mug11oz') {
-    camera.position.set(0.8, 2.3, 7.2);
-    controls.target.set(0, 0.70, 0);
+    camera.position.set(0.6, 2.7, 6.2);
+    controls.target.set(0, 0.68, 0);
   } else if (currentProductKey === 'mousePad' || currentProductKey === 'puzzle' || currentProductKey === 'coaster') {
     camera.position.set(0, 4.5, 0.001);
     controls.target.set(0, 0, 0);
@@ -804,8 +804,8 @@ function setBackgroundImageFromUrl(url, label) {
 document.querySelector('#bgPresetPodium')?.addEventListener('click', () => {
   setBackgroundImageFromUrl('/background-podium.jpg', 'Studio podium coloré appliqué');
   if (currentProductKey === 'mug11oz') {
-    camera.position.set(0, 2.05, 6.4);
-    controls.target.set(0, 0.65, 0);
+    camera.position.set(0, 2.7, 6.2);
+    controls.target.set(0, 0.68, 0);
     controls.update();
   }
 });
