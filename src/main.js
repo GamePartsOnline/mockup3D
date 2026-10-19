@@ -801,6 +801,14 @@ function setBackgroundImageFromUrl(url, label) {
   };
   img.src = url;
 }
+document.querySelector('#bgPresetPodium')?.addEventListener('click', () => {
+  setBackgroundImageFromUrl('/background-podium.jpg', 'Studio podium coloré appliqué');
+  if (currentProductKey === 'mug11oz') {
+    camera.position.set(0, 2.05, 6.4);
+    controls.target.set(0, 0.65, 0);
+    controls.update();
+  }
+});
 document.querySelector('#bgPresetMug')?.addEventListener('click', () => {
   setBackgroundImageFromUrl('/background-mug.jpg', 'Mise en scène cuisine moderne appliquée');
 });
