@@ -43,7 +43,7 @@ if (window.location.hostname !== 'localhost' && window.location.hostname !== '12
 const viewer = document.querySelector('#viewer');
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.LinearToneMapping; renderer.toneMappingExposure = 1.0;
 viewer.append(renderer.domElement);
 const scene = new THREE.Scene(); scene.background = new THREE.Color(0xe9edf0);
 const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100); camera.position.set(3.4, 2.8, 3.8);
@@ -128,9 +128,10 @@ watermarkImg.onload = () => {
 const wrapPreview = new THREE.Sprite(new THREE.SpriteMaterial({ transparent: true, depthTest: false, depthWrite: false }));
 wrapPreview.position.set(0, -1.28, -5); wrapPreview.visible = false; wrapPreview.renderOrder = 20;
 const controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = false; controls.autoRotate = false; controls.minDistance = 2.2; controls.maxDistance = 8; controls.target.set(0, -.04, 0);
-scene.add(new THREE.HemisphereLight(0xffffff, 0x607080, 2.2));
-const key = new THREE.DirectionalLight(0xffffff, 3.4); key.position.set(-3, 5, 4); key.castShadow = true; key.shadow.mapSize.set(2048, 2048); scene.add(key);
-const fill = new THREE.DirectionalLight(0xb8d7ff, 1.4); fill.position.set(4, 2, -3); scene.add(fill);
+scene.add(new THREE.HemisphereLight(0xffffff, 0xe2e8f0, 2.0));
+const key = new THREE.DirectionalLight(0xffffff, 2.8); key.position.set(-3, 5, 4); key.castShadow = true; key.shadow.mapSize.set(2048, 2048); scene.add(key);
+const fill = new THREE.DirectionalLight(0xffffff, 1.6); fill.position.set(4, 2, -3); scene.add(fill);
+const frontLight = new THREE.DirectionalLight(0xffffff, 0.8); frontLight.position.set(0, 0, 5); scene.add(frontLight);
 const floor = new THREE.Mesh(new THREE.CircleGeometry(5, 64), new THREE.ShadowMaterial({ color: 0x55616b, opacity: .15 })); floor.rotation.x = -Math.PI / 2; floor.position.y = -.09; floor.receiveShadow = true; scene.add(floor);
 const productDefinitions = {
   mousePad: mousePadProduct,
@@ -1027,59 +1028,255 @@ async function runExportAll() {
 }
 document.querySelector('#exportAll')?.addEventListener('click', runExportAll);
 async function exportMp4() {
-  const button = document.querySelector('#exportMp4'), status = document.querySelector('#exportStatus');
-  if (!window.VideoEncoder || !window.VideoFrame) { await exportMp4Compat(button, status); return; }
-  const width = renderer.domElement.width - renderer.domElement.width % 2, height = renderer.domElement.height - renderer.domElement.height % 2;
-  const config = { codec: 'avc1.42001f', width, height, bitrate: 5_000_000, framerate: 30, avc: { format: 'avc' } };
-  const support = await VideoEncoder.isConfigSupported(config).catch(() => null);
-  if (!support?.supported) { await exportMp4Compat(button, status); return; }
-  const oldText = button.textContent, startPosition = camera.position.clone(), offset = startPosition.clone().sub(controls.target);
-  const radius = Math.hypot(offset.x, offset.z), startAngle = Math.atan2(offset.z, offset.x), target = new ArrayBufferTarget();
+  const button = document.querySelector('#exportMp4');
+  const buttonSide = document.querySelector('#exportMp4Side');
+  const status = document.querySelector('#exportStatus');
+  const oldText = button?.textContent || 'Export MP4 (Rotation)';
+  const setButtonsDisabled = (val) => {
+    if (button) button.disabled = val;
+    if (buttonSide) buttonSide.disabled = val;
+  };
+  const setButtonsText = (txt) => {
+    if (button) button.textContent = txt;
+    if (buttonSide) buttonSide.textContent = txt;
+  };
+
+  if (!window.VideoEncoder || !window.VideoFrame) {
+    await exportMp4Compat(button, buttonSide, status, oldText);
+    return;
+  }
+
+  // Dimensions paires garanties
+  let width = renderer.domElement.width - (renderer.domElement.width % 2);
+  let height = renderer.domElement.height - (renderer.domElement.height % 2);
+  if (width <= 0 || height <= 0) {
+    width = 1280;
+    height = 720;
+  }
+
+  // Profils H264 testes par ordre de preference
+  const candidateProfiles = [
+    { codec: 'avc1.4d002a', width, height, bitrate: 6_000_000, framerate: 30, avc: { format: 'avc' } },
+    { codec: 'avc1.42001f', width, height, bitrate: 5_000_000, framerate: 30, avc: { format: 'avc' } }
+  ];
+
+  let config = null;
+  for (const candidate of candidateProfiles) {
+    try {
+      const support = await VideoEncoder.isConfigSupported(candidate);
+      if (support?.supported) {
+        config = candidate;
+        break;
+      }
+    } catch (e) {}
+  }
+
+  if (!config) {
+    await exportMp4Compat(button, buttonSide, status, oldText);
+    return;
+  }
+
+  const startPosition = camera.position.clone();
+  const target = new ArrayBufferTarget();
   const muxer = new Muxer({ target, video: { codec: 'avc', width, height }, fastStart: 'in-memory', firstTimestampBehavior: 'offset' });
   let encodeError = null;
-  const encoder = new VideoEncoder({ output: (chunk, meta) => muxer.addVideoChunk(chunk, meta), error: error => { encodeError = error; } });
-  const overlayWasVisible = isOverlayVisible(), gridWasVisible = grid.visible; setOverlayVisible(false); grid.visible = false; wrapPreview.visible = false;
-  button.disabled = true; controls.enabled = false; controls.autoRotate = false; document.querySelector('#autoRotate').checked = false; encoder.configure(config);
+  let encoder = null;
+
+  try {
+    encoder = new VideoEncoder({
+      output: (chunk, meta) => muxer.addVideoChunk(chunk, meta),
+      error: error => { encodeError = error; }
+    });
+    encoder.configure(config);
+  } catch (err) {
+    console.warn('Initialisation VideoEncoder echouee, passage au mode compatibilite :', err);
+    await exportMp4Compat(button, buttonSide, status, oldText);
+    return;
+  }
+
+  const overlayWasVisible = typeof isOverlayVisible === 'function' ? isOverlayVisible() : false;
+  const gridWasVisible = grid ? grid.visible : false;
+  const wrapWasVisible = wrapPreview ? wrapPreview.visible : false;
+
+  setOverlayVisible(false);
+  if (grid) grid.visible = false;
+  if (wrapPreview) wrapPreview.visible = false;
+  setButtonsDisabled(true);
+  controls.enabled = false;
+  controls.autoRotate = false;
+  const autoRotateEl = document.querySelector('#autoRotate');
+  if (autoRotateEl) autoRotateEl.checked = false;
+
   try {
     for (let i = 0; i < 180; i++) {
-      applyExportPose(i / 180, startPosition); renderer.render(scene, camera);
-      const frame = new VideoFrame(renderer.domElement, { timestamp: Math.round(i * 1_000_000 / 30), duration: Math.round(1_000_000 / 30) });
-      encoder.encode(frame, { keyFrame: i % 60 === 0 }); frame.close();
-      button.textContent = `Création du MP4… ${Math.round((i + 1) / 1.8)} %`; status.textContent = 'Gardez cette fenêtre ouverte';
+      applyExportPose(i / 180, startPosition);
+      renderer.render(scene, camera);
+      const frame = new VideoFrame(renderer.domElement, {
+        timestamp: Math.round(i * 1_000_000 / 30),
+        duration: Math.round(1_000_000 / 30)
+      });
+      encoder.encode(frame, { keyFrame: i % 60 === 0 });
+      frame.close();
+      const pct = Math.round((i + 1) / 1.8);
+      setButtonsText(`Creation MP4… ${pct} %`);
+      if (status) status.textContent = 'Gardez cette fenetre ouverte';
       await new Promise(resolve => requestAnimationFrame(resolve));
     }
-    await encoder.flush(); if (encodeError) throw encodeError; muxer.finalize();
-    const url = URL.createObjectURL(new Blob([target.buffer], { type: 'video/mp4' })), a = document.createElement('a');
-    a.href = url; a.download = `animation-${currentProductKey}-${Date.now()}.mp4`; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 10000); showToast('Animation MP4 enregistrée');
-  } catch (error) { console.error(error); showToast('Impossible de créer le MP4'); }
-  finally { encoder.close(); camera.position.copy(startPosition); camera.lookAt(controls.target); controls.enabled = true; setOverlayVisible(overlayWasVisible); grid.visible = gridWasVisible; wrapPreview.visible = wrapWasVisible; button.disabled = false; button.textContent = oldText; status.textContent = 'PNG haute qualité ou MP4 de 6 secondes'; }
+    await encoder.flush();
+    if (encodeError) throw encodeError;
+    muxer.finalize();
+
+    const url = URL.createObjectURL(new Blob([target.buffer], { type: 'video/mp4' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `animation-${currentProductKey}-${Date.now()}.mp4`;
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    showToast('Animation MP4 enregistree');
+  } catch (error) {
+    console.error(error);
+    showToast('Impossible de creer le MP4');
+  } finally {
+    if (encoder) {
+      try {
+        if (encoder.state !== 'closed') encoder.close();
+      } catch (e) {
+        console.warn('Erreur fermeture encoder :', e);
+      }
+    }
+    try {
+      camera.position.copy(startPosition);
+      camera.lookAt(controls.target);
+      controls.enabled = true;
+      controls.update();
+      setOverlayVisible(overlayWasVisible);
+      if (grid) grid.visible = gridWasVisible;
+      if (wrapPreview) wrapPreview.visible = wrapWasVisible;
+      renderer.render(scene, camera);
+    } catch (e) {
+      console.warn('Erreur restauration camera/scene :', e);
+    }
+    setButtonsDisabled(false);
+    setButtonsText(oldText);
+    if (status) status.textContent = 'PNG haute qualite ou MP4 de 6 secondes';
+  }
 }
-async function exportMp4Compat(button, status) {
-  if (!window.MediaRecorder || !renderer.domElement.captureStream) { showToast('Export vidéo indisponible dans ce navigateur'); return; }
-  const oldText = button.textContent, startPosition = camera.position.clone(), offset = startPosition.clone().sub(controls.target);
-  const radius = Math.hypot(offset.x, offset.z), startAngle = Math.atan2(offset.z, offset.x), chunks = [];
+
+async function exportMp4Compat(button, buttonSide, status, oldText) {
+  const setButtonsDisabled = (val) => {
+    if (button) button.disabled = val;
+    if (buttonSide) buttonSide.disabled = val;
+  };
+  const setButtonsText = (txt) => {
+    if (button) button.textContent = txt;
+    if (buttonSide) buttonSide.textContent = txt;
+  };
+
+  if (!window.MediaRecorder || !renderer.domElement.captureStream) {
+    showToast('Export video indisponible dans ce navigateur');
+    setButtonsDisabled(false);
+    return;
+  }
+  const startPosition = camera.position.clone();
+  const chunks = [];
   const stream = renderer.domElement.captureStream(30);
-  const mimeType = ['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(type => MediaRecorder.isTypeSupported(type));
-  if (!mimeType) { showToast('Enregistrement vidéo indisponible'); return; }
-  const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 5_000_000 });
-  recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
-  const overlayWasVisible = isOverlayVisible(), gridWasVisible = grid.visible; setOverlayVisible(false); grid.visible = false; wrapPreview.visible = false;
-  button.disabled = true; controls.enabled = false; controls.autoRotate = false; document.querySelector('#autoRotate').checked = false;
+  const mimeType = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'].find(type => MediaRecorder.isTypeSupported(type));
+  if (!mimeType) {
+    showToast('Enregistrement video indisponible');
+    setButtonsDisabled(false);
+    return;
+  }
+  let recorder = null;
   try {
-    recorder.start(250); const start = performance.now(), duration = 6000;
-    await new Promise(resolve => { const recordFrame = now => { const progress = Math.min(1, (now - start) / duration); applyExportPose(progress, startPosition); renderer.render(scene, camera); button.textContent = `Enregistrement… ${Math.round(progress * 100)} %`; status.textContent = 'Création locale de la vidéo'; if (progress < 1) requestAnimationFrame(recordFrame); else resolve(); }; requestAnimationFrame(recordFrame); });
-    const stopped = new Promise(resolve => recorder.addEventListener('stop', resolve, { once: true })); recorder.stop(); await stopped; stream.getTracks().forEach(track => track.stop());
-    button.textContent = 'Conversion en MP4…'; status.textContent = 'Première conversion : quelques secondes';
+    recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 5_000_000 });
+  } catch (e) {
+    showToast('Erreur initialisation enregistreur');
+    setButtonsDisabled(false);
+    return;
+  }
+  recorder.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+
+  const overlayWasVisible = typeof isOverlayVisible === 'function' ? isOverlayVisible() : false;
+  const gridWasVisible = grid ? grid.visible : false;
+  const wrapWasVisible = wrapPreview ? wrapPreview.visible : false;
+
+  setOverlayVisible(false);
+  if (grid) grid.visible = false;
+  if (wrapPreview) wrapPreview.visible = false;
+  setButtonsDisabled(true);
+  controls.enabled = false;
+  controls.autoRotate = false;
+  const autoRotateEl = document.querySelector('#autoRotate');
+  if (autoRotateEl) autoRotateEl.checked = false;
+
+  try {
+    recorder.start(250);
+    const start = performance.now();
+    const duration = 6000;
+    await new Promise(resolve => {
+      const recordFrame = now => {
+        const progress = Math.min(1, (now - start) / duration);
+        applyExportPose(progress, startPosition);
+        renderer.render(scene, camera);
+        setButtonsText(`Enregistrement… ${Math.round(progress * 100)} %`);
+        if (status) status.textContent = 'Creation locale de la video';
+        if (progress < 1) requestAnimationFrame(recordFrame);
+        else resolve();
+      };
+      requestAnimationFrame(recordFrame);
+    });
+
+    const stopped = new Promise(resolve => recorder.addEventListener('stop', resolve, { once: true }));
+    recorder.stop();
+    await stopped;
+    stream.getTracks().forEach(track => track.stop());
+
+    setButtonsText('Conversion en MP4…');
+    if (status) status.textContent = 'Premiere conversion : quelques secondes';
     const [{ FFmpeg }, { fetchFile }] = await Promise.all([import('@ffmpeg/ffmpeg'), import('@ffmpeg/util')]);
-    const ffmpeg = new FFmpeg(); await ffmpeg.load({ coreURL: '/ffmpeg-core.js', wasmURL: '/ffmpeg-core.wasm' });
+    const ffmpeg = new FFmpeg();
+    await ffmpeg.load({ coreURL: '/ffmpeg-core.js', wasmURL: '/ffmpeg-core.wasm' });
     await ffmpeg.writeFile('rotation.webm', await fetchFile(new Blob(chunks, { type: mimeType })));
-    const exitCode = await ffmpeg.exec(['-i','rotation.webm','-vf','scale=1280:-2','-r','30','-an','-c:v','libx264','-profile:v','baseline','-level','3.1','-pix_fmt','yuv420p','-movflags','+faststart','rotation.mp4']);
-    if (exitCode !== 0) throw new Error(`FFmpeg a retourné le code ${exitCode}`);
-    const data = await ffmpeg.readFile('rotation.mp4'); if (!data?.length) throw new Error('Le fichier MP4 est vide');
-    const url = URL.createObjectURL(new Blob([data], { type: 'video/mp4' })), a = document.createElement('a');
-    a.href = url; a.download = `animation-${currentProductKey}-${Date.now()}.mp4`; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 10000); ffmpeg.terminate(); showToast('Animation MP4 enregistrée');
-  } catch (error) { console.error(error); showToast('La conversion MP4 a échoué'); }
-  finally { if (recorder.state !== 'inactive') recorder.stop(); stream.getTracks().forEach(track => track.stop()); camera.position.copy(startPosition); camera.lookAt(controls.target); controls.enabled = true; setOverlayVisible(overlayWasVisible); grid.visible = gridWasVisible; wrapPreview.visible = wrapWasVisible; button.disabled = false; button.textContent = oldText; status.textContent = 'PNG haute qualité ou MP4 de 6 secondes'; }
+    const exitCode = await ffmpeg.exec(['-i', 'rotation.webm', '-vf', 'scale=1280:-2', '-r', '30', '-an', '-c:v', 'libx264', '-profile:v', 'baseline', '-level', '3.1', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', 'rotation.mp4']);
+    if (exitCode !== 0) throw new Error(`FFmpeg a retourne le code ${exitCode}`);
+    const data = await ffmpeg.readFile('rotation.mp4');
+    if (!data?.length) throw new Error('Le fichier MP4 est vide');
+    const url = URL.createObjectURL(new Blob([data], { type: 'video/mp4' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `animation-${currentProductKey}-${Date.now()}.mp4`;
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    ffmpeg.terminate();
+    showToast('Animation MP4 enregistree');
+  } catch (error) {
+    console.error(error);
+    showToast('La conversion MP4 a echoue');
+  } finally {
+    try {
+      if (recorder && recorder.state !== 'inactive') recorder.stop();
+    } catch (e) {}
+    try {
+      stream.getTracks().forEach(track => track.stop());
+    } catch (e) {}
+    try {
+      camera.position.copy(startPosition);
+      camera.lookAt(controls.target);
+      controls.enabled = true;
+      controls.update();
+      setOverlayVisible(overlayWasVisible);
+      if (grid) grid.visible = gridWasVisible;
+      if (wrapPreview) wrapPreview.visible = wrapWasVisible;
+      renderer.render(scene, camera);
+    } catch (e) {}
+    setButtonsDisabled(false);
+    setButtonsText(oldText);
+    if (status) status.textContent = 'PNG haute qualite ou MP4 de 6 secondes';
+  }
 }
 function showToast(message) { const el = document.querySelector('#toast'); el.textContent = message; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2400); }
 function imageLocalCorners() {
