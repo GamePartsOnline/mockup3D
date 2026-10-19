@@ -789,7 +789,8 @@ function applyExportPose(progress, startPosition) {
 function setViewAngle(degrees) { const radius = Math.hypot(camera.position.x - controls.target.x, camera.position.z - controls.target.z); const angle = THREE.MathUtils.degToRad(degrees); camera.position.x = controls.target.x + Math.cos(angle) * radius; camera.position.z = controls.target.z + Math.sin(angle) * radius; camera.lookAt(controls.target); controls.update(); document.querySelector('#viewAngle').value = degrees; document.querySelector('#angleValue').value = `${degrees}°`; }
 document.querySelectorAll('[data-angle]').forEach(button => button.onclick = () => setViewAngle(Number(button.dataset.angle)));
 document.querySelector('#viewAngle').oninput = e => setViewAngle(Number(e.target.value));
-document.querySelector('#bgInput').onchange = e => { const file = e.target.files[0]; if (!file) return; const url = URL.createObjectURL(file); new THREE.TextureLoader().load(url, loaded => { backgroundTexture?.dispose(); backgroundTexture = loaded; backgroundTexture.colorSpace = THREE.SRGBColorSpace; scene.background = backgroundTexture; URL.revokeObjectURL(url); showToast('Image de fond appliquée'); }); };
+document.querySelector('#bgInput').onchange = e => { const file = e.target.files[0]; if (!file) return; const url = URL.createObjectURL(file); const img = new Image(); img.onload = () => { bgImageObj = img; const opCtrl = document.getElementById('bgOpacityControl'); if (opCtrl) opCtrl.hidden = false; updateSceneBackground(); URL.revokeObjectURL(url); showToast('Image de fond appliquée'); }; img.src = url; };
+if (document.querySelector('#bgOpacity')) { document.querySelector('#bgOpacity').oninput = e => { document.querySelector('#bgOpacityValue').value = `${e.target.value} %`; updateSceneBackground(); }; }
 document.querySelector("#clearBg").onclick = () => { bgImageObj = null; document.querySelector("#bgOpacity").oninput = e => { document.querySelector("#bgOpacityValue").value = e.target.value + " %"; updateSceneBackground(); }; document.getElementById("bgOpacityControl").hidden = true; updateSceneBackground(); document.querySelector("#bgInput").value = ""; };
 // Synchronisation de la résolution d'export entre topbar et sidebar
 const resSelectTop = document.querySelector('#exportResolution');
@@ -1364,7 +1365,7 @@ if (toggleRightSidebarBtn) {
     } else {
       toggleRightSidebarBtn.textContent = '▶';
     }
-    setTimeout(() => { if (window.onWindowResize) window.onWindowResize(); }, 300); // Trigger resize for 3D canvas
+    setTimeout(() => resize(), 310); // Trigger resize for 3D canvas
   });
 }
 

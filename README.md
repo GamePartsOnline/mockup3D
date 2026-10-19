@@ -28,4 +28,4 @@ npm run build
 npm run preview -- --port 4173
 ```
 
-Les définitions des objets sont dans `src/products/`. Le tapis, les mugs, les t-shirts et les casquettes sont déjà intégrés au catalogue.
+Les définitions des objets sont dans `src/products/`. Le catalogue intègre actuellement les tapis de souris, mugs 11oz, t-shirts (2D et 3D avec DecalGeometry), casquettes, porte-clés (rectangulaire, rond, cœur), dessous de verre, coussins, trousses, puzzles et la borne d'arcade multi-zones.
