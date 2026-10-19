@@ -577,7 +577,7 @@ document.querySelector('#productSelect').onchange = e => {
     }
   }
   
-  floor.position.y = isArcade ? -0.80 : -0.09;
+  floor.position.y = isArcade ? -0.835 : -0.09;
   
   renderImagesList();
   if (imagesList.length > 0 || textParams.text.trim()) buildTexture(); 
@@ -687,8 +687,8 @@ const homeView = () => {
     camera.position.set(0, 0.35, 1.6);
     controls.target.set(0, 0.35, 0);
   } else if (currentProductKey === 'arcadeCabinet') {
-    camera.position.set(2.8, 0.5, 2.8);
-    controls.target.set(0, 0, 0);
+    camera.position.set(0.7, -0.05, 3.4);
+    controls.target.set(0, -0.05, 0);
   } else {
     camera.position.set(3.4, 2.8, 3.8);
     controls.target.set(0, -.04, 0);
@@ -700,7 +700,7 @@ document.querySelector('#resetViewSide')?.addEventListener('click', homeView);
 document.querySelector('#viewFaceA')?.addEventListener('click', () => {
   homeView();
   if (currentProductKey === 'arcadeCabinet') {
-    camera.position.set(2.6, 0.5, 1.5);
+    camera.position.set(0, -0.05, 3.4);
     controls.update();
   }
 });
@@ -709,7 +709,7 @@ document.querySelector('#viewFaceB')?.addEventListener('click', () => {
   if (currentProductKey === 'mug11oz') {
     camera.position.set(-0.8, 2.5, -6.5);
   } else if (currentProductKey === 'arcadeCabinet') {
-    camera.position.set(1.5, 0.5, -2.6);
+    camera.position.set(3.4, -0.05, 0);
   } else {
     camera.position.z = -Math.abs(camera.position.z);
   }

@@ -200,9 +200,24 @@ export const arcadeCabinetProduct = {
     const screen = createPlaneGroup(pScreenB, pScreenT, null, null, screenMaterial);
     const marquee = createPlaneGroup(pMarqueeB, pMarqueeT, 2, 1);
 
-    group.add(leftMesh, rightMesh, frontDoor, panelUnderside, panelGraphic, screenShelf, screen, speakerPanel, marquee, topRoof, bottomFloor, backPanel);
-    group.position.set(-0.3, -0.8, 0); // Center the cabinet
-    group.rotation.y = Math.PI / 6;
+    const cabinetContent = new THREE.Group();
+    cabinetContent.add(
+      leftMesh, rightMesh, frontDoor, panelUnderside, panelGraphic,
+      screenShelf, screen, speakerPanel, marquee, topRoof, bottomFloor, backPanel
+    );
+
+    // Centrage géométrique exact à l'origine (0, 0, 0)
+    // Centre X = 0.5618 / 2 = 0.2809 m, Centre Y = 1.6665 / 2 = 0.83325 m, Centre Z = 0 m
+    cabinetContent.position.set(-0.2809, -0.83325, 0);
+
+    // Rotation pour orienter la face avant vers +Z (vers la caméra)
+    // et dos vers -Z (mur du fond)
+    const cabinetRotator = new THREE.Group();
+    cabinetRotator.rotation.y = -Math.PI / 2;
+    cabinetRotator.add(cabinetContent);
+
+    group.add(cabinetRotator);
+    group.position.set(0, 0, 0);
 
     return { 
       group, 
