@@ -667,29 +667,29 @@ document.querySelectorAll('.collapsible-section .section-title-btn').forEach(btn
 
 const homeView = () => {
   if (currentProductKey === 'mug11oz') {
-    camera.position.set(0.8, 2.7, 6.5);
-    controls.target.set(0, 1.25, 0);
+    camera.position.set(0.8, 2.5, 6.5);
+    controls.target.set(0, 0.78, 0);
   } else if (currentProductKey === 'mousePad' || currentProductKey === 'puzzle' || currentProductKey === 'coaster') {
-    camera.position.set(0, 4.5, -0.299);
-    controls.target.set(0, 0, -0.30);
+    camera.position.set(0, 4.5, 0.001);
+    controls.target.set(0, 0, 0);
   } else if (currentProductKey === 'keychainHeart') {
-    camera.position.set(0, 0.53, 1.15);
-    controls.target.set(0, 0.53, 0);
+    camera.position.set(0, 0.45, 1.15);
+    controls.target.set(0, 0.45, 0);
   } else if (currentProductKey === 'keychainRound') {
-    camera.position.set(0, 0.38, 0.9);
-    controls.target.set(0, 0.38, 0);
-  } else if (currentProductKey === 'keychainRect') {
-    camera.position.set(0, 0.34, 0.7);
-    controls.target.set(0, 0.34, 0);
-  } else if (currentProductKey.startsWith('tshirt')) {
-    camera.position.set(0, 0.46, 1.6);
-    controls.target.set(0, 0.46, 0);
-  } else if (currentProductKey === 'arcadeCabinet') {
-    camera.position.set(2.8, 0.76, 2.8);
-    controls.target.set(0, 0.26, 0);
-  } else {
-    camera.position.set(3.4, 3.1, 3.8);
+    camera.position.set(0, 0.32, 0.9);
     controls.target.set(0, 0.32, 0);
+  } else if (currentProductKey === 'keychainRect') {
+    camera.position.set(0, 0.29, 0.7);
+    controls.target.set(0, 0.29, 0);
+  } else if (currentProductKey.startsWith('tshirt')) {
+    camera.position.set(0, 0.35, 1.6);
+    controls.target.set(0, 0.35, 0);
+  } else if (currentProductKey === 'arcadeCabinet') {
+    camera.position.set(2.8, 0.5, 2.8);
+    controls.target.set(0, 0, 0);
+  } else {
+    camera.position.set(3.4, 2.8, 3.8);
+    controls.target.set(0, -.04, 0);
   }
   controls.update();
 };
@@ -698,16 +698,16 @@ document.querySelector('#resetViewSide')?.addEventListener('click', homeView);
 document.querySelector('#viewFaceA')?.addEventListener('click', () => {
   homeView();
   if (currentProductKey === 'arcadeCabinet') {
-    camera.position.set(2.6, 0.76, 1.5);
+    camera.position.set(2.6, 0.5, 1.5);
     controls.update();
   }
 });
 document.querySelector('#viewFaceB')?.addEventListener('click', () => {
   homeView();
   if (currentProductKey === 'mug11oz') {
-    camera.position.set(-0.8, 2.7, -6.5);
+    camera.position.set(-0.8, 2.5, -6.5);
   } else if (currentProductKey === 'arcadeCabinet') {
-    camera.position.set(1.5, 0.76, -2.6);
+    camera.position.set(1.5, 0.5, -2.6);
   } else {
     camera.position.z = -Math.abs(camera.position.z);
   }

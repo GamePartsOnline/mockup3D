@@ -76,9 +76,9 @@ export const arcadeCabinetProduct = {
             const isSide = Math.abs(nz) < 0.5;
             const isInner = Math.sign(nz) === innerZDir;
             if (isSide || isInner) {
-                geo.addGroup(i * 3, 3, 1); // baseMaterial
+                geo.addGroup(i, 3, 1); // baseMaterial
             } else {
-                geo.addGroup(i * 3, 3, 0); // topMaterial
+                geo.addGroup(i, 3, 0); // topMaterial
             }
         }
     }
