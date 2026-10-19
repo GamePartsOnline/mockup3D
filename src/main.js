@@ -802,6 +802,9 @@ function setBackgroundImageFromUrl(url, label) {
   };
   img.src = url;
 }
+document.querySelector('#bgPresetMug')?.addEventListener('click', () => {
+  setBackgroundImageFromUrl('/background-mug.jpg', 'Mise en scène table de café appliquée');
+});
 document.querySelector('#bgPresetSalon')?.addEventListener('click', () => {
   setBackgroundImageFromUrl('/background-salon.jpg', 'Simulation salon moderne appliquée');
 });
