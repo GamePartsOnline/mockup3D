@@ -128,7 +128,7 @@ document.querySelector('#innerColor').oninput = e => { if (app.product.innerMate
       if (id === 'j2Color') mat = app.product.joystick2Material;
       if (id === 'b1Color') mat = app.product.button1Material;
       if (id === 'b2Color') mat = app.product.button2Material;
-      
+
       if (mat) {
         mat.color.set(e.target.value);
         if (document.querySelector('#arcadeGlow').checked) {

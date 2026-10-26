@@ -9,7 +9,7 @@ app.imageLocalCorners = function imageLocalCorners() {
   const sr = app.product.printAspect || 1.2;
   const meshW = app.product.meshWidth || (isTshirt ? 1.45 : isKeychain ? 1.2 : 2.4);
   const meshH = app.product.meshHeight || (isTshirt ? 1.85 : isKeychain ? 1.2 / sr : 2.0);
-  
+
   let w, h;
   if ((active.fitMode === 'contain') === (ir > sr)) {
     w = meshW;
@@ -64,7 +64,7 @@ app.updateOverlay = function updateOverlay() {
   if (!points.length) return;
   app.box.setAttribute('points', points.map(p => p.join(',')).join(' '));
   app.handles.forEach((h, i) => { h.setAttribute('cx', points[i][0]); h.setAttribute('cy', points[i][1]); });
-  
+
   // Positionnement des poignées d'arêtes (0: haut, 1: droite, 2: bas, 3: gauche)
   if (app.edgeHandles.length >= 4) {
     const midTop = [(points[0][0] + points[1][0]) / 2, (points[0][1] + points[1][1]) / 2];

@@ -7,24 +7,24 @@ import objUrl from '../mockup/male_crew_neck_worn_v1_no_tag_517_YEE.obj?url';
 const PRINT_ASPECT = 210 / 297;
 
 export const tshirt3DProduct = {
-  id: 'tshirt-3d', 
-  name: 'T-shirt 3D (Dos, Cœur, Ventre)', 
-  dimensions: 'S, M, L, XL', 
+  id: 'tshirt-3d',
+  name: 'T-shirt 3D (Dos, Cœur, Ventre)',
+  dimensions: 'S, M, L, XL',
   printable: [210, 297],
   icon: '👕',
   printAspect: PRINT_ASPECT,
   create() {
     const group = new THREE.Group();
     const decalsGroup = new THREE.Group();
-    
+
     let isLoaded = false;
     let pendingTexture = null;
     let printOrientation = 'portrait';
 
-    const fabricMaterial = new THREE.MeshStandardMaterial({ 
-      color: 0xffffff, 
-      roughness: 0.9, 
-      metalness: 0.05 
+    const fabricMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      roughness: 0.9,
+      metalness: 0.05
     });
 
     const decalMaterial = new THREE.MeshStandardMaterial({
@@ -54,7 +54,7 @@ export const tshirt3DProduct = {
           child.geometry.computeVertexNormals();
           child.geometry.computeBoundingBox();
           child.geometry.computeBoundingSphere();
-          
+
           child.material = fabricMaterial;
           child.castShadow = true;
           child.receiveShadow = true;
@@ -76,7 +76,7 @@ export const tshirt3DProduct = {
           pendingTexture = { texture, isTwoSided, canvas, heartTexture };
           return;
       }
-      
+
       while(decalsGroup.children.length > 0) {
           const child = decalsGroup.children[0];
           decalsGroup.remove(child);
@@ -92,11 +92,11 @@ export const tshirt3DProduct = {
       const frontMat = decalMaterial.clone();
       frontMat.map = texture;
       frontMat.needsUpdate = true;
-      
+
       const backMat = decalMaterial.clone();
       backMat.map = texture;
       backMat.needsUpdate = true;
-      
+
       group.updateMatrixWorld(true);
 
       const box = new THREE.Box3().setFromObject(mainMesh);
@@ -159,7 +159,7 @@ export const tshirt3DProduct = {
           console.error("Erreur Decal:", e);
       }
     }
-    
+
     const product = {
       group,
       topMaterial: fabricMaterial,

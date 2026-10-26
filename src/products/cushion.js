@@ -23,7 +23,7 @@ export const cushionProduct = {
   create() {
     const group = new THREE.Group();
     const size = 2.0; // 40 cm relative scale
-    
+
     // Cushion top half
     const topGeo = createPuffShape(size, 32);
     let uvs = topGeo.attributes.uv;
@@ -34,19 +34,19 @@ export const cushionProduct = {
     const topMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, metalness: 0.0 });
     const top = new THREE.Mesh(topGeo, topMaterial);
     top.castShadow = true; top.receiveShadow = true; group.add(top);
-    
+
     // Cushion bottom half
     const bottomGeo = createPuffShape(size, 32);
     uvs = bottomGeo.attributes.uv;
     for (let i = 0; i < uvs.count; i++) {
-        let u = 1.0 - uvs.getX(i); 
+        let u = 1.0 - uvs.getX(i);
         uvs.setX(i, u * 0.5 + 0.5); // Face B: 0.5 to 1.0
     }
     bottomGeo.rotateX(Math.PI / 2);
     const baseMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, metalness: 0.0 }); // kept for API
     const bottom = new THREE.Mesh(bottomGeo, topMaterial);
     bottom.castShadow = true; bottom.receiveShadow = true; group.add(bottom);
-    
+
     return { group, top, topMaterial, baseMaterial, printAspect: 1, type: 'flat', printMesh: top, meshWidth: size, meshHeight: size, twoSided: true };
   }
 };

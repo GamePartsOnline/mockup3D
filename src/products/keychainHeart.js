@@ -5,7 +5,7 @@ export const keychainHeartProduct = {
   icon: '🤍',
   create() {
     const group = new THREE.Group();
-    
+
     // Create heart shape
     const shape = new THREE.Shape();
     // In THREE.js, +Y is up. We want the bumps at the top (positive Y) and the tip at the bottom (negative Y).
@@ -29,26 +29,26 @@ export const keychainHeartProduct = {
     const geo = new THREE.ExtrudeGeometry(shape, {
       depth: depth, bevelEnabled: true, bevelSegments: 3, bevelSize: 0.002, bevelThickness: 0.002, curveSegments: 32
     });
-    
+
     geo.computeBoundingBox();
     const box = geo.boundingBox;
     const center = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
-    
+
     geo.translate(-center.x, -center.y, -depth / 2);
     // Move up so bottom is at y=0, then up a bit
     geo.translate(0, size.y / 2 + 0.1, 0);
-    
+
     const positions = geo.attributes.position;
     const uv = geo.attributes.uv;
     for (let i = 0; i < positions.count; i++) {
         const px = positions.getX(i);
         const py = positions.getY(i);
         const pz = positions.getZ(i);
-        
+
         let u = (px + size.x/2) / size.x;
         let v = (py - 0.1) / size.y;
-        
+
         if (pz < 0) {
              u = (-px + size.x/2) / size.x;
              u = u * 0.5 + 0.5;
@@ -60,14 +60,14 @@ export const keychainHeartProduct = {
         uv.setXY(i, u, v);
     }
     uv.needsUpdate = true;
-    
+
     const printMaterial = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.15, clearcoat: 0.8, clearcoatRoughness: 0.1 });
     const sideMaterial = new THREE.MeshPhysicalMaterial({ color: 0x222222, roughness: 0.4 });
     const mesh = new THREE.Mesh(geo, [printMaterial, sideMaterial]);
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     group.add(mesh);
-    
+
     return { group, topMaterial: printMaterial, baseMaterial: sideMaterial, printMesh: mesh, printAspect: 57.2 / 63.5, type: 'flat', twoSided: true, meshWidth: 1.0, meshHeight: 1.0 };
   }
 };

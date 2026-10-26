@@ -6,10 +6,10 @@ export const arcadeCabinetProduct = {
   dimensions: '600 × 1700 × 700 mm',
   printable: [600, 1700],
   icon: '🕹️',
-  printAspect: 1, 
+  printAspect: 1,
   twoSided: false,
   zones: [
-    { id: 'left', label: 'Côté Gauche', col: 0, row: 1, aspect: 561.8 / 1670.9 }, 
+    { id: 'left', label: 'Côté Gauche', col: 0, row: 1, aspect: 561.8 / 1670.9 },
     { id: 'right', label: 'Côté Droit', col: 1, row: 1, aspect: 561.8 / 1670.9 },
     { id: 'marquee', label: 'Fronton (Haut)', col: 2, row: 1, aspect: 600 / 200 },
     { id: 'front', label: 'Porte Avant', col: 2, row: 0, aspect: 600 / 800 }
@@ -100,8 +100,8 @@ export const arcadeCabinetProduct = {
     const pFrontDoorB = { x: 0.5128 - 0.03, y: 0.0 };
     const pFrontDoorT = { x: 0.5618 - 0.03, y: 0.9731 };
     const pPanelTip = { x: 0.5618, y: 0.9731 };
-    const pPanelBack = { x: 0.4800, y: 0.9850 }; 
-    const pScreenB = { x: 0.3500, y: 1.0500 }; 
+    const pPanelBack = { x: 0.4800, y: 0.9850 };
+    const pScreenB = { x: 0.3500, y: 1.0500 };
     const pScreenT = { x: 0.1500, y: 1.3500 };
     const pMarqueeB = { x: 0.3360, y: 1.5000 };
     const pMarqueeT = { x: 0.3147, y: 1.6665 };
@@ -161,10 +161,10 @@ export const arcadeCabinetProduct = {
     cabinetRotator.add(cabinetContent);
     group.add(cabinetRotator);
     group.position.set(0, 0, 0);
-    return { 
-      group, 
-      topMaterial, 
-      baseMaterial, 
+    return {
+      group,
+      topMaterial,
+      baseMaterial,
       joystick1Material,
       button1Material,
       joystick2Material,

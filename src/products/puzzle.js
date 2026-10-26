@@ -20,21 +20,21 @@ export const puzzleProduct = {
     const width = 2.8;
     const height = 1.95;
     const shape = roundedRect(width, height, 0.02); // tiny rounded corners for puzzle
-    
+
     // Cardboard base
     const baseGeo = new THREE.ExtrudeGeometry(shape, { depth: 0.02, bevelEnabled: true, bevelSegments: 2, bevelSize: 0.005, bevelThickness: 0.005, curveSegments: 8 });
     baseGeo.rotateX(Math.PI / 2); baseGeo.translate(0, -0.015, 0);
     const baseMaterial = new THREE.MeshStandardMaterial({ color: 0xe0d6c8, roughness: 0.9, metalness: 0.0 });
     const base = new THREE.Mesh(baseGeo, baseMaterial);
     base.castShadow = true; base.receiveShadow = true; group.add(base);
-    
+
     // Glossy top surface
     const topGeo = new THREE.ExtrudeGeometry(shape, { depth: 0.002, bevelEnabled: false, curveSegments: 8 });
     topGeo.rotateX(Math.PI / 2);
     topGeo.translate(0, 0.001, 0);
     const positions = topGeo.attributes.position;
     const uv = topGeo.attributes.uv;
-    
+
     // UV Mapping
     for (let i = 0; i < positions.count; i++) {
       const u = (positions.getX(i) + width / 2) / width;
@@ -42,14 +42,14 @@ export const puzzleProduct = {
       uv.setXY(i, u, v);
     }
     uv.needsUpdate = true;
-    
+
     // Générer un overlay pour simuler un relief 3D (Biseau / Emboss) sur les pièces de puzzle
     const bumpCanvas = document.createElement('canvas');
     bumpCanvas.width = 1500;
     bumpCanvas.height = 800;
     const ctx = bumpCanvas.getContext('2d');
     ctx.clearRect(0, 0, 1500, 800);
-    
+
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
 
@@ -115,9 +115,9 @@ export const puzzleProduct = {
     const linesTexture = new THREE.CanvasTexture(bumpCanvas);
     linesTexture.anisotropy = 4;
 
-    const topMaterial = new THREE.MeshStandardMaterial({ 
-      color: 0xffffff, roughness: 0.2, metalness: 0.1, 
-      polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 
+    const topMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffffff, roughness: 0.2, metalness: 0.1,
+      polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1
     });
     const top = new THREE.Mesh(topGeo, topMaterial); top.receiveShadow = true; group.add(top);
 
@@ -128,7 +128,7 @@ export const puzzleProduct = {
     });
     const overlay = new THREE.Mesh(topGeo, overlayMat);
     group.add(overlay);
-    
+
     return { group, top, topMaterial, baseMaterial, printAspect: width / height, type: 'flat', printMesh: top, meshWidth: width, meshHeight: height };
   }
 };

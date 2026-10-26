@@ -23,7 +23,7 @@ function createCoffeeTexture() {
     const spotX = cx + Math.cos(angle) * dist;
     const spotY = cy + Math.sin(angle) * dist;
     const spotR = 25 + Math.random() * 55;
-    
+
     const grad = ctx.createRadialGradient(spotX, spotY, 2, spotX, spotY, spotR);
     const alpha = 0.35 + Math.random() * 0.35;
     grad.addColorStop(0, `rgba(212, 163, 107, ${alpha})`);
@@ -74,34 +74,34 @@ export const mug11ozProduct = {
     const innerMaterial = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: .2, clearcoat: .4, clearcoatRoughness: .18, side: THREE.DoubleSide });
     const thetaLength = (210 / 257.6) * Math.PI * 2;
     const bodyGap = Math.PI * 2 - thetaLength;
-    
+
     // Corps cylindrique extérieur ouvert en haut et bas (openEnded = true)
     const bodyGeometry = new THREE.CylinderGeometry(.7, .7, 1.76, 96, 1, true, bodyGap / 2, thetaLength);
     const body = new THREE.Mesh(bodyGeometry, printMaterial); body.castShadow = true; body.receiveShadow = true; group.add(body);
-    
+
     const bodyBackGeometry = new THREE.CylinderGeometry(.7, .7, 1.76, 32, 1, true, -bodyGap / 2, bodyGap);
     const bodyBack = new THREE.Mesh(bodyBackGeometry, ceramic); bodyBack.castShadow = true; bodyBack.receiveShadow = true; group.add(bodyBack);
-    
+
     // Rebord supérieur en céramique
     const rimGeo = new THREE.RingGeometry(.62, .7, 96);
     rimGeo.rotateX(-Math.PI / 2);
     const rim = new THREE.Mesh(rimGeo, ceramic);
     rim.position.y = .88;
     group.add(rim);
-    
+
     // Fond inférieur du mug au sol
     const bottomGeo = new THREE.CircleGeometry(.7, 64);
     bottomGeo.rotateX(Math.PI / 2);
     const bottom = new THREE.Mesh(bottomGeo, ceramic);
     bottom.position.y = -.88;
     group.add(bottom);
-    
+
     // Paroi intérieure blanche visible sous le rebord
     const innerWallGeo = new THREE.CylinderGeometry(.62, .62, .40, 96, 1, true);
     const innerWall = new THREE.Mesh(innerWallGeo, innerMaterial);
     innerWall.position.y = .68;
     group.add(innerWall);
-    
+
     // Surface de café réaliste avec crème dorée et reflet liquide
     const coffeeMaterial = new THREE.MeshPhysicalMaterial({
       map: createCoffeeTexture(),
@@ -116,7 +116,7 @@ export const mug11ozProduct = {
     coffee.position.y = .76;
     coffee.receiveShadow = true;
     group.add(coffee);
-    
+
     // L'anse est centrée sur l'axe (X = 0, Z > 0)
     const handleCurve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(0, .58, .62), new THREE.Vector3(0, .58, 1.08), new THREE.Vector3(0, .3, 1.28),

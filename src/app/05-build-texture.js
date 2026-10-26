@@ -7,17 +7,17 @@ app.buildTexture = function buildTexture() {
     app.product.clearDecals?.(); app.texture?.dispose(); app.texture = null; app.heartTexture?.dispose(); app.heartTexture = null; app.product.topMaterial.map = null; app.product.topMaterial.needsUpdate = true; app.wrapPreview.material.map = null; app.wrapPreview.material.needsUpdate = true; app.updateWrapPreviewWidget(null); app.updateClientGuide(); return;
   }
   const surfaceColor = document.querySelector('#topColor')?.value || '#ffffff';
-  
+
   const isTwoSided = !!app.product.twoSided;
   const isMultiZone = !!app.product.zones;
   const canvas = document.createElement('canvas');
-  
+
   canvas.width = isMultiZone ? 3072 : (isTwoSided ? 3200 : 1600);
   canvas.height = isMultiZone ? 2048 : Math.round(1600 / app.product.printAspect);
-  const ctx = canvas.getContext('2d'); 
+  const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (app.product.type !== '3d-decal') {
-    ctx.fillStyle = surfaceColor; 
+    ctx.fillStyle = surfaceColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
@@ -57,7 +57,7 @@ app.buildTexture = function buildTexture() {
     const sx = item.scaleX ?? item.scale ?? 1;
     const sy = item.scaleY ?? item.scale ?? 1;
     const imageRatio = item.img.width / item.img.height;
-    
+
     let targetZones = [];
     if (app.product.zones) {
       targetZones = (item.side === 'both' || !item.side) ? app.product.zones : app.product.zones.filter(z => z.id === item.side);
@@ -72,7 +72,7 @@ app.buildTexture = function buildTexture() {
       const xOffset = zone.col * zoneWidth;
       const yOffset = (zone.row || 0) * zoneHeight;
       const surfaceRatio = isMultiZone ? (zone.aspect || 1) : (zoneWidth / zoneHeight);
-      
+
       let w, h;
       if (item.fitMode === 'fill') {
         w = zoneWidth;
@@ -86,15 +86,15 @@ app.buildTexture = function buildTexture() {
       }
       w *= sx;
       h *= sy;
-      
+
       const x = xOffset + zoneWidth / 2 + item.x * zoneWidth * 0.5;
       const y = yOffset + zoneHeight / 2 - item.y * zoneHeight * 0.5;
-      
+
       ctx.save();
       ctx.beginPath();
       ctx.rect(xOffset, yOffset, zoneWidth, zoneHeight);
       ctx.clip();
-      
+
       ctx.translate(x, y);
       ctx.rotate(-item.rotation * Math.PI / 180);
       ctx.drawImage(item.img, -w / 2, -h / 2, w, h);
@@ -117,11 +117,11 @@ app.buildTexture = function buildTexture() {
       const zoneHeight = isMultiZone ? 1024 : canvas.height;
       const xOffset = zone.col * zoneWidth;
       const yOffset = (zone.row || 0) * zoneHeight;
-      
+
       ctx.beginPath();
       ctx.rect(xOffset, yOffset, zoneWidth, zoneHeight);
       ctx.clip();
-      
+
       const tx = xOffset + zoneWidth / 2 + app.textParams.x * zoneWidth * 0.5;
       const ty = yOffset + zoneHeight / 2 - app.textParams.y * zoneHeight * 0.5;
       ctx.translate(tx, ty);

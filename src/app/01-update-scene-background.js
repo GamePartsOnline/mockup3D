@@ -97,7 +97,7 @@ if (window.matchMedia('(max-width: 900px)').matches) {
 if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
   const localBadge = document.querySelector('#localBadge');
   if (localBadge) localBadge.style.display = 'none';
-  
+
 
 }
 app.viewer = document.querySelector('#viewer');

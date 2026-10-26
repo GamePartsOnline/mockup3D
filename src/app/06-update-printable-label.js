@@ -61,7 +61,7 @@ document.querySelector('#productSelect').onchange = e => {
   document.querySelector('#loadTshirtExample').hidden = app.currentProductKey !== 'tshirt3D';
   if (app.currentProductKey === 'tshirt3D') document.querySelector('#tshirtOrientation').value = 'portrait';
   app.updatePrintableLabel();
-  
+
   const priceMap = {
     'mug11oz': '13,00 €',
     'mousePad': '10,00 €',
@@ -79,14 +79,14 @@ document.querySelector('#productSelect').onchange = e => {
   };
   const priceEl = document.querySelector('#productPrice');
   if (priceEl) priceEl.textContent = priceMap[app.currentProductKey] || '-- €';
-  
+
   const isMug = app.currentProductKey === 'mug11oz';
   const isArcade = app.currentProductKey === 'arcadeCabinet';
-  
+
   document.querySelector('#handleColorWrap').hidden = !isMug;
   document.querySelector('#innerColorWrap').hidden = !isMug;
   document.querySelector('#quickPalette').hidden = !isMug;
-  
+
   const arcadeControlsWrap = document.querySelector('#arcadeControlsWrap');
   if (arcadeControlsWrap) arcadeControlsWrap.hidden = !isArcade;
   const arcadeGlowWrap = document.querySelector('#arcadeGlowWrap');
@@ -104,15 +104,15 @@ document.querySelector('#productSelect').onchange = e => {
     if (document.querySelector('#b2Color')) document.querySelector('#b2Color').value = '#ff0000';
     if (document.querySelector('#arcadeGlow')) document.querySelector('#arcadeGlow').checked = false;
   }
-  
+
   const isTwoSided = !!app.product.twoSided;
   const hasZones = !!app.product.zones;
-  
+
   const viewFaceA = document.querySelector('#viewFaceA');
   const viewFaceB = document.querySelector('#viewFaceB');
   if (viewFaceA) viewFaceA.style.display = (isTwoSided || hasZones) ? 'inline-block' : 'none';
   if (viewFaceB) viewFaceB.style.display = (isTwoSided || hasZones) ? 'inline-block' : 'none';
-  
+
   // Custom labels for view buttons if zones
   if (viewFaceA) viewFaceA.innerHTML = hasZones ? '<span style="font-weight:900;margin-right:4px;">A</span> Face Avant' : '<span style="font-weight:900;margin-right:4px;">A</span> Face A';
   if (viewFaceB) viewFaceB.innerHTML = hasZones ? '<span style="font-weight:900;margin-right:4px;">B</span> Côtés' : '<span style="font-weight:900;margin-right:4px;">B</span> Face B';
@@ -126,12 +126,12 @@ document.querySelector('#productSelect').onchange = e => {
       textSideSelect.innerHTML = '<option value="both">2 faces</option><option value="A">Face A</option><option value="B">Face B</option>' + (app.currentProductKey === 'tshirt3D' ? '<option value="heart">Cœur (petit)</option>' : '');
     }
   }
-  
+
   app.floor.position.y = isArcade ? -0.835 : -0.09;
-  
+
   app.renderImagesList();
-  if (app.imagesList.length > 0 || app.textParams.text.trim()) app.buildTexture(); 
-  app.homeView(); app.setOverlayVisible(document.querySelector('#showTransformFrame').checked); 
+  if (app.imagesList.length > 0 || app.textParams.text.trim()) app.buildTexture();
+  app.homeView(); app.setOverlayVisible(document.querySelector('#showTransformFrame').checked);
   app.updateWrapPreviewWidget(app.texture?.image);
   app.updateClientGuide();
 };
