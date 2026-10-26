@@ -1,0 +1,159 @@
+.actions .angle-title {
+  color: #7b8792 !important;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.actions .angles button {
+  border: 1px solid #dfe4e7 !important;
+  background: #f8fafb !important;
+  color: #27323a !important;
+  border-radius: 4px;
+  transition: background .15s ease, border-color .15s ease;
+}
+
+.actions .angles button:hover {
+  background: #edf0f2 !important;
+  border-color: #cbd2d7 !important;
+}
+
+.actions .control span {
+  color: #27323a;
+}
+
+.actions .control output {
+  color: #63717c;
+}
+
+.actions .rotation-mode span {
+  color: #27323a !important;
+}
+
+.actions .rotation-mode select {
+  background: #f8fafb !important;
+  border: 1px solid #dfe4e7 !important;
+  color: #192129 !important;
+  border-radius: 6px;
+}
+
+.actions .secondary {
+  background: #f8fafb !important;
+  border: 1px solid #dfe4e7 !important;
+  color: #27323a !important;
+  border-radius: 8px;
+  transition: background .15s ease, border-color .15s ease;
+}
+
+.actions .secondary:hover {
+  background: #edf0f2 !important;
+  border-color: #cbd2d7 !important;
+}
+
+/* Bloc animation discret et clair */
+
+.actions > section:nth-child(2) {
+  background: #f0fdf9 !important;
+  border: 1px solid #a7f3d0 !important;
+  border-radius: 9px;
+  padding: 14px;
+  margin-bottom: 18px;
+}
+
+.actions .animation-switch strong {
+  color: #064e3b !important;
+}
+
+.actions .animation-switch small {
+  color: #047857 !important;
+}
+
+@media(min-width:851px){
+  .workspace {
+    grid-template-columns: 294px minmax(420px,1fr) 370px;
+    grid-template-rows: 1fr;
+  }
+  .panel {
+    grid-column: 1;
+    grid-row: 1;
+    background: #fff;
+    color: #192129;
+    border-right: 1px solid #dce1e5;
+  }
+  .viewer-wrap {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .actions {
+    grid-column: 3;
+    grid-row: 1;
+    padding-top: 24px;
+  }
+  .panel section {
+    border-color: #e5e8eb;
+  }
+  .panel .product-card,
+  .panel .upload {
+    background: #f8fafb;
+    border-color: #dfe4e7;
+    color: #27323a;
+  }
+  .panel .segmented {
+    background: #edf0f2;
+  }
+  .panel .segmented button {
+    color: #27323a;
+  }
+  .panel .segmented button.active {
+    background: #fff;
+    color: #192129;
+  }
+  .panel .text-button {
+    background: #fff;
+    border-color: #d5dce0;
+    color: #192129;
+  }
+  .panel .eyebrow {
+    color: #7b8792;
+  }
+}
+
+/* Styles pour le sélecteur de résolution PNG dans la topbar */
+
+.export-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.topbar-select {
+  background: #24272a;
+  color: #e5e8eb;
+  border: 1px solid #4a5157;
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: border-color .15s ease, background .15s ease;
+}
+
+.topbar-select:hover,
+.topbar-select:focus {
+  border-color: #18a985;
+  background: #2c3136;
+}
+
+.mug-views-btn {
+  background: #1f364d !important;
+  border: 1px solid #3b536b !important;
+}
+
+.mug-views-btn:hover {
+  background: #2c4a68 !important;
+  border-color: #527599 !important;
+}
+
+.layer-side-select { margin-top: 4px; padding: 2px; font-size: 11px; background: #28313a; color: #fff; border: 1px solid #425260; border-radius: 3px; }

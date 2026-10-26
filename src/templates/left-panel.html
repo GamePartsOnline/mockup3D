@@ -1,0 +1,142 @@
+<aside class="panel"><div class="drawer-heading"><strong>Personnaliser</strong><button type="button" data-close-panel="left" aria-label="Fermer le menu de gauche">✕</button></div>
+        <div id="clientGuide" class="client-guide" hidden>
+          <strong id="clientGuideTitle">Étape 1 · Choisir un produit</strong>
+          <p id="clientGuideText">Sélectionnez le produit à personnaliser.</p>
+          <ol class="client-guide-steps"><li data-guide-step="1">Produit</li><li data-guide-step="2">Visuel</li><li data-guide-step="3">Ajustement</li><li data-guide-step="4">Envoi</li></ol>
+          <button id="clientGuideAction" class="primary" type="button">Choisir ce produit</button>
+        </div>
+        <section id="sectionProduct" class="collapsible-section" data-section="1">
+          <button type="button" class="section-title-btn" aria-expanded="true">
+            <div class="section-title"><span>1</span><h2>Choix du produit</h2></div>
+            <span class="collapse-icon">▾</span>
+          </button>
+          <div class="section-content">
+            <div class="product-card">
+              <div class="product-icon" id="productIcon">▰</div>
+              <label>
+                <span>Objet 3D</span>
+                <select id="productSelect">
+                  <option value="mousePad">Tapis de souris</option>
+                  <option value="mug11oz" selected>Mug blanc 11 oz</option>
+                  <option value="keychainRect">Porte-clés rectangle Unisub</option>
+                  <option value="keychainRound">Porte-clés rond Unisub</option>
+                  <option value="keychainHeart">Porte-clés Cœur Unisub</option>
+                  <option value="tshirt3D">T-shirt 3D</option>
+                  <option value="puzzle">Puzzle 120 pièces (28x19.5 cm)</option>
+                  <option value="coaster">Sous-verre carré</option>
+                  <option value="coasterRound">Sous-verre rond</option>
+                  <option value="pencilCase">Trousse</option>
+                  <option value="cushion">Housse de coussin</option>
+                  <option value="eventWristband">Bracelet événementiel en tissu</option>
+                  <option value="arcadeCabinet">Borne d'Arcade (Multi-zones)</option>
+                </select>
+                <small id="productDimensions">Taille L (Poitrine 280 à 350 mm)</small><br><div style="margin-top: 6px; font-size: 13px; font-weight: 600; color: #4ade80; background: #16202a; padding: 4px 8px; border-radius: 4px; display: inline-block;">Prix de vente TTC : <span id="productPrice">13,00 €</span></div>
+              </label>
+            </div>
+            <label id="tshirtOrientationWrap" class="control" hidden><span>Impression T-shirt A4</span><select id="tshirtOrientation"><option value="portrait">Portrait 210 × 297 mm</option><option value="landscape">Paysage 297 × 210 mm</option></select></label>
+          </div>
+        </section>
+        <section id="sectionImages" class="collapsible-section" data-section="2">
+          <button type="button" class="section-title-btn" aria-expanded="true">
+            <div class="section-title"><span>2</span><h2>Vos visuels</h2></div>
+            <span class="collapse-icon">▾</span>
+          </button>
+          <div class="section-content">
+            <label class="upload" for="imageInput">
+              <strong>Importer des images</strong>
+              <small>PNG ou JPG (sélectionnez une ou plusieurs)</small>
+            </label>
+            <input id="imageInput" type="file" accept="image/png,image/jpeg" multiple />
+            <button id="loadTshirtExample" class="secondary" type="button" hidden>Voir un exemple sur le T-shirt</button><div id="imagesList" class="images-list"></div>
+          </div>
+        </section>
+        <section id="adjustments" class="collapsible-section disabled" data-section="3">
+          <button type="button" class="section-title-btn" aria-expanded="true">
+            <div class="section-title"><span>3</span><h2>Ajuster</h2></div>
+            <span class="collapse-icon">▾</span>
+          </button>
+          <div class="section-content">
+            <div class="layer-header" id="activeImageLabel">Aucune image active</div>
+            <div class="segmented" role="group" aria-label="Mode d’ajustement">
+              <button data-fit="contain">Image entière</button><button class="active" data-fit="cover">Remplir la surface</button><button data-fit="fill">Plein wrap (Étirer)</button>
+            </div>
+            <label class="frame-option"><input id="showTransformFrame" type="checkbox"> Afficher le cadre de sélection</label>
+            <label class="frame-option"><input id="showWatermark" type="checkbox"> Filigrane sous le visuel (en fond)</label>
+            <label class="control"><span>Taille <output id="scaleValue">100 %</output></span><input id="scale" type="range" min="20" max="250" value="100" /></label>
+            <label class="control"><span>Position horizontale <output id="posXValue">0 %</output></span><input id="posX" type="range" min="-100" max="100" value="0" /></label>
+            <label class="control"><span>Position verticale <output id="posYValue">0 %</output></span><input id="posY" type="range" min="-100" max="100" value="0" /></label>
+            <label class="control"><span>Rotation <output id="rotationValue">0°</output></span><input id="rotation" type="range" min="-180" max="180" value="0" /></label>
+            <button id="resetImage" class="text-button">Réinitialiser l'image active</button>
+          </div>
+        </section>
+        <section id="textSection" class="collapsible-section" data-section="4">
+          <button type="button" class="section-title-btn" aria-expanded="true">
+            <div class="section-title"><span>4</span><h2>Texte personnalisé</h2></div>
+            <span class="collapse-icon">▾</span>
+          </button>
+          <div class="section-content">
+            <label class="control">
+              <span>Texte (multiligne)</span><select id="textSideSelect" style="margin-left:10px; font-size:11px; padding:2px; background:#28313a; color:#fff; border:1px solid #425260;"><option value="both">2 faces</option><option value="A">Face A</option><option value="B">Face B</option></select>
+              <textarea id="customText" rows="3" placeholder="Votre texte ici…" autocomplete="off"></textarea>
+            </label>
+            <div class="text-format-bar">
+              <div class="segmented segmented-mini" role="group" aria-label="Alignement du texte">
+                <button type="button" class="align-btn active" data-align="center" title="Centré">≡</button>
+                <button type="button" class="align-btn" data-align="left" title="Aligné à gauche">⇤</button>
+                <button type="button" class="align-btn" data-align="right" title="Aligné à droite">⇥</button>
+              </div>
+              <label class="option-check mini-check">
+                <input id="textBold" type="checkbox"> <strong>Gras</strong>
+              </label>
+              <label class="option-check mini-check">
+                <input id="textItalic" type="checkbox"> <em>Italique</em>
+              </label>
+            </div>
+            <div class="color-grid">
+              <label><input id="textColor" type="color" value="#111820"><span>Couleur</span></label>
+              <label>
+                <span>Police</span>
+                <select id="textFont">
+                  <optgroup label="Sans-Serif & Modernes">
+                    <option value="Inter, sans-serif">Inter</option>
+                    <option value="Montserrat, sans-serif">Montserrat</option>
+                    <option value="Roboto, sans-serif">Roboto</option>
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="'Trebuchet MS', sans-serif">Trebuchet</option>
+                  </optgroup>
+                  <optgroup label="Titres & Impact">
+                    <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
+                    <option value="Oswald, sans-serif">Oswald</option>
+                    <option value="Impact, sans-serif">Impact</option>
+                    <option value="Righteous, cursive">Righteous</option>
+                  </optgroup>
+                  <optgroup label="Manuscrites & Calligraphie">
+                    <option value="'Dancing Script', cursive">Dancing Script</option>
+                    <option value="Pacifico, cursive">Pacifico</option>
+                    <option value="'Great Vibes', cursive">Great Vibes</option>
+                    <option value="Caveat, cursive">Caveat</option>
+                    <option value="Satisfy, cursive">Satisfy</option>
+                    <option value="Lobster, cursive">Lobster</option>
+                    <option value="'Comic Sans MS', cursive">Comic Sans</option>
+                  </optgroup>
+                  <optgroup label="Serif & Élégance">
+                    <option value="'Playfair Display', serif">Playfair Display</option>
+                    <option value="Cinzel, serif">Cinzel</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="'Times New Roman', serif">Times</option>
+                    <option value="'Courier New', monospace">Courier</option>
+                  </optgroup>
+                </select>
+              </label>
+            </div>
+            <label class="control">
+              <span>Taille <output id="textSizeValue">60 px</output></span>
+              <input id="textSize" type="range" min="16" max="220" value="60" />
+            </label>
+            <label class="control"><span>Position horizontale <output id="textPosXValue">0 %</output></span><input id="textPosX" type="range" min="-100" max="100" value="0" /></label>
+            <label class="control"><span>Position verticale <output id="textPosYValue">0 %</output></span><input id="textPosY" type="range" min="-100" max="100" value="0" /></label>
+            <label class="control"><span>Rotation <output id="textRotationValue">0°</output></span><input id="textRotation" type="range" min="-180" max="180" value="0" /></label>
+            <button id="resetText" class="text-button" type="button">Effacer le texte</button>
+          </div>
+        </section>
+      </aside>

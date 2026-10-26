@@ -1,14 +1,11 @@
 import * as THREE from 'three';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
-
 import maleTshirtUrl from '../mockup/male_crew_neck_worn_v1_no_tag_517_YEE.obj?url';
 import femaleLayingUrl from '../mockup/female_crew_neck_laying_CSEXX1.obj?url';
 import femaleHangingUrl from '../mockup/female_crew_neck_hanging_tag_CEFQZV.obj?url';
 import baseballHatUrl from '../mockup/baseball_hat_028.obj?url';
-
 const loader = new OBJLoader();
 const cache = new Map();
-
 async function loadObjGeometry(url) {
   if (cache.has(url)) return cache.get(url).clone();
   return new Promise((resolve, reject) => {
@@ -23,7 +20,6 @@ async function loadObjGeometry(url) {
     );
   });
 }
-
 function createObjProductConfig({ id, name, dimensions, icon, url, printArea, modelTransform }) {
   return {
     id,
@@ -32,14 +28,12 @@ function createObjProductConfig({ id, name, dimensions, icon, url, printArea, mo
     icon,
     create() {
       const group = new THREE.Group();
-
       const fabricMaterial = new THREE.MeshStandardMaterial({
         color: 0xf8f9fa,
         roughness: 0.82,
         metalness: 0.04,
         side: THREE.DoubleSide
       });
-
       const printMaterial = new THREE.MeshStandardMaterial({
         color: 0xffffff,
         roughness: 0.75,
@@ -50,8 +44,6 @@ function createObjProductConfig({ id, name, dimensions, icon, url, printArea, mo
         polygonOffsetUnits: -2,
         side: THREE.DoubleSide
       });
-
-      // Création de la zone d'impression (poitrine / face avant / front casquette)
       const pw = printArea.width || 1.6;
       const ph = printArea.height || 2.0;
       let printGeo;
@@ -68,17 +60,13 @@ function createObjProductConfig({ id, name, dimensions, icon, url, printArea, mo
           printGeo.computeVertexNormals();
         }
       }
-
       const printMesh = new THREE.Mesh(printGeo, printMaterial);
       printMesh.position.set(printArea.x || 0, printArea.y || 0.35, printArea.z || 0.38);
       if (printArea.rotX) printMesh.rotation.x = printArea.rotX;
       if (printArea.rotY) printMesh.rotation.y = printArea.rotY;
       printMesh.receiveShadow = true;
       group.add(printMesh);
-
-      // Chargement asynchrone du modèle OBJ photoréaliste
       loadObjGeometry(url).then(obj => {
-        // Appliquer le matériau tissu à tous les meshes du modèle
         obj.traverse(child => {
           if (child.isMesh) {
             child.material = fabricMaterial;
@@ -86,31 +74,22 @@ function createObjProductConfig({ id, name, dimensions, icon, url, printArea, mo
             child.receiveShadow = true;
           }
         });
-
-        // Calcul et centrage de la bounding box
         const box = new THREE.Box3().setFromObject(obj);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
-
-        // Normalisation d'échelle
         const maxDim = Math.max(size.x, size.y, size.z);
         const targetScale = (modelTransform.targetSize || 3.2) / maxDim;
         obj.scale.setScalar(targetScale);
-
-        // Centrage
         obj.position.x = -center.x * targetScale + (modelTransform.offsetX || 0);
         obj.position.y = -center.y * targetScale + (modelTransform.offsetY || 0);
         obj.position.z = -center.z * targetScale + (modelTransform.offsetZ || 0);
-
         if (modelTransform.rotX) obj.rotation.x = modelTransform.rotX;
         if (modelTransform.rotY) obj.rotation.y = modelTransform.rotY;
         if (modelTransform.rotZ) obj.rotation.z = modelTransform.rotZ;
-
         group.add(obj);
       }).catch(err => {
         console.error('Erreur chargement OBJ:', err);
       });
-
       return {
         group,
         topMaterial: printMaterial,
@@ -122,8 +101,6 @@ function createObjProductConfig({ id, name, dimensions, icon, url, printArea, mo
     }
   };
 }
-
-// 1. T-shirt Homme porté 3D (photoréaliste sur torse)
 export const maleTshirtProduct = createObjProductConfig({
   id: 'tshirt-male-worn',
   name: 'T-shirt homme porté 3D',
@@ -144,8 +121,6 @@ export const maleTshirtProduct = createObjProductConfig({
     rotY: 0
   }
 });
-
-// 2. T-shirt à plat couché 3D (laying)
 export const femaleLayingTshirtProduct = createObjProductConfig({
   id: 'tshirt-female-laying',
   name: 'T-shirt à plat couché 3D',
@@ -166,8 +141,6 @@ export const femaleLayingTshirtProduct = createObjProductConfig({
     rotY: 0
   }
 });
-
-// 3. T-shirt femme suspendu sur cintre 3D (hanging)
 export const femaleHangingTshirtProduct = createObjProductConfig({
   id: 'tshirt-female-hanging',
   name: 'T-shirt femme sur cintre 3D',
@@ -188,8 +161,6 @@ export const femaleHangingTshirtProduct = createObjProductConfig({
     rotY: 0
   }
 });
-
-// 4. Casquette de baseball 3D
 export const baseballHatProduct = createObjProductConfig({
   id: 'baseball-hat',
   name: 'Casquette de baseball 3D',

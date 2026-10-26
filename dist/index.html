@@ -9,12 +9,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&family=Cinzel:wght@700&family=Dancing+Script:wght@700&family=Great+Vibes&family=Lobster&family=Montserrat:ital,wght@0,400;0,700;1,400&family=Oswald:wght@600&family=Pacifico&family=Playfair+Display:ital,wght@0,700;1,700&family=Righteous&family=Roboto:wght@400;700&family=Satisfy&display=swap" rel="stylesheet">
   <title>MockUp3D C3</title>
-  <script type="module" crossorigin src="/assets/index-C4vAOIoS.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-fLv_OtQf.css">
+  <script type="module" crossorigin src="/assets/index-BhAUeerI.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-CT_3wwEO.css">
 </head>
 <body>
   <div id="app">
-    <header class="topbar">
+<header class="topbar">
       <div class="brand"><span class="logo-card"><img src="/logo-graph2print.png" alt="Graph2Print"></span><div><strong>MockUp3D</strong><span id="localBadge" style="background:#f86900;color:white;padding:2px 6px;border-radius:4px;font-size:10px;margin-left:8px;vertical-align:middle;text-transform:uppercase;font-weight:bold;">Site en local</span><small>Présentation produit locale</small><span id="modeLabel" class="mode-label"></span></div></div>
       <div class="topbar-actions"><a id="clientModeLink" class="client-mode-link" href="/">Voir interface client</a>
         <div class="export-group">
@@ -32,8 +32,10 @@
       </div>
       <div class="privacy"><span></span> Envoi uniquement après validation <span style="margin-left:12px;opacity:0.6;">| v1.2.0</span></div>
     </header>
+
+
     <main class="workspace">
-      <aside class="panel">
+<aside class="panel"><div class="drawer-heading"><strong>Personnaliser</strong><button type="button" data-close-panel="left" aria-label="Fermer le menu de gauche">✕</button></div>
         <div id="clientGuide" class="client-guide" hidden>
           <strong id="clientGuideTitle">Étape 1 · Choisir un produit</strong>
           <p id="clientGuideText">Sélectionnez le produit à personnaliser.</p>
@@ -175,7 +177,9 @@
           </div>
         </section>
       </aside>
-      <section class="viewer-wrap"><button id="toggleLeftSidebar" class="panel-menu panel-menu-left" type="button" aria-label="Masquer le menu de gauche" aria-expanded="true" title="Menu de gauche">☰</button>
+
+
+<section class="viewer-wrap"><button id="toggleLeftSidebar" class="panel-menu panel-menu-left" type="button" aria-label="Masquer le menu de gauche" aria-expanded="true" title="Menu de gauche">☰</button>
         <div id="viewer" aria-label="Aperçu 3D interactif"></div><div id="submissionMask" class="submission-mask" hidden><img src="/logo-graph2print.png" alt="Graph2Print"><strong>Préparation des fichiers</strong><span>Votre création sera envoyée à Graph2Print.</span></div>
         <svg id="transformOverlay" aria-label="Cadre d’ajustement du visuel" hidden>
           <polygon id="transformBox"></polygon>
@@ -213,9 +217,10 @@
           </div>
         </div>
       </section>
-      <aside class="actions">
+
+<aside class="actions"><div class="drawer-heading"><strong>Apparence</strong><button type="button" data-close-panel="right" aria-label="Fermer le menu de droite">✕</button></div>
         <section class="reference-options">
-          <p class="eyebrow">APPARENCE</p>
+          <p class="eyebrow">APPARENCE</p><p class="stock-note">Objets blancs uniquement.<br>Modification de couleur : <strong>non disponible pour le moment.</strong></p>
           <div class="color-grid">
             <label><input id="topColor" type="color" value="#ffffff"><span>Surface</span></label>
             <label><input id="baseColor" type="color" value="#101318"><span>Base</span></label>
@@ -270,6 +275,8 @@
         </section>
 
       </aside>
+
+
     </main>
     <div id="toast" role="status"></div>
   </div>
