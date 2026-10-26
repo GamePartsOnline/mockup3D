@@ -9,14 +9,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&family=Cinzel:wght@700&family=Dancing+Script:wght@700&family=Great+Vibes&family=Lobster&family=Montserrat:ital,wght@0,400;0,700;1,400&family=Oswald:wght@600&family=Pacifico&family=Playfair+Display:ital,wght@0,700;1,700&family=Righteous&family=Roboto:wght@400;700&family=Satisfy&display=swap" rel="stylesheet">
   <title>MockUp3D C3</title>
-  <script type="module" crossorigin src="/assets/index-CaKVL0Cu.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BuPriwxR.css">
+  <script type="module" crossorigin src="/assets/index-0xAPdNA_.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-fLv_OtQf.css">
 </head>
 <body>
   <div id="app">
     <header class="topbar">
-      <div class="brand"><span class="logo-card"><img src="/logo-graph2print.png" alt="Graph2Print"></span><div><strong>MockUp3D</strong><span id="localBadge" style="background:#f86900;color:white;padding:2px 6px;border-radius:4px;font-size:10px;margin-left:8px;vertical-align:middle;text-transform:uppercase;font-weight:bold;">Site en local</span><small>Présentation produit locale</small></div></div>
-      <div class="topbar-actions">
+      <div class="brand"><span class="logo-card"><img src="/logo-graph2print.png" alt="Graph2Print"></span><div><strong>MockUp3D</strong><span id="localBadge" style="background:#f86900;color:white;padding:2px 6px;border-radius:4px;font-size:10px;margin-left:8px;vertical-align:middle;text-transform:uppercase;font-weight:bold;">Site en local</span><small>Présentation produit locale</small><span id="modeLabel" class="mode-label"></span></div></div>
+      <div class="topbar-actions"><a id="clientModeLink" class="client-mode-link" href="/">Voir interface client</a>
         <div class="export-group">
           <select id="exportResolution" class="topbar-select" title="Résolution de l'export">
             <option value="1">Standard (Écran)</option>
@@ -28,12 +28,18 @@
           <button id="exportMugViews" class="topbar-btn secondary mug-views-btn" type="button" title="Exporter automatiquement les 3 vues du mug">3 faces (Mug)</button>
           <button id="exportMp4" class="topbar-btn secondary mp4" type="button">MP4</button>
         </div>
-        <span id="exportStatus" class="topbar-status">Prêt</span>
+        <span id="exportStatus" class="topbar-status">Prêt</span><button id="submitCreation" class="topbar-btn primary client-submit" type="button" hidden>Envoyer ma création</button>
       </div>
-      <div class="privacy"><span></span> Vos images restent sur cet ordinateur <span style="margin-left:12px;opacity:0.6;">| v1.2.0</span></div>
+      <div class="privacy"><span></span> Envoi uniquement après validation <span style="margin-left:12px;opacity:0.6;">| v1.2.0</span></div>
     </header>
     <main class="workspace">
       <aside class="panel">
+        <div id="clientGuide" class="client-guide" hidden>
+          <strong id="clientGuideTitle">Étape 1 · Choisir un produit</strong>
+          <p id="clientGuideText">Sélectionnez le produit à personnaliser.</p>
+          <ol class="client-guide-steps"><li data-guide-step="1">Produit</li><li data-guide-step="2">Visuel</li><li data-guide-step="3">Ajustement</li><li data-guide-step="4">Envoi</li></ol>
+          <button id="clientGuideAction" class="primary" type="button">Choisir ce produit</button>
+        </div>
         <section id="sectionProduct" class="collapsible-section" data-section="1">
           <button type="button" class="section-title-btn" aria-expanded="true">
             <div class="section-title"><span>1</span><h2>Choix du produit</h2></div>
@@ -56,11 +62,13 @@
                   <option value="coasterRound">Sous-verre rond</option>
                   <option value="pencilCase">Trousse</option>
                   <option value="cushion">Housse de coussin</option>
+                  <option value="eventWristband">Bracelet événementiel en tissu</option>
                   <option value="arcadeCabinet">Borne d'Arcade (Multi-zones)</option>
                 </select>
                 <small id="productDimensions">Taille L (Poitrine 280 à 350 mm)</small><br><div style="margin-top: 6px; font-size: 13px; font-weight: 600; color: #4ade80; background: #16202a; padding: 4px 8px; border-radius: 4px; display: inline-block;">Prix de vente TTC : <span id="productPrice">13,00 €</span></div>
               </label>
             </div>
+            <label id="tshirtOrientationWrap" class="control" hidden><span>Impression T-shirt A4</span><select id="tshirtOrientation"><option value="portrait">Portrait 210 × 297 mm</option><option value="landscape">Paysage 297 × 210 mm</option></select></label>
           </div>
         </section>
         <section id="sectionImages" class="collapsible-section" data-section="2">
@@ -74,7 +82,7 @@
               <small>PNG ou JPG (sélectionnez une ou plusieurs)</small>
             </label>
             <input id="imageInput" type="file" accept="image/png,image/jpeg" multiple />
-            <div id="imagesList" class="images-list"></div>
+            <button id="loadTshirtExample" class="secondary" type="button" hidden>Voir un exemple sur le T-shirt</button><div id="imagesList" class="images-list"></div>
           </div>
         </section>
         <section id="adjustments" class="collapsible-section disabled" data-section="3">
@@ -167,8 +175,8 @@
           </div>
         </section>
       </aside>
-      <section class="viewer-wrap">
-        <div id="viewer" aria-label="Aperçu 3D interactif"></div>
+      <section class="viewer-wrap"><button id="toggleLeftSidebar" class="panel-menu panel-menu-left" type="button" aria-label="Masquer le menu de gauche" aria-expanded="true" title="Menu de gauche">☰</button>
+        <div id="viewer" aria-label="Aperçu 3D interactif"></div><div id="submissionMask" class="submission-mask" hidden><img src="/logo-graph2print.png" alt="Graph2Print"><strong>Préparation des fichiers</strong><span>Votre création sera envoyée à Graph2Print.</span></div>
         <svg id="transformOverlay" aria-label="Cadre d’ajustement du visuel" hidden>
           <polygon id="transformBox"></polygon>
           <line id="rotateStem"></line>
@@ -184,7 +192,7 @@
         </svg>
         <div class="viewer-tools"><button id="viewFaceA" class="secondary" title="Voir Face A (Avant)"><span style="font-weight:900;margin-right:4px;">A</span> Face A</button><button id="viewFaceB" class="secondary" title="Voir Face B (Arrière)"><span style="font-weight:900;margin-right:4px;">B</span> Face B</button>
           <button id="zoomOut" title="Dézoomer" aria-label="Dézoomer">−</button><button id="zoomIn" title="Zoomer" aria-label="Zoomer">+</button><button id="resetView" title="Réinitialiser la vue" aria-label="Réinitialiser la vue">⌂</button>
-          <button id="toggleRightSidebar" title="Masquer/Afficher le panneau de droite" style="font-size:14px;">▶</button>
+          <button id="toggleRightSidebar" title="Menu de droite" aria-label="Masquer le menu de droite" aria-expanded="true" style="font-size:20px;">☰</button>
         </div>
         <div class="drag-hint">↔ Faites glisser pour tourner</div>
         <div id="wrapPreviewWidget" class="wrap-preview-widget" hidden>
@@ -195,12 +203,13 @@
           <div id="wrapPreviewContent" class="wrap-preview-content">
             <div class="wrap-preview-header">
               <small id="wrapDimensions">Visuel déroulé (210 × 95 mm)</small>
-              <button id="downloadWrapBtn" class="wrap-download-btn" type="button" title="Télécharger le fichier wrap d'impression">Télécharger PNG</button>
+              <button id="downloadHeartBtn" class="wrap-download-btn" type="button" hidden>Télécharger Cœur PNG</button><button id="downloadWrapBtn" class="wrap-download-btn" type="button" title="Télécharger le fichier wrap d'impression">Télécharger PNG</button>
             </div>
             <div class="wrap-preview-img-box">
               <div class="wrap-start-indicator" title="Départ du visuel wrap côté anse"></div>
               <img id="wrapPreviewImg" alt="Aperçu wrap à plat" />
             </div>
+            <div id="heartPreviewPanel" class="heart-preview" hidden><small>Visuel Cœur (petit)</small><img id="heartPreviewImg" alt="Aperçu du logo sur le cœur" /></div>
           </div>
         </div>
       </section>
@@ -263,8 +272,6 @@
       </aside>
     </main>
     <div id="toast" role="status"></div>
-  </div>
+  </div>
 </body>
 </html>
-
-

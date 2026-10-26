@@ -11,6 +11,7 @@ import './compact-screen.css';
 import './text-tool.css';
 import './wrap-preview.css';
 import './exports-sidebar.css';
+import './interface-modes.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { ArrayBufferTarget, Muxer } from 'mp4-muxer';
@@ -26,18 +27,27 @@ import { coasterRoundProduct } from './products/coasterRound.js';
 import { pencilCaseProduct } from './products/pencilCase.js';
 import { cushionProduct } from './products/cushion.js';
 import { arcadeCabinetProduct } from './products/arcadeCabinet.js';
+import { eventWristbandProduct } from './products/eventWristband.js';
+const clientMode = document.documentElement.dataset.mode !== 'admin';
+let clientSelectedProduct = false;
+let clientDesignConfirmed = false;
+let suppressClientWatermarkForOwnerExport = false;
+document.body.classList.toggle('client-mode', clientMode);
+document.querySelector('#submitCreation').hidden = !clientMode;
+document.querySelector('#clientGuide').hidden = !clientMode;
+document.querySelector('#clientModeLink').href = '/';
+document.querySelector('#modeLabel').textContent = clientMode ? 'ESPACE CLIENT' : 'ATELIER PROPRIÉTAIRE';
+const watermarkControl = document.querySelector('#showWatermark');
+if (clientMode) { watermarkControl.checked = true; watermarkControl.disabled = true; }
+if (window.matchMedia('(max-width: 900px)').matches) {
+  document.querySelector('.workspace').classList.add('right-collapsed');
+  if (!clientMode) document.querySelector('.workspace').classList.add('left-collapsed');
+}
 if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
   const localBadge = document.querySelector('#localBadge');
   if (localBadge) localBadge.style.display = 'none';
   
-  const pSelect = document.querySelector('#productSelect');
-  if (pSelect) {
-    Array.from(pSelect.options).forEach(opt => {
-      if (opt.value === 'tshirt3D') {
-        opt.remove();
-      }
-    });
-  }
+
 }
 
 const viewer = document.querySelector('#viewer');
@@ -53,7 +63,7 @@ let bgImageObj = null;
 let backgroundTexture = null;
 
 function updateSceneBackground() {
-  const showWatermark = document.querySelector("#showWatermark")?.checked ?? true;
+  const showWatermark = !suppressClientWatermarkForOwnerExport && (clientMode || (document.querySelector("#showWatermark")?.checked ?? true));
   const bgColor = document.querySelector("#sceneColor")?.value || "#e9edf0";
   const opInput = document.querySelector("#bgOpacity");
   const opacityVal = opInput ? Number(opInput.value) / 100 : 1;
@@ -82,7 +92,7 @@ function updateSceneBackground() {
     ctx.restore();
   }
 
-  if (showWatermark && isWatermarkLoaded && watermarkImg.width > 0 && product.type !== "3d-decal") {
+  if (showWatermark && isWatermarkLoaded && watermarkImg.width > 0) {
     ctx.save();
     const wmCanvas = document.createElement("canvas");
     wmCanvas.width = watermarkImg.width;
@@ -145,7 +155,8 @@ const productDefinitions = {
   coasterRound: coasterRoundProduct,
   pencilCase: pencilCaseProduct,
   cushion: cushionProduct,
-  arcadeCabinet: arcadeCabinetProduct
+  arcadeCabinet: arcadeCabinetProduct,
+  eventWristband: eventWristbandProduct
 };
 const defaultProductKey = document.querySelector('#productSelect')?.value || 'mug11oz';
 let currentProductKey = defaultProductKey, product = productDefinitions[defaultProductKey].create(); scene.add(product.group);
@@ -153,6 +164,7 @@ const grid = new THREE.GridHelper(8, 24, 0x617078, 0x9aa6ac); grid.position.y = 
 
 let imagesList = [];
 let activeImageIndex = -1;
+let heartTexture = null;
 let texture = null, fitMode = 'cover';
 const params = { scale: 1, x: 0, y: 0, rotation: 0 };
 const textParams = { text: '', color: '#111820', font: 'Inter, sans-serif', size: 60, bold: false, italic: false, align: 'center', x: 0, y: 0, rotation: 0 };
@@ -208,6 +220,8 @@ function selectActiveImage(index) {
 
 function removeImageByIndex(index, e) {
   if (e) e.stopPropagation();
+  const removed = imagesList[index];
+  if (removed?.img.src.startsWith('blob:')) URL.revokeObjectURL(removed.img.src);
   imagesList.splice(index, 1);
   if (activeImageIndex >= imagesList.length) {
     activeImageIndex = imagesList.length - 1;
@@ -240,7 +254,7 @@ function renderImagesList() {
     if (product.zones) {
       sideSelect.innerHTML = '<option value="both">Toutes zones</option>' + product.zones.map(z => `<option value="${z.id}">${z.label}</option>`).join('');
     } else {
-      sideSelect.innerHTML = '<option value="both">Deux faces</option><option value="A">Face A</option><option value="B">Face B</option>';
+      sideSelect.innerHTML = '<option value="both">Deux faces</option><option value="A">Face A</option><option value="B">Face B</option>' + (currentProductKey === 'tshirt3D' ? '<option value="heart">Cœur (petit)</option>' : '');
     }
     sideSelect.value = item.side || 'both';
     sideSelect.onclick = e => e.stopPropagation();
@@ -284,6 +298,11 @@ function updateWrapPreviewWidget(canvas) {
   const widget = document.querySelector('#wrapPreviewWidget');
   const img = document.querySelector('#wrapPreviewImg');
   if (!widget || !img) return;
+  const heartPanel = document.querySelector('#heartPreviewPanel');
+  const heartDownload = document.querySelector('#downloadHeartBtn');
+  if (heartPanel) heartPanel.hidden = !heartTexture;
+  if (heartDownload) heartDownload.hidden = !heartTexture || clientMode;
+  if (heartTexture) document.querySelector('#heartPreviewImg').src = heartTexture.image.toDataURL('image/png');
   const hasContent = imagesList.length > 0 || textParams.text.trim().length > 0;
   if (hasContent) {
     widget.hidden = false;
@@ -299,6 +318,15 @@ document.querySelector('#toggleWrapPreview')?.addEventListener('click', () => {
   document.querySelector('#wrapPreviewWidget')?.classList.toggle('collapsed');
 });
 
+document.querySelector('#downloadHeartBtn')?.addEventListener('click', () => {
+  if (!heartTexture?.image) return;
+  const link = document.createElement('a');
+  link.href = heartTexture.image.toDataURL('image/png');
+  link.download = 'coeur-tshirt-' + Date.now() + '.png';
+  document.body.append(link);
+  link.click();
+  link.remove();
+});
 document.querySelector('#downloadWrapBtn')?.addEventListener('click', () => {
   const targetCanvas = texture?.image;
   if (!targetCanvas || !targetCanvas.toDataURL) {
@@ -307,18 +335,70 @@ document.querySelector('#downloadWrapBtn')?.addEventListener('click', () => {
   }
   const link = document.createElement('a');
   link.href = targetCanvas.toDataURL('image/png');
-  link.download = `wrap-${currentProductKey}-210x95mm-${Date.now()}.png`;
+  const printable = product.printable || productDefinitions[currentProductKey].printable;
+  const sizeLabel = Array.isArray(printable) ? printable.join('x') + 'mm' : '210x95mm';
+  link.download = 'wrap-' + currentProductKey + '-' + sizeLabel + '-' + Date.now() + '.png';
   document.body.append(link);
   link.click();
   link.remove();
   showToast('Fichier d’impression Wrap PNG téléchargé');
 });
 
+function buildHeartTexture() {
+  heartTexture?.dispose();
+  heartTexture = null;
+  if (currentProductKey !== 'tshirt3D') return;
+  const items = imagesList.filter(item => item.side === 'heart' && item.img);
+  const hasHeartText = textParams.side === 'heart' && textParams.text.trim();
+  if (!items.length && !hasHeartText) return;
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 1024;
+  const ctx = canvas.getContext('2d');
+  for (const item of items) {
+    const ratio = item.img.width / item.img.height;
+    let w, h;
+    if (item.fitMode === 'fill') {
+      w = h = 1024;
+    } else if ((item.fitMode === 'contain') === (ratio > 1)) {
+      w = 1024; h = w / ratio;
+    } else {
+      h = 1024; w = h * ratio;
+    }
+    w *= item.scaleX ?? item.scale ?? 1;
+    h *= item.scaleY ?? item.scale ?? 1;
+    ctx.save();
+    ctx.translate(512 + item.x * 512, 512 - item.y * 512);
+    ctx.rotate(-item.rotation * Math.PI / 180);
+    ctx.drawImage(item.img, -w / 2, -h / 2, w, h);
+    ctx.restore();
+  }
+  if (hasHeartText) {
+    ctx.save();
+    ctx.translate(512 + textParams.x * 512, 512 - textParams.y * 512);
+    ctx.rotate(-textParams.rotation * Math.PI / 180);
+    ctx.font = (textParams.italic ? 'italic ' : '') + (textParams.bold ? 'bold ' : 'normal ') + textParams.size + 'px ' + textParams.font;
+    ctx.fillStyle = textParams.color;
+    ctx.textAlign = textParams.align || 'center';
+    ctx.textBaseline = 'middle';
+    const lines = textParams.text.split('\n');
+    lines.forEach((line, index) => ctx.fillText(line, 0, (index - (lines.length - 1) / 2) * textParams.size * 1.25));
+    ctx.restore();
+  }
+  if (clientMode && !suppressClientWatermarkForOwnerExport && isWatermarkLoaded) {
+    ctx.save();
+    ctx.globalAlpha = 0.16;
+    ctx.drawImage(watermarkImg, 320, 320, 384, 384 * watermarkImg.height / watermarkImg.width);
+    ctx.restore();
+  }
+  heartTexture = new THREE.CanvasTexture(canvas);
+  heartTexture.colorSpace = THREE.SRGBColorSpace;
+  heartTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+}
 function buildTexture() {
   const hasText = textParams.text.trim().length > 0;
   const hasImages = imagesList.length > 0;
   if (!hasImages && !hasText) {
-    texture?.dispose(); texture = null; product.topMaterial.map = null; product.topMaterial.needsUpdate = true; wrapPreview.material.map = null; wrapPreview.material.needsUpdate = true; updateWrapPreviewWidget(null); return;
+    product.clearDecals?.(); texture?.dispose(); texture = null; heartTexture?.dispose(); heartTexture = null; product.topMaterial.map = null; product.topMaterial.needsUpdate = true; wrapPreview.material.map = null; wrapPreview.material.needsUpdate = true; updateWrapPreviewWidget(null); updateClientGuide(); return;
   }
   const surfaceColor = document.querySelector('#topColor')?.value || '#ffffff';
   
@@ -335,7 +415,7 @@ function buildTexture() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
-  const showWatermark = document.querySelector('#showWatermark')?.checked ?? true;
+  const showWatermark = !suppressClientWatermarkForOwnerExport && (clientMode || (document.querySelector('#showWatermark')?.checked ?? true));
   if (showWatermark && isWatermarkLoaded && watermarkImg.width > 0 && product.type !== '3d-decal') {
     ctx.save();
     const wmCanvas = document.createElement('canvas');
@@ -367,7 +447,7 @@ function buildTexture() {
   }
 
   imagesList.forEach(item => {
-    if (!item.img) return;
+    if (!item.img || (currentProductKey === 'tshirt3D' && item.side === 'heart')) return;
     const sx = item.scaleX ?? item.scale ?? 1;
     const sy = item.scaleY ?? item.scale ?? 1;
     const imageRatio = item.img.width / item.img.height;
@@ -416,7 +496,7 @@ function buildTexture() {
     });
   });
 
-  if (hasText) {
+  if (hasText && !(currentProductKey === 'tshirt3D' && textParams.side === 'heart')) {
     let targetZones = [];
     if (product.zones) {
       targetZones = (textParams.side === 'both' || !textParams.side) ? product.zones : product.zones.filter(z => z.id === textParams.side);
@@ -455,16 +535,18 @@ function buildTexture() {
       ctx.restore();
     });
   }
+  buildHeartTexture();
   texture?.dispose(); texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace; texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
   if (product.type === '3d-decal') {
     // texture.premultiplyAlpha = false;
     texture.needsUpdate = true;
-    if (product.applyDecals) product.applyDecals(texture, isTwoSided, canvas);
+    if (product.applyDecals) product.applyDecals(texture, isTwoSided, canvas, heartTexture);
   } else {
     product.topMaterial.map = texture; product.topMaterial.color.set(0xffffff); product.topMaterial.needsUpdate = true;
   }
   wrapPreview.material.map = texture; wrapPreview.material.needsUpdate = true; wrapPreview.scale.set(3.1, 3.1 / product.printAspect, 1);
   updateWrapPreviewWidget(canvas);
+  updateClientGuide();
 }
 
 document.querySelector('#imageInput').addEventListener('change', async e => {
@@ -488,7 +570,6 @@ document.querySelector('#imageInput').addEventListener('change', async e => {
           fitMode: 'cover',
           side: product.zones ? product.zones[0].id : 'both'
         });
-        URL.revokeObjectURL(url);
         resolve();
       };
       img.onerror = () => {
@@ -508,10 +589,15 @@ document.querySelector('#imageInput').addEventListener('change', async e => {
 });
 
 document.querySelector('#productSelect').onchange = e => {
+  if (clientMode && !e.detail?.initial) clientSelectedProduct = true;
   currentProductKey = e.target.value; scene.remove(product.group); product.group.traverse(child => child.geometry?.dispose());
   const definition = productDefinitions[currentProductKey]; product = definition.create(); scene.add(product.group);
   document.querySelector('#productDimensions').textContent = Array.isArray(definition.dimensions) ? `${definition.dimensions.join(' × ')} mm` : definition.dimensions;
   document.querySelector('#productIcon').textContent = definition.icon || (currentProductKey === 'mousePad' ? '▰' : currentProductKey === 'mug11oz' ? '☕' : '👕');
+  document.querySelector('#tshirtOrientationWrap').hidden = currentProductKey !== 'tshirt3D';
+  document.querySelector('#loadTshirtExample').hidden = currentProductKey !== 'tshirt3D';
+  if (currentProductKey === 'tshirt3D') document.querySelector('#tshirtOrientation').value = 'portrait';
+  updatePrintableLabel();
   
   const priceMap = {
     'mug11oz': '13,00 €',
@@ -525,7 +611,8 @@ document.querySelector('#productSelect').onchange = e => {
     'coasterRound': '8,00 €',
     'pencilCase': '11,00 €',
     'cushion': '17,00 €',
-    'arcadeCabinet': '2090,00 €'
+    'arcadeCabinet': '2090,00 €',
+    'eventWristband': 'À définir'
   };
   const priceEl = document.querySelector('#productPrice');
   if (priceEl) priceEl.textContent = priceMap[currentProductKey] || '-- €';
@@ -573,7 +660,7 @@ document.querySelector('#productSelect').onchange = e => {
     if (hasZones) {
       textSideSelect.innerHTML = '<option value="both">Toutes zones</option>' + product.zones.map(z => `<option value="${z.id}">${z.label}</option>`).join('');
     } else {
-      textSideSelect.innerHTML = '<option value="both">2 faces</option><option value="A">Face A</option><option value="B">Face B</option>';
+      textSideSelect.innerHTML = '<option value="both">2 faces</option><option value="A">Face A</option><option value="B">Face B</option>' + (currentProductKey === 'tshirt3D' ? '<option value="heart">Cœur (petit)</option>' : '');
     }
   }
   
@@ -583,7 +670,25 @@ document.querySelector('#productSelect').onchange = e => {
   if (imagesList.length > 0 || textParams.text.trim()) buildTexture(); 
   homeView(); setOverlayVisible(document.querySelector('#showTransformFrame').checked); 
   updateWrapPreviewWidget(texture?.image);
+  updateClientGuide();
 };
+function updatePrintableLabel() {
+  const printable = product.printable || productDefinitions[currentProductKey].printable;
+  if (currentProductKey === 'tshirt3D') {
+    const orientation = document.querySelector('#tshirtOrientation').value === 'landscape' ? 'paysage' : 'portrait';
+    document.querySelector('#productDimensions').textContent = 'Zone devant et dos : A4 ' + orientation + ' (' + printable.join(' × ') + ' mm)';
+  }
+  if (Array.isArray(printable)) {
+    document.querySelector('#wrapDimensions').textContent = 'Visuel déroulé (' + printable.join(' × ') + ' mm)';
+  }
+}
+document.querySelector('#tshirtOrientation').addEventListener('change', e => {
+  if (currentProductKey !== 'tshirt3D') return;
+  product.setPrintOrientation(e.target.value);
+  updatePrintableLabel();
+  if (imagesList.length || textParams.text.trim()) buildTexture();
+  showToast('Zone A4 ' + (e.target.value === 'landscape' ? 'paysage' : 'portrait') + ' appliquée aux deux faces');
+});
 document.querySelector('#showTransformFrame').addEventListener('change', e => {
   setOverlayVisible(e.target.checked);
   if (e.target.checked) updateOverlay();
@@ -673,6 +778,9 @@ const homeView = () => {
     controls.target.set(0, 0.68, 0);
   } else if (currentProductKey === 'mousePad' || currentProductKey === 'puzzle' || currentProductKey === 'coaster') {
     camera.position.set(0, 4.5, 0.001);
+    controls.target.set(0, 0, 0);
+  } else if (currentProductKey === 'eventWristband') {
+    camera.position.set(0, 2.5, 0.001);
     controls.target.set(0, 0, 0);
   } else if (currentProductKey === 'keychainHeart') {
     camera.position.set(0, 0.45, 1.15);
@@ -780,6 +888,7 @@ document.querySelector('#showShadow')?.addEventListener('change', e => {
   showToast(e.target.checked ? 'Ombre au sol activée' : 'Ombre au sol masquée');
 });
 document.querySelector('#showWatermark')?.addEventListener('change', () => {
+  if (clientMode) { watermarkControl.checked = true; return; }
   updateSceneBackground();
   buildTexture();
   showToast(document.querySelector('#showWatermark').checked ? 'Filigrane activé' : 'Filigrane retiré');
@@ -1027,7 +1136,7 @@ async function runExportAll() {
   }
 }
 document.querySelector('#exportAll')?.addEventListener('click', runExportAll);
-async function exportMp4() {
+async function exportMp4({ download = true } = {}) {
   const button = document.querySelector('#exportMp4');
   const buttonSide = document.querySelector('#exportMp4Side');
   const status = document.querySelector('#exportStatus');
@@ -1042,7 +1151,7 @@ async function exportMp4() {
   };
 
   if (!window.VideoEncoder || !window.VideoFrame) {
-    await exportMp4Compat(button, buttonSide, status, oldText);
+    return await exportMp4Compat(button, buttonSide, status, oldText, download);
     return;
   }
 
@@ -1072,7 +1181,7 @@ async function exportMp4() {
   }
 
   if (!config) {
-    await exportMp4Compat(button, buttonSide, status, oldText);
+    return await exportMp4Compat(button, buttonSide, status, oldText, download);
     return;
   }
 
@@ -1090,7 +1199,7 @@ async function exportMp4() {
     encoder.configure(config);
   } catch (err) {
     console.warn('Initialisation VideoEncoder echouee, passage au mode compatibilite :', err);
-    await exportMp4Compat(button, buttonSide, status, oldText);
+    return await exportMp4Compat(button, buttonSide, status, oldText, download);
     return;
   }
 
@@ -1126,18 +1235,23 @@ async function exportMp4() {
     if (encodeError) throw encodeError;
     muxer.finalize();
 
-    const url = URL.createObjectURL(new Blob([target.buffer], { type: 'video/mp4' }));
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `animation-${currentProductKey}-${Date.now()}.mp4`;
-    document.body.append(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 10000);
-    showToast('Animation MP4 enregistree');
+    const blob = new Blob([target.buffer], { type: 'video/mp4' });
+    if (download) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `animation-${currentProductKey}-${Date.now()}.mp4`;
+      document.body.append(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      showToast('Animation MP4 enregistree');
+    }
+    return blob;
   } catch (error) {
     console.error(error);
     showToast('Impossible de creer le MP4');
+    if (!download) throw error;
   } finally {
     if (encoder) {
       try {
@@ -1164,7 +1278,7 @@ async function exportMp4() {
   }
 }
 
-async function exportMp4Compat(button, buttonSide, status, oldText) {
+async function exportMp4Compat(button, buttonSide, status, oldText, download = true) {
   const setButtonsDisabled = (val) => {
     if (button) button.disabled = val;
     if (buttonSide) buttonSide.disabled = val;
@@ -1243,19 +1357,24 @@ async function exportMp4Compat(button, buttonSide, status, oldText) {
     if (exitCode !== 0) throw new Error(`FFmpeg a retourne le code ${exitCode}`);
     const data = await ffmpeg.readFile('rotation.mp4');
     if (!data?.length) throw new Error('Le fichier MP4 est vide');
-    const url = URL.createObjectURL(new Blob([data], { type: 'video/mp4' }));
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `animation-${currentProductKey}-${Date.now()}.mp4`;
-    document.body.append(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    const blob = new Blob([data], { type: 'video/mp4' });
+    if (download) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `animation-${currentProductKey}-${Date.now()}.mp4`;
+      document.body.append(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      showToast('Animation MP4 enregistree');
+    }
     ffmpeg.terminate();
-    showToast('Animation MP4 enregistree');
+    return blob;
   } catch (error) {
     console.error(error);
     showToast('La conversion MP4 a echoue');
+    if (!download) throw error;
   } finally {
     try {
       if (recorder && recorder.state !== 'inactive') recorder.stop();
@@ -1589,22 +1708,205 @@ function animate(now = performance.now()) {
 }
 animate();
 
-setTimeout(() => document.querySelector('#productSelect').dispatchEvent(new Event('change')), 100);
+setTimeout(() => document.querySelector('#productSelect').dispatchEvent(new CustomEvent('change', { detail: { initial: true } })), 100);
 
 
-// Toggle right sidebar
-const toggleRightSidebarBtn = document.getElementById('toggleRightSidebar');
-if (toggleRightSidebarBtn) {
-  toggleRightSidebarBtn.addEventListener('click', () => {
-    document.querySelector('.workspace').classList.toggle('right-collapsed');
-    if (document.querySelector('.workspace').classList.contains('right-collapsed')) {
-      toggleRightSidebarBtn.textContent = '◀';
-    } else {
-      toggleRightSidebarBtn.textContent = '▶';
-    }
-    setTimeout(() => resize(), 310); // Trigger resize for 3D canvas
+// Both menus remain accessible in owner and client views.
+const workspace = document.querySelector('.workspace');
+for (const [id, className, side] of [
+  ['toggleLeftSidebar', 'left-collapsed', 'gauche'],
+  ['toggleRightSidebar', 'right-collapsed', 'droite']
+]) {
+  const button = document.getElementById(id);
+  const sync = () => {
+    const expanded = !workspace.classList.contains(className);
+    button.setAttribute('aria-expanded', String(expanded));
+    button.setAttribute('aria-label', (expanded ? 'Masquer' : 'Afficher') + ' le menu de ' + side);
+    button.title = button.getAttribute('aria-label');
+  };
+  button.addEventListener('click', () => {
+    workspace.classList.toggle(className);
+    sync();
+    requestAnimationFrame(resize);
+    setTimeout(resize, 320);
+  });
+  sync();
+}
+
+async function captureSubmissionPng() {
+  const size = new THREE.Vector2();
+  renderer.getSize(size);
+  const pixelRatio = renderer.getPixelRatio();
+  const overlayVisible = isOverlayVisible();
+  const gridVisible = grid.visible;
+  const wrapVisible = wrapPreview.visible;
+  try {
+    setOverlayVisible(false);
+    grid.visible = false;
+    wrapPreview.visible = false;
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2) * 2);
+    renderer.render(scene, camera);
+    return renderer.domElement.toDataURL('image/png');
+  } finally {
+    renderer.setPixelRatio(pixelRatio);
+    renderer.setSize(size.x, size.y, false);
+    grid.visible = gridVisible;
+    wrapPreview.visible = wrapVisible;
+    setOverlayVisible(overlayVisible);
+    renderer.render(scene, camera);
+  }
+}
+
+function blobToDataUrl(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
   });
 }
 
+function submissionWrapDataUrl() {
+  const source = texture?.image;
+  if (!source?.toDataURL) throw new Error('Ajoutez une image ou un texte avant l’envoi.');
+  return source.toDataURL('image/png');
+}
+document.querySelector('#submitCreation')?.addEventListener('click', async () => {
+  if (!clientMode) return;
+  const button = document.querySelector('#submitCreation');
+  const initialText = button.textContent;
+  button.disabled = true;
+  let ownerExportStarted = false;
+  try {
+    if (!texture) throw new Error('Ajoutez une image ou un texte avant l’envoi.');
+    const statusResponse = await fetch('/api/submissions/status');
+    const status = await statusResponse.json();
+    if (!status.configured) throw new Error('Envoi mail non configuré. Contactez Graph2Print.');
+    ownerExportStarted = true;
+    document.querySelector('#submissionMask').hidden = false;
+    suppressClientWatermarkForOwnerExport = true;
+    buildTexture();
+    updateSceneBackground();
+    button.textContent = 'Préparation des fichiers…';
+    const key = currentProductKey;
+    const files = [];
+    const addPng = (name, data) => files.push({ name, type: 'image/png', data });
+    const printable = product.printable || productDefinitions[key].printable || [210, 95];
+    addPng('wrap-' + key + '-' + printable.join('x') + 'mm.png', submissionWrapDataUrl());
+    if (heartTexture?.image) addPng('coeur-tshirt.png', heartTexture.image.toDataURL('image/png'));
+    if (key === 'tshirt3D') {
+      const source = texture.image;
+      for (const [index, side] of ['a', 'b'].entries()) {
+        const page = document.createElement('canvas');
+        page.width = source.width / 2;
+        page.height = source.height;
+        page.getContext('2d').drawImage(source, index * page.width, 0, page.width, page.height, 0, 0, page.width, page.height);
+        addPng('wrap-tshirt-face-' + side + '-' + printable.join('x') + 'mm.png', page.toDataURL('image/png'));
+      }
+    }
+    const savedPosition = camera.position.clone();
+    const savedTarget = controls.target.clone();
+    const savedAngle = document.querySelector('#viewAngle').value;
+    try {
+      addPng('mockup-' + key + '-apercu.png', await captureSubmissionPng());
+      const views = key === 'mug11oz'
+        ? [{ name: '90deg', angle: 90 }, { name: '225deg', angle: 225 }, { name: '270deg', angle: 270 }]
+        : (key.startsWith('keychain') || key === 'tshirt3D')
+          ? [{ name: 'face-a', angle: 90 }, { name: 'face-b', angle: 270 }]
+          : [];
+      for (const view of views) {
+        setViewAngle(view.angle);
+        addPng('mockup-' + key + '-' + view.name + '.png', await captureSubmissionPng());
+      }
+    } finally {
+      camera.position.copy(savedPosition);
+      controls.target.copy(savedTarget);
+      controls.update();
+      document.querySelector('#viewAngle').value = savedAngle;
+      renderer.render(scene, camera);
+    }
+    button.textContent = 'Création de la vidéo…';
+    let videoUnavailable = false;
+    try {
+      const video = await exportMp4({ download: false });
+      if (video?.size) files.push({ name: 'animation-' + key + '.mp4', type: 'video/mp4', data: await blobToDataUrl(video) });
+      else videoUnavailable = true;
+    } catch (error) {
+      console.warn('MP4 unavailable:', error);
+      videoUnavailable = true;
+    }
+    button.textContent = 'Envoi en cours…';
+    const response = await fetch('/api/submissions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ product: productDefinitions[key].name, files })
+    });
+    const result = await response.json();
+    if (!response.ok || !result.ok) throw new Error(result.error || "L'envoi a échoué.");
+    showToast(videoUnavailable ? 'Création envoyée, vidéo indisponible' : 'Création et exports envoyés');
+  } catch (error) {
+    console.error(error);
+    showToast(error.message || "L'envoi a échoué.");
+  } finally {
+    if (ownerExportStarted) {
+      suppressClientWatermarkForOwnerExport = false;
+      buildTexture();
+      updateSceneBackground();
+      document.querySelector('#submissionMask').hidden = true;
+    }
+    button.disabled = false;
+    button.textContent = initialText;
+  }
+});
 
+function updateClientGuide() {
+  if (!clientMode) return;
+  const hasContent = imagesList.length > 0 || !!textParams.text.trim();
+  const step = !clientSelectedProduct ? 1 : !hasContent ? 2 : !clientDesignConfirmed ? 3 : 4;
+  document.body.dataset.clientStep = String(step);
+  const titles = [
+    '', 'Étape 1 · Choisir un produit', 'Étape 2 · Ajouter un visuel',
+    'Étape 3 · Ajuster le rendu', 'Étape 4 · Envoyer la création'
+  ];
+  const instructions = [
+    '', 'Choisissez un produit dans la liste, puis confirmez votre choix.',
+    'Importez une image PNG ou JPG, ou ajoutez du texte.',
+    'Vérifiez les faces, la position et les couleurs. Confirmez quand le rendu vous convient.',
+    'Les fichiers PNG et la vidéo seront préparés puis envoyés à Graph2Print.'
+  ];
+  document.querySelector('#clientGuideTitle').textContent = titles[step];
+  document.querySelector('#clientGuideText').textContent = instructions[step];
+  document.querySelectorAll('[data-guide-step]').forEach(el => {
+    const number = Number(el.dataset.guideStep);
+    el.classList.toggle('active', number === step);
+    el.classList.toggle('done', number < step);
+  });
+  const action = document.querySelector('#clientGuideAction');
+  action.hidden = step === 2;
+  action.textContent = step === 1 ? 'Choisir ce produit' : step === 3 ? 'Mon visuel est prêt' : 'Envoyer ma création';
+  document.querySelector('#submitCreation').disabled = step !== 4;
+}
+document.querySelector('#clientGuideAction').addEventListener('click', () => {
+  const step = Number(document.body.dataset.clientStep);
+  if (step === 1) clientSelectedProduct = true;
+  if (step === 3) clientDesignConfirmed = true;
+  if (step === 4) document.querySelector('#submitCreation').click();
+  updateClientGuide();
+});
+updateClientGuide();
 
+document.querySelector('#loadTshirtExample').addEventListener('click', async () => {
+  if (currentProductKey !== 'tshirt3D') return;
+  const img = new Image();
+  img.src = '/logo-graph2print.png';
+  await img.decode();
+  for (const side of ['A', 'B', 'heart']) {
+    imagesList.push({ id: 'example-' + side + '-' + Date.now(), name: 'Exemple Graph2Print · ' + side,
+      img, scale: 1, scaleX: 1, scaleY: 1, x: 0, y: 0, rotation: 0, fitMode: 'contain', side });
+  }
+  activeImageIndex = imagesList.length - 1;
+  renderImagesList();
+  syncActiveControls();
+  buildTexture();
+  showToast('Exemples ajoutés : devant, dos et cœur');
+});
