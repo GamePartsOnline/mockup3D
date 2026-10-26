@@ -31,6 +31,7 @@ import { eventWristbandProduct } from './products/eventWristband.js';
 const clientMode = document.documentElement.dataset.mode !== 'admin';
 let clientSelectedProduct = false;
 let clientDesignConfirmed = false;
+let submissionInProgress = false;
 let suppressClientWatermarkForOwnerExport = false;
 document.body.classList.toggle('client-mode', clientMode);
 document.querySelector('#submitCreation').hidden = !clientMode;
@@ -1772,7 +1773,8 @@ function submissionWrapDataUrl() {
   return source.toDataURL('image/png');
 }
 document.querySelector('#submitCreation')?.addEventListener('click', async () => {
-  if (!clientMode) return;
+  if (!clientMode || submissionInProgress) return;
+  submissionInProgress = true;
   const button = document.querySelector('#submitCreation');
   const initialText = button.textContent;
   button.disabled = true;
@@ -1783,6 +1785,7 @@ document.querySelector('#submitCreation')?.addEventListener('click', async () =>
     const status = await statusResponse.json();
     if (!status.configured) throw new Error('Envoi mail non configuré. Contactez Graph2Print.');
     ownerExportStarted = true;
+    document.querySelector('.workspace').inert = true;
     document.querySelector('#submissionMask').hidden = false;
     suppressClientWatermarkForOwnerExport = true;
     buildTexture();
@@ -1854,8 +1857,10 @@ document.querySelector('#submitCreation')?.addEventListener('click', async () =>
       updateSceneBackground();
       document.querySelector('#submissionMask').hidden = true;
     }
-    button.disabled = false;
+    submissionInProgress = false;
+    document.querySelector('.workspace').inert = false;
     button.textContent = initialText;
+    updateClientGuide();
   }
 });
 
@@ -1884,7 +1889,7 @@ function updateClientGuide() {
   const action = document.querySelector('#clientGuideAction');
   action.hidden = step === 2;
   action.textContent = step === 1 ? 'Choisir ce produit' : step === 3 ? 'Mon visuel est prêt' : 'Envoyer ma création';
-  document.querySelector('#submitCreation').disabled = step !== 4;
+  document.querySelector('#submitCreation').disabled = step !== 4 || submissionInProgress;
 }
 document.querySelector('#clientGuideAction').addEventListener('click', () => {
   const step = Number(document.body.dataset.clientStep);
