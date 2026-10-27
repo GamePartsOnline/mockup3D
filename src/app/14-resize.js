@@ -45,6 +45,7 @@ for (const [id, className, side] of [
   ['toggleRightSidebar', 'right-collapsed', 'droite']
 ]) {
   const button = document.getElementById(id);
+  if (!button) continue;
   const sync = () => {
     const expanded = !app.workspace.classList.contains(className);
     button.setAttribute('aria-expanded', String(expanded));

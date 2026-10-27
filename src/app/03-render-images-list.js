@@ -66,6 +66,10 @@ app.updateWrapPreviewWidget = function updateWrapPreviewWidget(canvas) {
   const widget = document.querySelector('#wrapPreviewWidget');
   const img = document.querySelector('#wrapPreviewImg');
   if (!widget || !img) return;
+  if (app.currentProductKey === 'showcase') {
+    widget.hidden = true;
+    return;
+  }
   const heartPanel = document.querySelector('#heartPreviewPanel');
   const heartDownload = document.querySelector('#downloadHeartBtn');
   if (heartPanel) heartPanel.hidden = !app.heartTexture;

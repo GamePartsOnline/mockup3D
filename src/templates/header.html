@@ -1,18 +1,73 @@
 <header class="topbar">
-      <div class="brand"><span class="logo-card"><img src="/logo-graph2print.png" alt="Graph2Print"></span><div><strong>MockUp3D</strong><span id="localBadge" style="background:#f86900;color:white;padding:2px 6px;border-radius:4px;font-size:10px;margin-left:8px;vertical-align:middle;text-transform:uppercase;font-weight:bold;">Site en local</span><small>Présentation produit locale</small><span id="modeLabel" class="mode-label"></span></div></div>
-      <div class="topbar-actions"><a id="clientModeLink" class="client-mode-link" href="/">Voir interface client</a>
-        <div class="export-group">
-          <select id="exportResolution" class="topbar-select" title="Résolution de l'export">
-            <option value="1">Standard (Écran)</option>
-            <option value="2" selected>HD (Catalogue 2×)</option>
-            <option value="3">Ultra HD (Impression 3×)</option>
-          </select>
-          <button id="exportAll" class="topbar-btn primary mega-export" type="button" title="Exporter le PNG, la vidéo MP4 et les vues du mug en une fois">Tout Exporter</button>
-          <button id="exportPng" class="topbar-btn secondary" type="button">PNG</button>
-          <button id="exportMugViews" class="topbar-btn secondary mug-views-btn" type="button" title="Exporter automatiquement les 3 vues du mug">3 faces (Mug)</button>
-          <button id="exportMp4" class="topbar-btn secondary mp4" type="button">MP4</button>
+  <div class="brand">
+    <span class="logo-card"><img src="/logo-graph2print.png" alt="Graph2Print"></span>
+    <div>
+      <strong>MockUp3D</strong>
+      <span id="localBadge" style="background:#f86900;color:white;padding:2px 6px;border-radius:4px;font-size:10px;margin-left:8px;vertical-align:middle;text-transform:uppercase;font-weight:bold;">Site en local</span>
+      <small>Présentation produit locale</small>
+      <span id="modeLabel" class="mode-label"></span>
+    </div>
+    <nav class="app-menu-bar" aria-label="Menu principal">
+      <div class="menu-dropdown">
+        <button type="button" class="menu-dropdown-btn">Fichier ▾</button>
+        <div class="menu-dropdown-content">
+          <button type="button" id="menuFileImport">Importer une image…</button>
+          <hr>
+          <div style="padding:6px 16px; display:flex; flex-direction:column; gap:4px;">
+            <span style="font-size:10px; font-weight:700; text-transform:uppercase; color:#64748b;">Qualité d'export</span>
+            <select id="exportResolution" class="topbar-select" title="Résolution de l'export" style="width:100%;">
+              <option value="1">Standard (Écran 1×)</option>
+              <option value="2" selected>HD (Catalogue 2×)</option>
+              <option value="3">Ultra HD (Impression 3×)</option>
+            </select>
+          </div>
+          <hr>
+          <button type="button" id="exportPng">Exporter en image PNG</button>
+          <button type="button" id="exportMp4">Exporter en vidéo MP4</button>
+          <button type="button" id="exportMugViews">Exporter 3 faces (Mug)</button>
+          <hr>
+          <button type="button" id="exportAll" style="font-weight:700; color:#0d9488;">Tout Exporter (PNG + MP4)</button>
         </div>
-        <span id="exportStatus" class="topbar-status">Prêt</span><button id="submitCreation" class="topbar-btn primary client-submit" type="button" hidden>Envoyer ma création</button>
       </div>
-      <div class="privacy"><span></span> Envoi uniquement après validation <span style="margin-left:12px;opacity:0.6;">| v1.2.0</span></div>
-    </header>
+      <div class="menu-dropdown">
+        <button type="button" class="menu-dropdown-btn">Éditer ▾</button>
+        <div class="menu-dropdown-content">
+          <button type="button" id="menuEditResetImg">Réinitialiser le visuel actif</button>
+          <button type="button" id="menuEditRepeat">Basculer le motif en mosaïque</button>
+          <button type="button" id="menuEditFrame">Afficher / Masquer le cadre</button>
+          <hr>
+          <button type="button" id="menuEditResetText">Effacer le texte personnalisé</button>
+        </div>
+      </div>
+      <div class="menu-dropdown">
+        <button type="button" class="menu-dropdown-btn">Affichage ▾</button>
+        <div class="menu-dropdown-content">
+          <button type="button" id="themeToggle">Mode Nuit</button>
+          <hr>
+          <button type="button" id="menuViewShowcase">Table d'accueil (Tous les produits)</button>
+          <button type="button" id="menuViewHome">Réinitialiser la vue 3D</button>
+          <button type="button" id="menuViewSave" style="font-weight:700; color:#0284c7;">Sauvegarder la vue actuelle</button>
+          <button type="button" id="menuViewClearSave">Oublier la vue sauvegardée</button>
+          <hr>
+          <button type="button" id="menuViewFaceA">Vue Face Avant (A)</button>
+          <button type="button" id="menuViewFaceB">Vue Face Arrière / Côtés (B)</button>
+          <hr>
+          <button type="button" id="menuViewGrid">Afficher / Masquer la grille</button>
+          <button type="button" id="menuViewShadow">Afficher / Masquer l'ombre</button>
+        </div>
+      </div>
+      <div class="menu-dropdown">
+        <button type="button" class="menu-dropdown-btn">Catalogue ▾</button>
+        <div class="menu-dropdown-content">
+          <button type="button" id="menuCatOpen">Parcourir les visuels</button>
+          <button type="button" id="menuCatAdd">+ Ajouter un visuel au catalogue</button>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <div class="topbar-actions">
+    <span id="exportStatus" class="topbar-status" style="font-size:12px; color:#94a3b8; margin-right:8px;">Prêt</span>
+    <a id="clientModeLink" class="client-mode-btn" href="/">Interface Client</a>
+    <button id="submitCreation" class="topbar-btn primary client-submit" type="button" hidden>Envoyer ma création</button>
+  </div>
+</header>

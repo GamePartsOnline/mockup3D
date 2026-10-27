@@ -3,14 +3,16 @@ import * as THREE from 'three';
 const createPuffShape = (size, segments) => {
   const geo = new THREE.PlaneGeometry(size, size, segments, segments);
   const pos = geo.attributes.position;
-  // Make it puff out in the center
+  const half = size / 2;
+  // Bombé régulier avec jonction hermétique stricte à z = 0 sur les 4 bords
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i);
     const y = pos.getY(i);
-    // distance from center normalized (0 to 1)
-    const dist = Math.sqrt(x*x + y*y) / (size/Math.sqrt(2));
-    // curve
-    const z = Math.cos(dist * Math.PI / 2) * 0.15; // 0.15 height at center
+    const nx = Math.max(-1, Math.min(1, x / half));
+    const ny = Math.max(-1, Math.min(1, y / half));
+    const cx = Math.cos(nx * Math.PI * 0.5);
+    const cy = Math.cos(ny * Math.PI * 0.5);
+    const z = Math.pow(Math.max(0, cx * cy), 0.55) * 0.22;
     pos.setZ(i, z);
   }
   geo.computeVertexNormals();
@@ -25,7 +27,7 @@ export const cushionProduct = {
     const size = 2.0; // 40 cm relative scale
 
     // Cushion top half
-    const topGeo = createPuffShape(size, 32);
+    const topGeo = createPuffShape(size, 40);
     let uvs = topGeo.attributes.uv;
     for (let i = 0; i < uvs.count; i++) {
         uvs.setX(i, uvs.getX(i) * 0.5); // Face A: 0 to 0.5
@@ -36,7 +38,7 @@ export const cushionProduct = {
     top.castShadow = true; top.receiveShadow = true; group.add(top);
 
     // Cushion bottom half
-    const bottomGeo = createPuffShape(size, 32);
+    const bottomGeo = createPuffShape(size, 40);
     uvs = bottomGeo.attributes.uv;
     for (let i = 0; i < uvs.count; i++) {
         let u = 1.0 - uvs.getX(i);

@@ -1,0 +1,169 @@
+/* Theme Sombre (Mode Nuit) MockUp3D - Contraste Haute Lisibilite */
+html[data-theme="dark"],
+html[data-theme="dark"] body {
+  background: #0d1217 !important;
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .topbar {
+  background: #0b0f14 !important;
+  border-bottom: 1px solid #1f2937 !important;
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .actions,
+html[data-theme="dark"] .workspace .panel,
+html[data-theme="dark"] .workspace .actions {
+  background: #141c26 !important;
+  color: #f8fafc !important;
+  border-color: #263445 !important;
+}
+
+html[data-theme="dark"] .panel section,
+html[data-theme="dark"] .actions section {
+  border-color: #263445 !important;
+}
+
+html[data-theme="dark"] .section-title-btn,
+html[data-theme="dark"] .section-title h2,
+html[data-theme="dark"] .panel strong,
+html[data-theme="dark"] .actions strong {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .section-title span {
+  background: #0ea5e9 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .collapse-icon {
+  color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .section-title-btn:hover .collapse-icon {
+  background: #243040 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .product-card,
+html[data-theme="dark"] .upload,
+html[data-theme="dark"] .segmented,
+html[data-theme="dark"] .file-info,
+html[data-theme="dark"] .image-item,
+html[data-theme="dark"] #arcadeControlsWrap {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .image-item.active {
+  background: #0f2926 !important;
+  border-color: #10b981 !important;
+}
+
+html[data-theme="dark"] .image-item-name,
+html[data-theme="dark"] .product-card select,
+html[data-theme="dark"] .panel .product-card select option,
+html[data-theme="dark"] .upload strong {
+  color: #ffffff !important;
+  background-color: #1e293b !important;
+}
+
+html[data-theme="dark"] .product-card label > span,
+html[data-theme="dark"] .product-card small,
+html[data-theme="dark"] .upload small,
+html[data-theme="dark"] .image-item-meta,
+html[data-theme="dark"] .frame-option,
+html[data-theme="dark"] .control span,
+html[data-theme="dark"] .control output,
+html[data-theme="dark"] .angle-title,
+html[data-theme="dark"] .rotation-mode span,
+html[data-theme="dark"] .quick-palette-title,
+html[data-theme="dark"] .eyebrow,
+html[data-theme="dark"] .actions .color-grid label,
+html[data-theme="dark"] .actions .option-check,
+html[data-theme="dark"] .actions label {
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .layer-header {
+  background: #0f2926 !important;
+  color: #34d399 !important;
+  border: 1px solid #059669 !important;
+}
+
+html[data-theme="dark"] .product-icon {
+  background: #243040 !important;
+  color: #6ee7b7 !important;
+}
+
+html[data-theme="dark"] .segmented button {
+  color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .segmented button.active {
+  background: #0d9488 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+html[data-theme="dark"] .text-button,
+html[data-theme="dark"] .secondary,
+html[data-theme="dark"] .actions .secondary,
+html[data-theme="dark"] .angles button,
+html[data-theme="dark"] .actions .angles button {
+  background: #1e293b !important;
+  border-color: #3b4d63 !important;
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .text-button:hover,
+html[data-theme="dark"] .secondary:hover,
+html[data-theme="dark"] .actions .secondary:hover,
+html[data-theme="dark"] .angles button:hover,
+html[data-theme="dark"] .actions .angles button:hover {
+  background: #28364d !important;
+  border-color: #38bdf8 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .viewer-wrap {
+  background: #0d1217 !important;
+}
+
+html[data-theme="dark"] .viewer-tools button,
+html[data-theme="dark"] .viewer-tools #viewFaceA,
+html[data-theme="dark"] .viewer-tools #viewFaceB,
+html[data-theme="dark"] .panel-menu,
+html[data-theme="dark"] .btn-showcase-floating {
+  background: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .panel select,
+html[data-theme="dark"] .panel textarea,
+html[data-theme="dark"] .panel input[type="text"],
+html[data-theme="dark"] .actions select,
+html[data-theme="dark"] .actions .rotation-mode select {
+  background: #1e293b !important;
+  color: #ffffff !important;
+  border-color: #3b4d63 !important;
+}
+
+html[data-theme="dark"] .wrap-preview-widget,
+html[data-theme="dark"] .wrap-preview-content {
+  background: #141c26 !important;
+  border-color: #263445 !important;
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .wrap-preview-header {
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .drag-hint {
+  background: rgba(20, 28, 38, 0.9) !important;
+  color: #e2e8f0 !important;
+}

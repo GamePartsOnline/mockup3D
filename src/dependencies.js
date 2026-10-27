@@ -13,6 +13,8 @@ import './wrap-preview.css';
 import './exports-sidebar.css';
 import './interface-modes.css';
 import './responsive.css';
+import './dark-mode.css';
+import './app-menu.css';
 import { CanvasTexture, CircleGeometry, Color, DirectionalLight, GridHelper, HemisphereLight, LinearToneMapping, MathUtils, Mesh, PCFSoftShadowMap, PerspectiveCamera, Raycaster, SRGBColorSpace, Scene, ShadowMaterial, Sprite, SpriteMaterial, Vector2, Vector3, WebGLRenderer } from 'three';
 const THREE = { CanvasTexture, CircleGeometry, Color, DirectionalLight, GridHelper, HemisphereLight, LinearToneMapping, MathUtils, Mesh, PCFSoftShadowMap, PerspectiveCamera, Raycaster, SRGBColorSpace, Scene, ShadowMaterial, Sprite, SpriteMaterial, Vector2, Vector3, WebGLRenderer };
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -30,6 +32,9 @@ import { pencilCaseProduct } from './products/pencilCase.js';
 import { cushionProduct } from './products/cushion.js';
 import { arcadeCabinetProduct } from './products/arcadeCabinet.js';
 import { eventWristbandProduct } from './products/eventWristband.js';
+import { capProduct } from './products/cap.js';
+import { posterProduct } from './products/poster.js';
+import { showcaseTableProduct } from './products/showcaseTable.js';
 
 export const dependencies = {
   THREE,
@@ -42,6 +47,9 @@ export const dependencies = {
   keychainRoundProduct,
   keychainHeartProduct,
   tshirt3DProduct,
+  capProduct,
+  posterProduct,
+  showcaseTableProduct,
   puzzleProduct,
   coasterProduct,
   coasterRoundProduct,

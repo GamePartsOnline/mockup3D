@@ -32,6 +32,17 @@ app.syncActiveControls = function syncActiveControls() {
   document.querySelector('#rotation').value = Math.round(active.rotation);
   document.querySelector('#rotationValue').value = `${Math.round(active.rotation)}°`;
 
+  const repBox = document.querySelector('#repeatPattern');
+  const repCtrl = document.querySelector('#repeatCountControl');
+  if (repBox) repBox.checked = !!active.repeatPattern;
+  if (repCtrl) repCtrl.hidden = !active.repeatPattern;
+  const repInput = document.querySelector('#repeatCount');
+  if (repInput) {
+    repInput.value = active.repeatCount || 3;
+    const repVal = document.querySelector('#repeatCountValue');
+    if (repVal) repVal.value = `${active.repeatCount || 3} × ${active.repeatCount || 3}`;
+  }
+
   document.querySelectorAll('[data-fit]').forEach(x => x.classList.toggle('active', x.dataset.fit === active.fitMode));
 };
 
@@ -82,12 +93,15 @@ app.floor.position.y = -.09;
 app.floor.receiveShadow = true;
 app.scene.add(app.floor);
 app.productDefinitions = {
+  showcase: app.showcaseTableProduct,
   mousePad: app.mousePadProduct,
   mug11oz: app.mug11ozProduct,
   keychainRect: app.keychainRectProduct,
   keychainRound: app.keychainRoundProduct,
   keychainHeart: app.keychainHeartProduct,
   tshirt3D: app.tshirt3DProduct,
+  cap: app.capProduct,
+  poster: app.posterProduct,
   puzzle: app.puzzleProduct,
   coaster: app.coasterProduct,
   coasterRound: app.coasterRoundProduct,
@@ -96,7 +110,7 @@ app.productDefinitions = {
   arcadeCabinet: app.arcadeCabinetProduct,
   eventWristband: app.eventWristbandProduct
 };
-app.defaultProductKey = document.querySelector('#productSelect')?.value || 'mug11oz';
+app.defaultProductKey = document.querySelector('#productSelect')?.value || 'showcase';
 app.currentProductKey = app.defaultProductKey;
 app.product = app.productDefinitions[app.defaultProductKey].create();
 app.scene.add(app.product.group);

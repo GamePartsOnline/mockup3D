@@ -16,13 +16,16 @@
               <label>
                 <span>Objet 3D</span>
                 <select id="productSelect">
+                  <option value="showcase" selected>Table d'accueil (Tous les produits)</option>
                   <option value="mousePad">Tapis de souris</option>
-                  <option value="mug11oz" selected>Mug blanc 11 oz</option>
+                  <option value="mug11oz">Mug blanc 11 oz</option>
                   <option value="keychainRect">Porte-clés rectangle Unisub</option>
                   <option value="keychainRound">Porte-clés rond Unisub</option>
                   <option value="keychainHeart">Porte-clés Cœur Unisub</option>
                   <option value="tshirt3D">T-shirt 3D</option>
-                  <option value="puzzle">Puzzle 120 pièces (28x19.5 cm)</option>
+                  <option value="cap">Casquette 3D</option>
+                  <option value="poster">Poster 80 × 60 cm (800 × 600 mm)</option>
+                  <option value="puzzle">Puzzle 120 pièces (280 × 195 × 2 mm)</option>
                   <option value="coaster">Sous-verre carré</option>
                   <option value="coasterRound">Sous-verre rond</option>
                   <option value="pencilCase">Trousse</option>
@@ -42,11 +45,18 @@
             <span class="collapse-icon">▾</span>
           </button>
           <div class="section-content">
-            <label class="upload" for="imageInput">
-              <strong>Importer des images</strong>
-              <small>PNG ou JPG (sélectionnez une ou plusieurs)</small>
-            </label>
-            <input id="imageInput" type="file" accept="image/png,image/jpeg" multiple />
+            <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+              <button type="button" id="openCatalogBtn" class="primary" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#0ea5e9; font-weight:700; padding:10px; font-size:12px;">
+                Parcourir le catalogue de visuels
+              </button>
+              
+              <label class="upload" for="imageInput" style="padding:12px 10px; cursor:pointer;">
+                <strong>Importer</strong>
+                <small>PNG, JPG ou SVG (sélectionnez une ou plusieurs)</small>
+              </label>
+              <input id="imageInput" type="file" accept="image/png,image/jpeg,image/svg+xml" multiple style="display:none;" />
+            </div>
+
             <button id="loadTshirtExample" class="secondary" type="button" hidden>Voir un exemple sur le T-shirt</button><div id="imagesList" class="images-list"></div>
           </div>
         </section>
@@ -58,10 +68,14 @@
           <div class="section-content">
             <div class="layer-header" id="activeImageLabel">Aucune image active</div>
             <div class="segmented" role="group" aria-label="Mode d’ajustement">
-              <button data-fit="contain">Image entière</button><button class="active" data-fit="cover">Remplir la surface</button><button data-fit="fill">Plein wrap (Étirer)</button>
+              <button class="active" data-fit="contain">Image entière</button><button data-fit="cover">Remplir la surface</button><button data-fit="fill">Plein wrap (Étirer)</button>
             </div>
             <label class="frame-option"><input id="showTransformFrame" type="checkbox"> Afficher le cadre de sélection</label>
             <label class="frame-option"><input id="showWatermark" type="checkbox"> Filigrane sous le visuel (en fond)</label>
+            <label class="frame-option"><input id="repeatPattern" type="checkbox"> Répéter en motif (Mosaïque)</label>
+            <div id="repeatCountControl" hidden>
+              <label class="control" style="margin:6px 0 10px;"><span>Densité du motif <output id="repeatCountValue">3 × 3</output></span><input id="repeatCount" type="range" min="2" max="8" value="3" /></label>
+            </div>
             <label class="control"><span>Taille <output id="scaleValue">100 %</output></span><input id="scale" type="range" min="20" max="250" value="100" /></label>
             <label class="control"><span>Position horizontale <output id="posXValue">0 %</output></span><input id="posX" type="range" min="-100" max="100" value="0" /></label>
             <label class="control"><span>Position verticale <output id="posYValue">0 %</output></span><input id="posY" type="range" min="-100" max="100" value="0" /></label>
@@ -139,4 +153,3 @@
             <button id="resetText" class="text-button" type="button">Effacer le texte</button>
           </div>
         </section>
-      </aside>

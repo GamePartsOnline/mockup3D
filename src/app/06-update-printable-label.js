@@ -16,6 +16,7 @@ export function initialize(app) {
 document.querySelector('#imageInput').addEventListener('change', async e => {
   const files = Array.from(e.target.files || []);
   if (!files.length) return;
+  if (app.clientMode) app.proposeClientImages?.(files);
   for (const file of files) {
     const url = URL.createObjectURL(file);
     await new Promise(resolve => {
@@ -23,36 +24,23 @@ document.querySelector('#imageInput').addEventListener('change', async e => {
       img.onload = () => {
         app.imagesList.push({
           id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-          name: file.name,
-          img,
-          scale: 1,
-          scaleX: 1,
-          scaleY: 1,
-          x: 0,
-          y: 0,
-          rotation: 0,
-          fitMode: 'cover',
+          name: file.name, img, scale: 1, scaleX: 1, scaleY: 1, x: 0, y: 0, rotation: 0, fitMode: 'contain',
           side: app.product.zones ? app.product.zones[0].id : 'both'
         });
         resolve();
       };
-      img.onerror = () => {
-        URL.revokeObjectURL(url);
-        resolve();
-      };
+      img.onerror = () => { URL.revokeObjectURL(url); resolve(); };
       img.src = url;
     });
   }
   e.target.value = '';
   app.activeImageIndex = app.imagesList.length - 1;
-  app.renderImagesList();
-  app.syncActiveControls();
-  app.buildTexture();
+  app.renderImagesList(); app.syncActiveControls(); app.buildTexture();
   app.setOverlayVisible(document.querySelector('#showTransformFrame').checked);
-  app.showToast(`${files.length} image(s) ajoutée(s)`);
+  app.showToast(app.clientMode ? `${files.length} image(s) ajoutée(s) (soumise(s) à validation catalogue)` : `${files.length} image(s) ajoutée(s)`);
 });
 document.querySelector('#productSelect').onchange = e => {
-  if (app.clientMode && !e.detail?.initial) app.clientSelectedProduct = true;
+  if (app.clientMode && !e.detail?.initial) app.clientSelectedProduct = e.target.value !== 'showcase';
   app.currentProductKey = e.target.value; app.scene.remove(app.product.group); app.product.group.traverse(child => child.geometry?.dispose());
   const definition = app.productDefinitions[app.currentProductKey]; app.product = definition.create(); app.scene.add(app.product.group);
   document.querySelector('#productDimensions').textContent = Array.isArray(definition.dimensions) ? `${definition.dimensions.join(' × ')} mm` : definition.dimensions;
@@ -63,25 +51,33 @@ document.querySelector('#productSelect').onchange = e => {
   app.updatePrintableLabel();
 
   const priceMap = {
+    'showcase': 'Catalogue complet (6 € à 2290 €)',
     'mug11oz': '13,00 €',
     'mousePad': '10,00 €',
     'keychainRect': '6,00 €',
     'keychainRound': '6,00 €',
     'keychainHeart': '6,00 €',
     'tshirt3D': '17,00 € - 21,00 €',
+    'cap': '15,00 €',
+    'poster': '25,00 €',
     'puzzle': '15,00 €',
     'coaster': '8,00 €',
     'coasterRound': '8,00 €',
     'pencilCase': '11,00 €',
     'cushion': '17,00 €',
-    'arcadeCabinet': '2090,00 €',
-    'eventWristband': 'À définir'
+    'arcadeCabinet': '2290,00 € (Décoration spécifique)',
+    'eventWristband': '6,50 €'
   };
   const priceEl = document.querySelector('#productPrice');
   if (priceEl) priceEl.textContent = priceMap[app.currentProductKey] || '-- €';
 
   const isMug = app.currentProductKey === 'mug11oz';
   const isArcade = app.currentProductKey === 'arcadeCabinet';
+  const isShowcase = app.currentProductKey === 'showcase';
+  const btnShowcase = document.querySelector('#btnShowcaseTable');
+  if (btnShowcase) btnShowcase.style.display = isShowcase ? 'none' : 'inline-block';
+  const saveViewBtn = document.querySelector('#saveViewBtn');
+  if (saveViewBtn) saveViewBtn.style.left = isShowcase ? '66px' : '188px';
 
   document.querySelector('#handleColorWrap').hidden = !isMug;
   document.querySelector('#innerColorWrap').hidden = !isMug;
@@ -127,7 +123,7 @@ document.querySelector('#productSelect').onchange = e => {
     }
   }
 
-  app.floor.position.y = isArcade ? -0.835 : -0.09;
+  app.floor.position.y = isMug ? -0.002 : (isArcade || isShowcase) ? -0.835 : -0.09;
 
   app.renderImagesList();
   if (app.imagesList.length > 0 || app.textParams.text.trim()) app.buildTexture();
@@ -146,6 +142,23 @@ document.querySelector('#showTransformFrame').addEventListener('change', e => {
   app.setOverlayVisible(e.target.checked);
   if (e.target.checked) app.updateOverlay();
   app.showToast(e.target.checked ? 'Cadre de sélection activé' : 'Cadre de sélection masqué');
+});
+document.querySelector('#repeatPattern')?.addEventListener('change', e => {
+  const active = app.getActiveImage();
+  if (!active) return;
+  active.repeatPattern = e.target.checked;
+  const repCtrl = document.querySelector('#repeatCountControl');
+  if (repCtrl) repCtrl.hidden = !e.target.checked;
+  app.requestBuildTexture();
+  app.showToast(e.target.checked ? 'Mode motif répété activé' : 'Mode motif répété désactivé');
+});
+document.querySelector('#repeatCount')?.addEventListener('input', e => {
+  const active = app.getActiveImage();
+  if (!active) return;
+  active.repeatCount = Number(e.target.value) || 3;
+  const repVal = document.querySelector('#repeatCountValue');
+  if (repVal) repVal.value = `${active.repeatCount} × ${active.repeatCount}`;
+  app.requestBuildTexture();
 });
 document.querySelectorAll('[data-fit]').forEach(btn => btn.onclick = () => {
   const active = app.getActiveImage();
@@ -167,6 +180,6 @@ Object.entries(app.sliders).forEach(([id, [out, format, convert]]) => document.q
     active[id === 'posX' ? 'x' : id === 'posY' ? 'y' : id] = convert(e.target.value);
   }
   document.querySelector(`#${out}`).value = format(e.target.value);
-  app.buildTexture();
+  app.requestBuildTexture();
 }));
 }

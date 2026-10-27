@@ -16,9 +16,9 @@ app.resetActiveImage = function resetActiveImage(redraw = true) {
 
 export function initialize(app) {
 document.querySelector('#resetImage').onclick = () => app.resetActiveImage(true);
-document.querySelector('#customText').addEventListener('input', e => { app.textParams.text = e.target.value; app.buildTexture(); });
+document.querySelector('#customText').addEventListener('input', e => { app.textParams.text = e.target.value; app.requestBuildTexture(); });
 document.querySelector('#textSideSelect')?.addEventListener('change', e => { app.textParams.side = e.target.value; app.buildTexture(); });
-document.querySelector('#textColor').addEventListener('input', e => { app.textParams.color = e.target.value; app.buildTexture(); });
+document.querySelector('#textColor').addEventListener('input', e => { app.textParams.color = e.target.value; app.requestBuildTexture(); });
 document.querySelector('#textFont').addEventListener('change', async e => {
   app.textParams.font = e.target.value;
   if (document.fonts) {
@@ -28,7 +28,7 @@ document.querySelector('#textFont').addEventListener('change', async e => {
   }
   app.buildTexture();
 });
-document.querySelector('#textSize').addEventListener('input', e => { app.textParams.size = Number(e.target.value); document.querySelector('#textSizeValue').value = `${e.target.value} px`; app.buildTexture(); });
+document.querySelector('#textSize').addEventListener('input', e => { app.textParams.size = Number(e.target.value); document.querySelector('#textSizeValue').value = `${e.target.value} px`; app.requestBuildTexture(); });
 document.querySelector('#textBold').addEventListener('change', e => { app.textParams.bold = e.target.checked; app.buildTexture(); });
 document.querySelector('#textItalic').addEventListener('change', e => { app.textParams.italic = e.target.checked; app.buildTexture(); });
 document.querySelectorAll('.align-btn').forEach(btn => {
@@ -38,9 +38,9 @@ document.querySelectorAll('.align-btn').forEach(btn => {
     app.buildTexture();
   });
 });
-document.querySelector('#textPosX').addEventListener('input', e => { app.textParams.x = Number(e.target.value) / 100; document.querySelector('#textPosXValue').value = `${e.target.value} %`; app.buildTexture(); });
-document.querySelector('#textPosY').addEventListener('input', e => { app.textParams.y = Number(e.target.value) / 100; document.querySelector('#textPosYValue').value = `${e.target.value} %`; app.buildTexture(); });
-document.querySelector('#textRotation').addEventListener('input', e => { app.textParams.rotation = Number(e.target.value); document.querySelector('#textRotationValue').value = `${e.target.value}°`; app.buildTexture(); });
+document.querySelector('#textPosX').addEventListener('input', e => { app.textParams.x = Number(e.target.value) / 100; document.querySelector('#textPosXValue').value = `${e.target.value} %`; app.requestBuildTexture(); });
+document.querySelector('#textPosY').addEventListener('input', e => { app.textParams.y = Number(e.target.value) / 100; document.querySelector('#textPosYValue').value = `${e.target.value} %`; app.requestBuildTexture(); });
+document.querySelector('#textRotation').addEventListener('input', e => { app.textParams.rotation = Number(e.target.value); document.querySelector('#textRotationValue').value = `${e.target.value}°`; app.requestBuildTexture(); });
 document.querySelector('#resetText').addEventListener('click', () => {
   app.textParams.text = ''; app.textParams.color = '#111820'; app.textParams.font = 'Inter, sans-serif'; app.textParams.size = 60; app.textParams.bold = false; app.textParams.italic = false; app.textParams.align = 'center'; app.textParams.x = 0; app.textParams.y = 0; app.textParams.rotation = 0;
   document.querySelector('#customText').value = ''; document.querySelector('#textColor').value = '#111820'; document.querySelector('#textFont').value = 'Inter, sans-serif'; document.querySelector('#textSize').value = 60; document.querySelector('#textSizeValue').value = '60 px'; document.querySelector('#textBold').checked = false; document.querySelector('#textItalic').checked = false;
@@ -56,11 +56,52 @@ document.querySelectorAll('.collapsible-section .section-title-btn').forEach(btn
     btn.setAttribute('aria-expanded', String(!isCollapsed));
   });
 });
-app.homeView = () => {
-  if (app.currentProductKey === 'mug11oz') {
-    app.camera.position.set(0.6, 2.7, 6.2);
-    app.controls.target.set(0, 0.68, 0);
-  } else if (app.currentProductKey === 'mousePad' || app.currentProductKey === 'puzzle' || app.currentProductKey === 'coaster') {
+app.saveCurrentView = () => {
+  try {
+    const store = JSON.parse(localStorage.getItem('mockup3d_saved_views') || '{}');
+    const active = app.getActiveImage?.();
+    store[app.currentProductKey] = {
+      pos: app.camera.position.toArray(),
+      target: app.controls.target.toArray()
+    };
+    if (active?.img?.src && !active.img.src.startsWith('blob:')) {
+      store._savedVisual = { url: active.img.src, name: active.name, fitMode: active.fitMode, scale: active.scale, repeatPattern: !!active.repeatPattern };
+    }
+    localStorage.setItem('mockup3d_saved_views', JSON.stringify(store));
+    app.showToast('Vue et visuel sauvegardés');
+  } catch {}
+};
+app.clearSavedView = () => {
+  try {
+    const store = JSON.parse(localStorage.getItem('mockup3d_saved_views') || '{}');
+    delete store[app.currentProductKey];
+    localStorage.setItem('mockup3d_saved_views', JSON.stringify(store));
+    app.homeView(true);
+    app.showToast('Vue par défaut restaurée');
+  } catch {}
+};
+app.homeView = (ignoreSaved = false) => {
+  if (!ignoreSaved) {
+    try {
+      const saved = JSON.parse(localStorage.getItem('mockup3d_saved_views') || '{}')[app.currentProductKey];
+      if (saved?.pos && saved?.target) {
+        app.camera.position.fromArray(saved.pos);
+        app.controls.target.fromArray(saved.target);
+        app.controls.update();
+        return;
+      }
+    } catch {}
+  }
+  if (app.currentProductKey === 'showcase') {
+    app.camera.position.set(-0.55, 2.75, 5.35);
+    app.controls.target.set(-0.55, 0.30, -0.05);
+  } else if (app.currentProductKey === 'cap') {
+    app.camera.position.set(0.3, 1.35, 2.75);
+    app.controls.target.set(0, 0.48, 0.05);
+  } else if (app.currentProductKey === 'mug11oz') {
+    app.camera.position.set(0.6, 2.76, 6.2);
+    app.controls.target.set(0, 0.88, 0);
+  } else if (app.currentProductKey === 'mousePad' || app.currentProductKey === 'puzzle' || app.currentProductKey === 'coaster' || app.currentProductKey === 'poster') {
     app.camera.position.set(0, 4.5, 0.001);
     app.controls.target.set(0, 0, 0);
   } else if (app.currentProductKey === 'eventWristband') {
@@ -93,8 +134,12 @@ document.querySelector('#viewFaceA')?.addEventListener('click', () => {
   app.homeView();
   if (app.currentProductKey === 'arcadeCabinet') {
     app.camera.position.set(0, -0.05, 3.4);
-    app.controls.update();
+  } else if (app.currentProductKey.startsWith('tshirt')) {
+    app.camera.position.set(0, 0.28, 1.55);
+    app.controls.target.set(0, 0.25, 0);
   }
+  app.controls.update();
+  app.showToast('Vue : Face A (Avant)');
 });
 document.querySelector('#viewFaceB')?.addEventListener('click', () => {
   app.homeView();
@@ -102,10 +147,17 @@ document.querySelector('#viewFaceB')?.addEventListener('click', () => {
     app.camera.position.set(-0.8, 2.5, -6.5);
   } else if (app.currentProductKey === 'arcadeCabinet') {
     app.camera.position.set(3.4, -0.05, 0);
+  } else if (app.currentProductKey.startsWith('tshirt')) {
+    app.camera.position.set(0, 0.28, -1.55);
+    app.controls.target.set(0, 0.25, 0);
+  } else if (app.currentProductKey === 'cushion' || app.currentProductKey === 'pencilCase') {
+    app.camera.position.set(0, -3.8, -0.01);
+    app.controls.target.set(0, 0, 0);
   } else {
     app.camera.position.z = -Math.abs(app.camera.position.z);
   }
   app.controls.update();
+  app.showToast('Vue : Face B (Arrière)');
 });
 document.querySelector('#zoomIn').onclick = () => { app.camera.position.multiplyScalar(.84); app.controls.update(); };
 document.querySelector('#zoomOut').onclick = () => { app.camera.position.multiplyScalar(1.16); app.controls.update(); };
@@ -114,7 +166,7 @@ app.controls.autoRotateSpeed = 1.25;
 document.querySelector('#topColor').oninput = e => {
   app.product.topMaterial.color.set(e.target.value);
   app.product.topMaterial.needsUpdate = true;
-  app.buildTexture();
+  app.requestBuildTexture();
 };
 document.querySelector('#baseColor').oninput = e => { app.product.baseMaterial.color.set(e.target.value); app.product.baseMaterial.needsUpdate = true; };
 document.querySelector('#handleColor').oninput = e => { if (app.product.handleMaterial) { app.product.handleMaterial.color.set(e.target.value); app.product.handleMaterial.needsUpdate = true; } };

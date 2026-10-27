@@ -15,7 +15,7 @@ app.setBackgroundImageFromUrl = function setBackgroundImageFromUrl(url, label) {
     const opCtrl = document.getElementById('bgOpacityControl');
     if (opCtrl) opCtrl.hidden = false;
     app.updateSceneBackground();
-    app.showToast(label || 'Image de fond appliquée');
+    if (label) app.showToast(label);
   };
   img.src = url;
 };
@@ -91,7 +91,7 @@ document.querySelectorAll('.quick-palette .swatch').forEach(swatch => {
     if (app.product.innerMaterial) { app.product.innerMaterial.color.set(col); app.product.innerMaterial.needsUpdate = true; }
   });
 });
-document.querySelector('#sceneColor').oninput = () => app.updateSceneBackground();
+document.querySelector('#sceneColor').oninput = () => app.requestUpdateSceneBackground();
 document.querySelector('#showGrid').onchange = e => app.grid.visible = e.target.checked;
 document.querySelector('#showShadow')?.addEventListener('change', e => {
   app.floor.visible = e.target.checked;
@@ -130,10 +130,10 @@ document.querySelector('#bgPresetBureau')?.addEventListener('click', () => {
   }
 });
 document.querySelector('#bgPresetSalon')?.addEventListener('click', () => {
-  app.setBackgroundImageFromUrl('/background-salon.jpg', 'Simulation salon moderne appliquée');
+  app.setBackgroundImageFromUrl('/background-salon.jpg?v=4', 'Simulation salon moderne appliquée');
 });
 document.querySelector('#bgInput').onchange = e => { const file = e.target.files[0]; if (!file) return; const url = URL.createObjectURL(file); app.setBackgroundImageFromUrl(url, 'Image de fond appliquée'); };
-if (document.querySelector('#bgOpacity')) { document.querySelector('#bgOpacity').oninput = e => { document.querySelector('#bgOpacityValue').value = `${e.target.value} %`; app.updateSceneBackground(); }; }
+if (document.querySelector('#bgOpacity')) { document.querySelector('#bgOpacity').oninput = e => { document.querySelector('#bgOpacityValue').value = `${e.target.value} %`; app.requestUpdateSceneBackground(); }; }
 document.querySelector("#clearBg").onclick = () => { app.bgImageObj = null; app.backgroundTexture?.dispose(); app.backgroundTexture = null; const opCtrl = document.getElementById("bgOpacityControl"); if (opCtrl) opCtrl.hidden = true; app.updateSceneBackground(); document.querySelector("#bgInput").value = ""; };
 app.resSelectTop = document.querySelector('#exportResolution');
 app.resSelectSide = document.querySelector('#exportResolutionSide');

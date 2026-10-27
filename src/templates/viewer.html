@@ -1,4 +1,4 @@
-<section class="viewer-wrap"><button id="toggleLeftSidebar" class="panel-menu panel-menu-left" type="button" aria-label="Masquer le menu de gauche" aria-expanded="true" title="Menu de gauche">☰</button>
+<section class="viewer-wrap"><button id="toggleLeftSidebar" class="panel-menu panel-menu-left" type="button" aria-label="Masquer le menu de gauche" aria-expanded="true" title="Menu de gauche">☰</button><button id="btnShowcaseTable" class="btn-showcase-floating" type="button" title="Retourner à la table de présentation de tous les produits">Table d'accueil</button><button id="saveViewBtn" class="btn-showcase-floating btn-save-view" type="button" title="Sauvegarder l'angle et le zoom actuels pour ce produit">Sauvegarder la vue</button>
         <div id="viewer" aria-label="Aperçu 3D interactif"></div><div id="submissionMask" class="submission-mask" hidden><img src="/logo-graph2print.png" alt="Graph2Print"><strong>Préparation des fichiers</strong><span>Votre création sera envoyée à Graph2Print.</span></div>
         <svg id="transformOverlay" aria-label="Cadre d’ajustement du visuel" hidden>
           <polygon id="transformBox"></polygon>
@@ -13,10 +13,10 @@
           <circle class="resize-handle" data-corner="2" r="7" title="Coin bas-droit"></circle>
           <circle class="resize-handle" data-corner="3" r="7" title="Coin bas-gauche"></circle>
         </svg>
-        <div class="viewer-tools"><button id="viewFaceA" class="secondary" title="Voir Face A (Avant)"><span style="font-weight:900;margin-right:4px;">A</span> Face A</button><button id="viewFaceB" class="secondary" title="Voir Face B (Arrière)"><span style="font-weight:900;margin-right:4px;">B</span> Face B</button>
-          <button id="zoomOut" title="Dézoomer" aria-label="Dézoomer">−</button><button id="zoomIn" title="Zoomer" aria-label="Zoomer">+</button><button id="resetView" title="Réinitialiser la vue" aria-label="Réinitialiser la vue">⌂</button>
-          <button id="toggleRightSidebar" title="Menu de droite" aria-label="Masquer le menu de droite" aria-expanded="true" style="font-size:20px;">☰</button>
+        <div class="viewer-tools"><button id="viewFaceA" class="secondary" type="button" title="Voir Face A (Avant)"><span style="font-weight:900;margin-right:4px;">A</span> Face A</button><button id="viewFaceB" class="secondary" type="button" title="Voir Face B (Arrière)"><span style="font-weight:900;margin-right:4px;">B</span> Face B</button>
+          <button id="zoomOut" type="button" title="Dézoomer" aria-label="Dézoomer">−</button><button id="zoomIn" type="button" title="Zoomer" aria-label="Zoomer">+</button><button id="resetView" type="button" title="Réinitialiser la vue" aria-label="Réinitialiser la vue">⌂</button>
         </div>
+        <div id="showcaseTooltip" class="showcase-tooltip" hidden></div>
         <div class="drag-hint">↔ Faites glisser pour tourner</div>
         <div id="wrapPreviewWidget" class="wrap-preview-widget" hidden>
           <button id="toggleWrapPreview" class="wrap-preview-tab" type="button" title="Aperçu à plat (Wrap)">
@@ -35,4 +35,36 @@
             <div id="heartPreviewPanel" class="heart-preview" hidden><small>Visuel Cœur (petit)</small><img id="heartPreviewImg" alt="Aperçu du logo sur le cœur" /></div>
           </div>
         </div>
+        <aside id="catalogExplorer" class="catalog-explorer" hidden>
+          <div class="catalog-explorer-header">
+            <div class="catalog-explorer-title">
+              <strong>Explorateur de visuels</strong>
+              <small id="catalogCount">Visuels disponibles</small>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <select id="adminCategorySelect" title="Catégorie pour les prochains ajouts" style="padding:5px 8px; font-size:11px; border-radius:6px; border:1px solid #cbd5e1; background:#f8fafc; color:#1e293b;">
+                <option value="auto">Catégorie : Auto</option>
+                <option value="Fleurs">Fleurs</option>
+                <option value="Licornes">Licornes</option>
+                <option value="Animaux & Art">Animaux & Art</option>
+                <option value="Illustrations">Illustrations</option>
+                <option value="Motifs">Motifs</option>
+                <option value="Logos">Logos</option>
+              </select>
+              <button type="button" id="adminAddLibraryBtn" class="primary" style="padding:6px 12px; font-size:11px; background:#1caa88; width:auto; font-weight:700;">+ Ajouter un visuel</button>
+              <input id="adminLibraryInput" type="file" accept="image/png,image/jpeg,image/svg+xml" multiple style="display:none;" />
+              <button type="button" id="closeExplorerBtn" class="close-explorer-btn" title="Fermer le catalogue" aria-label="Fermer">✕</button>
+            </div>
+          </div>
+          <div class="catalog-explorer-search">
+            <input type="text" id="catalogSearchInput" placeholder="Rechercher un visuel..." autocomplete="off" />
+            <div id="catalogCategories" class="catalog-categories">
+              <button type="button" class="cat-pill active" data-cat="all">Tous</button>
+              <button type="button" class="cat-pill" data-cat="Motifs">Motifs</button>
+              <button type="button" class="cat-pill" data-cat="Illustrations">Illustrations</button>
+              <button type="button" class="cat-pill" data-cat="Logos">Logos</button>
+            </div>
+          </div>
+          <div id="catalogGrid" class="catalog-explorer-grid"></div>
+        </aside>
       </section>

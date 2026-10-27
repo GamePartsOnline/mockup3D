@@ -2,8 +2,8 @@ import * as THREE from 'three';
 import { profilePoints } from './arcadeProfile.js';
 export const arcadeCabinetProduct = {
   id: 'arcade-cabinet',
-  name: 'Borne d\'Arcade',
-  dimensions: '600 × 1700 × 700 mm',
+  name: "Borne d'Arcade (Décoration spécifique)",
+  dimensions: '600 × 1700 × 700 mm • Décoration spécifique',
   printable: [600, 1700],
   icon: '🕹️',
   printAspect: 1,

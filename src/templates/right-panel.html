@@ -1,57 +1,69 @@
-<aside class="actions"><div class="drawer-heading"><strong>Apparence</strong><button type="button" data-close-panel="right" aria-label="Fermer le menu de droite">✕</button></div>
-        <section class="reference-options">
-          <p class="eyebrow">APPARENCE</p><p class="stock-note">Objets blancs uniquement.<br>Modification de couleur : <strong>non disponible pour le moment.</strong></p>
-          <div class="color-grid">
-            <label><input id="topColor" type="color" value="#ffffff"><span>Surface</span></label>
-            <label><input id="baseColor" type="color" value="#101318"><span>Base</span></label>
-            <label><input id="sceneColor" type="color" value="#e9edf0"><span>Fond</span></label>
-            <label id="handleColorWrap" hidden><input id="handleColor" type="color" value="#ffffff"><span>Anse</span></label>
-            <label id="innerColorWrap" hidden><input id="innerColor" type="color" value="#ffffff"><span>Intérieur</span></label>
-            <div id="arcadeControlsWrap" hidden style="margin-top:8px; display:grid; grid-template-columns:1fr 1fr; gap:4px; font-size:12px;">
-              <label>J1 Joy: <select id="j1Color" class="custom-select" style="padding:2px; border-radius:4px;"><option value="#0055ff">Bleu</option><option value="#ff0000" selected>Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
-              <label>J2 Joy: <select id="j2Color" class="custom-select" style="padding:2px; border-radius:4px;"><option value="#0055ff" selected>Bleu</option><option value="#ff0000">Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
-              <label>J1 Btn: <select id="b1Color" class="custom-select" style="padding:2px; border-radius:4px;"><option value="#0055ff" selected>Bleu</option><option value="#ff0000">Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
-              <label>J2 Btn: <select id="b2Color" class="custom-select" style="padding:2px; border-radius:4px;"><option value="#0055ff">Bleu</option><option value="#ff0000" selected>Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
+        <section id="sectionAppearance" class="collapsible-section reference-options actions" data-section="5">
+          <button type="button" class="section-title-btn" aria-expanded="true">
+            <div class="section-title"><span>5</span><h2>Apparence & Fond</h2></div>
+            <span class="collapse-icon">▾</span>
+          </button>
+          <div class="section-content">
+            <p class="stock-note">Objets blancs uniquement.<br>Modification de couleur : <strong>non disponible pour le moment.</strong></p>
+            <div class="color-grid">
+              <label><input id="topColor" type="color" value="#ffffff"><span>Surface</span></label>
+              <label><input id="baseColor" type="color" value="#101318"><span>Base</span></label>
+              <label><input id="sceneColor" type="color" value="#e9edf0"><span>Fond</span></label>
+              <label id="handleColorWrap" hidden><input id="handleColor" type="color" value="#ffffff"><span>Anse</span></label>
+              <label id="innerColorWrap" hidden><input id="innerColor" type="color" value="#ffffff"><span>Intérieur</span></label>
             </div>
-          </div>
-          <div id="arcadeGlowWrap" hidden style="margin-top:8px; margin-bottom:8px;">
-            <label class="option-check mini-check"><input id="arcadeGlow" type="checkbox"> Boutons/Manettes lumineux</label>
-          </div>
-          <div id="quickPalette" class="quick-palette" hidden>
-            <span class="quick-palette-title">Palette mug rapide :</span>
-            <div class="quick-palette-colors">
-              <button type="button" class="swatch" data-color="#ffffff" style="background:#ffffff" title="Blanc"></button>
-              <button type="button" class="swatch" data-color="#000000" style="background:#000000" title="Noir"></button>
-              <button type="button" class="swatch" data-color="#df1212" style="background:#df1212" title="Rouge"></button>
-              <button type="button" class="swatch" data-color="#7a0205" style="background:#7a0205" title="Bordeaux"></button>
-              <button type="button" class="swatch" data-color="#f86900" style="background:#f86900" title="Orange"></button>
-              <button type="button" class="swatch" data-color="#edd900" style="background:#edd900" title="Jaune"></button>
-              <button type="button" class="swatch" data-color="#075103" style="background:#075103" title="Vert"></button>
-              <button type="button" class="swatch" data-color="#1d85d0" style="background:#1d85d0" title="Bleu"></button>
-              <button type="button" class="swatch" data-color="#270e68" style="background:#270e68" title="Marine"></button>
-              <button type="button" class="swatch" data-color="#ffc2c2" style="background:#ffc2c2" title="Rose"></button>
+            <div id="arcadeControlsWrap" hidden style="margin-top:10px; margin-bottom:8px; padding:10px; border-radius:8px; background:rgba(0,0,0,0.05); border:1px solid #dce1e5;">
+              <div style="font-weight:700; font-size:11px; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em; color:#475569;">Contrôles de la Borne Arcade</div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:11px;">
+                <label style="display:flex; flex-direction:column; gap:2px;"><strong>J1 Joystick</strong><select id="j1Color" class="custom-select" style="padding:4px; border-radius:4px;"><option value="#0055ff">Bleu</option><option value="#ff0000" selected>Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
+                <label style="display:flex; flex-direction:column; gap:2px;"><strong>J2 Joystick</strong><select id="j2Color" class="custom-select" style="padding:4px; border-radius:4px;"><option value="#0055ff" selected>Bleu</option><option value="#ff0000">Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
+                <label style="display:flex; flex-direction:column; gap:2px;"><strong>J1 Boutons</strong><select id="b1Color" class="custom-select" style="padding:4px; border-radius:4px;"><option value="#0055ff" selected>Bleu</option><option value="#ff0000">Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
+                <label style="display:flex; flex-direction:column; gap:2px;"><strong>J2 Boutons</strong><select id="b2Color" class="custom-select" style="padding:4px; border-radius:4px;"><option value="#0055ff">Bleu</option><option value="#ff0000" selected>Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
+              </div>
+              <div id="arcadeGlowWrap" style="margin-top:8px;">
+                <label class="option-check mini-check" style="margin:0;"><input id="arcadeGlow" type="checkbox"> Boutons/Manettes lumineux</label>
+              </div>
             </div>
+            <div id="quickPalette" class="quick-palette" hidden>
+              <span class="quick-palette-title">Palette mug rapide :</span>
+              <div class="quick-palette-colors">
+                <button type="button" class="swatch" data-color="#ffffff" style="background:#ffffff" title="Blanc"></button>
+                <button type="button" class="swatch" data-color="#000000" style="background:#000000" title="Noir"></button>
+                <button type="button" class="swatch" data-color="#df1212" style="background:#df1212" title="Rouge"></button>
+                <button type="button" class="swatch" data-color="#7a0205" style="background:#7a0205" title="Bordeaux"></button>
+                <button type="button" class="swatch" data-color="#f86900" style="background:#f86900" title="Orange"></button>
+                <button type="button" class="swatch" data-color="#edd900" style="background:#edd900" title="Jaune"></button>
+                <button type="button" class="swatch" data-color="#075103" style="background:#075103" title="Vert"></button>
+                <button type="button" class="swatch" data-color="#1d85d0" style="background:#1d85d0" title="Bleu"></button>
+                <button type="button" class="swatch" data-color="#270e68" style="background:#270e68" title="Marine"></button>
+                <button type="button" class="swatch" data-color="#ffc2c2" style="background:#ffc2c2" title="Rose"></button>
+              </div>
+            </div>
+            <label class="option-check"><input id="showGrid" type="checkbox"> Afficher la grille</label>
+            <label class="option-check"><input id="showShadow" type="checkbox" checked> Afficher l'ombre au sol</label>
+            <div class="background-actions"><label for="bgInput" class="secondary">Ajouter une image de fond</label><button id="clearBg" class="secondary">Effacer le fond</button></div><input id="bgInput" type="file" accept="image/png,image/jpeg">
+            <div class="background-actions" style="margin-top:6px; display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+              <button id="bgPresetPodium" class="secondary" type="button" style="background:#fff1f2; border-color:#fecdd3; color:#9f1239; font-weight:700; font-size:11px; padding:6px 4px;" title="Podium coloré studio pour le mug">Podium (Mug)</button>
+              <button id="bgPresetMug" class="secondary" type="button" style="background:#f1f5f9; border-color:#cbd5e1; color:#334155; font-weight:600; font-size:11px; padding:6px 4px;" title="Cuisine moderne pour le mug">Cuisine (Mug)</button>
+              <button id="bgPresetBureau" class="secondary" type="button" style="background:#eff6ff; border-color:#bfdbfe; color:#1e40af; font-weight:600; font-size:11px; padding:6px 4px;" title="Bureau moderne avec ordi pour le tapis de souris">Bureau (Tapis)</button>
+              <button id="bgPresetSalon" class="secondary" type="button" style="background:#f0fdf9; border-color:#a7f3d0; color:#065f46; font-weight:600; font-size:11px; padding:6px 4px;" title="Salon moderne pour la borne">Salon (Arcade)</button>
+            </div>
+            <label class="control" id="bgOpacityControl" hidden><span>Opacité du fond <output id="bgOpacityValue">100 %</output></span><input id="bgOpacity" type="range" min="0" max="100" value="100"></label>
           </div>
-          <label class="option-check"><input id="showGrid" type="checkbox"> Afficher la grille</label>
-          <label class="option-check"><input id="showShadow" type="checkbox" checked> Afficher l'ombre au sol</label>
-          <div class="angle-title">Angles de vue</div><div class="angles"><button data-angle="45">45°</button><button data-angle="90">90°</button><button data-angle="135">135°</button><button data-angle="225">225°</button><button data-angle="270">270°</button><button data-angle="315">315°</button></div>
-          <label class="control"><span>Angle personnalisé <output id="angleValue">45°</output></span><input id="viewAngle" type="range" min="0" max="360" value="45"></label>
-          <label class="control"><span>Vitesse d’animation <output id="speedValue">1×</output></span><input id="speed" type="range" min="2" max="30" value="12"></label>
-          <label class="rotation-mode"><span>Sens de rotation</span><select id="rotationMode"><option value="horizontal">Horizontal</option><option value="vertical">Vertical</option><option value="diagonal">Diagonal</option><option value="swing">Va-et-vient</option></select></label>
-          <label class="option-check"><input id="reverse" type="checkbox"> Sens inverse</label>
-          <div class="background-actions"><label for="bgInput" class="secondary">Ajouter une image de fond</label><button id="clearBg" class="secondary">Effacer le fond</button></div><input id="bgInput" type="file" accept="image/png,image/jpeg">
-          <div class="background-actions" style="margin-top:6px; display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-            <button id="bgPresetPodium" class="secondary" type="button" style="background:#fff1f2; border-color:#fecdd3; color:#9f1239; font-weight:700; font-size:11px; padding:6px 4px;" title="Podium coloré studio pour le mug">Podium (Mug)</button>
-            <button id="bgPresetMug" class="secondary" type="button" style="background:#f1f5f9; border-color:#cbd5e1; color:#334155; font-weight:600; font-size:11px; padding:6px 4px;" title="Cuisine moderne pour le mug">Cuisine (Mug)</button>
-            <button id="bgPresetBureau" class="secondary" type="button" style="background:#eff6ff; border-color:#bfdbfe; color:#1e40af; font-weight:600; font-size:11px; padding:6px 4px;" title="Bureau moderne avec ordi pour le tapis de souris">Bureau (Tapis)</button>
-            <button id="bgPresetSalon" class="secondary" type="button" style="background:#f0fdf9; border-color:#a7f3d0; color:#065f46; font-weight:600; font-size:11px; padding:6px 4px;" title="Salon moderne pour la borne">Salon (Arcade)</button>
+        </section>
+        <section id="sectionAnimation" class="collapsible-section actions" data-section="6">
+          <button type="button" class="section-title-btn" aria-expanded="true">
+            <div class="section-title"><span>6</span><h2>Animation & Angles</h2></div>
+            <span class="collapse-icon">▾</span>
+          </button>
+          <div class="section-content">
+            <label class="switch-row animation-switch"><span><strong>Animer le produit</strong><small>Active ou arrête la rotation</small></span><input id="autoRotate" type="checkbox" /><i></i></label>
+            <div class="angle-title">Angles de vue</div><div class="angles"><button data-angle="45">45°</button><button data-angle="90">90°</button><button data-angle="135">135°</button><button data-angle="225">225°</button><button data-angle="270">270°</button><button data-angle="315">315°</button></div>
+            <label class="control"><span>Angle personnalisé <output id="angleValue">45°</output></span><input id="viewAngle" type="range" min="0" max="360" value="45"></label>
+            <label class="control"><span>Vitesse d’animation <output id="speedValue">1×</output></span><input id="speed" type="range" min="2" max="30" value="12"></label>
+            <label class="rotation-mode"><span>Sens de rotation</span><select id="rotationMode"><option value="horizontal">Horizontal</option><option value="vertical">Vertical</option><option value="diagonal">Diagonal</option><option value="swing">Va-et-vient</option></select></label>
+            <label class="option-check"><input id="reverse" type="checkbox"> Sens inverse</label>
+            <button id="resetViewSide" class="secondary" style="margin-top:10px;">Réinitialiser la vue</button>
           </div>
-          <label class="control" id="bgOpacityControl" hidden><span>Opacité du fond <output id="bgOpacityValue">100 %</output></span><input id="bgOpacity" type="range" min="0" max="100" value="100"></label>
         </section>
-        <section>
-          <p class="eyebrow">ANIMATION</p>
-          <label class="switch-row animation-switch"><span><strong>Animer le produit</strong><small>Active ou arrête la rotation</small></span><input id="autoRotate" type="checkbox" /><i></i></label>
-          <button id="resetViewSide" class="secondary">Réinitialiser la vue</button>
-        </section>
-
       </aside>

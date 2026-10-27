@@ -9,29 +9,84 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&family=Cinzel:wght@700&family=Dancing+Script:wght@700&family=Great+Vibes&family=Lobster&family=Montserrat:ital,wght@0,400;0,700;1,400&family=Oswald:wght@600&family=Pacifico&family=Playfair+Display:ital,wght@0,700;1,700&family=Righteous&family=Roboto:wght@400;700&family=Satisfy&display=swap" rel="stylesheet">
   <title>MockUp3D C3</title>
-  <script type="module" crossorigin src="/assets/index-BhAUeerI.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-CT_3wwEO.css">
+  <script type="module" crossorigin src="/assets/index-89kzVyvI.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BUtMHapO.css">
 </head>
 <body>
   <div id="app">
 <header class="topbar">
-      <div class="brand"><span class="logo-card"><img src="/logo-graph2print.png" alt="Graph2Print"></span><div><strong>MockUp3D</strong><span id="localBadge" style="background:#f86900;color:white;padding:2px 6px;border-radius:4px;font-size:10px;margin-left:8px;vertical-align:middle;text-transform:uppercase;font-weight:bold;">Site en local</span><small>Présentation produit locale</small><span id="modeLabel" class="mode-label"></span></div></div>
-      <div class="topbar-actions"><a id="clientModeLink" class="client-mode-link" href="/">Voir interface client</a>
-        <div class="export-group">
-          <select id="exportResolution" class="topbar-select" title="Résolution de l'export">
-            <option value="1">Standard (Écran)</option>
-            <option value="2" selected>HD (Catalogue 2×)</option>
-            <option value="3">Ultra HD (Impression 3×)</option>
-          </select>
-          <button id="exportAll" class="topbar-btn primary mega-export" type="button" title="Exporter le PNG, la vidéo MP4 et les vues du mug en une fois">Tout Exporter</button>
-          <button id="exportPng" class="topbar-btn secondary" type="button">PNG</button>
-          <button id="exportMugViews" class="topbar-btn secondary mug-views-btn" type="button" title="Exporter automatiquement les 3 vues du mug">3 faces (Mug)</button>
-          <button id="exportMp4" class="topbar-btn secondary mp4" type="button">MP4</button>
+  <div class="brand">
+    <span class="logo-card"><img src="/logo-graph2print.png" alt="Graph2Print"></span>
+    <div>
+      <strong>MockUp3D</strong>
+      <span id="localBadge" style="background:#f86900;color:white;padding:2px 6px;border-radius:4px;font-size:10px;margin-left:8px;vertical-align:middle;text-transform:uppercase;font-weight:bold;">Site en local</span>
+      <small>Présentation produit locale</small>
+      <span id="modeLabel" class="mode-label"></span>
+    </div>
+    <nav class="app-menu-bar" aria-label="Menu principal">
+      <div class="menu-dropdown">
+        <button type="button" class="menu-dropdown-btn">Fichier ▾</button>
+        <div class="menu-dropdown-content">
+          <button type="button" id="menuFileImport">Importer une image…</button>
+          <hr>
+          <div style="padding:6px 16px; display:flex; flex-direction:column; gap:4px;">
+            <span style="font-size:10px; font-weight:700; text-transform:uppercase; color:#64748b;">Qualité d'export</span>
+            <select id="exportResolution" class="topbar-select" title="Résolution de l'export" style="width:100%;">
+              <option value="1">Standard (Écran 1×)</option>
+              <option value="2" selected>HD (Catalogue 2×)</option>
+              <option value="3">Ultra HD (Impression 3×)</option>
+            </select>
+          </div>
+          <hr>
+          <button type="button" id="exportPng">Exporter en image PNG</button>
+          <button type="button" id="exportMp4">Exporter en vidéo MP4</button>
+          <button type="button" id="exportMugViews">Exporter 3 faces (Mug)</button>
+          <hr>
+          <button type="button" id="exportAll" style="font-weight:700; color:#0d9488;">Tout Exporter (PNG + MP4)</button>
         </div>
-        <span id="exportStatus" class="topbar-status">Prêt</span><button id="submitCreation" class="topbar-btn primary client-submit" type="button" hidden>Envoyer ma création</button>
       </div>
-      <div class="privacy"><span></span> Envoi uniquement après validation <span style="margin-left:12px;opacity:0.6;">| v1.2.0</span></div>
-    </header>
+      <div class="menu-dropdown">
+        <button type="button" class="menu-dropdown-btn">Éditer ▾</button>
+        <div class="menu-dropdown-content">
+          <button type="button" id="menuEditResetImg">Réinitialiser le visuel actif</button>
+          <button type="button" id="menuEditRepeat">Basculer le motif en mosaïque</button>
+          <button type="button" id="menuEditFrame">Afficher / Masquer le cadre</button>
+          <hr>
+          <button type="button" id="menuEditResetText">Effacer le texte personnalisé</button>
+        </div>
+      </div>
+      <div class="menu-dropdown">
+        <button type="button" class="menu-dropdown-btn">Affichage ▾</button>
+        <div class="menu-dropdown-content">
+          <button type="button" id="themeToggle">Mode Nuit</button>
+          <hr>
+          <button type="button" id="menuViewShowcase">Table d'accueil (Tous les produits)</button>
+          <button type="button" id="menuViewHome">Réinitialiser la vue 3D</button>
+          <button type="button" id="menuViewSave" style="font-weight:700; color:#0284c7;">Sauvegarder la vue actuelle</button>
+          <button type="button" id="menuViewClearSave">Oublier la vue sauvegardée</button>
+          <hr>
+          <button type="button" id="menuViewFaceA">Vue Face Avant (A)</button>
+          <button type="button" id="menuViewFaceB">Vue Face Arrière / Côtés (B)</button>
+          <hr>
+          <button type="button" id="menuViewGrid">Afficher / Masquer la grille</button>
+          <button type="button" id="menuViewShadow">Afficher / Masquer l'ombre</button>
+        </div>
+      </div>
+      <div class="menu-dropdown">
+        <button type="button" class="menu-dropdown-btn">Catalogue ▾</button>
+        <div class="menu-dropdown-content">
+          <button type="button" id="menuCatOpen">Parcourir les visuels</button>
+          <button type="button" id="menuCatAdd">+ Ajouter un visuel au catalogue</button>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <div class="topbar-actions">
+    <span id="exportStatus" class="topbar-status" style="font-size:12px; color:#94a3b8; margin-right:8px;">Prêt</span>
+    <a id="clientModeLink" class="client-mode-btn" href="/">Interface Client</a>
+    <button id="submitCreation" class="topbar-btn primary client-submit" type="button" hidden>Envoyer ma création</button>
+  </div>
+</header>
 
 
     <main class="workspace">
@@ -53,13 +108,16 @@
               <label>
                 <span>Objet 3D</span>
                 <select id="productSelect">
+                  <option value="showcase" selected>Table d'accueil (Tous les produits)</option>
                   <option value="mousePad">Tapis de souris</option>
-                  <option value="mug11oz" selected>Mug blanc 11 oz</option>
+                  <option value="mug11oz">Mug blanc 11 oz</option>
                   <option value="keychainRect">Porte-clés rectangle Unisub</option>
                   <option value="keychainRound">Porte-clés rond Unisub</option>
                   <option value="keychainHeart">Porte-clés Cœur Unisub</option>
                   <option value="tshirt3D">T-shirt 3D</option>
-                  <option value="puzzle">Puzzle 120 pièces (28x19.5 cm)</option>
+                  <option value="cap">Casquette 3D</option>
+                  <option value="poster">Poster 80 × 60 cm (800 × 600 mm)</option>
+                  <option value="puzzle">Puzzle 120 pièces (280 × 195 × 2 mm)</option>
                   <option value="coaster">Sous-verre carré</option>
                   <option value="coasterRound">Sous-verre rond</option>
                   <option value="pencilCase">Trousse</option>
@@ -79,11 +137,18 @@
             <span class="collapse-icon">▾</span>
           </button>
           <div class="section-content">
-            <label class="upload" for="imageInput">
-              <strong>Importer des images</strong>
-              <small>PNG ou JPG (sélectionnez une ou plusieurs)</small>
-            </label>
-            <input id="imageInput" type="file" accept="image/png,image/jpeg" multiple />
+            <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+              <button type="button" id="openCatalogBtn" class="primary" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#0ea5e9; font-weight:700; padding:10px; font-size:12px;">
+                Parcourir le catalogue de visuels
+              </button>
+              
+              <label class="upload" for="imageInput" style="padding:12px 10px; cursor:pointer;">
+                <strong>Importer</strong>
+                <small>PNG, JPG ou SVG (sélectionnez une ou plusieurs)</small>
+              </label>
+              <input id="imageInput" type="file" accept="image/png,image/jpeg,image/svg+xml" multiple style="display:none;" />
+            </div>
+
             <button id="loadTshirtExample" class="secondary" type="button" hidden>Voir un exemple sur le T-shirt</button><div id="imagesList" class="images-list"></div>
           </div>
         </section>
@@ -95,10 +160,14 @@
           <div class="section-content">
             <div class="layer-header" id="activeImageLabel">Aucune image active</div>
             <div class="segmented" role="group" aria-label="Mode d’ajustement">
-              <button data-fit="contain">Image entière</button><button class="active" data-fit="cover">Remplir la surface</button><button data-fit="fill">Plein wrap (Étirer)</button>
+              <button class="active" data-fit="contain">Image entière</button><button data-fit="cover">Remplir la surface</button><button data-fit="fill">Plein wrap (Étirer)</button>
             </div>
             <label class="frame-option"><input id="showTransformFrame" type="checkbox"> Afficher le cadre de sélection</label>
             <label class="frame-option"><input id="showWatermark" type="checkbox"> Filigrane sous le visuel (en fond)</label>
+            <label class="frame-option"><input id="repeatPattern" type="checkbox"> Répéter en motif (Mosaïque)</label>
+            <div id="repeatCountControl" hidden>
+              <label class="control" style="margin:6px 0 10px;"><span>Densité du motif <output id="repeatCountValue">3 × 3</output></span><input id="repeatCount" type="range" min="2" max="8" value="3" /></label>
+            </div>
             <label class="control"><span>Taille <output id="scaleValue">100 %</output></span><input id="scale" type="range" min="20" max="250" value="100" /></label>
             <label class="control"><span>Position horizontale <output id="posXValue">0 %</output></span><input id="posX" type="range" min="-100" max="100" value="0" /></label>
             <label class="control"><span>Position verticale <output id="posYValue">0 %</output></span><input id="posY" type="range" min="-100" max="100" value="0" /></label>
@@ -176,10 +245,78 @@
             <button id="resetText" class="text-button" type="button">Effacer le texte</button>
           </div>
         </section>
+
+        <section id="sectionAppearance" class="collapsible-section reference-options actions" data-section="5">
+          <button type="button" class="section-title-btn" aria-expanded="true">
+            <div class="section-title"><span>5</span><h2>Apparence & Fond</h2></div>
+            <span class="collapse-icon">▾</span>
+          </button>
+          <div class="section-content">
+            <p class="stock-note">Objets blancs uniquement.<br>Modification de couleur : <strong>non disponible pour le moment.</strong></p>
+            <div class="color-grid">
+              <label><input id="topColor" type="color" value="#ffffff"><span>Surface</span></label>
+              <label><input id="baseColor" type="color" value="#101318"><span>Base</span></label>
+              <label><input id="sceneColor" type="color" value="#e9edf0"><span>Fond</span></label>
+              <label id="handleColorWrap" hidden><input id="handleColor" type="color" value="#ffffff"><span>Anse</span></label>
+              <label id="innerColorWrap" hidden><input id="innerColor" type="color" value="#ffffff"><span>Intérieur</span></label>
+            </div>
+            <div id="arcadeControlsWrap" hidden style="margin-top:10px; margin-bottom:8px; padding:10px; border-radius:8px; background:rgba(0,0,0,0.05); border:1px solid #dce1e5;">
+              <div style="font-weight:700; font-size:11px; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em; color:#475569;">Contrôles de la Borne Arcade</div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:11px;">
+                <label style="display:flex; flex-direction:column; gap:2px;"><strong>J1 Joystick</strong><select id="j1Color" class="custom-select" style="padding:4px; border-radius:4px;"><option value="#0055ff">Bleu</option><option value="#ff0000" selected>Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
+                <label style="display:flex; flex-direction:column; gap:2px;"><strong>J2 Joystick</strong><select id="j2Color" class="custom-select" style="padding:4px; border-radius:4px;"><option value="#0055ff" selected>Bleu</option><option value="#ff0000">Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
+                <label style="display:flex; flex-direction:column; gap:2px;"><strong>J1 Boutons</strong><select id="b1Color" class="custom-select" style="padding:4px; border-radius:4px;"><option value="#0055ff" selected>Bleu</option><option value="#ff0000">Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
+                <label style="display:flex; flex-direction:column; gap:2px;"><strong>J2 Boutons</strong><select id="b2Color" class="custom-select" style="padding:4px; border-radius:4px;"><option value="#0055ff">Bleu</option><option value="#ff0000" selected>Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
+              </div>
+              <div id="arcadeGlowWrap" style="margin-top:8px;">
+                <label class="option-check mini-check" style="margin:0;"><input id="arcadeGlow" type="checkbox"> Boutons/Manettes lumineux</label>
+              </div>
+            </div>
+            <div id="quickPalette" class="quick-palette" hidden>
+              <span class="quick-palette-title">Palette mug rapide :</span>
+              <div class="quick-palette-colors">
+                <button type="button" class="swatch" data-color="#ffffff" style="background:#ffffff" title="Blanc"></button>
+                <button type="button" class="swatch" data-color="#000000" style="background:#000000" title="Noir"></button>
+                <button type="button" class="swatch" data-color="#df1212" style="background:#df1212" title="Rouge"></button>
+                <button type="button" class="swatch" data-color="#7a0205" style="background:#7a0205" title="Bordeaux"></button>
+                <button type="button" class="swatch" data-color="#f86900" style="background:#f86900" title="Orange"></button>
+                <button type="button" class="swatch" data-color="#edd900" style="background:#edd900" title="Jaune"></button>
+                <button type="button" class="swatch" data-color="#075103" style="background:#075103" title="Vert"></button>
+                <button type="button" class="swatch" data-color="#1d85d0" style="background:#1d85d0" title="Bleu"></button>
+                <button type="button" class="swatch" data-color="#270e68" style="background:#270e68" title="Marine"></button>
+                <button type="button" class="swatch" data-color="#ffc2c2" style="background:#ffc2c2" title="Rose"></button>
+              </div>
+            </div>
+            <label class="option-check"><input id="showGrid" type="checkbox"> Afficher la grille</label>
+            <label class="option-check"><input id="showShadow" type="checkbox" checked> Afficher l'ombre au sol</label>
+            <div class="background-actions"><label for="bgInput" class="secondary">Ajouter une image de fond</label><button id="clearBg" class="secondary">Effacer le fond</button></div><input id="bgInput" type="file" accept="image/png,image/jpeg">
+            <div class="background-actions" style="margin-top:6px; display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+              <button id="bgPresetPodium" class="secondary" type="button" style="background:#fff1f2; border-color:#fecdd3; color:#9f1239; font-weight:700; font-size:11px; padding:6px 4px;" title="Podium coloré studio pour le mug">Podium (Mug)</button>
+              <button id="bgPresetMug" class="secondary" type="button" style="background:#f1f5f9; border-color:#cbd5e1; color:#334155; font-weight:600; font-size:11px; padding:6px 4px;" title="Cuisine moderne pour le mug">Cuisine (Mug)</button>
+              <button id="bgPresetBureau" class="secondary" type="button" style="background:#eff6ff; border-color:#bfdbfe; color:#1e40af; font-weight:600; font-size:11px; padding:6px 4px;" title="Bureau moderne avec ordi pour le tapis de souris">Bureau (Tapis)</button>
+              <button id="bgPresetSalon" class="secondary" type="button" style="background:#f0fdf9; border-color:#a7f3d0; color:#065f46; font-weight:600; font-size:11px; padding:6px 4px;" title="Salon moderne pour la borne">Salon (Arcade)</button>
+            </div>
+            <label class="control" id="bgOpacityControl" hidden><span>Opacité du fond <output id="bgOpacityValue">100 %</output></span><input id="bgOpacity" type="range" min="0" max="100" value="100"></label>
+          </div>
+        </section>
+        <section id="sectionAnimation" class="collapsible-section actions" data-section="6">
+          <button type="button" class="section-title-btn" aria-expanded="true">
+            <div class="section-title"><span>6</span><h2>Animation & Angles</h2></div>
+            <span class="collapse-icon">▾</span>
+          </button>
+          <div class="section-content">
+            <label class="switch-row animation-switch"><span><strong>Animer le produit</strong><small>Active ou arrête la rotation</small></span><input id="autoRotate" type="checkbox" /><i></i></label>
+            <div class="angle-title">Angles de vue</div><div class="angles"><button data-angle="45">45°</button><button data-angle="90">90°</button><button data-angle="135">135°</button><button data-angle="225">225°</button><button data-angle="270">270°</button><button data-angle="315">315°</button></div>
+            <label class="control"><span>Angle personnalisé <output id="angleValue">45°</output></span><input id="viewAngle" type="range" min="0" max="360" value="45"></label>
+            <label class="control"><span>Vitesse d’animation <output id="speedValue">1×</output></span><input id="speed" type="range" min="2" max="30" value="12"></label>
+            <label class="rotation-mode"><span>Sens de rotation</span><select id="rotationMode"><option value="horizontal">Horizontal</option><option value="vertical">Vertical</option><option value="diagonal">Diagonal</option><option value="swing">Va-et-vient</option></select></label>
+            <label class="option-check"><input id="reverse" type="checkbox"> Sens inverse</label>
+            <button id="resetViewSide" class="secondary" style="margin-top:10px;">Réinitialiser la vue</button>
+          </div>
+        </section>
       </aside>
 
-
-<section class="viewer-wrap"><button id="toggleLeftSidebar" class="panel-menu panel-menu-left" type="button" aria-label="Masquer le menu de gauche" aria-expanded="true" title="Menu de gauche">☰</button>
+<section class="viewer-wrap"><button id="toggleLeftSidebar" class="panel-menu panel-menu-left" type="button" aria-label="Masquer le menu de gauche" aria-expanded="true" title="Menu de gauche">☰</button><button id="btnShowcaseTable" class="btn-showcase-floating" type="button" title="Retourner à la table de présentation de tous les produits">Table d'accueil</button><button id="saveViewBtn" class="btn-showcase-floating btn-save-view" type="button" title="Sauvegarder l'angle et le zoom actuels pour ce produit">Sauvegarder la vue</button>
         <div id="viewer" aria-label="Aperçu 3D interactif"></div><div id="submissionMask" class="submission-mask" hidden><img src="/logo-graph2print.png" alt="Graph2Print"><strong>Préparation des fichiers</strong><span>Votre création sera envoyée à Graph2Print.</span></div>
         <svg id="transformOverlay" aria-label="Cadre d’ajustement du visuel" hidden>
           <polygon id="transformBox"></polygon>
@@ -194,10 +331,10 @@
           <circle class="resize-handle" data-corner="2" r="7" title="Coin bas-droit"></circle>
           <circle class="resize-handle" data-corner="3" r="7" title="Coin bas-gauche"></circle>
         </svg>
-        <div class="viewer-tools"><button id="viewFaceA" class="secondary" title="Voir Face A (Avant)"><span style="font-weight:900;margin-right:4px;">A</span> Face A</button><button id="viewFaceB" class="secondary" title="Voir Face B (Arrière)"><span style="font-weight:900;margin-right:4px;">B</span> Face B</button>
-          <button id="zoomOut" title="Dézoomer" aria-label="Dézoomer">−</button><button id="zoomIn" title="Zoomer" aria-label="Zoomer">+</button><button id="resetView" title="Réinitialiser la vue" aria-label="Réinitialiser la vue">⌂</button>
-          <button id="toggleRightSidebar" title="Menu de droite" aria-label="Masquer le menu de droite" aria-expanded="true" style="font-size:20px;">☰</button>
+        <div class="viewer-tools"><button id="viewFaceA" class="secondary" type="button" title="Voir Face A (Avant)"><span style="font-weight:900;margin-right:4px;">A</span> Face A</button><button id="viewFaceB" class="secondary" type="button" title="Voir Face B (Arrière)"><span style="font-weight:900;margin-right:4px;">B</span> Face B</button>
+          <button id="zoomOut" type="button" title="Dézoomer" aria-label="Dézoomer">−</button><button id="zoomIn" type="button" title="Zoomer" aria-label="Zoomer">+</button><button id="resetView" type="button" title="Réinitialiser la vue" aria-label="Réinitialiser la vue">⌂</button>
         </div>
+        <div id="showcaseTooltip" class="showcase-tooltip" hidden></div>
         <div class="drag-hint">↔ Faites glisser pour tourner</div>
         <div id="wrapPreviewWidget" class="wrap-preview-widget" hidden>
           <button id="toggleWrapPreview" class="wrap-preview-tab" type="button" title="Aperçu à plat (Wrap)">
@@ -216,65 +353,39 @@
             <div id="heartPreviewPanel" class="heart-preview" hidden><small>Visuel Cœur (petit)</small><img id="heartPreviewImg" alt="Aperçu du logo sur le cœur" /></div>
           </div>
         </div>
+        <aside id="catalogExplorer" class="catalog-explorer" hidden>
+          <div class="catalog-explorer-header">
+            <div class="catalog-explorer-title">
+              <strong>Explorateur de visuels</strong>
+              <small id="catalogCount">Visuels disponibles</small>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <select id="adminCategorySelect" title="Catégorie pour les prochains ajouts" style="padding:5px 8px; font-size:11px; border-radius:6px; border:1px solid #cbd5e1; background:#f8fafc; color:#1e293b;">
+                <option value="auto">Catégorie : Auto</option>
+                <option value="Fleurs">Fleurs</option>
+                <option value="Licornes">Licornes</option>
+                <option value="Animaux & Art">Animaux & Art</option>
+                <option value="Illustrations">Illustrations</option>
+                <option value="Motifs">Motifs</option>
+                <option value="Logos">Logos</option>
+              </select>
+              <button type="button" id="adminAddLibraryBtn" class="primary" style="padding:6px 12px; font-size:11px; background:#1caa88; width:auto; font-weight:700;">+ Ajouter un visuel</button>
+              <input id="adminLibraryInput" type="file" accept="image/png,image/jpeg,image/svg+xml" multiple style="display:none;" />
+              <button type="button" id="closeExplorerBtn" class="close-explorer-btn" title="Fermer le catalogue" aria-label="Fermer">✕</button>
+            </div>
+          </div>
+          <div class="catalog-explorer-search">
+            <input type="text" id="catalogSearchInput" placeholder="Rechercher un visuel..." autocomplete="off" />
+            <div id="catalogCategories" class="catalog-categories">
+              <button type="button" class="cat-pill active" data-cat="all">Tous</button>
+              <button type="button" class="cat-pill" data-cat="Motifs">Motifs</button>
+              <button type="button" class="cat-pill" data-cat="Illustrations">Illustrations</button>
+              <button type="button" class="cat-pill" data-cat="Logos">Logos</button>
+            </div>
+          </div>
+          <div id="catalogGrid" class="catalog-explorer-grid"></div>
+        </aside>
       </section>
-
-<aside class="actions"><div class="drawer-heading"><strong>Apparence</strong><button type="button" data-close-panel="right" aria-label="Fermer le menu de droite">✕</button></div>
-        <section class="reference-options">
-          <p class="eyebrow">APPARENCE</p><p class="stock-note">Objets blancs uniquement.<br>Modification de couleur : <strong>non disponible pour le moment.</strong></p>
-          <div class="color-grid">
-            <label><input id="topColor" type="color" value="#ffffff"><span>Surface</span></label>
-            <label><input id="baseColor" type="color" value="#101318"><span>Base</span></label>
-            <label><input id="sceneColor" type="color" value="#e9edf0"><span>Fond</span></label>
-            <label id="handleColorWrap" hidden><input id="handleColor" type="color" value="#ffffff"><span>Anse</span></label>
-            <label id="innerColorWrap" hidden><input id="innerColor" type="color" value="#ffffff"><span>Intérieur</span></label>
-            <div id="arcadeControlsWrap" hidden style="margin-top:8px; display:grid; grid-template-columns:1fr 1fr; gap:4px; font-size:12px;">
-              <label>J1 Joy: <select id="j1Color" class="custom-select" style="padding:2px; border-radius:4px;"><option value="#0055ff">Bleu</option><option value="#ff0000" selected>Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
-              <label>J2 Joy: <select id="j2Color" class="custom-select" style="padding:2px; border-radius:4px;"><option value="#0055ff" selected>Bleu</option><option value="#ff0000">Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
-              <label>J1 Btn: <select id="b1Color" class="custom-select" style="padding:2px; border-radius:4px;"><option value="#0055ff" selected>Bleu</option><option value="#ff0000">Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
-              <label>J2 Btn: <select id="b2Color" class="custom-select" style="padding:2px; border-radius:4px;"><option value="#0055ff">Bleu</option><option value="#ff0000" selected>Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
-            </div>
-          </div>
-          <div id="arcadeGlowWrap" hidden style="margin-top:8px; margin-bottom:8px;">
-            <label class="option-check mini-check"><input id="arcadeGlow" type="checkbox"> Boutons/Manettes lumineux</label>
-          </div>
-          <div id="quickPalette" class="quick-palette" hidden>
-            <span class="quick-palette-title">Palette mug rapide :</span>
-            <div class="quick-palette-colors">
-              <button type="button" class="swatch" data-color="#ffffff" style="background:#ffffff" title="Blanc"></button>
-              <button type="button" class="swatch" data-color="#000000" style="background:#000000" title="Noir"></button>
-              <button type="button" class="swatch" data-color="#df1212" style="background:#df1212" title="Rouge"></button>
-              <button type="button" class="swatch" data-color="#7a0205" style="background:#7a0205" title="Bordeaux"></button>
-              <button type="button" class="swatch" data-color="#f86900" style="background:#f86900" title="Orange"></button>
-              <button type="button" class="swatch" data-color="#edd900" style="background:#edd900" title="Jaune"></button>
-              <button type="button" class="swatch" data-color="#075103" style="background:#075103" title="Vert"></button>
-              <button type="button" class="swatch" data-color="#1d85d0" style="background:#1d85d0" title="Bleu"></button>
-              <button type="button" class="swatch" data-color="#270e68" style="background:#270e68" title="Marine"></button>
-              <button type="button" class="swatch" data-color="#ffc2c2" style="background:#ffc2c2" title="Rose"></button>
-            </div>
-          </div>
-          <label class="option-check"><input id="showGrid" type="checkbox"> Afficher la grille</label>
-          <label class="option-check"><input id="showShadow" type="checkbox" checked> Afficher l'ombre au sol</label>
-          <div class="angle-title">Angles de vue</div><div class="angles"><button data-angle="45">45°</button><button data-angle="90">90°</button><button data-angle="135">135°</button><button data-angle="225">225°</button><button data-angle="270">270°</button><button data-angle="315">315°</button></div>
-          <label class="control"><span>Angle personnalisé <output id="angleValue">45°</output></span><input id="viewAngle" type="range" min="0" max="360" value="45"></label>
-          <label class="control"><span>Vitesse d’animation <output id="speedValue">1×</output></span><input id="speed" type="range" min="2" max="30" value="12"></label>
-          <label class="rotation-mode"><span>Sens de rotation</span><select id="rotationMode"><option value="horizontal">Horizontal</option><option value="vertical">Vertical</option><option value="diagonal">Diagonal</option><option value="swing">Va-et-vient</option></select></label>
-          <label class="option-check"><input id="reverse" type="checkbox"> Sens inverse</label>
-          <div class="background-actions"><label for="bgInput" class="secondary">Ajouter une image de fond</label><button id="clearBg" class="secondary">Effacer le fond</button></div><input id="bgInput" type="file" accept="image/png,image/jpeg">
-          <div class="background-actions" style="margin-top:6px; display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-            <button id="bgPresetPodium" class="secondary" type="button" style="background:#fff1f2; border-color:#fecdd3; color:#9f1239; font-weight:700; font-size:11px; padding:6px 4px;" title="Podium coloré studio pour le mug">Podium (Mug)</button>
-            <button id="bgPresetMug" class="secondary" type="button" style="background:#f1f5f9; border-color:#cbd5e1; color:#334155; font-weight:600; font-size:11px; padding:6px 4px;" title="Cuisine moderne pour le mug">Cuisine (Mug)</button>
-            <button id="bgPresetBureau" class="secondary" type="button" style="background:#eff6ff; border-color:#bfdbfe; color:#1e40af; font-weight:600; font-size:11px; padding:6px 4px;" title="Bureau moderne avec ordi pour le tapis de souris">Bureau (Tapis)</button>
-            <button id="bgPresetSalon" class="secondary" type="button" style="background:#f0fdf9; border-color:#a7f3d0; color:#065f46; font-weight:600; font-size:11px; padding:6px 4px;" title="Salon moderne pour la borne">Salon (Arcade)</button>
-          </div>
-          <label class="control" id="bgOpacityControl" hidden><span>Opacité du fond <output id="bgOpacityValue">100 %</output></span><input id="bgOpacity" type="range" min="0" max="100" value="100"></label>
-        </section>
-        <section>
-          <p class="eyebrow">ANIMATION</p>
-          <label class="switch-row animation-switch"><span><strong>Animer le produit</strong><small>Active ou arrête la rotation</small></span><input id="autoRotate" type="checkbox" /><i></i></label>
-          <button id="resetViewSide" class="secondary">Réinitialiser la vue</button>
-        </section>
-
-      </aside>
 
 
     </main>

@@ -4,6 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { json, secureHeaders } from './server/security.js';
 import { mailConfigured, submit } from './server/submissions.js';
+import { getCatalog, saveCatalog, proposeCatalogItem } from './server/catalog.js';
 import { serveStatic } from './server/static.js';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
@@ -13,6 +14,15 @@ const server = http.createServer(async (req, res) => {
   secureHeaders(req, res);
   try {
     const route = req.url?.split('?')[0];
+    if (route === '/api/catalog-images' && req.method === 'GET') {
+      return await getCatalog(req, res);
+    }
+    if (route === '/api/catalog-images' && req.method === 'POST') {
+      return await saveCatalog(req, res);
+    }
+    if (route === '/api/catalog-images/propose' && req.method === 'POST') {
+      return await proposeCatalogItem(req, res);
+    }
     if (route === '/api/submissions/status' && req.method === 'GET') {
       return json(res, 200, { configured: mailConfigured() });
     }

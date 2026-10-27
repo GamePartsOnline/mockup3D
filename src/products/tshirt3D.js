@@ -5,6 +5,8 @@ import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
 import objUrl from '../mockup/male_crew_neck_worn_v1_no_tag_517_YEE.obj?url';
 
 const PRINT_ASPECT = 210 / 297;
+const loader = new OBJLoader();
+let cachedTshirtGeometry = null;
 
 export const tshirt3DProduct = {
   id: 'tshirt-3d',
@@ -42,64 +44,82 @@ export const tshirt3DProduct = {
       blending: THREE.NormalBlending
     });
 
-    const loader = new OBJLoader();
-    loader.load(objUrl, (obj) => {
-      obj.traverse((child) => {
-        if (child.isMesh) {
-          if (!child.geometry.attributes.normal) {
-              child.geometry.computeVertexNormals();
-          }
-          child.geometry.scale(0.01, 0.01, 0.01);
-          child.geometry.translate(0, -0.1, 0); // Remonter le t-shirt
-          child.geometry.computeVertexNormals();
-          child.geometry.computeBoundingBox();
-          child.geometry.computeBoundingSphere();
-
-          child.material = fabricMaterial;
-          child.castShadow = true;
-          child.receiveShadow = true;
-          group.userData.mainMesh = child;
-        }
-      });
-      group.add(obj);
+    const setupGeometry = (rawGeo) => {
+      const geo = rawGeo.clone();
+      const mesh = new THREE.Mesh(geo, fabricMaterial);
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      group.userData.mainMesh = mesh;
+      group.add(mesh);
+      mesh.add(decalsGroup);
       isLoaded = true;
       if (pendingTexture) {
-         applyDecals(pendingTexture.texture, pendingTexture.isTwoSided, pendingTexture.canvas, pendingTexture.heartTexture);
-         pendingTexture = null;
+        applyDecals(pendingTexture.texture, pendingTexture.isTwoSided, pendingTexture.canvas, pendingTexture.heartTexture);
+        pendingTexture = null;
       }
-    }, undefined, (error) => {
-      console.error('Erreur de chargement du modèle T-Shirt:', error);
-    });
+    };
+
+    if (cachedTshirtGeometry) {
+      setupGeometry(cachedTshirtGeometry);
+    } else {
+      loader.load(objUrl, (obj) => {
+        let foundGeo = null;
+        obj.traverse((child) => {
+          if (child.isMesh && !foundGeo) {
+            const g = child.geometry.clone();
+            g.scale(0.01, 0.01, 0.01);
+            g.translate(0, -0.1, 0);
+            g.computeVertexNormals();
+            g.computeBoundingBox();
+            g.computeBoundingSphere();
+            foundGeo = g;
+          }
+        });
+        if (foundGeo) {
+          cachedTshirtGeometry = foundGeo;
+          setupGeometry(foundGeo);
+        }
+      }, undefined, (error) => {
+        console.error('Erreur de chargement du modèle T-Shirt:', error);
+      });
+    }
+
+    function clearDecals() {
+      pendingTexture = null;
+      while (decalsGroup.children.length > 0) {
+        const child = decalsGroup.children[0];
+        decalsGroup.remove(child);
+        child.geometry?.dispose();
+        if (child.material?.userData?.ownsTexture) child.material.map?.dispose();
+        child.material?.dispose();
+      }
+    }
 
     function applyDecals(texture, isTwoSided, canvas, heartTexture) {
       if (!isLoaded || !group.userData.mainMesh) {
-          pendingTexture = { texture, isTwoSided, canvas, heartTexture };
-          return;
+        pendingTexture = { texture, isTwoSided, canvas, heartTexture };
+        return;
       }
-
-      while(decalsGroup.children.length > 0) {
-          const child = decalsGroup.children[0];
-          decalsGroup.remove(child);
-          child.geometry?.dispose();
-          child.material?.dispose();
-      }
+      clearDecals();
 
       const mainMesh = group.userData.mainMesh;
-      if (!decalsGroup.parent) {
-          mainMesh.add(decalsGroup);
-      }
-      // On utilise directement la texture passée en paramètre, qui est 100% valide
+      if (!decalsGroup.parent) mainMesh.add(decalsGroup);
+
+      const decalTex = canvas ? new THREE.CanvasTexture(canvas) : texture;
+      if (canvas) decalTex.colorSpace = THREE.SRGBColorSpace;
+
       const frontMat = decalMaterial.clone();
-      frontMat.map = texture;
+      frontMat.map = decalTex;
+      frontMat.userData = { ownsTexture: !!canvas };
       frontMat.needsUpdate = true;
 
       const backMat = decalMaterial.clone();
-      backMat.map = texture;
+      backMat.map = decalTex;
       backMat.needsUpdate = true;
 
-      group.updateMatrixWorld(true);
-
-      const box = new THREE.Box3().setFromObject(mainMesh);
+      const localTarget = new THREE.Mesh(mainMesh.geometry);
+      if (!mainMesh.geometry.boundingBox) mainMesh.geometry.computeBoundingBox();
+      const box = mainMesh.geometry.boundingBox;
       const center = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3());
 
@@ -119,7 +139,7 @@ export const tshirt3DProduct = {
       const sBack = new THREE.Vector3(projWidth, projHeight, projDepth);
 
       try {
-          const frontGeometry = new DecalGeometry(mainMesh, pFront, oFront, sFront);
+          const frontGeometry = new DecalGeometry(localTarget, pFront, oFront, sFront);
           // Ajuster les UVs pour la face avant (moitié gauche de la texture)
           if (isTwoSided) {
               const uv = frontGeometry.attributes.uv;
@@ -131,7 +151,7 @@ export const tshirt3DProduct = {
           decalsGroup.add(frontMesh);
 
           if (isTwoSided) {
-              const backGeometry = new DecalGeometry(mainMesh, pBack, oBack, sBack);
+              const backGeometry = new DecalGeometry(localTarget, pBack, oBack, sBack);
               // Ajuster les UVs pour la face arrière (moitié droite de la texture)
               const uv = backGeometry.attributes.uv;
               for (let i = 0; i < uv.count; i++) {
@@ -147,7 +167,7 @@ export const tshirt3DProduct = {
                 box.max.z + 0.005
               );
               const heartGeometry = new DecalGeometry(
-                mainMesh, heartPosition, oFront,
+                localTarget, heartPosition, oFront,
                 new THREE.Vector3(0.09, 0.09, projDepth)
               );
               const heartMaterial = decalMaterial.clone();
@@ -164,19 +184,11 @@ export const tshirt3DProduct = {
       group,
       topMaterial: fabricMaterial,
       applyDecals,
+      clearDecals,
       type: '3d-decal',
       printAspect: PRINT_ASPECT,
       printable: [210, 297],
       twoSided: true,
-      clearDecals() {
-        pendingTexture = null;
-        while (decalsGroup.children.length) {
-          const child = decalsGroup.children[0];
-          decalsGroup.remove(child);
-          child.geometry?.dispose();
-          child.material?.dispose();
-        }
-      },
       setPrintOrientation(value) {
         printOrientation = value === 'landscape' ? 'landscape' : 'portrait';
         product.printable = printOrientation === 'landscape' ? [297, 210] : [210, 297];

@@ -13,7 +13,10 @@ export const eventWristbandProduct = {
   create() {
     const group = new THREE.Group();
     const baseMaterial = new THREE.MeshStandardMaterial({ color: 0xe5e7eb, roughness: 0.95, metalness: 0 });
-    const topMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.88, metalness: 0, side: THREE.FrontSide });
+    const topMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffffff, roughness: 0.85, metalness: 0, side: THREE.FrontSide,
+      polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2
+    });
     const stitchMaterial = new THREE.MeshStandardMaterial({ color: 0xcbd5e1, roughness: 1 });
     const claspMaterial = new THREE.MeshStandardMaterial({ color: 0xf8f8f5, roughness: 0.62, metalness: 0 });
 
@@ -25,7 +28,7 @@ export const eventWristbandProduct = {
     const topGeo = new THREE.PlaneGeometry(WIDTH, HEIGHT);
     topGeo.rotateX(-Math.PI / 2);
     const top = new THREE.Mesh(topGeo, topMaterial);
-    top.position.y = 0.0065;
+    top.position.y = 0.008;
     top.receiveShadow = true;
     group.add(top);
 

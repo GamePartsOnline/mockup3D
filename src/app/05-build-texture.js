@@ -10,10 +10,13 @@ app.buildTexture = function buildTexture() {
 
   const isTwoSided = !!app.product.twoSided;
   const isMultiZone = !!app.product.zones;
-  const canvas = document.createElement('canvas');
-
-  canvas.width = isMultiZone ? 3072 : (isTwoSided ? 3200 : 1600);
-  canvas.height = isMultiZone ? 2048 : Math.round(1600 / app.product.printAspect);
+  const targetW = isMultiZone ? 3072 : (isTwoSided ? 3200 : 1600);
+  const targetH = isMultiZone ? 2048 : Math.round(1600 / app.product.printAspect);
+  if (!app._buildCanvas) app._buildCanvas = document.createElement('canvas');
+  const canvas = app._buildCanvas;
+  const sizeChanged = canvas.width !== targetW || canvas.height !== targetH;
+  if (canvas.width !== targetW) canvas.width = targetW;
+  if (canvas.height !== targetH) canvas.height = targetH;
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (app.product.type !== '3d-decal') {
@@ -97,7 +100,15 @@ app.buildTexture = function buildTexture() {
 
       ctx.translate(x, y);
       ctx.rotate(-item.rotation * Math.PI / 180);
-      ctx.drawImage(item.img, -w / 2, -h / 2, w, h);
+      if (item.repeatPattern) {
+        const count = item.repeatCount || 3;
+        const tw = Math.max(16, w / count), th = Math.max(16, h / count);
+        const cols = Math.ceil(zoneWidth * 1.5 / tw) + 2, rows = Math.ceil(zoneHeight * 1.5 / th) + 2;
+        const sx = -((cols * tw) / 2), sy = -((rows * th) / 2);
+        for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) ctx.drawImage(item.img, sx + c * tw, sy + r * th, tw, th);
+      } else {
+        ctx.drawImage(item.img, -w / 2, -h / 2, w, h);
+      }
       ctx.restore();
     });
   });
@@ -142,9 +153,15 @@ app.buildTexture = function buildTexture() {
     });
   }
   app.buildHeartTexture();
-  app.texture?.dispose(); app.texture = new app.THREE.CanvasTexture(canvas); app.texture.colorSpace = app.THREE.SRGBColorSpace; app.texture.anisotropy = app.renderer.capabilities.getMaxAnisotropy();
+  if (!app.texture || app.texture.image !== canvas || sizeChanged) {
+    app.texture?.dispose();
+    app.texture = new app.THREE.CanvasTexture(canvas);
+    app.texture.colorSpace = app.THREE.SRGBColorSpace;
+    app.texture.anisotropy = app.renderer.capabilities.getMaxAnisotropy();
+  } else {
+    app.texture.needsUpdate = true;
+  }
   if (app.product.type === '3d-decal') {
-    // texture.premultiplyAlpha = false;
     app.texture.needsUpdate = true;
     if (app.product.applyDecals) app.product.applyDecals(app.texture, isTwoSided, canvas, app.heartTexture);
   } else {
@@ -153,6 +170,14 @@ app.buildTexture = function buildTexture() {
   app.wrapPreview.material.map = app.texture; app.wrapPreview.material.needsUpdate = true; app.wrapPreview.scale.set(3.1, 3.1 / app.product.printAspect, 1);
   app.updateWrapPreviewWidget(canvas);
   app.updateClientGuide();
+};
+let rafBuildId = null;
+app.requestBuildTexture = function requestBuildTexture() {
+  if (rafBuildId) return;
+  rafBuildId = requestAnimationFrame(() => {
+    rafBuildId = null;
+    app.buildTexture();
+  });
 };
 }
 

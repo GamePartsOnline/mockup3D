@@ -44,7 +44,7 @@ app.renderer.domElement.addEventListener('pointermove', e => {
     active.x = Math.max(-1, Math.min(1, app.directDrag.initialPosX + dx * 2.2));
     active.y = Math.max(-1, Math.min(1, app.directDrag.initialPosY - dy * 2.2));
     app.syncActiveControls();
-    app.buildTexture();
+    app.requestBuildTexture();
   }
 });
 app.renderer.domElement.addEventListener('pointerup', e => {
@@ -163,7 +163,7 @@ app.overlay.addEventListener('pointermove', e => {
     active.rotation = app.directDrag.startRotation + (side === 'B' ? -dTheta : dTheta);
   }
   app.syncActiveControls();
-  app.buildTexture();
+  app.requestBuildTexture();
 });
 app.overlay.addEventListener('pointerup', () => {
   app.directDrag = null;

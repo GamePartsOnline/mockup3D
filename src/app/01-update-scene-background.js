@@ -1,6 +1,7 @@
 // Shared application state is supplied by the entry point.
 export function register(app) {
 app.updateSceneBackground = function updateSceneBackground() {
+  if (!app.scene) return;
   const showWatermark = !app.suppressClientWatermarkForOwnerExport && (app.clientMode || (document.querySelector("#showWatermark")?.checked ?? true));
   const bgColor = document.querySelector("#sceneColor")?.value || "#e9edf0";
   const opInput = document.querySelector("#bgOpacity");
@@ -13,9 +14,12 @@ app.updateSceneBackground = function updateSceneBackground() {
     return;
   }
 
-  const canvas = document.createElement("canvas");
-  canvas.width = window.innerWidth > 0 ? window.innerWidth * 2 : 2048;
-  canvas.height = window.innerHeight > 0 ? window.innerHeight * 2 : 2048;
+  const targetW = Math.min(window.innerWidth > 0 ? window.innerWidth : 1920, 1920);
+  const targetH = Math.min(window.innerHeight > 0 ? window.innerHeight : 1080, 1080);
+  if (!app._bgCanvas) app._bgCanvas = document.createElement("canvas");
+  const canvas = app._bgCanvas;
+  if (canvas.width !== targetW) canvas.width = targetW;
+  if (canvas.height !== targetH) canvas.height = targetH;
   const ctx = canvas.getContext("2d");
   ctx.fillStyle = bgColor;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -32,14 +36,16 @@ app.updateSceneBackground = function updateSceneBackground() {
 
   if (showWatermark && app.isWatermarkLoaded && app.watermarkImg.width > 0) {
     ctx.save();
-    const wmCanvas = document.createElement("canvas");
-    wmCanvas.width = app.watermarkImg.width;
-    wmCanvas.height = app.watermarkImg.height;
-    const wmCtx = wmCanvas.getContext("2d");
-    wmCtx.drawImage(app.watermarkImg, 0, 0);
-    wmCtx.globalCompositeOperation = "source-in";
-    wmCtx.fillStyle = "#425260";
-    wmCtx.fillRect(0, 0, wmCanvas.width, wmCanvas.height);
+    if (!app._wmCanvas) {
+      app._wmCanvas = document.createElement("canvas");
+      app._wmCanvas.width = app.watermarkImg.width;
+      app._wmCanvas.height = app.watermarkImg.height;
+      const wmCtx = app._wmCanvas.getContext("2d");
+      wmCtx.drawImage(app.watermarkImg, 0, 0);
+      wmCtx.globalCompositeOperation = "source-in";
+      wmCtx.fillStyle = "#425260";
+      wmCtx.fillRect(0, 0, app._wmCanvas.width, app._wmCanvas.height);
+    }
 
     ctx.globalAlpha = 0.08;
     ctx.translate(canvas.width / 2, canvas.height / 2);
@@ -52,16 +58,28 @@ app.updateSceneBackground = function updateSceneBackground() {
     for (let py = -canvas.height * 0.6; py < canvas.height * 1.6; py += stepY) {
       const offsetX = (Math.floor(py / stepY) % 2) * (stepX / 2);
       for (let px = -canvas.width * 0.6; px < canvas.width * 1.6; px += stepX) {
-        ctx.drawImage(wmCanvas, px + offsetX, py, wmWidth, wmHeight);
+        ctx.drawImage(app._wmCanvas, px + offsetX, py, wmWidth, wmHeight);
       }
     }
     ctx.restore();
   }
 
-  app.sceneWatermarkTexture?.dispose();
-  app.sceneWatermarkTexture = new app.THREE.CanvasTexture(canvas);
-  app.sceneWatermarkTexture.colorSpace = app.THREE.SRGBColorSpace;
+  if (!app.sceneWatermarkTexture || app.sceneWatermarkTexture.image !== canvas) {
+    app.sceneWatermarkTexture?.dispose();
+    app.sceneWatermarkTexture = new app.THREE.CanvasTexture(canvas);
+    app.sceneWatermarkTexture.colorSpace = app.THREE.SRGBColorSpace;
+  } else {
+    app.sceneWatermarkTexture.needsUpdate = true;
+  }
   app.scene.background = app.sceneWatermarkTexture;
+};
+let rafBgId = null;
+app.requestUpdateSceneBackground = function requestUpdateSceneBackground() {
+  if (rafBgId) return;
+  rafBgId = requestAnimationFrame(() => {
+    rafBgId = null;
+    app.updateSceneBackground();
+  });
 };
 }
 
@@ -74,21 +92,44 @@ app.suppressClientWatermarkForOwnerExport = false;
 document.body.classList.toggle('client-mode', app.clientMode);
 document.querySelector('#submitCreation').hidden = !app.clientMode;
 document.querySelector('#clientGuide').hidden = !app.clientMode;
-document.querySelector('#clientModeLink').href = '/';
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const clientLink = document.querySelector('#clientModeLink');
+if (clientLink) {
+  clientLink.href = app.clientMode ? '/admin' : '/';
+  clientLink.textContent = app.clientMode ? 'Retour Atelier (Admin)' : 'Interface Client';
+  if (app.clientMode && !isLocal) clientLink.style.display = 'none';
+}
 document.querySelector('#modeLabel').textContent = app.clientMode ? 'ESPACE CLIENT' : 'ATELIER PROPRIÉTAIRE';
-for (const id of ['topColor','baseColor','handleColor','innerColor','j1Color','j2Color','b1Color','b2Color']) {
-  const input = document.getElementById(id);
-  if (input) {
-    input.disabled = true;
-    input.title = 'Non disponible pour le moment — objets blancs uniquement';
+if (app.clientMode) {
+  for (const id of ['topColor','baseColor']) {
+    const input = document.getElementById(id);
+    if (input) {
+      input.disabled = true;
+      input.title = 'Objets blancs uniquement';
+    }
   }
 }
-document.querySelectorAll('.quick-palette .swatch').forEach(button => {
-  button.disabled = true;
-  button.title = 'Non disponible pour le moment — objets blancs uniquement';
-});
 app.watermarkControl = document.querySelector('#showWatermark');
 if (app.clientMode) { app.watermarkControl.checked = true; app.watermarkControl.disabled = true; }
+const savedTheme = localStorage.getItem('mockup3d_theme') || 'light';
+const applyTheme = theme => {
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.querySelector('#themeToggle');
+  if (btn) btn.textContent = theme === 'dark' ? 'Mode Jour' : 'Mode Nuit';
+  localStorage.setItem('mockup3d_theme', theme);
+  if (!app.bgImageObj) {
+    const sceneColorInput = document.querySelector('#sceneColor');
+    if (sceneColorInput) {
+      sceneColorInput.value = theme === 'dark' ? '#0f141a' : '#e9edf0';
+      app.updateSceneBackground();
+    }
+  }
+};
+applyTheme(savedTheme);
+document.querySelector('#themeToggle')?.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+});
 if (window.matchMedia('(max-width: 900px)').matches) {
   document.querySelector('.workspace').classList.add('right-collapsed');
   document.querySelector('#wrapPreviewWidget').classList.add('collapsed');
@@ -132,6 +173,7 @@ app.wrapPreview.renderOrder = 20;
 app.controls = new app.OrbitControls(app.camera, app.renderer.domElement);
 app.controls.enableDamping = false;
 app.controls.autoRotate = false;
-app.controls.minDistance = 2.2;
-app.controls.maxDistance = 8;
+app.controls.minDistance = 1.6;
+app.controls.maxDistance = 10;
+applyTheme(savedTheme);
 }

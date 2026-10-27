@@ -15,6 +15,8 @@ import * as feature12 from './app/13-get-intersection.js';
 import * as feature13 from './app/14-resize.js';
 import * as feature14 from './app/15-capture-submission-png.js';
 import * as feature15 from './app/16-update-client-guide.js';
+import * as feature16 from './app/17-visual-library.js';
+import * as feature17 from './app/18-app-menu.js';
 
 const app = { ...dependencies };
 const features = [
@@ -33,7 +35,9 @@ const features = [
   feature12,
   feature13,
   feature14,
-  feature15
+  feature15,
+  feature16,
+  feature17
 ];
 
 for (const feature of features) feature.register(app);

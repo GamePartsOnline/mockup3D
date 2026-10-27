@@ -10,9 +10,9 @@ app.updateClientGuide = function updateClientGuide() {
     'Étape 3 · Ajuster le rendu', 'Étape 4 · Envoyer la création'
   ];
   const instructions = [
-    '', 'Choisissez un produit dans la liste, puis confirmez votre choix.',
-    'Importez une image PNG ou JPG, ou ajoutez du texte.',
-    'Vérifiez les faces, la position et les couleurs. Confirmez quand le rendu vous convient.',
+    '', 'Cliquez directement sur un objet de la table 3D ou choisissez-le dans la liste.',
+    'Choisissez un visuel du catalogue, importez une image ou ajoutez du texte.',
+    'Vérifiez les faces, la position et le rendu. Confirmez quand votre création vous convient.',
     'Les fichiers PNG et la vidéo seront préparés puis envoyés à Graph2Print.'
   ];
   document.querySelector('#clientGuideTitle').textContent = titles[step];
@@ -23,7 +23,7 @@ app.updateClientGuide = function updateClientGuide() {
     el.classList.toggle('done', number < step);
   });
   const action = document.querySelector('#clientGuideAction');
-  action.hidden = step === 2;
+  action.hidden = step === 2 || (step === 1 && app.currentProductKey === 'showcase');
   action.textContent = step === 1 ? 'Choisir ce produit' : step === 3 ? 'Mon visuel est prêt' : 'Envoyer ma création';
   document.querySelector('#submitCreation').disabled = step !== 4 || app.submissionInProgress;
 };
@@ -57,7 +57,7 @@ document.querySelectorAll('[data-close-panel]').forEach(button => {
   button.addEventListener('click', () => {
     const side = button.dataset.closePanel;
     document.querySelector('.workspace').classList.add(side + '-collapsed');
-    document.querySelector(side === 'left' ? '#toggleLeftSidebar' : '#toggleRightSidebar').setAttribute('aria-expanded','false');
+    document.querySelector(side === 'left' ? '#toggleLeftSidebar' : '#toggleRightSidebar')?.setAttribute('aria-expanded','false');
   });
 });
 }

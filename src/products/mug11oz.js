@@ -123,7 +123,7 @@ export const mug11ozProduct = {
       new THREE.Vector3(0, -.3, 1.28), new THREE.Vector3(0, -.58, 1.08), new THREE.Vector3(0, -.58, .62)
     ]);
     const handle = new THREE.Mesh(new THREE.TubeGeometry(handleCurve, 64, .105, 20, false), handleMaterial); handle.castShadow = true; group.add(handle);
-    group.position.y = .82;
+    group.position.y = .88;
     return { group, topMaterial: printMaterial, baseMaterial: ceramic, handleMaterial, innerMaterial, printMesh: body, printAspect: 210 / 95, type: 'wrap' };
   }
 };

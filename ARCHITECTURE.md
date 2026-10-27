@@ -7,7 +7,10 @@
 - src/templates contient les sections HTML assemblées par Vite.
 - src/products définit les objets 3D. Le profil détaillé de la borne est une donnée JSON.
 - src/responsive.css gère les panneaux sur téléphone et tablette.
-- server/security.js contrôle l'authentification, les origines, les limites et les en-têtes.
+- src/app-menu.css et src/app/18-app-menu.js gèrent la barre de menu supérieure.
+- src/dark-mode.css gère le thème sombre (mode Jour/Nuit).
+- src/app/17-visual-library.js et server/catalog.js gèrent la bibliothèque de visuels persistante dans public/visuels.
+- server/security.js contrôle l'authentification (avec accès direct local sur 127.0.0.1), les origines, les limites et les en-têtes.
 - server/submissions.js valide les pièces jointes et les transmet au destinataire configuré.
 - server/static.js sert uniquement les fichiers de dist.
 - test/security.test.js vérifie les contrôles d'accès et les refus d'envoi.

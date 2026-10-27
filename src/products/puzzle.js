@@ -21,9 +21,9 @@ export const puzzleProduct = {
     const height = 1.95;
     const shape = roundedRect(width, height, 0.02); // tiny rounded corners for puzzle
 
-    // Cardboard base
-    const baseGeo = new THREE.ExtrudeGeometry(shape, { depth: 0.02, bevelEnabled: true, bevelSegments: 2, bevelSize: 0.005, bevelThickness: 0.005, curveSegments: 8 });
-    baseGeo.rotateX(Math.PI / 2); baseGeo.translate(0, -0.015, 0);
+    // Cardboard base (2 mm = 0.02 unités pour 280 × 195 × 2 mm)
+    const baseGeo = new THREE.ExtrudeGeometry(shape, { depth: 0.014, bevelEnabled: true, bevelSegments: 2, bevelSize: 0.003, bevelThickness: 0.003, curveSegments: 8 });
+    baseGeo.rotateX(Math.PI / 2); baseGeo.translate(0, -0.017, 0);
     const baseMaterial = new THREE.MeshStandardMaterial({ color: 0xe0d6c8, roughness: 0.9, metalness: 0.0 });
     const base = new THREE.Mesh(baseGeo, baseMaterial);
     base.castShadow = true; base.receiveShadow = true; group.add(base);
@@ -43,20 +43,20 @@ export const puzzleProduct = {
     }
     uv.needsUpdate = true;
 
-    // Générer un overlay pour simuler un relief 3D (Biseau / Emboss) sur les pièces de puzzle
+    // Générer un overlay pour simuler un relief 3D (12 × 10 = 120 pièces au ratio exact 280 × 195 mm)
     const bumpCanvas = document.createElement('canvas');
-    bumpCanvas.width = 1500;
-    bumpCanvas.height = 800;
+    bumpCanvas.width = 1400;
+    bumpCanvas.height = 975;
     const ctx = bumpCanvas.getContext('2d');
-    ctx.clearRect(0, 0, 1500, 800);
+    ctx.clearRect(0, 0, 1400, 975);
 
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
 
-    const cols = 15;
-    const rows = 8;
-    const cellW = 1500 / cols;
-    const cellH = 800 / rows;
+    const cols = 12;
+    const rows = 10;
+    const cellW = 1400 / cols;
+    const cellH = 975 / rows;
 
     const drawPaths = () => {
       ctx.beginPath();
