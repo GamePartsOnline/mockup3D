@@ -95,7 +95,7 @@ export function initialize(app) {
     }
     pills.push({ id: 'all', label: `Tous (${visibleItems.filter(x => x.status !== 'pending').length})` });
     if (!app.clientMode && pendingCount > 0) pills.push({ id: 'pending', label: `À valider (${pendingCount})`, warn: true });
-    const cats = app.catalogCategories || ['Fleurs', 'Licornes', 'Animaux & Art', 'Illustrations', 'Motifs', 'Logos'];
+    const cats = app.catalogCategories || ['Nouveau', 'Fleurs', 'Licornes', 'Animaux & Art', 'Illustrations', 'Motifs', 'Logos'];
     for (const c of cats) if (counts[c] || !app.clientMode) pills.push({ id: c, label: `${c} (${counts[c] || 0})` });
     pills.forEach(p => {
       const b = document.createElement('button');
@@ -145,6 +145,8 @@ export function initialize(app) {
       card.appendChild(title);
       if (item.status === 'pending') {
         const b = document.createElement('span'); b.className = 'catalog-item-badge'; b.style.background = '#f59e0b'; b.textContent = 'À valider'; card.appendChild(b);
+      } else if (item.category === 'Nouveau') {
+        const b = document.createElement('span'); b.className = 'catalog-item-badge'; b.style.background = '#10b981'; b.textContent = 'Nouveau'; card.appendChild(b);
       } else if (item.repeatPattern) {
         const b = document.createElement('span'); b.className = 'catalog-item-badge'; b.textContent = 'Motif'; card.appendChild(b);
       }

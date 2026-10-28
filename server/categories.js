@@ -10,10 +10,11 @@ const categoriesPath = path.join(visuelsDir, 'categories.json');
 const distCategoriesPath = path.join(distVisuelsDir, 'categories.json');
 const catalogPath = path.join(visuelsDir, 'catalog.json');
 
-export const DEFAULT_CATEGORIES = ['Fleurs', 'Licornes', 'Animaux & Art', 'Illustrations', 'Motifs', 'Logos'];
+export const DEFAULT_CATEGORIES = ['Nouveau', 'Fleurs', 'Licornes', 'Animaux & Art', 'Illustrations', 'Motifs', 'Logos'];
 
 export function inferCategory(name) {
   const n = String(name || '').toLowerCase();
+  if (/nouveau|new|recent|nouveaut/i.test(n)) return 'Nouveau';
   if (/flower|fleur|rose|floral|plante|feuille/i.test(n)) return 'Fleurs';
   if (/unicorn|licorne|enfant|kids|magic/i.test(n)) return 'Licornes';
   if (/pig|cochon|cerf|deer|animal|valentine|art|jpg/i.test(n)) return 'Animaux & Art';

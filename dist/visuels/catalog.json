@@ -22,6 +22,28 @@
     ]
   },
   {
+    "id": "visuel-1793179083449-4nhf",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwj00j.jpg",
+    "category": "Animaux & Art",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1793179275589-f4ua",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwn49q.jpg",
+    "category": "Animaux & Art",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
     "id": "visuel-1793179083450-m3z4",
     "name": "Visuel",
     "url": "/visuels/Visuel-mvrwj00i.jpg",
@@ -242,6 +264,94 @@
     ]
   },
   {
+    "id": "visuel-1793179083451-gixg",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwj00g.jpg",
+    "category": "Dessin animés",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1793179275583-4ts0",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwn49x.jpg",
+    "category": "Dessin animés",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1793179275588-6m1d",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwn49r.jpg",
+    "category": "Dessin animés",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1793179275586-gazw",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwn49t.jpg",
+    "category": "Dessin animés",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1793179275585-eocn",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwn49u.jpg",
+    "category": "Dessin animés",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1793179275584-9av7",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwn49v.jpg",
+    "category": "Dessin animés",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1793179083447-fiwe",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwj00l.jpg",
+    "category": "Dessin animés",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1793179083452-ty1w",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwj00c.jpg",
+    "category": "Films",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
     "id": "visuel-1793117214065-gc4g",
     "name": "Floral Pastel (1)",
     "url": "/visuels/Flower-mug-1-mvqvoxgy.png",
@@ -308,120 +418,10 @@
     ]
   },
   {
-    "id": "visuel-1793179275589-f4ua",
-    "name": "Visuel",
-    "url": "/visuels/Visuel-mvrwn49q.jpg",
-    "category": "Illustrations",
-    "repeatPattern": false,
-    "status": "approved",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793179275588-6m1d",
-    "name": "Visuel",
-    "url": "/visuels/Visuel-mvrwn49r.jpg",
-    "category": "Illustrations",
-    "repeatPattern": false,
-    "status": "approved",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793179275586-gazw",
-    "name": "Visuel",
-    "url": "/visuels/Visuel-mvrwn49t.jpg",
-    "category": "Illustrations",
-    "repeatPattern": false,
-    "status": "approved",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793179275585-eocn",
-    "name": "Visuel",
-    "url": "/visuels/Visuel-mvrwn49u.jpg",
-    "category": "Illustrations",
-    "repeatPattern": false,
-    "status": "approved",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793179275584-9av7",
-    "name": "Visuel",
-    "url": "/visuels/Visuel-mvrwn49v.jpg",
-    "category": "Illustrations",
-    "repeatPattern": false,
-    "status": "approved",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793179275583-4ts0",
-    "name": "Visuel",
-    "url": "/visuels/Visuel-mvrwn49x.jpg",
-    "category": "Illustrations",
-    "repeatPattern": false,
-    "status": "approved",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793179083452-ty1w",
-    "name": "Visuel",
-    "url": "/visuels/Visuel-mvrwj00c.jpg",
-    "category": "Illustrations",
-    "repeatPattern": false,
-    "status": "approved",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
     "id": "visuel-1793179083451-g89u",
     "name": "Visuel",
     "url": "/visuels/Visuel-mvrwj00e.jpg",
-    "category": "Illustrations",
-    "repeatPattern": false,
-    "status": "approved",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793179083451-gixg",
-    "name": "Visuel",
-    "url": "/visuels/Visuel-mvrwj00g.jpg",
-    "category": "Illustrations",
-    "repeatPattern": false,
-    "status": "approved",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793179083449-4nhf",
-    "name": "Visuel",
-    "url": "/visuels/Visuel-mvrwj00j.jpg",
-    "category": "Illustrations",
-    "repeatPattern": false,
-    "status": "approved",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793179083447-fiwe",
-    "name": "Visuel",
-    "url": "/visuels/Visuel-mvrwj00l.jpg",
-    "category": "Illustrations",
+    "category": "humour",
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [

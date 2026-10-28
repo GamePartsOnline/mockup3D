@@ -8,6 +8,7 @@ export function formatCleanTitle(raw) {
 
 export function inferCategory(name) {
   const n = String(name || '').toLowerCase();
+  if (/nouveau|new|recent|nouveaut/i.test(n)) return 'Nouveau';
   if (/flower|fleur|rose|floral|plante/i.test(n)) return 'Fleurs';
   if (/unicorn|licorne|enfant|kids/i.test(n)) return 'Licornes';
   if (/pig|cochon|cerf|deer|animal|baleine|requin|lemur|panda|art/i.test(n)) return 'Animaux & Art';
@@ -17,7 +18,7 @@ export function inferCategory(name) {
 }
 
 export function register(app) {
-  app.catalogCategories = ['Fleurs', 'Licornes', 'Animaux & Art', 'Illustrations', 'Motifs', 'Logos'];
+  app.catalogCategories = ['Nouveau', 'Fleurs', 'Licornes', 'Animaux & Art', 'Illustrations', 'Motifs', 'Logos'];
 
   app.loadCatalogCategories = async function loadCatalogCategories() {
     try {
@@ -54,10 +55,12 @@ export function register(app) {
 export function initialize(app) {
   const addCatBtn = document.querySelector('#adminAddCategoryBtn');
   const editCatBtn = document.querySelector('#adminEditCategoryBtn');
+  const delCatBtn = document.querySelector('#adminDeleteCategoryBtn');
 
   if (app.clientMode) {
     if (addCatBtn) addCatBtn.style.display = 'none';
     if (editCatBtn) editCatBtn.style.display = 'none';
+    if (delCatBtn) delCatBtn.style.display = 'none';
     return;
   }
 
@@ -74,11 +77,25 @@ export function initialize(app) {
     app.showToast(`Catégorie "${clean}" créée`);
   });
 
+  function pickCategory(title, filterFn) {
+    const pool = (app.catalogCategories || []).filter(filterFn || (() => true));
+    if (!pool.length) return null;
+    const act = app.activeCatalogCategory;
+    if (act && act !== 'all' && act !== 'pending' && act !== 'current_product' && pool.includes(act)) {
+      return act;
+    }
+    const list = pool.map((c, i) => `${i + 1}. ${c}`).join('\n');
+    const input = prompt(`${title}\n\n${list}`);
+    if (!input || !input.trim()) return null;
+    const num = parseInt(input.trim(), 10);
+    if (!isNaN(num) && num >= 1 && num <= pool.length) return pool[num - 1];
+    return pool.find(c => c.toLowerCase() === input.trim().toLowerCase()) || null;
+  }
+
   editCatBtn?.addEventListener('click', async () => {
-    const active = (app.activeCatalogCategory !== 'all' && app.activeCatalogCategory !== 'pending') ? app.activeCatalogCategory : '';
-    const target = active || prompt(`Quelle catégorie modifier parmi :\n${app.catalogCategories.join(', ')}`);
-    if (!target || !app.catalogCategories.includes(target)) return;
-    const val = prompt(`Renommer la catégorie "${target}" (ou laisser vide pour la supprimer) :`, target);
+    const target = pickCategory('Entrez le numéro ou le nom de la catégorie à modifier :');
+    if (!target) return;
+    const val = prompt(`Renommer la catégorie "${target}" :`, target);
     if (val === null) return;
     const clean = val.trim();
     if (clean && clean !== target) {
@@ -89,14 +106,20 @@ export function initialize(app) {
       await Promise.all([app.persistCatalogCategories(), app.persistCatalog?.()]);
       app.renderCatalog?.();
       app.showToast(`Catégorie renommée en "${clean}"`);
-    } else if (!clean) {
-      app.catalogCategories = app.catalogCategories.filter(c => c !== target);
-      app.catalogImages.forEach(it => { if (it.category === target) it.category = 'Illustrations'; });
-      if (app.activeCatalogCategory === target) app.activeCatalogCategory = 'all';
-      await Promise.all([app.persistCatalogCategories(), app.persistCatalog?.()]);
-      app.renderCatalog?.();
-      app.showToast(`Catégorie "${target}" supprimée`);
     }
+  });
+
+  delCatBtn?.addEventListener('click', async () => {
+    const target = pickCategory('Entrez le numéro ou le nom de la catégorie à supprimer :', c => c !== 'Illustrations');
+    if (!target) return;
+    const ok = confirm(`Confirmez-vous la suppression de la catégorie "${target}" ?\nLes visuels associés seront transférés dans "Illustrations".`);
+    if (!ok) return;
+    app.catalogCategories = app.catalogCategories.filter(c => c !== target);
+    app.catalogImages.forEach(it => { if (it.category === target) it.category = 'Illustrations'; });
+    if (app.activeCatalogCategory === target) app.activeCatalogCategory = 'all';
+    await Promise.all([app.persistCatalogCategories(), app.persistCatalog?.()]);
+    app.renderCatalog?.();
+    app.showToast(`Catégorie "${target}" supprimée`);
   });
 
   app.loadCatalogCategories();
