@@ -21,6 +21,7 @@ import * as feature18 from './app/19-shop-catalog-2d.js';
 import * as feature19 from './app/20-business-card-modal.js';
 
 const app = { ...dependencies };
+if (typeof window !== 'undefined') window.app = app;
 const features = [
   feature0,
   feature1,

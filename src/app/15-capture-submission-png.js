@@ -52,7 +52,7 @@ document.querySelector('#submitCreation')?.addEventListener('click', async () =>
     if (!app.texture) throw new Error('Ajoutez une image ou un texte avant l’envoi.');
     const statusResponse = await fetch('/api/submissions/status');
     const status = await statusResponse.json();
-    if (!status.configured) throw new Error('Envoi mail non configuré. Contactez Graph2Print.');
+    if (!status.configured) throw new Error('Envoi non configuré. Contactez Graph2Print.');
     ownerExportStarted = true;
     document.querySelector('.workspace').inert = true;
     document.querySelector('#submissionMask').hidden = false;
@@ -115,7 +115,10 @@ document.querySelector('#submitCreation')?.addEventListener('click', async () =>
     });
     const result = await response.json();
     if (!response.ok || !result.ok) throw new Error(result.error || "L'envoi a échoué.");
-    app.showToast(videoUnavailable ? 'Création envoyée, vidéo indisponible' : 'Création et exports envoyés');
+    const isLocalSave = result.mode === 'local';
+    app.showToast(videoUnavailable
+      ? (isLocalSave ? 'Création enregistrée en local (sans vidéo)' : 'Création envoyée, vidéo indisponible')
+      : (isLocalSave ? 'Création et exports enregistrés dans submissions/' : 'Création et exports envoyés'));
   } catch (error) {
     console.error(error);
     app.showToast(error.message || "L'envoi a échoué.");

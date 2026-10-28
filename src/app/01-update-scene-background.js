@@ -7,10 +7,14 @@ app.updateSceneBackground = function updateSceneBackground() {
   const opInput = document.querySelector("#bgOpacity");
   const opacityVal = opInput ? Number(opInput.value) / 100 : 1;
 
+  const isDark = typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'dark';
+
   if (!showWatermark && !app.bgImageObj) {
     app.sceneWatermarkTexture?.dispose();
     app.sceneWatermarkTexture = null;
     app.scene.background = new app.THREE.Color(bgColor);
+    const sf = app.scene?.getObjectByName('studioFloor');
+    if (sf?.material) { sf.material.map = null; sf.material.color.set(isDark ? 0x000000 : 0xdde3ea); sf.material.needsUpdate = true; }
     return;
   }
 
@@ -36,19 +40,17 @@ app.updateSceneBackground = function updateSceneBackground() {
 
   if (showWatermark && app.isWatermarkLoaded && app.watermarkImg.width > 0) {
     ctx.save();
-    if (!app._wmCanvas) {
-      app._wmCanvas = document.createElement("canvas");
-      app._wmCanvas.width = app.watermarkImg.width;
-      app._wmCanvas.height = app.watermarkImg.height;
-      const wmCtx = app._wmCanvas.getContext("2d");
-      wmCtx.drawImage(app.watermarkImg, 0, 0);
-      wmCtx.globalCompositeOperation = "source-in";
-      const isDark = typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'dark';
-      wmCtx.fillStyle = isDark ? "#060608" : "#425260";
-      wmCtx.fillRect(0, 0, app._wmCanvas.width, app._wmCanvas.height);
-    }
+    if (!app._wmCanvas) app._wmCanvas = document.createElement("canvas");
+    app._wmCanvas.width = app.watermarkImg.width;
+    app._wmCanvas.height = app.watermarkImg.height;
+    const wmCtx = app._wmCanvas.getContext("2d");
+    wmCtx.clearRect(0, 0, app._wmCanvas.width, app._wmCanvas.height);
+    wmCtx.drawImage(app.watermarkImg, 0, 0);
+    wmCtx.globalCompositeOperation = "source-in";
+    wmCtx.fillStyle = isDark ? "#94a3b8" : "#425260";
+    wmCtx.fillRect(0, 0, app._wmCanvas.width, app._wmCanvas.height);
 
-    ctx.globalAlpha = 0.08;
+    ctx.globalAlpha = isDark ? 0.08 : 0.08;
     ctx.translate(canvas.width / 2, canvas.height / 2);
     ctx.rotate(-25 * Math.PI / 180);
     ctx.translate(-canvas.width / 2, -canvas.height / 2);
@@ -73,6 +75,18 @@ app.updateSceneBackground = function updateSceneBackground() {
     app.sceneWatermarkTexture.needsUpdate = true;
   }
   app.scene.background = app.sceneWatermarkTexture;
+
+  const sf = app.scene?.getObjectByName('studioFloor');
+  if (sf?.material) {
+    if (showWatermark && app.sceneWatermarkTexture) {
+      sf.material.map = app.sceneWatermarkTexture;
+      sf.material.color.set(0xffffff);
+    } else {
+      sf.material.map = null;
+      sf.material.color.set(isDark ? 0x000000 : 0xdde3ea);
+    }
+    sf.material.needsUpdate = true;
+  }
 };
 let rafBgId = null;
 app.requestUpdateSceneBackground = function requestUpdateSceneBackground() {
@@ -102,13 +116,7 @@ if (clientLink) {
 }
 document.querySelector('#modeLabel').textContent = app.clientMode ? 'Espace Client' : 'Atelier de création';
 if (app.clientMode) {
-  for (const id of ['topColor','baseColor']) {
-    const input = document.getElementById(id);
-    if (input) {
-      input.disabled = true;
-      input.title = 'Objets blancs uniquement';
-    }
-  }
+  ['topColor','baseColor'].forEach(id => { const el = document.getElementById(id); if (el) { el.disabled = true; el.title = 'Objets blancs uniquement'; } });
 }
 app.watermarkControl = document.querySelector('#showWatermark');
 if (app.clientMode) { app.watermarkControl.checked = true; app.watermarkControl.disabled = true; }
@@ -121,20 +129,13 @@ const applyTheme = theme => {
   localStorage.setItem('mockup3d_theme', theme);
   if (!app.bgImageObj) {
     const sceneColorInput = document.querySelector('#sceneColor');
-    if (sceneColorInput) {
-      sceneColorInput.value = theme === 'dark' ? '#000000' : '#e9edf0';
-      app.updateSceneBackground();
-    }
+    if (sceneColorInput) sceneColorInput.value = theme === 'dark' ? '#000000' : '#e9edf0';
   }
   if (app.floor?.material) {
     app.floor.material.color.set(theme === 'dark' ? 0x000000 : 0x55616b);
     app.floor.material.needsUpdate = true;
   }
-  const sf = app.scene?.getObjectByName('studioFloor');
-  if (sf?.material) {
-    sf.material.color.set(theme === 'dark' ? 0x000000 : 0xdde3ea);
-    sf.material.needsUpdate = true;
-  }
+  app.updateSceneBackground();
 };
 applyTheme(savedTheme);
 document.querySelector('#themeToggle')?.addEventListener('click', () => {
@@ -149,8 +150,6 @@ if (window.matchMedia('(max-width: 900px)').matches) {
 if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
   const localBadge = document.querySelector('#localBadge');
   if (localBadge) localBadge.style.display = 'none';
-
-
 }
 app.viewer = document.querySelector('#viewer');
 app.renderer = new app.THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });

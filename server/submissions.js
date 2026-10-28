@@ -1,7 +1,12 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import nodemailer from 'nodemailer';
 import { acceptSubmission, json, readJson } from './security.js';
 
 let active = 0;
+const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const submissionsDir = path.join(root, 'submissions');
 export const mailConfigured = () => !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
 
 function validateAttachments(files) {
@@ -36,7 +41,6 @@ function validateAttachments(files) {
 }
 
 export async function submit(req, res) {
-  if (!mailConfigured()) return json(res, 503, { error: "L'envoi mail doit être configuré sur le serveur." });
   if (!acceptSubmission(req, res)) return;
   if (active >= 4) return json(res, 503, { error: 'Le service est occupé. Réessayez plus tard.' });
   active++;
@@ -49,6 +53,21 @@ export async function submit(req, res) {
     let attachments;
     try { attachments = validateAttachments(body.files); }
     catch (error) { return json(res, error.status || 400, { error: error.message }); }
+
+    if (!mailConfigured()) {
+      const dateStr = new Date().toISOString().replace(/[:.]/g, '-');
+      const safeProduct = body.product.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40);
+      const targetDir = path.join(submissionsDir, `${dateStr}_${safeProduct}`);
+      fs.mkdirSync(targetDir, { recursive: true });
+      for (const file of attachments) {
+        fs.writeFileSync(path.join(targetDir, file.filename), file.content);
+      }
+      fs.writeFileSync(path.join(targetDir, 'submission.json'), JSON.stringify({
+        product: body.product, date: new Date().toISOString(), files: attachments.map(a => a.filename)
+      }, null, 2));
+      return json(res, 200, { ok: true, mode: 'local', savedTo: targetDir });
+    }
+
     transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT || 587),

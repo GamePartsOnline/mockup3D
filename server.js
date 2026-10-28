@@ -24,7 +24,7 @@ const server = http.createServer(async (req, res) => {
       return await proposeCatalogItem(req, res);
     }
     if (route === '/api/submissions/status' && req.method === 'GET') {
-      return json(res, 200, { configured: mailConfigured() });
+      return json(res, 200, { configured: true, mailConfigured: mailConfigured(), mode: mailConfigured() ? 'smtp' : 'local' });
     }
     if (route === '/api/submissions') {
       if (req.method !== 'POST') return json(res, 405, { error: 'Méthode non autorisée.' });

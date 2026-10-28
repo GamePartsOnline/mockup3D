@@ -81,13 +81,10 @@ document.querySelector('#productSelect').onchange = e => {
     app.controls.enablePan = !isShowcase;
     app.controls.enableZoom = !isShowcase;
   }
-  if (isShowcase && app.backgroundTexture) {
-    app.backgroundTexture.dispose();
-    app.backgroundTexture = null;
-    app.updateSceneBackground?.();
-  }
+  if (isShowcase && app.backgroundTexture) { app.backgroundTexture.dispose(); app.backgroundTexture = null; }
+  app.updateSceneBackground?.();
   const btnShowcase = document.querySelector('#btnShowcaseTable');
-  if (btnShowcase) btnShowcase.style.display = isShowcase ? 'none' : 'inline-block';
+  if (btnShowcase) btnShowcase.style.display = isShowcase ? 'none' : 'inline-flex';
 
   document.querySelector('#handleColorWrap').hidden = !isMug;
   document.querySelector('#innerColorWrap').hidden = !isMug;

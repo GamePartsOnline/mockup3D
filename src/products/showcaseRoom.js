@@ -97,9 +97,15 @@ export function createStudioRoom() {
   const plinth = new THREE.Mesh(new THREE.BoxGeometry(16.0, 0.12, 0.05), plinthMat);
   plinth.position.set(tableX, -0.775, -1.14); plinth.receiveShadow = true; roomGroup.add(plinth);
 
-  // Sol du studio / showroom (noir en mode nuit)
+  // Sol du studio / showroom avec filigrane actif
   const isDark = typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'dark';
-  const studioFloor = new THREE.Mesh(new THREE.PlaneGeometry(24.0, 14.0), new THREE.MeshStandardMaterial({ color: isDark ? 0x000000 : 0xdde3ea, roughness: 0.85, metalness: 0.05 }));
+  const wmTex = (typeof window !== 'undefined' && window.app?.sceneWatermarkTexture) || null;
+  const studioFloor = new THREE.Mesh(new THREE.PlaneGeometry(24.0, 14.0), new THREE.MeshStandardMaterial({
+    color: wmTex ? 0xffffff : (isDark ? 0x000000 : 0xdde3ea),
+    map: wmTex,
+    roughness: 0.85,
+    metalness: 0.05
+  }));
   studioFloor.name = 'studioFloor'; studioFloor.rotation.x = -Math.PI / 2; studioFloor.position.set(tableX, -0.835, 3.5); studioFloor.receiveShadow = true; roomGroup.add(studioFloor);
 
   // Carte de visite interactive posée sur la table

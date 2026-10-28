@@ -136,7 +136,7 @@ html[data-theme="dark"] .viewer-tools button,
 html[data-theme="dark"] .viewer-tools #viewFaceA,
 html[data-theme="dark"] .viewer-tools #viewFaceB,
 html[data-theme="dark"] .panel-menu,
-html[data-theme="dark"] .btn-showcase-floating {
+html[data-theme="dark"] .topbar-showcase-btn {
   background: #1e293b !important;
   color: #f8fafc !important;
   border-color: #334155 !important;

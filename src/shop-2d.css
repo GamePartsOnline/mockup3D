@@ -10,14 +10,14 @@
   background: #8b5cf6; border-color: #a78bfa; color: #ffffff; transform: translateY(-1px);
 }
 
-.btn-showcase-floating {
-  position: absolute; z-index: 5; top: 18px; left: 66px; height: 40px; padding: 0 14px;
-  border: 1px solid #d5dce0; border-radius: 8px; background: #fff; color: #17212a;
-  font-size: 12px; font-weight: 700; cursor: pointer;
-  box-shadow: 0 4px 16px rgba(82, 97, 109, 0.14); transition: all .15s ease;
+.topbar-showcase-btn {
+  display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 0 14px;
+  border: 1px solid #64748b; border-radius: 8px; background: rgba(100, 116, 139, 0.16);
+  color: #e2e8f0; font-size: 12px; font-weight: 700; cursor: pointer;
+  transition: all .15s ease; white-space: nowrap;
 }
-.btn-showcase-floating:hover {
-  background: #f5f3ff; border-color: #a78bfa; color: #6d28d9;
+.topbar-showcase-btn:hover {
+  background: #475569; border-color: #94a3b8; color: #ffffff; transform: translateY(-1px);
 }
 
 /* Barre de defilement toujours visible et soignee */
