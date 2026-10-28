@@ -1,5 +1,3 @@
-const CATEGORIES = ['Fleurs', 'Licornes', 'Animaux & Art', 'Illustrations', 'Motifs', 'Logos'];
-
 function formatCleanTitle(raw) {
   return String(raw || 'Visuel').replace(/\.[^/.]+$/, '').replace(/[-_.]+/g, ' ')
     .replace(/\b[0-9a-f]{4,}\b/gi, '').replace(/\s+/g, ' ').trim()
@@ -18,13 +16,14 @@ function inferCategory(name) {
 
 export function register(app) {
   app.catalogImages = [];
+  app.activeCatalogCategory = 'all';
+
   app.addImageFromUrl = function(url, name, options = {}) {
     return new Promise(resolve => {
       const img = new Image(); img.crossOrigin = 'anonymous';
       img.onload = () => {
         app.imagesList.push({
-          id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-          name: name || 'Visuel', img,
+          id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, name: name || 'Visuel', img,
           scale: options.scale || 1, scaleX: options.scale || 1, scaleY: options.scale || 1,
           x: options.x || 0, y: options.y || 0, rotation: options.rotation || 0,
           fitMode: options.fitMode || (options.repeatPattern ? 'cover' : 'contain'),
@@ -41,6 +40,7 @@ export function register(app) {
       img.src = url;
     });
   };
+
   app.proposeClientImages = async function(files) {
     for (const file of files) {
       const dataUrl = await new Promise(res => {
@@ -59,16 +59,11 @@ export function register(app) {
 
 export function initialize(app) {
   const explorer = document.querySelector('#catalogExplorer');
-  const openBtn = document.querySelector('#openCatalogBtn');
-  const closeBtn = document.querySelector('#closeExplorerBtn');
-  const grid = document.querySelector('#catalogGrid');
-  const addBtn = document.querySelector('#adminAddLibraryBtn');
-  const addInput = document.querySelector('#adminLibraryInput');
-  const catSelect = document.querySelector('#adminCategorySelect');
-  const searchInput = document.querySelector('#catalogSearchInput');
-  const countLabel = document.querySelector('#catalogCount');
+  const openBtn = document.querySelector('#openCatalogBtn'), closeBtn = document.querySelector('#closeExplorerBtn');
+  const grid = document.querySelector('#catalogGrid'), addBtn = document.querySelector('#adminAddLibraryBtn');
+  const addInput = document.querySelector('#adminLibraryInput'), catSelect = document.querySelector('#adminCategorySelect');
+  const searchInput = document.querySelector('#catalogSearchInput'), countLabel = document.querySelector('#catalogCount');
   const catBar = document.querySelector('#catalogCategories');
-  let activeCategory = 'all';
 
   if (app.clientMode) {
     if (addBtn) addBtn.style.display = 'none';
@@ -80,12 +75,14 @@ export function initialize(app) {
   searchInput?.addEventListener('input', () => renderCatalog());
 
   async function loadCatalog() {
+    await app.loadCatalogCategories?.();
     try {
       const res = await fetch('/api/catalog-images');
       if (res.ok) { const list = await res.json(); if (Array.isArray(list)) app.catalogImages = list; }
     } catch {}
     renderCatalog();
   }
+
   async function persistCatalog() {
     try {
       const res = await fetch('/api/catalog-images', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(app.catalogImages) });
@@ -93,6 +90,7 @@ export function initialize(app) {
     } catch {}
     renderCatalog();
   }
+  app.persistCatalog = persistCatalog;
 
   function renderPills(visibleItems, pendingCount) {
     if (!catBar) return;
@@ -101,12 +99,13 @@ export function initialize(app) {
     visibleItems.filter(x => x.status !== 'pending').forEach(x => { const c = x.category || 'Illustrations'; counts[c] = (counts[c] || 0) + 1; });
     const pills = [{ id: 'all', label: `Tous (${visibleItems.filter(x => x.status !== 'pending').length})` }];
     if (!app.clientMode && pendingCount > 0) pills.push({ id: 'pending', label: `À valider (${pendingCount})`, warn: true });
-    for (const c of CATEGORIES) if (counts[c]) pills.push({ id: c, label: `${c} (${counts[c]})` });
+    const cats = app.catalogCategories || ['Fleurs', 'Licornes', 'Animaux & Art', 'Illustrations', 'Motifs', 'Logos'];
+    for (const c of cats) if (counts[c] || !app.clientMode) pills.push({ id: c, label: `${c} (${counts[c] || 0})` });
     pills.forEach(p => {
       const b = document.createElement('button');
-      b.type = 'button'; b.className = 'cat-pill' + (activeCategory === p.id ? ' active' : '');
+      b.type = 'button'; b.className = 'cat-pill' + (app.activeCatalogCategory === p.id ? ' active' : '');
       if (p.warn) b.style.cssText = 'background:#f59e0b;color:#fff;font-weight:700;';
-      b.textContent = p.label; b.onclick = () => { activeCategory = p.id; renderCatalog(); };
+      b.textContent = p.label; b.onclick = () => { app.activeCatalogCategory = p.id; renderCatalog(); };
       catBar.appendChild(b);
     });
   }
@@ -120,9 +119,9 @@ export function initialize(app) {
     renderPills(baseList, pendingCount);
 
     const filtered = baseList.filter(item => {
-      if (activeCategory === 'pending') return item.status === 'pending';
-      if (item.status === 'pending' && activeCategory !== 'pending') return false;
-      const matchCat = activeCategory === 'all' || (activeCategory === 'Motifs' ? (item.repeatPattern || item.category === 'Motifs') : item.category === activeCategory);
+      if (app.activeCatalogCategory === 'pending') return item.status === 'pending';
+      if (item.status === 'pending' && app.activeCatalogCategory !== 'pending') return false;
+      const matchCat = app.activeCatalogCategory === 'all' || (app.activeCatalogCategory === 'Motifs' ? (item.repeatPattern || item.category === 'Motifs') : item.category === app.activeCatalogCategory);
       return matchCat && (!q || item.name.toLowerCase().includes(q) || (item.category || '').toLowerCase().includes(q));
     });
 
@@ -157,7 +156,7 @@ export function initialize(app) {
         const actions = document.createElement('div'); actions.className = 'catalog-item-actions';
         if (item.status === 'pending') {
           const okBtn = document.createElement('button'); okBtn.type = 'button'; okBtn.className = 'card-btn active'; okBtn.style.background = '#8b5cf6'; okBtn.title = 'Valider'; okBtn.textContent = '✓';
-          okBtn.onclick = e => { e.stopPropagation(); item.status = 'approved'; activeCategory = 'all'; persistCatalog(); app.showToast(`"${item.name}" validé`); };
+          okBtn.onclick = e => { e.stopPropagation(); item.status = 'approved'; app.activeCatalogCategory = 'all'; persistCatalog(); app.showToast(`"${item.name}" validé`); };
           actions.appendChild(okBtn);
         }
         const renBtn = document.createElement('button'); renBtn.type = 'button'; renBtn.className = 'card-btn'; renBtn.title = 'Renommer'; renBtn.textContent = '✎';
@@ -167,7 +166,8 @@ export function initialize(app) {
           if (n && n.trim()) { item.name = n.trim(); persistCatalog(); app.showToast(`Renommé en "${item.name}"`); }
         };
         const catSel = document.createElement('select'); catSel.style.cssText = 'font-size:9px;padding:1px 2px;border-radius:4px;background:#0f172a;color:#fff;border:1px solid #334155;max-width:68px;';
-        CATEGORIES.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; if (item.category === c) o.selected = true; catSel.appendChild(o); });
+        const curCats = app.catalogCategories || ['Fleurs', 'Licornes', 'Animaux & Art', 'Illustrations', 'Motifs', 'Logos'];
+        curCats.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; if (item.category === c) o.selected = true; catSel.appendChild(o); });
         catSel.onchange = e => { e.stopPropagation(); item.category = e.target.value; persistCatalog(); };
         const repBtn = document.createElement('button'); repBtn.type = 'button'; repBtn.className = 'card-btn' + (item.repeatPattern ? ' active' : ''); repBtn.title = 'Basculer Motif'; repBtn.textContent = 'M';
         repBtn.onclick = e => { e.stopPropagation(); item.repeatPattern = !item.repeatPattern; persistCatalog(); };
@@ -179,6 +179,7 @@ export function initialize(app) {
       grid.appendChild(card);
     });
   }
+  app.renderCatalog = renderCatalog;
 
   addBtn?.addEventListener('click', () => addInput?.click());
   addInput?.addEventListener('change', async e => {

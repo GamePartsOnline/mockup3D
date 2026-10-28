@@ -27,6 +27,22 @@ test('public access, admin protection and submission validation', async () => {
     });
     assert.equal(authorized.status, 200);
     assert.match(await authorized.text(), /data-mode="admin"/);
+    const catRes = await fetch(base + '/api/catalog-categories');
+    assert.equal(catRes.status, 200);
+    assert.equal(Array.isArray(await catRes.json()), true);
+    const unauthCat = await fetch(base + '/api/catalog-categories', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '["Test"]'
+    });
+    assert.equal(unauthCat.status, 401);
+    const authCat = await fetch(base + '/api/catalog-categories', {
+      method: 'POST',
+      headers: {
+        Authorization: 'Basic ' + Buffer.from('test-admin:test-only-password').toString('base64'),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(['Fleurs', 'Licornes', 'Animaux & Art', 'Illustrations', 'Motifs', 'Logos', 'NouvelleCat'])
+    });
+    assert.equal(authCat.status, 200);
     assert.equal((await fetch(base + '/missing.js')).status, 404);
     assert.equal((await fetch(base + '/%00')).status, 400);
     const crossSite = await fetch(base + '/api/submissions', {

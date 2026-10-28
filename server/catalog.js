@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { json, authorizeAdmin } from './security.js';
+import { inferCategory } from './categories.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const visuelsDir = path.join(root, 'public', 'visuels');
@@ -9,16 +10,6 @@ const distVisuelsDir = path.join(root, 'dist', 'visuels');
 const catalogPath = path.join(visuelsDir, 'catalog.json');
 const distCatalogPath = path.join(distVisuelsDir, 'catalog.json');
 const IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.svg', '.avif', '.webp']);
-
-function inferCategory(name) {
-  const n = String(name || '').toLowerCase();
-  if (/flower|fleur|rose|floral|plante|feuille/i.test(n)) return 'Fleurs';
-  if (/unicorn|licorne|enfant|kids|magic/i.test(n)) return 'Licornes';
-  if (/pig|cochon|cerf|deer|animal|valentine|art|jpg/i.test(n)) return 'Animaux & Art';
-  if (/motif|pattern|wrap|trame/i.test(n)) return 'Motifs';
-  if (/logo|marque|brand|badge/i.test(n)) return 'Logos';
-  return 'Illustrations';
-}
 
 function sanitizeFileName(name, ext) {
   const base = String(name || 'visuel')
@@ -66,20 +57,14 @@ async function syncCatalogWithDisk() {
   for (const fileName of diskFiles) {
     const srcFile = path.join(visuelsDir, fileName);
     const dstFile = path.join(distVisuelsDir, fileName);
-    try { await fs.stat(dstFile); }
-    catch { try { await fs.copyFile(srcFile, dstFile); } catch {} }
+    try { await fs.stat(dstFile); } catch { try { await fs.copyFile(srcFile, dstFile); } catch {} }
   }
 
   const diskUrlSet = new Set(diskFiles.map(f => `/visuels/${f}`));
   const validList = savedList.filter(item => diskUrlSet.has(item.url)).map(item => {
     const autoCat = inferCategory(item.name);
     const cat = (!item.category || (item.category === 'Illustrations' && autoCat !== 'Illustrations')) ? autoCat : item.category;
-    return {
-      ...item,
-      name: item.name === 'JPG' ? 'Cerf Polygonal (Art)' : item.name,
-      category: cat,
-      status: item.status === 'pending' ? 'pending' : 'approved'
-    };
+    return { ...item, name: item.name === 'JPG' ? 'Cerf Polygonal (Art)' : item.name, category: cat, status: item.status === 'pending' ? 'pending' : 'approved' };
   });
   const knownUrls = new Set(validList.map(item => item.url));
 
@@ -87,24 +72,16 @@ async function syncCatalogWithDisk() {
     const url = `/visuels/${fileName}`;
     if (!knownUrls.has(url)) {
       const cleanName = fileName.replace(/\.[^/.]+$/, '');
-      const isPattern = /motif|pattern|wrap/i.test(cleanName);
-      validList.push({
-        id: `visuel-${fileName}`,
-        name: cleanName,
-        url,
-        category: inferCategory(cleanName),
-        repeatPattern: isPattern,
-        status: 'approved'
-      });
+      validList.push({ id: `visuel-${fileName}`, name: cleanName, url, category: inferCategory(cleanName), repeatPattern: /motif|pattern|wrap/i.test(cleanName), status: 'approved' });
     }
   }
 
-  validList.sort((a, b) => {
+  const sortItems = list => list.sort((a, b) => {
     if ((a.status === 'pending') !== (b.status === 'pending')) return a.status === 'pending' ? -1 : 1;
     const catCmp = String(a.category || '').localeCompare(String(b.category || ''), 'fr');
-    if (catCmp !== 0) return catCmp;
-    return String(a.name || '').localeCompare(String(b.name || ''), 'fr', { numeric: true });
+    return catCmp !== 0 ? catCmp : String(a.name || '').localeCompare(String(b.name || ''), 'fr', { numeric: true });
   });
+  sortItems(validList);
 
   await fs.writeFile(catalogPath, JSON.stringify(validList, null, 2), 'utf8');
   try { await fs.writeFile(distCatalogPath, JSON.stringify(validList, null, 2), 'utf8'); } catch {}
@@ -112,12 +89,8 @@ async function syncCatalogWithDisk() {
 }
 
 export async function getCatalog(req, res) {
-  try {
-    const list = await syncCatalogWithDisk();
-    return json(res, 200, list);
-  } catch {
-    return json(res, 200, []);
-  }
+  try { return json(res, 200, await syncCatalogWithDisk()); }
+  catch { return json(res, 200, []); }
 }
 
 export async function proposeCatalogItem(req, res) {
@@ -176,9 +149,7 @@ export async function saveCatalog(req, res) {
 
     await fs.mkdir(visuelsDir, { recursive: true });
     await fs.mkdir(distVisuelsDir, { recursive: true });
-
-    const finalItems = [];
-    const keptFiles = new Set();
+    const finalItems = [], keptFiles = new Set();
 
     for (const item of parsed) {
       if (!item || typeof item !== 'object') continue;
@@ -198,12 +169,9 @@ export async function saveCatalog(req, res) {
         keptFiles.add(fileName);
         const cleanName = String(item.name || fileName.replace(/\.[^/.]+$/, ''));
         finalItems.push({
-          id: String(item.id || `visuel-${fileName}`),
-          name: cleanName,
-          url: `/visuels/${fileName}`,
+          id: String(item.id || `visuel-${fileName}`), name: cleanName, url: `/visuels/${fileName}`,
           category: String(item.category || inferCategory(cleanName)),
-          repeatPattern: Boolean(item.repeatPattern),
-          status: item.status === 'pending' ? 'pending' : 'approved'
+          repeatPattern: Boolean(item.repeatPattern), status: item.status === 'pending' ? 'pending' : 'approved'
         });
       }
     }
@@ -219,8 +187,7 @@ export async function saveCatalog(req, res) {
     finalItems.sort((a, b) => {
       if ((a.status === 'pending') !== (b.status === 'pending')) return a.status === 'pending' ? -1 : 1;
       const catCmp = String(a.category || '').localeCompare(String(b.category || ''), 'fr');
-      if (catCmp !== 0) return catCmp;
-      return String(a.name || '').localeCompare(String(b.name || ''), 'fr', { numeric: true });
+      return catCmp !== 0 ? catCmp : String(a.name || '').localeCompare(String(b.name || ''), 'fr', { numeric: true });
     });
 
     await fs.writeFile(catalogPath, JSON.stringify(finalItems, null, 2), 'utf8');
