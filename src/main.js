@@ -22,6 +22,10 @@ import * as feature19 from './app/20-business-card-modal.js';
 import * as feature20 from './app/21-catalog-categories.js';
 import * as feature21 from './app/22-product-compatibility.js';
 import * as feature22 from './app/23-catalog-subcategories.js';
+import * as feature23 from './app/24-category-manager-modal.js';
+import * as feature24 from './app/26-visual-edit-modal.js';
+import * as feature25 from './app/27-client-order-modal.js';
+import * as feature26 from './app/28-admin-submissions-modal.js';
 
 const app = { ...dependencies };
 if (typeof window !== 'undefined') window.app = app;
@@ -48,7 +52,11 @@ const features = [
   feature19,
   feature20,
   feature21,
-  feature22
+  feature22,
+  feature23,
+  feature24,
+  feature25,
+  feature26
 ];
 
 for (const feature of features) feature.register(app);

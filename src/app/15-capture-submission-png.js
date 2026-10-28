@@ -5,20 +5,20 @@ app.captureSubmissionPng = async function captureSubmissionPng() {
   app.renderer.getSize(size);
   const pixelRatio = app.renderer.getPixelRatio();
   const overlayVisible = app.isOverlayVisible();
-  const gridVisible = app.grid.visible;
-  const wrapVisible = app.wrapPreview.visible;
+  const gridVisible = app.grid?.visible ?? false;
+  const wrapVisible = app.wrapPreview?.visible ?? false;
   try {
     app.setOverlayVisible(false);
-    app.grid.visible = false;
-    app.wrapPreview.visible = false;
+    if (app.grid) app.grid.visible = false;
+    if (app.wrapPreview) app.wrapPreview.visible = false;
     app.renderer.setPixelRatio(Math.min(devicePixelRatio, 2) * 2);
     app.renderer.render(app.scene, app.camera);
     return app.renderer.domElement.toDataURL('image/png');
   } finally {
     app.renderer.setPixelRatio(pixelRatio);
     app.renderer.setSize(size.x, size.y, false);
-    app.grid.visible = gridVisible;
-    app.wrapPreview.visible = wrapVisible;
+    if (app.grid) app.grid.visible = gridVisible;
+    if (app.wrapPreview) app.wrapPreview.visible = wrapVisible;
     app.setOverlayVisible(overlayVisible);
     app.renderer.render(app.scene, app.camera);
   }
@@ -38,35 +38,42 @@ app.submissionWrapDataUrl = function submissionWrapDataUrl() {
   if (!source?.toDataURL) throw new Error('Ajoutez une image ou un texte avant l’envoi.');
   return source.toDataURL('image/png');
 };
-}
 
-export function initialize(app) {
-document.querySelector('#submitCreation')?.addEventListener('click', async () => {
-  if (!app.clientMode || app.submissionInProgress) return;
+app.executeSubmission = async function executeSubmission(clientData) {
+  if (app.submissionInProgress) return;
   app.submissionInProgress = true;
   const button = document.querySelector('#submitCreation');
-  const initialText = button.textContent;
-  button.disabled = true;
+  const initialText = button ? button.textContent : 'Envoyer ma création';
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Préparation des fichiers…';
+  }
   let ownerExportStarted = false;
   try {
-    if (!app.texture) throw new Error('Ajoutez une image ou un texte avant l’envoi.');
+    if (app.currentProductKey === 'showcase') throw new Error('Veuillez d’abord choisir un objet à personnaliser.');
+    if (!app.texture && (app.imagesList?.length > 0 || app.textParams?.text?.trim())) {
+      app.buildTexture?.();
+    }
+    if (!app.texture) throw new Error('Ajoutez une image ou un texte sur votre objet avant l’envoi.');
+
     const statusResponse = await fetch('/api/submissions/status');
     const status = await statusResponse.json();
     if (!status.configured) throw new Error('Envoi non configuré. Contactez Graph2Print.');
     ownerExportStarted = true;
-    document.querySelector('.workspace').inert = true;
-    document.querySelector('#submissionMask').hidden = false;
+    const ws = document.querySelector('.workspace');
+    if (ws) ws.inert = true;
+    const mask = document.querySelector('#submissionMask');
+    if (mask) mask.hidden = false;
     app.suppressClientWatermarkForOwnerExport = true;
-    app.buildTexture();
-    app.updateSceneBackground();
-    button.textContent = 'Préparation des fichiers…';
+    app.buildTexture?.();
+    app.updateSceneBackground?.();
     const key = app.currentProductKey;
     const files = [];
     const addPng = (name, data) => files.push({ name, type: 'image/png', data });
-    const printable = app.product.printable || app.productDefinitions[key].printable || [210, 95];
+    const printable = app.product?.printable || app.productDefinitions?.[key]?.printable || [210, 95];
     addPng('wrap-' + key + '-' + printable.join('x') + 'mm.png', app.submissionWrapDataUrl());
     if (app.heartTexture?.image) addPng('coeur-tshirt.png', app.heartTexture.image.toDataURL('image/png'));
-    if (key === 'tshirt3D') {
+    if (key === 'tshirt3D' && app.texture?.image) {
       const source = app.texture.image;
       for (const [index, side] of ['a', 'b'].entries()) {
         const page = document.createElement('canvas');
@@ -78,7 +85,8 @@ document.querySelector('#submitCreation')?.addEventListener('click', async () =>
     }
     const savedPosition = app.camera.position.clone();
     const savedTarget = app.controls.target.clone();
-    const savedAngle = document.querySelector('#viewAngle').value;
+    const angleEl = document.querySelector('#viewAngle');
+    const savedAngle = angleEl ? angleEl.value : 45;
     try {
       addPng('mockup-' + key + '-apercu.png', await app.captureSubmissionPng());
       const views = key === 'mug11oz'
@@ -87,52 +95,69 @@ document.querySelector('#submitCreation')?.addEventListener('click', async () =>
           ? [{ name: 'face-a', angle: 90 }, { name: 'face-b', angle: 270 }]
           : [];
       for (const view of views) {
-        app.setViewAngle(view.angle);
+        app.setViewAngle?.(view.angle);
         addPng('mockup-' + key + '-' + view.name + '.png', await app.captureSubmissionPng());
       }
     } finally {
       app.camera.position.copy(savedPosition);
       app.controls.target.copy(savedTarget);
       app.controls.update();
-      document.querySelector('#viewAngle').value = savedAngle;
+      if (angleEl) angleEl.value = savedAngle;
       app.renderer.render(app.scene, app.camera);
     }
-    button.textContent = 'Création de la vidéo…';
-    let videoUnavailable = false;
+    if (button) button.textContent = 'Envoi des fichiers…';
     try {
-      const video = await app.exportMp4({ download: false });
+      const vPromise = app.exportMp4({ download: false });
+      const tPromise = new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 4000));
+      const video = await Promise.race([vPromise, tPromise]);
       if (video?.size) files.push({ name: 'animation-' + key + '.mp4', type: 'video/mp4', data: await app.blobToDataUrl(video) });
-      else videoUnavailable = true;
-    } catch (error) {
-      console.warn('MP4 unavailable:', error);
-      videoUnavailable = true;
-    }
-    button.textContent = 'Envoi en cours…';
+    } catch {}
+
     const response = await fetch('/api/submissions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ product: app.productDefinitions[key].name, files })
+      body: JSON.stringify({ product: app.productDefinitions?.[key]?.name || key, files, client: clientData })
     });
     const result = await response.json();
     if (!response.ok || !result.ok) throw new Error(result.error || "L'envoi a échoué.");
-    const isLocalSave = result.mode === 'local';
-    app.showToast(videoUnavailable
-      ? (isLocalSave ? 'Création enregistrée en local (sans vidéo)' : 'Création envoyée, vidéo indisponible')
-      : (isLocalSave ? 'Création et exports enregistrés dans submissions/' : 'Création et exports envoyés'));
+    app.showToast(result.message || 'Votre création a été transmise à l’atelier Graph2Print.');
+    return true;
   } catch (error) {
     console.error(error);
     app.showToast(error.message || "L'envoi a échoué.");
+    throw error;
   } finally {
     if (ownerExportStarted) {
       app.suppressClientWatermarkForOwnerExport = false;
-      app.buildTexture();
-      app.updateSceneBackground();
-      document.querySelector('#submissionMask').hidden = true;
+      app.buildTexture?.();
+      app.updateSceneBackground?.();
+      const mask = document.querySelector('#submissionMask');
+      if (mask) mask.hidden = true;
     }
     app.submissionInProgress = false;
-    document.querySelector('.workspace').inert = false;
-    button.textContent = initialText;
-    app.updateClientGuide();
+    const ws = document.querySelector('.workspace');
+    if (ws) ws.inert = false;
+    if (button) button.textContent = initialText;
+    app.updateClientGuide?.();
   }
-});
+};
+}
+
+export function initialize(app) {
+  document.querySelector('#submitCreation')?.addEventListener('click', () => {
+    if (app.submissionInProgress) return;
+    if (app.currentProductKey === 'showcase') {
+      app.showToast('Veuillez d’abord choisir un objet à personnaliser.');
+      app.openShop2D?.();
+      return;
+    }
+    if (!app.texture && (app.imagesList?.length > 0 || app.textParams?.text?.trim())) {
+      app.buildTexture?.();
+    }
+    if (!app.texture) {
+      app.showToast('Veuillez ajouter une image ou un texte avant d’envoyer votre création.');
+      return;
+    }
+    app.openClientOrderModal?.();
+  });
 }

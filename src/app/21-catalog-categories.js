@@ -39,10 +39,14 @@ export function register(app) {
 
   app.normalizeCategoryItems = list => {
     if (!Array.isArray(list)) return [];
-    return list.map(c => {
+    const items = list.map(c => {
       if (typeof c === 'string') return { name: c.trim(), subs: [] };
-      return { name: String(c.name || '').trim(), subs: Array.isArray(c.subs) ? c.subs.map(s => String(s).trim()).filter(Boolean) : [] };
+      const subs = Array.isArray(c.subs) ? c.subs.map(s => String(s).trim()).filter(Boolean) : [];
+      subs.sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
+      return { name: String(c.name || '').trim(), subs };
     }).filter(c => Boolean(c.name));
+    items.sort((a, b) => a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' }));
+    return items;
   };
 
   app.loadCatalogCategories = async function loadCatalogCategories() {
@@ -139,15 +143,17 @@ export function initialize(app) {
   });
 
   delCatBtn?.addEventListener('click', async () => {
-    const target = pickCategory('Entrez le numéro ou le nom de la catégorie à supprimer :', c => c !== 'Illustrations');
+    const target = pickCategory('Entrez le numéro ou le nom de la catégorie à supprimer :');
     if (!target) return;
-    const ok = confirm(`Confirmez-vous la suppression de la catégorie "${target}" ?\nLes visuels associés seront transférés dans "Illustrations".`);
+    const ok = confirm(`Confirmez-vous la suppression de la catégorie "${target}" ?`);
     if (!ok) return;
     app.catalogCategories = app.catalogCategories.filter(c => (typeof c === 'string' ? c : c.name) !== target);
-    app.catalogImages.forEach(it => { if (it.category === target) { it.category = 'Illustrations'; it.subcategory = ''; } });
+    const fallback = app.catalogCategories[0] ? (typeof app.catalogCategories[0] === 'string' ? app.catalogCategories[0] : app.catalogCategories[0].name) : 'Général';
+    app.catalogImages.forEach(it => { if (it.category === target) { it.category = fallback; it.subcategory = ''; } });
     if (app.activeCatalogCategory === target) app.activeCatalogCategory = 'all';
     await Promise.all([app.persistCatalogCategories(), app.persistCatalog?.()]);
     app.renderCatalog?.();
+    app.updateCatalogCategorySelect?.();
     app.showToast(`Catégorie "${target}" supprimée`);
   });
 

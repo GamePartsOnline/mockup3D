@@ -30,8 +30,8 @@ function validateAttachments(files) {
       : content.subarray(4, 8).toString('ascii') === 'ftyp';
     if (!valid) throw new Error('Le contenu ne correspond pas au fichier.');
     total += content.length;
-    if (total > 19 * 1024 * 1024) {
-      throw Object.assign(new Error('Dossier trop volumineux pour un courriel.'), { status: 413 });
+    if (total > 25 * 1024 * 1024) {
+      throw Object.assign(new Error('Dossier trop volumineux pour transmission.'), { status: 413 });
     }
     attachments.push({ filename: file.name, content, contentType: file.type });
   }
@@ -40,11 +40,80 @@ function validateAttachments(files) {
   return attachments;
 }
 
+function validateClient(client) {
+  if (!client || typeof client !== 'object') throw new Error('Les coordonnées sont obligatoires.');
+  const nom = String(client.nom || '').trim();
+  const prenom = String(client.prenom || '').trim();
+  const adresse = String(client.adresse || '').trim();
+  const codePostal = String(client.codePostal || '').trim();
+  const ville = String(client.ville || '').trim();
+  const email = String(client.email || '').trim().toLowerCase();
+  const telephone = String(client.telephone || '').trim();
+  const note = String(client.note || '').trim();
+
+  if (!nom) throw new Error('Le nom est requis.');
+  if (!prenom) throw new Error('Le prénom est requis.');
+  if (!adresse) throw new Error("L'adresse postale est requise.");
+  if (!codePostal) throw new Error('Le code postal est requis.');
+  if (!ville) throw new Error('La ville est requise.');
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Une adresse email valide est requise.');
+  if (!telephone || telephone.length < 6) throw new Error('Un numéro de téléphone valide est requis.');
+
+  return { nom, prenom, adresse, codePostal, ville, email, telephone, note: note.slice(0, 1000) };
+}
+
+async function sendMailNotification(client, product, attachments) {
+  if (!mailConfigured()) return { sent: false, reason: 'smtp_not_configured' };
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT || 587),
+    secure: Number(process.env.SMTP_PORT || 587) === 465,
+    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+    connectionTimeout: 10_000, greetingTimeout: 10_000, socketTimeout: 30_000,
+    disableFileAccess: true, disableUrlAccess: true
+  });
+  try {
+    const textBody = [
+      `NOUVELLE CRÉATION CLIENT - MOCKUP3D`,
+      `------------------------------------`,
+      `Date : ${new Date().toLocaleString('fr-FR')}`,
+      `Produit : ${product}`,
+      ``,
+      `COORDONNÉES DU CLIENT :`,
+      `Nom : ${client.nom}`,
+      `Prénom : ${client.prenom}`,
+      `Adresse : ${client.adresse}`,
+      `Code Postal : ${client.codePostal}`,
+      `Ville : ${client.ville}`,
+      `Email : ${client.email}`,
+      `Téléphone : ${client.telephone}`,
+      client.note ? `Note du client : ${client.note}` : '',
+      ``,
+      `Fichiers joints (${attachments.length}) :`,
+      attachments.map(a => '- ' + a.filename).join('\n')
+    ].filter(Boolean).join('\n');
+
+    await transporter.sendMail({
+      from: process.env.SMTP_FROM || process.env.SMTP_USER,
+      to: process.env.SUBMISSION_TO || 'callisto.gfx@gmail.com',
+      replyTo: client.email,
+      subject: `[MockUp3D] Création de ${client.nom} ${client.prenom} - ${product}`,
+      text: textBody,
+      attachments
+    });
+    return { sent: true };
+  } catch (err) {
+    console.error('SMTP sendMail error:', err?.message || err);
+    return { sent: false, reason: err?.message || 'smtp_error' };
+  } finally {
+    transporter?.close();
+  }
+}
+
 export async function submit(req, res) {
   if (!acceptSubmission(req, res)) return;
   if (active >= 4) return json(res, 503, { error: 'Le service est occupé. Réessayez plus tard.' });
   active++;
-  let transporter;
   try {
     const body = await readJson(req);
     if (typeof body?.product !== 'string' || body.product.length > 120) {
@@ -54,42 +123,49 @@ export async function submit(req, res) {
     try { attachments = validateAttachments(body.files); }
     catch (error) { return json(res, error.status || 400, { error: error.message }); }
 
-    if (!mailConfigured()) {
-      const dateStr = new Date().toISOString().replace(/[:.]/g, '-');
-      const safeProduct = body.product.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40);
-      const targetDir = path.join(submissionsDir, `${dateStr}_${safeProduct}`);
-      fs.mkdirSync(targetDir, { recursive: true });
-      for (const file of attachments) {
-        fs.writeFileSync(path.join(targetDir, file.filename), file.content);
-      }
-      fs.writeFileSync(path.join(targetDir, 'submission.json'), JSON.stringify({
-        product: body.product, date: new Date().toISOString(), files: attachments.map(a => a.filename)
-      }, null, 2));
-      return json(res, 200, { ok: true, mode: 'local', savedTo: targetDir });
+    let client;
+    try { client = validateClient(body.client); }
+    catch (error) { return json(res, 400, { error: error.message }); }
+
+    const dateStr = new Date().toISOString().replace(/[:.]/g, '-');
+    const safeNom = client.nom.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 30);
+    const safeProduct = body.product.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 30);
+    const folderName = `${dateStr}_${safeNom}_${safeProduct}`;
+    const targetDir = path.join(submissionsDir, folderName);
+    fs.mkdirSync(targetDir, { recursive: true });
+
+    const savedFiles = [];
+    for (const file of attachments) {
+      fs.writeFileSync(path.join(targetDir, file.filename), file.content);
+      savedFiles.push({ name: file.filename, size: file.content.length, type: file.contentType });
     }
 
-    transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT || 587),
-      secure: Number(process.env.SMTP_PORT || 587) === 465,
-      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-      connectionTimeout: 10_000, greetingTimeout: 10_000, socketTimeout: 30_000,
-      disableFileAccess: true, disableUrlAccess: true
+    const mailResult = await sendMailNotification(client, body.product, attachments);
+
+    const submissionData = {
+      id: folderName,
+      folder: folderName,
+      date: new Date().toISOString(),
+      status: 'nouveau',
+      product: body.product,
+      client,
+      files: savedFiles,
+      emailStatus: mailResult.sent ? 'sent' : (mailResult.reason || 'not_sent')
+    };
+    fs.writeFileSync(path.join(targetDir, 'submission.json'), JSON.stringify(submissionData, null, 2), 'utf8');
+
+    return json(res, 200, {
+      ok: true,
+      id: folderName,
+      emailSent: mailResult.sent,
+      message: mailResult.sent
+        ? 'Création et coordonnées transmises avec succès par courriel et enregistrées à l’atelier.'
+        : 'Création et coordonnées enregistrées avec succès à l’atelier.'
     });
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM || process.env.SMTP_USER,
-      to: process.env.SUBMISSION_TO || 'callisto.gfx@gmail.com',
-      subject: 'MockUp3D - nouvelle création client',
-      text: 'Produit : ' + body.product.replace(/[\r\n]/g, ' ') +
-        '\nFichiers joints : ' + attachments.map(a => a.filename).join(', '),
-      attachments
-    });
-    json(res, 200, { ok: true });
   } catch (error) {
-    console.error('Submission failed:', error.code || error.status || 'unknown');
-    json(res, error.status || 502, { error: error.status ? error.message : "L'envoi a échoué. Réessayez plus tard." });
+    console.error('Submission failed:', error.code || error.status || error);
+    json(res, error.status || 500, { error: error.message || "L'envoi a échoué. Réessayez plus tard." });
   } finally {
     active--;
-    transporter?.close();
   }
 }

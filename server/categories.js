@@ -10,19 +10,26 @@ const categoriesPath = path.join(visuelsDir, 'categories.json');
 const distCategoriesPath = path.join(distVisuelsDir, 'categories.json');
 
 export const DEFAULT_CATEGORIES = [
-  { name: 'Nouveau', subs: [] },
-  { name: 'Animaux', subs: ['Chats', 'Chiens', 'Girafe', 'Licorne'] },
+  { name: 'Animaux', subs: ['Cerf', 'Chats', 'Chiens', 'Girafe', 'Licorne'] },
+  { name: 'Arcades', subs: [] },
+  { name: 'Callisto Arts', subs: [] },
+  { name: 'Dessins animés', subs: [] },
+  { name: 'Fantaisie', subs: ['Fées'] },
+  { name: 'Films', subs: [] },
   { name: 'Fleurs', subs: [] },
+  { name: 'Humour', subs: [] },
   { name: 'Illustrations', subs: [] },
+  { name: 'Logos', subs: [] },
   { name: 'Motifs', subs: [] },
-  { name: 'Logos', subs: [] }
+  { name: 'Noël', subs: [] },
+  { name: 'Nouveau', subs: [] }
 ];
 
 export function inferCategory(name) {
   const n = String(name || '').toLowerCase();
   if (/nouveau|new|recent|nouveaut/i.test(n)) return 'Nouveau';
   if (/flower|fleur|rose|floral|plante|feuille/i.test(n)) return 'Fleurs';
-  if (/unicorn|licorne|chat|cat|chien|dog|girafe|giraffe|pig|cochon|cerf|deer|animal|baleine|requin|lemur|panda/i.test(n)) return 'Animaux';
+  if (/unicorn|licorne|chat|cat|chien|dog|girafe|giraffe|pig|cochon|cerf|deer|animal|baleine|requin|lemur|panda|elephant/i.test(n)) return 'Animaux';
   if (/motif|pattern|wrap|trame/i.test(n)) return 'Motifs';
   if (/logo|marque|brand|badge/i.test(n)) return 'Logos';
   return 'Illustrations';
@@ -34,27 +41,29 @@ export function inferSubcategory(name) {
   if (/chien|dog|puppy/i.test(n)) return 'Chiens';
   if (/girafe|giraffe/i.test(n)) return 'Girafe';
   if (/unicorn|licorne/i.test(n)) return 'Licorne';
+  if (/cerf|deer/i.test(n)) return 'Cerf';
   return '';
 }
 
 export function normalizeCategories(rawList) {
   if (!Array.isArray(rawList)) return DEFAULT_CATEGORIES;
-  const map = new Map();
+  const list = [];
+  const seen = new Set();
   for (const it of rawList) {
     if (!it) continue;
     let name = typeof it === 'string' ? it.trim() : String(it.name || '').trim();
-    if (!name) continue;
-    if (name === 'Licornes' || name === 'Animaux & Art') name = 'Animaux';
-    let subs = typeof it === 'object' && Array.isArray(it.subs) ? it.subs.map(s => String(s).trim()).filter(Boolean) : [];
-    if (name === 'Animaux' && !subs.length) subs = ['Chats', 'Chiens', 'Girafe', 'Licorne'];
-    if (!map.has(name)) {
-      map.set(name, { name, subs: Array.from(new Set(subs)) });
-    } else {
-      const cur = map.get(name);
-      cur.subs = Array.from(new Set([...cur.subs, ...subs]));
-    }
+    if (!name || seen.has(name.toLowerCase())) continue;
+    seen.add(name.toLowerCase());
+    name = name.charAt(0).toUpperCase() + name.slice(1);
+    let subs = typeof it === 'object' && Array.isArray(it.subs)
+      ? it.subs.map(s => String(s).trim()).filter(Boolean)
+      : [];
+    if (name === 'Animaux' && !subs.length) subs = ['Cerf', 'Chats', 'Chiens', 'Girafe', 'Licorne'];
+    subs.sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
+    list.push({ name, subs: Array.from(new Set(subs)) });
   }
-  return Array.from(map.values());
+  list.sort((a, b) => a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' }));
+  return list;
 }
 
 export async function loadCategoriesList() {

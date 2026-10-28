@@ -79,8 +79,8 @@ export function acceptSubmission(req, res) {
   }
   const ip = clientAddress(req);
   const previous = attempts.get(ip);
-  if (previous && Date.now() - previous.time < 60_000) {
-    json(res, 429, { error: 'Attendez une minute avant un nouvel envoi.' });
+  if (previous && Date.now() - previous.time < 10_000) {
+    json(res, 429, { error: 'Veuillez patienter quelques secondes avant un nouvel envoi.' });
     return false;
   }
   attempts.set(ip, { time: Date.now() });

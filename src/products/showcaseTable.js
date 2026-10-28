@@ -23,7 +23,7 @@ export const SHOWCASE_LAYOUT = [
   // Rangée arrière (décalée à droite sur la table) : T-shirt, Coussin, Poster A4, Casquette, Mug
   { key: 'tshirt3D', def: tshirt3DProduct, label: 'T-shirt 3D (A4 210×297 mm)', price: '17,00 € - 21,00 €', pos: [-0.63, 0.517, -0.45], scale: 2.35, rot: [0, 0.12, 0], withStand: true },
   { key: 'cushion', def: cushionProduct, label: 'Housse de coussin (400×400×150 mm)', price: '17,00 €', pos: [0.80, 0.111, -0.45], scale: 0.50, rot: [0, -0.04, 0] },
-  { key: 'photoFrame', def: photoFrameProduct, label: 'Poster A4 (21×29,7 cm)', price: '20,00 €', pos: [1.57, 0.001, -0.44], scale: 0.56, rot: [0, -0.18, 0] },
+  { key: 'photoFrame', def: photoFrameProduct, label: 'Poster A4 (Sans cadre)', price: '12,00 €', pos: [1.57, 0.001, -0.44], scale: 0.56, rot: [0, -0.18, 0] },
   { key: 'cap', def: capProduct, label: 'Casquette 3D (Front 120×65 mm)', price: '15,00 €', pos: [2.21, 0.024, -0.45], scale: 0.30, rot: [0, -0.22, 0] },
   { key: 'mug11oz', def: mug11ozProduct, label: 'Mug blanc 11 oz (Ø 82×95 mm)', price: '13,00 €', pos: [2.65, 0.001, -0.42], scale: 0.165, rot: [0, 2.70, 0] },
   // Rangée centrale : Puzzle, Tapis de souris, Trousse, Sous-verres

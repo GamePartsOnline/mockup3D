@@ -44,6 +44,8 @@ export function initialize(app) {
   };
   document.querySelector('#menuViewShowcase')?.addEventListener('click', goShowcase);
   document.querySelector('#btnShowcaseTable')?.addEventListener('click', goShowcase);
+  document.querySelector('#btnBackToShowroom')?.addEventListener('click', goShowcase);
+  document.querySelector('#btnChangeProductShop')?.addEventListener('click', () => app.openShop2D?.());
   document.querySelector('#menuViewHome')?.addEventListener('click', () => {
     app.homeView?.();
     app.showToast('Vue 3D réinitialisée');

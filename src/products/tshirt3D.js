@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
-
 import objUrl from '../mockup/male_crew_neck_worn_v1_no_tag_517_YEE.obj?url';
 
 const PRINT_ASPECT = 210 / 297;
@@ -13,7 +12,7 @@ export const tshirt3DProduct = {
   name: 'T-shirt 3D (Dos, Cœur, Ventre)',
   dimensions: 'S, M, L, XL',
   printable: [210, 297],
-  icon: '👕',
+  icon: '',
   printAspect: PRINT_ASPECT,
   create() {
     const group = new THREE.Group();

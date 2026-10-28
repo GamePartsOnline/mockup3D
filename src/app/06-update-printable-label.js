@@ -83,8 +83,10 @@ document.querySelector('#productSelect').onchange = e => {
   }
   if (isShowcase && app.backgroundTexture) { app.backgroundTexture.dispose(); app.backgroundTexture = null; }
   app.updateSceneBackground?.();
-  const btnShowcase = document.querySelector('#btnShowcaseTable');
-  if (btnShowcase) btnShowcase.style.display = isShowcase ? 'none' : 'inline-flex';
+  const btnShowcase = document.querySelector('#btnShowcaseTable'), btnBack = document.querySelector('#btnBackToShowroom');
+  if (btnShowcase) { btnShowcase.style.opacity = isShowcase ? '0.6' : '1'; btnShowcase.title = isShowcase ? 'Showroom 3D actif' : 'Retourner au Showroom 3D'; }
+  if (btnBack) btnBack.style.display = isShowcase ? 'none' : 'inline-flex';
+  const nameEl = document.querySelector('#activeProductName'); if (nameEl) nameEl.textContent = isShowcase ? 'Le Showroom 3D' : (definition.name || 'Objet personnalisé');
 
   document.querySelector('#handleColorWrap').hidden = !isMug;
   document.querySelector('#innerColorWrap').hidden = !isMug;

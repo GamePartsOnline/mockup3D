@@ -6,6 +6,7 @@ import { json, secureHeaders } from './server/security.js';
 import { mailConfigured, submit } from './server/submissions.js';
 import { getCatalog, saveCatalog, proposeCatalogItem } from './server/catalog.js';
 import { getCategories, saveCategories } from './server/categories.js';
+import { getSubmissions, serveSubmissionFile, updateSubmissionStatus, deleteSubmission } from './server/admin-submissions.js';
 import { serveStatic } from './server/static.js';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
@@ -36,6 +37,18 @@ const server = http.createServer(async (req, res) => {
     if (route === '/api/submissions') {
       if (req.method !== 'POST') return json(res, 405, { error: 'Méthode non autorisée.' });
       return await submit(req, res);
+    }
+    if (route === '/api/admin/submissions' && req.method === 'GET') {
+      return await getSubmissions(req, res);
+    }
+    if (route === '/api/admin/submissions/file' && req.method === 'GET') {
+      return await serveSubmissionFile(req, res);
+    }
+    if (route === '/api/admin/submissions/status' && req.method === 'POST') {
+      return await updateSubmissionStatus(req, res);
+    }
+    if (route === '/api/admin/submissions/delete' && req.method === 'POST') {
+      return await deleteSubmission(req, res);
     }
     await serveStatic(req, res, dist);
   } catch (error) {

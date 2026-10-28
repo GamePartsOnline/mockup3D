@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&family=Cinzel:wght@700&family=Dancing+Script:wght@700&family=Great+Vibes&family=Lobster&family=Montserrat:ital,wght@0,400;0,700;1,400&family=Oswald:wght@600&family=Pacifico&family=Playfair+Display:ital,wght@0,700;1,700&family=Righteous&family=Roboto:wght@400;700&family=Satisfy&display=swap" rel="stylesheet">
   <title>MockUp3D C3</title>
-  <script type="module" crossorigin src="/assets/index-klfOZVoI.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-C70HnZ-8.css">
+  <script type="module" crossorigin src="/assets/index-wivIQCtC.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-D46DDouq.css">
 </head>
 <body>
   <div id="app">
@@ -81,9 +81,10 @@
     </nav>
   </div>
   <div class="topbar-actions">
-    <button type="button" id="btnShowcaseTable" class="topbar-showcase-btn" style="display:none;" title="Retourner au Showroom 3D">Showroom 3D</button>
+    <button type="button" id="btnShowcaseTable" class="topbar-showcase-btn" title="Le Showroom 3D (Tous les objets sur la table)">Showroom 3D</button>
     <button type="button" id="btnShop2D" class="topbar-shop-btn" title="Ouvrir la Boutique 2D">Boutique 2D</button>
     <span id="exportStatus" class="topbar-status" style="font-size:12px; color:#94a3b8; margin-right:8px;">Prêt</span>
+    <button type="button" id="btnAdminSubmissions" class="topbar-btn secondary" style="display:none; font-weight:700;" title="Consulter les créations et commandes reçues">Créations reçues (<span id="adminSubmissionsBadge">0</span>)</button>
     <a id="clientModeLink" class="client-mode-btn" href="/">Interface Client</a>
     <button id="submitCreation" class="topbar-btn primary client-submit" type="button" hidden>Envoyer ma création</button>
   </div>
@@ -117,43 +118,37 @@
           </div>
           <button id="clientGuideAction" class="primary" type="button">Choisir ce produit</button>
         </div>
-        <section id="sectionProduct" class="collapsible-section" data-section="1">
-          <button type="button" class="section-title-btn" aria-expanded="true">
-            <div class="section-title"><span>1</span><h2>Choix du produit</h2></div>
-            <span class="collapse-icon">▾</span>
-          </button>
-          <div class="section-content">
-            <div class="product-card">
-              <label>
-                <span>Objet 3D</span>
-                <select id="productSelect">
-                  <option value="showcase" selected>Le Showroom 3D</option>
-                  <option value="tshirt3D">T-shirt 3D</option>
-                  <option value="mug11oz">Mug blanc 11 oz</option>
-                  <option value="photoFrame">Poster A4</option>
-                  <option value="poster">Poster 80 × 60 cm</option>
-                  <option value="cushion">Housse de coussin</option>
-                  <option value="cap">Casquette 3D</option>
-                  <option value="mousePad">Tapis de souris</option>
-                  <option value="puzzle">Puzzle 120 pièces</option>
-                  <option value="pencilCase">Trousse</option>
-                  <option value="coaster">Sous-verre carré</option>
-                  <option value="coasterRound">Sous-verre rond</option>
-                  <option value="keychainRect">Porte-clés rectangle</option>
-                  <option value="keychainRound">Porte-clés rond</option>
-                  <option value="keychainHeart">Porte-clés Cœur</option>
-                  <option value="eventWristband">Bracelet événementiel</option>
-                  <option value="arcadeCabinet">Borne d'Arcade</option>
-                </select>
-                <small id="productDimensions">Taille L (Poitrine 280 à 350 mm)</small><br><div id="productPriceContainer" style="margin-top: 6px; font-size: 13px; font-weight: 600; color: #c084fc; background: #16202a; padding: 4px 8px; border-radius: 4px; display: none;">Prix de vente TTC : <span id="productPrice">-- €</span></div>
-              </label>
-            </div>
-            <label id="tshirtOrientationWrap" class="control" hidden><span>Impression T-shirt A4</span><select id="tshirtOrientation"><option value="portrait">Portrait 210 × 297 mm</option><option value="landscape">Paysage 297 × 210 mm</option></select></label>
-          </div>
-        </section>
+        <div style="display:none;">
+          <select id="productSelect">
+            <option value="showcase" selected>Le Showroom 3D</option>
+            <option value="tshirt3D">T-shirt 3D</option>
+            <option value="mug11oz">Mug blanc 11 oz</option>
+            <option value="photoFrame">Poster A4</option>
+            <option value="poster">Poster 80 × 60 cm</option>
+            <option value="cushion">Housse de coussin</option>
+            <option value="cap">Casquette 3D</option>
+            <option value="mousePad">Tapis de souris</option>
+            <option value="puzzle">Puzzle 120 pièces</option>
+            <option value="pencilCase">Trousse</option>
+            <option value="coaster">Sous-verre carré</option>
+            <option value="coasterRound">Sous-verre rond</option>
+            <option value="keychainRect">Porte-clés rectangle</option>
+            <option value="keychainRound">Porte-clés rond</option>
+            <option value="keychainHeart">Porte-clés Cœur</option>
+            <option value="eventWristband">Bracelet événementiel</option>
+            <option value="arcadeCabinet">Borne d'Arcade</option>
+          </select>
+          <small id="productDimensions"></small>
+          <div id="productPriceContainer"><span id="productPrice"></span></div>
+          <label id="tshirtOrientationWrap"><select id="tshirtOrientation"><option value="portrait">Portrait</option><option value="landscape">Paysage</option></select></label>
+        </div>
+        <div id="activeProductBanner" style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:8px 12px; border-radius:8px; margin-bottom:12px; border:1px solid #e2e8f0;">
+          <div><small style="color:#64748b; font-size:10px; font-weight:700; text-transform:uppercase;">Objet sélectionné</small><strong id="activeProductName" style="display:block; font-size:13px; color:#0f172a;">Le Showroom 3D</strong></div>
+          <button type="button" id="btnChangeProductShop" class="cat-btn-sm" style="background:#8b5cf6; color:#fff; font-weight:700; padding:5px 10px;">Changer</button>
+        </div>
         <section id="sectionImages" class="collapsible-section" data-section="2">
           <button type="button" class="section-title-btn" aria-expanded="true">
-            <div class="section-title"><span>2</span><h2>Vos visuels</h2></div>
+            <div class="section-title"><span>1</span><h2>Vos visuels</h2></div>
             <span class="collapse-icon">▾</span>
           </button>
           <div class="section-content">
@@ -182,16 +177,22 @@
             <div class="segmented" role="group" aria-label="Mode d’ajustement">
               <button class="active" data-fit="contain">Image entière</button><button data-fit="cover">Remplir la surface</button><button data-fit="fill">Plein wrap (Étirer)</button>
             </div>
-            <label class="frame-option"><input id="showTransformFrame" type="checkbox"> Afficher le cadre de sélection</label>
+            <label class="frame-option"><input id="showTransformFrame" type="checkbox" checked> Cadre d'ajustement direct (Drag & Drop)</label>
+            <div style="font-size:11px; color:#6d28d9; background:#f5f3ff; border:1px solid #ddd6fe; border-radius:6px; padding:6px 10px; margin:4px 0 8px;">Glissez-déplacez votre visuel directement à la souris sur l'objet.</div>
             <label class="frame-option"><input id="showWatermark" type="checkbox"> Filigrane sous le visuel (en fond)</label>
             <label class="frame-option"><input id="repeatPattern" type="checkbox"> Répéter en motif (Mosaïque)</label>
             <div id="repeatCountControl" hidden>
               <label class="control" style="margin:6px 0 10px;"><span>Densité du motif <output id="repeatCountValue">3 × 3</output></span><input id="repeatCount" type="range" min="2" max="8" value="3" /></label>
             </div>
             <label class="control"><span>Taille <output id="scaleValue">100 %</output></span><input id="scale" type="range" min="20" max="250" value="100" /></label>
-            <label class="control"><span>Position horizontale <output id="posXValue">0 %</output></span><input id="posX" type="range" min="-100" max="100" value="0" /></label>
-            <label class="control"><span>Position verticale <output id="posYValue">0 %</output></span><input id="posY" type="range" min="-100" max="100" value="0" /></label>
             <label class="control"><span>Rotation <output id="rotationValue">0°</output></span><input id="rotation" type="range" min="-180" max="180" value="0" /></label>
+            <details style="margin:6px 0 4px; font-size:11px; color:#64748b; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:6px 10px;">
+              <summary style="cursor:pointer; font-weight:700; color:#475569;">Réglage fin de position (Sliders)</summary>
+              <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">
+                <label class="control"><span>Position horizontale <output id="posXValue">0 %</output></span><input id="posX" type="range" min="-100" max="100" value="0" /></label>
+                <label class="control"><span>Position verticale <output id="posYValue">0 %</output></span><input id="posY" type="range" min="-100" max="100" value="0" /></label>
+              </div>
+            </details>
             <button id="resetImage" class="text-button">Réinitialiser l'image active</button>
           </div>
         </section>
@@ -207,9 +208,9 @@
             </label>
             <div class="text-format-bar">
               <div class="segmented segmented-mini" role="group" aria-label="Alignement du texte">
-                <button type="button" class="align-btn active" data-align="center" title="Centré">≡</button>
-                <button type="button" class="align-btn" data-align="left" title="Aligné à gauche">⇤</button>
-                <button type="button" class="align-btn" data-align="right" title="Aligné à droite">⇥</button>
+                <button type="button" class="align-btn" data-align="left" title="Aligner à gauche">Gauche</button>
+                <button type="button" class="align-btn active" data-align="center" title="Centrer">Centré</button>
+                <button type="button" class="align-btn" data-align="right" title="Aligner à droite">Droite</button>
               </div>
               <label class="option-check mini-check">
                 <input id="textBold" type="checkbox"> <strong>Gras</strong>
@@ -339,7 +340,7 @@
         </section>
       </aside>
 
-<section class="viewer-wrap"><button id="toggleLeftSidebar" class="panel-menu panel-menu-left" type="button" aria-label="Masquer le menu de gauche" aria-expanded="true" title="Menu de gauche">☰</button>
+<section class="viewer-wrap"><button id="toggleLeftSidebar" class="panel-menu panel-menu-left" type="button" aria-label="Masquer le menu de gauche" aria-expanded="true" title="Menu de gauche">☰</button><button id="btnBackToShowroom" class="btn-showcase-floating" type="button" style="display:none;" title="Revenir au Showroom 3D">← Revenir aux objets (Showroom 3D)</button>
         <div id="viewer" aria-label="Aperçu 3D interactif"></div><div id="submissionMask" class="submission-mask" hidden><img src="/logo-graph2print.png" alt="Graph2Print"><strong>Préparation des fichiers</strong><span>Votre création sera envoyée à Graph2Print.</span></div>
         <svg id="transformOverlay" aria-label="Cadre d’ajustement du visuel" hidden>
           <polygon id="transformBox"></polygon>
@@ -389,26 +390,76 @@
               <select id="adminSubcategorySelect" title="Sous-catégorie pour les prochains ajouts" style="padding:5px 8px; font-size:11px; border-radius:6px; border:1px solid #cbd5e1; background:#f8fafc; color:#1e293b; display:none;">
                 <option value="auto">Sous-cat : Auto</option>
               </select>
-              <button type="button" id="adminAddCategoryBtn" class="secondary" title="Ajouter une nouvelle catégorie" style="padding:6px 10px; font-size:11px; width:auto; font-weight:700;">+ Catégorie</button>
-              <button type="button" id="adminEditCategoryBtn" class="secondary" title="Modifier ou renommer une catégorie" style="padding:6px 10px; font-size:11px; width:auto; font-weight:700;">Modifier catégorie</button>
-              <button type="button" id="adminDeleteCategoryBtn" class="secondary" title="Supprimer une catégorie" style="padding:6px 10px; font-size:11px; width:auto; font-weight:700; color:#ef4444; border-color:#fca5a5;">Supprimer catégorie</button>
+              <button type="button" id="openCategoryManagerBtn" class="secondary" title="Gérer l'ordre, les sous-catégories et les déplacements" style="padding:6px 12px; font-size:11px; width:auto; font-weight:700;">Gérer les catégories</button>
               <button type="button" id="adminAddLibraryBtn" class="primary" style="padding:6px 12px; font-size:11px; background:#8b5cf6; width:auto; font-weight:700;">+ Ajouter un visuel</button>
               <input id="adminLibraryInput" type="file" accept="image/png,image/jpeg,image/svg+xml" multiple style="display:none;" />
               <button type="button" id="closeExplorerBtn" class="close-explorer-btn" title="Fermer le catalogue" aria-label="Fermer">✕</button>
             </div>
           </div>
-          <div class="catalog-explorer-search">
-            <input type="text" id="catalogSearchInput" placeholder="Rechercher un visuel..." autocomplete="off" />
-            <div id="catalogCategories" class="catalog-categories">
-              <button type="button" class="cat-pill active" data-cat="all">Tous</button>
-              <button type="button" class="cat-pill" data-cat="Motifs">Motifs</button>
-              <button type="button" class="cat-pill" data-cat="Illustrations">Illustrations</button>
-              <button type="button" class="cat-pill" data-cat="Logos">Logos</button>
-            </div>
-            <div id="catalogSubcategories" class="catalog-subcategories" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;" hidden></div>
+          <div class="catalog-filter-bar">
+            <select id="catalogCategorySelect" title="Catégorie"></select>
+            <input type="text" id="catalogSearchInput" placeholder="Rechercher par nom..." autocomplete="off" style="flex:1; padding:9px 12px; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;" />
+            <button type="button" id="emptyTrashBtn" class="cat-btn-sm cat-btn-danger" style="display:none; padding:7px 12px; font-weight:700;">Vider la corbeille</button>
+            <small id="catalogSummary" style="color:#64748b; font-weight:600; white-space:nowrap;"></small>
           </div>
           <div id="catalogGrid" class="catalog-explorer-grid"></div>
         </aside>
+        <div id="visualEditModal" class="visual-edit-modal" hidden>
+          <div class="visual-edit-dialog">
+            <div class="visual-edit-header">
+              <strong style="font-size:15px; color:#0f172a;">Modifier le visuel</strong>
+              <button type="button" id="closeVisualEditBtn" class="close-explorer-btn" aria-label="Fermer">✕</button>
+            </div>
+            <div class="visual-edit-body">
+              <div style="display:flex; justify-content:center; padding:8px 0;">
+                <img id="visualEditThumb" src="" alt="Aperçu" style="max-height:140px; max-width:100%; object-fit:contain; border-radius:8px; border:1px solid #e2e8f0; background:#fff;" />
+              </div>
+              <div class="visual-edit-field">
+                <label>Nom du visuel :</label>
+                <input type="text" id="visualEditNameInput" />
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div class="visual-edit-field">
+                  <label>Catégorie :</label>
+                  <select id="visualEditCategorySelect"></select>
+                </div>
+                <div class="visual-edit-field">
+                  <label>Sous-catégorie :</label>
+                  <select id="visualEditSubcategorySelect"></select>
+                </div>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                <label style="display:flex; align-items:center; gap:6px; font-size:12px; cursor:pointer;">
+                  <input type="checkbox" id="visualEditRepeatCheck" /> Motif répétable (wrap)
+                </label>
+                <button type="button" id="visualEditCompatBtn" class="cat-btn-sm" style="padding:6px 10px;">Objets compatibles</button>
+              </div>
+            </div>
+            <div class="visual-edit-actions">
+              <button type="button" id="visualEditTrashBtn" class="cat-btn-sm cat-btn-danger" style="padding:8px 12px;">Mettre à la corbeille</button>
+              <div style="display:flex; gap:8px;">
+                <button type="button" id="cancelVisualEditBtn" class="cat-btn-sm" style="padding:8px 14px;">Annuler</button>
+                <button type="button" id="saveVisualEditBtn" class="primary" style="padding:8px 16px; background:#8b5cf6; font-weight:700;">Enregistrer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="categoryManagerModal" class="category-manager-modal" hidden>
+          <div class="category-manager-dialog">
+            <div class="category-manager-header">
+              <div>
+                <strong style="font-size:15px; color:#0f172a;">Gestionnaire de catégories</strong>
+                <small style="display:block; color:#64748b; font-size:11px;">Organiser, déplacer, renommer et ordonner l'arborescence</small>
+              </div>
+              <div style="display:flex; gap:6px;">
+                <button type="button" id="sortCategoriesAlphaBtn" class="secondary" style="padding:6px 12px; font-size:11px; font-weight:700;" title="Trier toutes les catégories de A à Z">Trier de A à Z</button>
+                <button type="button" id="addCategoryFromModalBtn" class="primary" style="padding:6px 12px; font-size:11px; background:#8b5cf6; font-weight:700;">+ Nouvelle catégorie</button>
+                <button type="button" id="closeCategoryManagerBtn" class="close-explorer-btn" title="Fermer" aria-label="Fermer">✕</button>
+              </div>
+            </div>
+            <div id="categoryManagerList" class="category-manager-list"></div>
+          </div>
+        </div>
         <div id="shop2DOverlay" class="shop-2d-overlay" hidden>
           <div class="shop-2d-dialog">
             <header class="shop-2d-header">
@@ -416,7 +467,10 @@
                 <h2>Boutique & Objets personnalisés</h2>
                 <small>Choisissez un objet pour le personnaliser instantanément en 3D</small>
               </div>
-              <button type="button" id="closeShop2DBtn" class="shop-2d-close" aria-label="Fermer la boutique">✕</button>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <button type="button" id="shopGoShowcaseBtn" class="topbar-showcase-btn" style="background:#8b5cf6; color:#ffffff; border-color:#a78bfa;" title="Basculer vers le Showroom 3D complet">Showroom 3D</button>
+                <button type="button" id="closeShop2DBtn" class="shop-2d-close" aria-label="Fermer la boutique">✕</button>
+              </div>
             </header>
             <nav class="shop-2d-filters" aria-label="Catégories boutique">
               <button type="button" class="shop-cat-btn active" data-shop-cat="all">Tous nos produits (16)</button>
@@ -484,6 +538,86 @@
 
 
     </main>
+<div id="clientOrderModal" class="visual-edit-modal" hidden>
+  <div class="visual-edit-dialog" style="max-width:580px; width:95vw;">
+    <div class="visual-edit-header">
+      <div>
+        <strong style="font-size:16px; color:#0f172a;">Finaliser ma création et mes coordonnées</strong>
+        <p style="margin:2px 0 0 0; font-size:12px; color:#64748b;">Renseignez vos coordonnées pour la transmission de votre commande à l'atelier.</p>
+      </div>
+      <button type="button" id="closeOrderModalBtn" class="close-explorer-btn" aria-label="Fermer">✕</button>
+    </div>
+    <form id="clientOrderForm" class="visual-edit-body" style="display:flex; flex-direction:column; gap:12px;" onsubmit="return false;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <label style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-weight:600; color:#334155;">
+          Nom *
+          <input type="text" id="orderNom" required placeholder="Ex : Dupont" style="padding:8px 10px; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;" />
+        </label>
+        <label style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-weight:600; color:#334155;">
+          Prénom *
+          <input type="text" id="orderPrenom" required placeholder="Ex : Marie" style="padding:8px 10px; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;" />
+        </label>
+      </div>
+      <label style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-weight:600; color:#334155;">
+        Adresse postale *
+        <input type="text" id="orderAdresse" required placeholder="Numéro et nom de rue" style="padding:8px 10px; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;" />
+      </label>
+      <div style="display:grid; grid-template-columns:120px 1fr; gap:10px;">
+        <label style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-weight:600; color:#334155;">
+          Code Postal *
+          <input type="text" id="orderCodePostal" required placeholder="Ex : 51100" style="padding:8px 10px; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;" />
+        </label>
+        <label style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-weight:600; color:#334155;">
+          Ville *
+          <input type="text" id="orderVille" required placeholder="Ex : Reims" style="padding:8px 10px; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;" />
+        </label>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <label style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-weight:600; color:#334155;">
+          Adresse e-mail *
+          <input type="email" id="orderEmail" required placeholder="contact@exemple.fr" style="padding:8px 10px; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;" />
+        </label>
+        <label style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-weight:600; color:#334155;">
+          Numéro de téléphone *
+          <input type="tel" id="orderTelephone" required placeholder="06 00 00 00 00" style="padding:8px 10px; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;" />
+        </label>
+      </div>
+      <label style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-weight:600; color:#334155;">
+        Remarque ou instruction spécifique (facultatif)
+        <textarea id="orderNote" rows="2" placeholder="Précision sur la quantité, le marquage ou la livraison…" style="padding:8px 10px; border-radius:6px; border:1px solid #cbd5e1; font-size:12px; resize:vertical;"></textarea>
+      </label>
+      <div id="orderErrorMessage" style="display:none; color:#dc2626; font-size:12px; font-weight:600; background:#fef2f2; padding:8px 12px; border-radius:6px;"></div>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+        <button type="button" id="cancelOrderBtn" class="cat-btn-sm cat-btn-light" style="padding:8px 16px;">Annuler</button>
+        <button type="button" id="confirmOrderSubmitBtn" class="cat-btn-sm cat-btn-primary" style="padding:8px 20px; font-weight:700;">Valider et envoyer la création</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="adminSubmissionsModal" class="visual-edit-modal" hidden>
+  <div class="visual-edit-dialog" style="max-width:1150px; width:95vw; max-height:90vh; display:flex; flex-direction:column;">
+    <div class="visual-edit-header" style="flex-shrink:0;">
+      <div>
+        <strong style="font-size:16px; color:#0f172a;">Créations et commandes clients reçues</strong>
+        <p style="margin:2px 0 0 0; font-size:12px; color:#64748b;">Consultez les fichiers créés par les clients, leurs coordonnées complètes et l'état de traitement.</p>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <select id="adminSubFilter" style="padding:5px 8px; font-size:12px; border-radius:6px; border:1px solid #cbd5e1;">
+          <option value="all">Toutes les créations</option>
+          <option value="nouveau" selected>Nouveaux uniquement</option>
+          <option value="traite">Traités uniquement</option>
+        </select>
+        <button type="button" id="refreshAdminSubBtn" class="cat-btn-sm cat-btn-light" title="Actualiser la liste">Actualiser</button>
+        <button type="button" id="closeAdminSubmissionsBtn" class="close-explorer-btn" aria-label="Fermer">✕</button>
+      </div>
+    </div>
+    <div id="adminSubmissionsList" style="flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:16px; background:#f8fafc;">
+      <p style="text-align:center; color:#64748b; font-size:13px; margin:40px 0;">Chargement des commandes…</p>
+    </div>
+  </div>
+</div>
+
     <div id="toast" role="status"></div>
   </div>
 </body>

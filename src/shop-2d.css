@@ -36,8 +36,9 @@ html[data-theme="dark"] .panel::-webkit-scrollbar-thumb { background: #475569; b
 
 /* Modale plein ecran Boutique 2D et Catalogue Produits */
 .shop-2d-overlay {
-  position: absolute; inset: 0; z-index: 25; background: rgba(15, 23, 42, 0.72);
-  backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center;
+  position: fixed; inset: 0; z-index: 1000; background: rgba(15, 23, 42, 0.78);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
   padding: 16px; box-sizing: border-box;
 }
 .shop-2d-overlay[hidden] { display: none !important; }

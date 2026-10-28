@@ -33,6 +33,7 @@ function extFromDataUrl(dataUrl, fallbackName = '') {
 
 function sortCatalogItems(list) {
   return list.sort((a, b) => {
+    if ((a.status === 'trash') !== (b.status === 'trash')) return a.status === 'trash' ? 1 : -1;
     if ((a.status === 'pending') !== (b.status === 'pending')) return a.status === 'pending' ? -1 : 1;
     const catCmp = String(a.category || '').localeCompare(String(b.category || ''), 'fr');
     if (catCmp !== 0) return catCmp;
@@ -70,15 +71,16 @@ async function syncCatalogWithDisk() {
     let sub = String(item.subcategory || '').trim() || inferSubcategory(item.name);
     if (!sub && cat === 'Animaux' && /licorne/i.test(item.name)) sub = 'Licorne';
     const targets = Array.isArray(item.compatibleProducts) && item.compatibleProducts.length ? item.compatibleProducts : ['all'];
-    return { ...item, name: item.name === 'JPG' ? 'Cerf Polygonal (Art)' : item.name, category: cat, subcategory: sub, status: item.status === 'pending' ? 'pending' : 'approved', compatibleProducts: targets };
+    const st = item.status === 'trash' ? 'trash' : (item.status === 'pending' ? 'pending' : 'approved');
+    return { ...item, name: item.name === 'JPG' ? 'Cerf Polygonal (Art)' : item.name, category: cat, subcategory: sub, status: st, compatibleProducts: targets };
   });
   const knownUrls = new Set(validList.map(item => item.url));
 
   for (const fileName of diskFiles) {
     const url = `/visuels/${fileName}`;
     if (!knownUrls.has(url)) {
-      const clean = fileName.replace(/\.[^/.]+$/, ''), cat = inferCategory(clean);
-      validList.push({ id: `visuel-${fileName}`, name: clean, url, category: cat, subcategory: inferSubcategory(clean), repeatPattern: /motif|pattern|wrap/i.test(clean), status: 'approved', compatibleProducts: ['all'] });
+      const clean = fileName.replace(/\.[^/.]+$/, '');
+      validList.push({ id: `visuel-${fileName}`, name: clean, url, category: 'Nouveau', subcategory: '', repeatPattern: /motif|pattern|wrap/i.test(clean), status: 'pending', compatibleProducts: ['all'] });
     }
   }
 
@@ -115,7 +117,7 @@ export async function proposeCatalogItem(req, res) {
     list.unshift({
       id: `pending-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       name: clean, url: `/visuels/${fileName}`,
-      category: inferCategory(clean), subcategory: inferSubcategory(clean),
+      category: 'Nouveau', subcategory: '',
       repeatPattern: false, status: 'pending'
     });
     await fs.writeFile(catalogPath, JSON.stringify(list, null, 2), 'utf8');
@@ -154,10 +156,11 @@ export async function saveCatalog(req, res) {
         const fileName = path.basename(url); keptFiles.add(fileName);
         const clean = String(item.name || fileName.replace(/\.[^/.]+$/, ''));
         const targets = Array.isArray(item.compatibleProducts) && item.compatibleProducts.length ? item.compatibleProducts : ['all'];
+        const st = item.status === 'trash' ? 'trash' : (item.status === 'pending' ? 'pending' : 'approved');
         finalItems.push({
           id: String(item.id || `visuel-${fileName}`), name: clean, url: `/visuels/${fileName}`,
           category: String(item.category || inferCategory(clean)), subcategory: String(item.subcategory || '').trim(),
-          repeatPattern: Boolean(item.repeatPattern), status: item.status === 'pending' ? 'pending' : 'approved',
+          repeatPattern: Boolean(item.repeatPattern), status: st,
           compatibleProducts: targets
         });
       }

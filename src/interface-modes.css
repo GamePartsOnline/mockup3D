@@ -6,6 +6,7 @@ body.client-mode .app-menu-bar,
 body.client-mode #exportStatus,
 body.client-mode #saveViewBtn,
 body.client-mode #downloadWrapBtn,
+body.client-mode #wrapPreviewWidget,
 body.client-mode .frame-option:has(#showWatermark),
 body.client-mode .background-actions { display:none !important; }
 body:not(.client-mode) .stock-note { display:none !important; }

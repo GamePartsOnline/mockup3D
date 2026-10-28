@@ -2,86 +2,57 @@ import * as THREE from 'three';
 
 export const photoFrameProduct = {
   id: 'photo-frame-a4',
-  name: 'Poster A4 (21 × 29,7 cm)',
-  dimensions: [210, 297, 18],
+  name: 'Poster A4 (Sans cadre)',
+  dimensions: [210, 297, 3],
   printable: [210, 297],
-  icon: '🖼️',
+  icon: '📄',
   create() {
     const group = new THREE.Group();
     const w = 0.70;
     const h = 0.99;
-    const border = 0.055;
-    const depth = 0.036;
-    const yCenter = 0.54;
+    const thickness = 0.008;
+    const yCenter = 0.52;
 
-    // Baguette du cadre (noire satinée par défaut, personnalisable via baseMaterial)
-    const baseMaterial = new THREE.MeshStandardMaterial({
-      color: 0x1e242b,
-      roughness: 0.38,
-      metalness: 0.12
+    // Support papier d'art rigide 250g blanc satiné sans cadre
+    const paperMat = new THREE.MeshStandardMaterial({
+      color: 0xfcfcfc,
+      roughness: 0.6,
+      metalness: 0.02
     });
+    const sheet = new THREE.Mesh(new THREE.BoxGeometry(w, h, thickness), paperMat);
+    sheet.position.set(0, yCenter, 0);
+    sheet.castShadow = true;
+    sheet.receiveShadow = true;
 
-    const topBar = new THREE.Mesh(new THREE.BoxGeometry(w + border * 2, border, depth), baseMaterial);
-    topBar.position.set(0, yCenter + h / 2 + border / 2, 0);
-    topBar.castShadow = true;
-    topBar.receiveShadow = true;
+    // Mini chevalet discret à l'arrière pour le maintien debout
+    const standMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.8 });
+    const stand = new THREE.Mesh(new THREE.BoxGeometry(0.14, h * 0.45, 0.006), standMat);
+    stand.position.set(0, yCenter - h * 0.22, -0.09);
+    stand.rotation.x = 0.38;
+    stand.castShadow = true;
 
-    const botBar = new THREE.Mesh(new THREE.BoxGeometry(w + border * 2, border, depth), baseMaterial);
-    botBar.position.set(0, yCenter - h / 2 - border / 2, 0);
-    botBar.castShadow = true;
-    botBar.receiveShadow = true;
-
-    const leftBar = new THREE.Mesh(new THREE.BoxGeometry(border, h, depth), baseMaterial);
-    leftBar.position.set(-w / 2 - border / 2, yCenter, 0);
-    leftBar.castShadow = true;
-    leftBar.receiveShadow = true;
-
-    const rightBar = new THREE.Mesh(new THREE.BoxGeometry(border, h, depth), baseMaterial);
-    rightBar.position.set(w / 2 + border / 2, yCenter, 0);
-    rightBar.castShadow = true;
-    rightBar.receiveShadow = true;
-
-    // Dos carton rigide et pied cravate arrière pour poser le cadre
-    const backMat = new THREE.MeshStandardMaterial({ color: 0x2b3038, roughness: 0.75 });
-    const backBoard = new THREE.Mesh(new THREE.BoxGeometry(w + border * 0.8, h + border * 0.8, 0.012), backMat);
-    backBoard.position.set(0, yCenter, -depth * 0.32);
-    backBoard.castShadow = true;
-
-    const standLeg = new THREE.Mesh(new THREE.BoxGeometry(0.16, h * 0.62, 0.014), backMat);
-    standLeg.position.set(0, yCenter - h * 0.16, -0.14);
-    standLeg.rotation.x = 0.36;
-    standLeg.castShadow = true;
-
-    // Passe-partout blanc fin derrière la vitre
-    const matBoard = new THREE.Mesh(
-      new THREE.BoxGeometry(w + 0.01, h + 0.01, 0.014),
-      new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.6 })
-    );
-    matBoard.position.set(0, yCenter, -0.002);
-
-    // Zone photo A4 brillante sous verre
-    const topGeo = new THREE.PlaneGeometry(w, h);
+    // Face avant d'impression du poster A4
+    const topGeo = new THREE.PlaneGeometry(w - 0.004, h - 0.004);
     const topMaterial = new THREE.MeshPhysicalMaterial({
       color: 0xffffff,
-      roughness: 0.15,
-      metalness: 0.02,
-      clearcoat: 0.65,
-      clearcoatRoughness: 0.12,
+      roughness: 0.35,
+      metalness: 0.01,
+      clearcoat: 0.15,
       polygonOffset: true,
       polygonOffsetFactor: -1,
       polygonOffsetUnits: -1
     });
     const top = new THREE.Mesh(topGeo, topMaterial);
-    top.position.set(0, yCenter, 0.007);
+    top.position.set(0, yCenter, thickness / 2 + 0.001);
     top.receiveShadow = true;
 
-    group.add(topBar, botBar, leftBar, rightBar, backBoard, standLeg, matBoard, top);
+    group.add(sheet, stand, top);
 
     return {
       group,
       top,
       topMaterial,
-      baseMaterial,
+      baseMaterial: paperMat,
       printMesh: top,
       printAspect: w / h,
       meshWidth: w,

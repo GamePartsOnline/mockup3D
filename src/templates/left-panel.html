@@ -24,43 +24,37 @@
           </div>
           <button id="clientGuideAction" class="primary" type="button">Choisir ce produit</button>
         </div>
-        <section id="sectionProduct" class="collapsible-section" data-section="1">
-          <button type="button" class="section-title-btn" aria-expanded="true">
-            <div class="section-title"><span>1</span><h2>Choix du produit</h2></div>
-            <span class="collapse-icon">▾</span>
-          </button>
-          <div class="section-content">
-            <div class="product-card">
-              <label>
-                <span>Objet 3D</span>
-                <select id="productSelect">
-                  <option value="showcase" selected>Le Showroom 3D</option>
-                  <option value="tshirt3D">T-shirt 3D</option>
-                  <option value="mug11oz">Mug blanc 11 oz</option>
-                  <option value="photoFrame">Poster A4</option>
-                  <option value="poster">Poster 80 × 60 cm</option>
-                  <option value="cushion">Housse de coussin</option>
-                  <option value="cap">Casquette 3D</option>
-                  <option value="mousePad">Tapis de souris</option>
-                  <option value="puzzle">Puzzle 120 pièces</option>
-                  <option value="pencilCase">Trousse</option>
-                  <option value="coaster">Sous-verre carré</option>
-                  <option value="coasterRound">Sous-verre rond</option>
-                  <option value="keychainRect">Porte-clés rectangle</option>
-                  <option value="keychainRound">Porte-clés rond</option>
-                  <option value="keychainHeart">Porte-clés Cœur</option>
-                  <option value="eventWristband">Bracelet événementiel</option>
-                  <option value="arcadeCabinet">Borne d'Arcade</option>
-                </select>
-                <small id="productDimensions">Taille L (Poitrine 280 à 350 mm)</small><br><div id="productPriceContainer" style="margin-top: 6px; font-size: 13px; font-weight: 600; color: #c084fc; background: #16202a; padding: 4px 8px; border-radius: 4px; display: none;">Prix de vente TTC : <span id="productPrice">-- €</span></div>
-              </label>
-            </div>
-            <label id="tshirtOrientationWrap" class="control" hidden><span>Impression T-shirt A4</span><select id="tshirtOrientation"><option value="portrait">Portrait 210 × 297 mm</option><option value="landscape">Paysage 297 × 210 mm</option></select></label>
-          </div>
-        </section>
+        <div style="display:none;">
+          <select id="productSelect">
+            <option value="showcase" selected>Le Showroom 3D</option>
+            <option value="tshirt3D">T-shirt 3D</option>
+            <option value="mug11oz">Mug blanc 11 oz</option>
+            <option value="photoFrame">Poster A4</option>
+            <option value="poster">Poster 80 × 60 cm</option>
+            <option value="cushion">Housse de coussin</option>
+            <option value="cap">Casquette 3D</option>
+            <option value="mousePad">Tapis de souris</option>
+            <option value="puzzle">Puzzle 120 pièces</option>
+            <option value="pencilCase">Trousse</option>
+            <option value="coaster">Sous-verre carré</option>
+            <option value="coasterRound">Sous-verre rond</option>
+            <option value="keychainRect">Porte-clés rectangle</option>
+            <option value="keychainRound">Porte-clés rond</option>
+            <option value="keychainHeart">Porte-clés Cœur</option>
+            <option value="eventWristband">Bracelet événementiel</option>
+            <option value="arcadeCabinet">Borne d'Arcade</option>
+          </select>
+          <small id="productDimensions"></small>
+          <div id="productPriceContainer"><span id="productPrice"></span></div>
+          <label id="tshirtOrientationWrap"><select id="tshirtOrientation"><option value="portrait">Portrait</option><option value="landscape">Paysage</option></select></label>
+        </div>
+        <div id="activeProductBanner" style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:8px 12px; border-radius:8px; margin-bottom:12px; border:1px solid #e2e8f0;">
+          <div><small style="color:#64748b; font-size:10px; font-weight:700; text-transform:uppercase;">Objet sélectionné</small><strong id="activeProductName" style="display:block; font-size:13px; color:#0f172a;">Le Showroom 3D</strong></div>
+          <button type="button" id="btnChangeProductShop" class="cat-btn-sm" style="background:#8b5cf6; color:#fff; font-weight:700; padding:5px 10px;">Changer</button>
+        </div>
         <section id="sectionImages" class="collapsible-section" data-section="2">
           <button type="button" class="section-title-btn" aria-expanded="true">
-            <div class="section-title"><span>2</span><h2>Vos visuels</h2></div>
+            <div class="section-title"><span>1</span><h2>Vos visuels</h2></div>
             <span class="collapse-icon">▾</span>
           </button>
           <div class="section-content">
@@ -89,16 +83,22 @@
             <div class="segmented" role="group" aria-label="Mode d’ajustement">
               <button class="active" data-fit="contain">Image entière</button><button data-fit="cover">Remplir la surface</button><button data-fit="fill">Plein wrap (Étirer)</button>
             </div>
-            <label class="frame-option"><input id="showTransformFrame" type="checkbox"> Afficher le cadre de sélection</label>
+            <label class="frame-option"><input id="showTransformFrame" type="checkbox" checked> Cadre d'ajustement direct (Drag & Drop)</label>
+            <div style="font-size:11px; color:#6d28d9; background:#f5f3ff; border:1px solid #ddd6fe; border-radius:6px; padding:6px 10px; margin:4px 0 8px;">Glissez-déplacez votre visuel directement à la souris sur l'objet.</div>
             <label class="frame-option"><input id="showWatermark" type="checkbox"> Filigrane sous le visuel (en fond)</label>
             <label class="frame-option"><input id="repeatPattern" type="checkbox"> Répéter en motif (Mosaïque)</label>
             <div id="repeatCountControl" hidden>
               <label class="control" style="margin:6px 0 10px;"><span>Densité du motif <output id="repeatCountValue">3 × 3</output></span><input id="repeatCount" type="range" min="2" max="8" value="3" /></label>
             </div>
             <label class="control"><span>Taille <output id="scaleValue">100 %</output></span><input id="scale" type="range" min="20" max="250" value="100" /></label>
-            <label class="control"><span>Position horizontale <output id="posXValue">0 %</output></span><input id="posX" type="range" min="-100" max="100" value="0" /></label>
-            <label class="control"><span>Position verticale <output id="posYValue">0 %</output></span><input id="posY" type="range" min="-100" max="100" value="0" /></label>
             <label class="control"><span>Rotation <output id="rotationValue">0°</output></span><input id="rotation" type="range" min="-180" max="180" value="0" /></label>
+            <details style="margin:6px 0 4px; font-size:11px; color:#64748b; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:6px 10px;">
+              <summary style="cursor:pointer; font-weight:700; color:#475569;">Réglage fin de position (Sliders)</summary>
+              <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">
+                <label class="control"><span>Position horizontale <output id="posXValue">0 %</output></span><input id="posX" type="range" min="-100" max="100" value="0" /></label>
+                <label class="control"><span>Position verticale <output id="posYValue">0 %</output></span><input id="posY" type="range" min="-100" max="100" value="0" /></label>
+              </div>
+            </details>
             <button id="resetImage" class="text-button">Réinitialiser l'image active</button>
           </div>
         </section>
@@ -114,9 +114,9 @@
             </label>
             <div class="text-format-bar">
               <div class="segmented segmented-mini" role="group" aria-label="Alignement du texte">
-                <button type="button" class="align-btn active" data-align="center" title="Centré">≡</button>
-                <button type="button" class="align-btn" data-align="left" title="Aligné à gauche">⇤</button>
-                <button type="button" class="align-btn" data-align="right" title="Aligné à droite">⇥</button>
+                <button type="button" class="align-btn" data-align="left" title="Aligner à gauche">Gauche</button>
+                <button type="button" class="align-btn active" data-align="center" title="Centrer">Centré</button>
+                <button type="button" class="align-btn" data-align="right" title="Aligner à droite">Droite</button>
               </div>
               <label class="option-check mini-check">
                 <input id="textBold" type="checkbox"> <strong>Gras</strong>

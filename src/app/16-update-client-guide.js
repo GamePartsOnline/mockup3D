@@ -26,18 +26,21 @@ app.updateClientGuide = function updateClientGuide() {
   if (fill) fill.style.width = step === 1 ? '12%' : step === 2 ? '38%' : step === 3 ? '68%' : '100%';
   const action = document.querySelector('#clientGuideAction');
   action.hidden = step === 2 || (step === 1 && app.currentProductKey === 'showcase');
-  action.textContent = step === 1 ? 'Choisir ce produit' : step === 3 ? 'Mon visuel est prêt' : 'Envoyer ma création';
-  document.querySelector('#submitCreation').disabled = step !== 4 || app.submissionInProgress;
+  action.textContent = step === 1 ? 'Choisir ce produit' : 'Envoyer ma création';
+  const submitBtn = document.querySelector('#submitCreation');
+  if (submitBtn) submitBtn.disabled = !!app.submissionInProgress;
 };
 }
 
 export function initialize(app) {
-document.querySelector('#clientGuideAction').addEventListener('click', () => {
+document.querySelector('#clientGuideAction')?.addEventListener('click', () => {
   const step = Number(document.body.dataset.clientStep);
-  if (step === 1) app.clientSelectedProduct = true;
-  if (step === 3) app.clientDesignConfirmed = true;
-  if (step === 4) document.querySelector('#submitCreation').click();
-  app.updateClientGuide();
+  if (step === 1) {
+    app.clientSelectedProduct = true;
+    app.updateClientGuide();
+    return;
+  }
+  document.querySelector('#submitCreation')?.click();
 });
 document.querySelectorAll('.timeline-step').forEach(stepEl => {
   stepEl.addEventListener('click', () => {

@@ -6,7 +6,7 @@ export const PRODUCTS_LIST = [
   { key: 'cap', label: 'Casquette 3D' },
   { key: 'cushion', label: 'Housse de coussin' },
   { key: 'poster', label: 'Poster 80 × 60' },
-  { key: 'photoFrame', label: 'Poster A4 (cadre)' },
+  { key: 'photoFrame', label: 'Poster A4 (Sans cadre)' },
   { key: 'puzzle', label: 'Puzzle 120 pièces' },
   { key: 'coaster', label: 'Sous-verre carré' },
   { key: 'coasterRound', label: 'Sous-verre rond' },

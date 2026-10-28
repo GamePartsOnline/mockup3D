@@ -1,4 +1,4 @@
-<section class="viewer-wrap"><button id="toggleLeftSidebar" class="panel-menu panel-menu-left" type="button" aria-label="Masquer le menu de gauche" aria-expanded="true" title="Menu de gauche">☰</button>
+<section class="viewer-wrap"><button id="toggleLeftSidebar" class="panel-menu panel-menu-left" type="button" aria-label="Masquer le menu de gauche" aria-expanded="true" title="Menu de gauche">☰</button><button id="btnBackToShowroom" class="btn-showcase-floating" type="button" style="display:none;" title="Revenir au Showroom 3D">← Revenir aux objets (Showroom 3D)</button>
         <div id="viewer" aria-label="Aperçu 3D interactif"></div><div id="submissionMask" class="submission-mask" hidden><img src="/logo-graph2print.png" alt="Graph2Print"><strong>Préparation des fichiers</strong><span>Votre création sera envoyée à Graph2Print.</span></div>
         <svg id="transformOverlay" aria-label="Cadre d’ajustement du visuel" hidden>
           <polygon id="transformBox"></polygon>
@@ -48,26 +48,76 @@
               <select id="adminSubcategorySelect" title="Sous-catégorie pour les prochains ajouts" style="padding:5px 8px; font-size:11px; border-radius:6px; border:1px solid #cbd5e1; background:#f8fafc; color:#1e293b; display:none;">
                 <option value="auto">Sous-cat : Auto</option>
               </select>
-              <button type="button" id="adminAddCategoryBtn" class="secondary" title="Ajouter une nouvelle catégorie" style="padding:6px 10px; font-size:11px; width:auto; font-weight:700;">+ Catégorie</button>
-              <button type="button" id="adminEditCategoryBtn" class="secondary" title="Modifier ou renommer une catégorie" style="padding:6px 10px; font-size:11px; width:auto; font-weight:700;">Modifier catégorie</button>
-              <button type="button" id="adminDeleteCategoryBtn" class="secondary" title="Supprimer une catégorie" style="padding:6px 10px; font-size:11px; width:auto; font-weight:700; color:#ef4444; border-color:#fca5a5;">Supprimer catégorie</button>
+              <button type="button" id="openCategoryManagerBtn" class="secondary" title="Gérer l'ordre, les sous-catégories et les déplacements" style="padding:6px 12px; font-size:11px; width:auto; font-weight:700;">Gérer les catégories</button>
               <button type="button" id="adminAddLibraryBtn" class="primary" style="padding:6px 12px; font-size:11px; background:#8b5cf6; width:auto; font-weight:700;">+ Ajouter un visuel</button>
               <input id="adminLibraryInput" type="file" accept="image/png,image/jpeg,image/svg+xml" multiple style="display:none;" />
               <button type="button" id="closeExplorerBtn" class="close-explorer-btn" title="Fermer le catalogue" aria-label="Fermer">✕</button>
             </div>
           </div>
-          <div class="catalog-explorer-search">
-            <input type="text" id="catalogSearchInput" placeholder="Rechercher un visuel..." autocomplete="off" />
-            <div id="catalogCategories" class="catalog-categories">
-              <button type="button" class="cat-pill active" data-cat="all">Tous</button>
-              <button type="button" class="cat-pill" data-cat="Motifs">Motifs</button>
-              <button type="button" class="cat-pill" data-cat="Illustrations">Illustrations</button>
-              <button type="button" class="cat-pill" data-cat="Logos">Logos</button>
-            </div>
-            <div id="catalogSubcategories" class="catalog-subcategories" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;" hidden></div>
+          <div class="catalog-filter-bar">
+            <select id="catalogCategorySelect" title="Catégorie"></select>
+            <input type="text" id="catalogSearchInput" placeholder="Rechercher par nom..." autocomplete="off" style="flex:1; padding:9px 12px; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;" />
+            <button type="button" id="emptyTrashBtn" class="cat-btn-sm cat-btn-danger" style="display:none; padding:7px 12px; font-weight:700;">Vider la corbeille</button>
+            <small id="catalogSummary" style="color:#64748b; font-weight:600; white-space:nowrap;"></small>
           </div>
           <div id="catalogGrid" class="catalog-explorer-grid"></div>
         </aside>
+        <div id="visualEditModal" class="visual-edit-modal" hidden>
+          <div class="visual-edit-dialog">
+            <div class="visual-edit-header">
+              <strong style="font-size:15px; color:#0f172a;">Modifier le visuel</strong>
+              <button type="button" id="closeVisualEditBtn" class="close-explorer-btn" aria-label="Fermer">✕</button>
+            </div>
+            <div class="visual-edit-body">
+              <div style="display:flex; justify-content:center; padding:8px 0;">
+                <img id="visualEditThumb" src="" alt="Aperçu" style="max-height:140px; max-width:100%; object-fit:contain; border-radius:8px; border:1px solid #e2e8f0; background:#fff;" />
+              </div>
+              <div class="visual-edit-field">
+                <label>Nom du visuel :</label>
+                <input type="text" id="visualEditNameInput" />
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div class="visual-edit-field">
+                  <label>Catégorie :</label>
+                  <select id="visualEditCategorySelect"></select>
+                </div>
+                <div class="visual-edit-field">
+                  <label>Sous-catégorie :</label>
+                  <select id="visualEditSubcategorySelect"></select>
+                </div>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                <label style="display:flex; align-items:center; gap:6px; font-size:12px; cursor:pointer;">
+                  <input type="checkbox" id="visualEditRepeatCheck" /> Motif répétable (wrap)
+                </label>
+                <button type="button" id="visualEditCompatBtn" class="cat-btn-sm" style="padding:6px 10px;">Objets compatibles</button>
+              </div>
+            </div>
+            <div class="visual-edit-actions">
+              <button type="button" id="visualEditTrashBtn" class="cat-btn-sm cat-btn-danger" style="padding:8px 12px;">Mettre à la corbeille</button>
+              <div style="display:flex; gap:8px;">
+                <button type="button" id="cancelVisualEditBtn" class="cat-btn-sm" style="padding:8px 14px;">Annuler</button>
+                <button type="button" id="saveVisualEditBtn" class="primary" style="padding:8px 16px; background:#8b5cf6; font-weight:700;">Enregistrer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="categoryManagerModal" class="category-manager-modal" hidden>
+          <div class="category-manager-dialog">
+            <div class="category-manager-header">
+              <div>
+                <strong style="font-size:15px; color:#0f172a;">Gestionnaire de catégories</strong>
+                <small style="display:block; color:#64748b; font-size:11px;">Organiser, déplacer, renommer et ordonner l'arborescence</small>
+              </div>
+              <div style="display:flex; gap:6px;">
+                <button type="button" id="sortCategoriesAlphaBtn" class="secondary" style="padding:6px 12px; font-size:11px; font-weight:700;" title="Trier toutes les catégories de A à Z">Trier de A à Z</button>
+                <button type="button" id="addCategoryFromModalBtn" class="primary" style="padding:6px 12px; font-size:11px; background:#8b5cf6; font-weight:700;">+ Nouvelle catégorie</button>
+                <button type="button" id="closeCategoryManagerBtn" class="close-explorer-btn" title="Fermer" aria-label="Fermer">✕</button>
+              </div>
+            </div>
+            <div id="categoryManagerList" class="category-manager-list"></div>
+          </div>
+        </div>
         <div id="shop2DOverlay" class="shop-2d-overlay" hidden>
           <div class="shop-2d-dialog">
             <header class="shop-2d-header">
@@ -75,7 +125,10 @@
                 <h2>Boutique & Objets personnalisés</h2>
                 <small>Choisissez un objet pour le personnaliser instantanément en 3D</small>
               </div>
-              <button type="button" id="closeShop2DBtn" class="shop-2d-close" aria-label="Fermer la boutique">✕</button>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <button type="button" id="shopGoShowcaseBtn" class="topbar-showcase-btn" style="background:#8b5cf6; color:#ffffff; border-color:#a78bfa;" title="Basculer vers le Showroom 3D complet">Showroom 3D</button>
+                <button type="button" id="closeShop2DBtn" class="shop-2d-close" aria-label="Fermer la boutique">✕</button>
+              </div>
             </header>
             <nav class="shop-2d-filters" aria-label="Catégories boutique">
               <button type="button" class="shop-cat-btn active" data-shop-cat="all">Tous nos produits (16)</button>

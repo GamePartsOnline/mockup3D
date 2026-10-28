@@ -66,7 +66,7 @@ app.updateWrapPreviewWidget = function updateWrapPreviewWidget(canvas) {
   const widget = document.querySelector('#wrapPreviewWidget');
   const img = document.querySelector('#wrapPreviewImg');
   if (!widget || !img) return;
-  if (app.currentProductKey === 'showcase') {
+  if (app.clientMode || app.currentProductKey === 'showcase') {
     widget.hidden = true;
     return;
   }

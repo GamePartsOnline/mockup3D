@@ -1,11 +1,8 @@
 [
   {
-    "name": "Nouveau",
-    "subs": []
-  },
-  {
     "name": "Animaux",
     "subs": [
+      "Cerf",
       "Chats",
       "Chiens",
       "Girafe",
@@ -13,19 +10,7 @@
     ]
   },
   {
-    "name": "Fleurs",
-    "subs": []
-  },
-  {
-    "name": "Illustrations",
-    "subs": []
-  },
-  {
-    "name": "Motifs",
-    "subs": []
-  },
-  {
-    "name": "Logos",
+    "name": "Arcades",
     "subs": []
   },
   {
@@ -33,23 +18,45 @@
     "subs": []
   },
   {
-    "name": "Dessin animés",
+    "name": "Dessins animés",
     "subs": []
+  },
+  {
+    "name": "Fantaisie",
+    "subs": [
+      "Fées"
+    ]
   },
   {
     "name": "Films",
     "subs": []
   },
   {
-    "name": "Noel",
+    "name": "Fleurs",
     "subs": []
   },
   {
-    "name": "Arcades",
+    "name": "Humour",
     "subs": []
   },
   {
-    "name": "humour",
+    "name": "Illustrations",
+    "subs": []
+  },
+  {
+    "name": "Logos",
+    "subs": []
+  },
+  {
+    "name": "Motifs",
+    "subs": []
+  },
+  {
+    "name": "Noël",
+    "subs": []
+  },
+  {
+    "name": "Nouveau",
     "subs": []
   }
 ]
