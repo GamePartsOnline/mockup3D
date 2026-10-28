@@ -1,15 +1,55 @@
 [
-  "Nouveau",
-  "Fleurs",
-  "Licornes",
-  "Animaux & Art",
-  "Illustrations",
-  "Motifs",
-  "Logos",
-  "Callisto Arts",
-  "Dessin animés",
-  "Films",
-  "Noel",
-  "Arcades",
-  "humour"
+  {
+    "name": "Nouveau",
+    "subs": []
+  },
+  {
+    "name": "Animaux",
+    "subs": [
+      "Chats",
+      "Chiens",
+      "Girafe",
+      "Licorne"
+    ]
+  },
+  {
+    "name": "Fleurs",
+    "subs": []
+  },
+  {
+    "name": "Illustrations",
+    "subs": []
+  },
+  {
+    "name": "Motifs",
+    "subs": []
+  },
+  {
+    "name": "Logos",
+    "subs": []
+  },
+  {
+    "name": "Callisto Arts",
+    "subs": []
+  },
+  {
+    "name": "Dessin animés",
+    "subs": []
+  },
+  {
+    "name": "Films",
+    "subs": []
+  },
+  {
+    "name": "Noel",
+    "subs": []
+  },
+  {
+    "name": "Arcades",
+    "subs": []
+  },
+  {
+    "name": "humour",
+    "subs": []
+  }
 ]

@@ -8,19 +8,53 @@ const visuelsDir = path.join(root, 'public', 'visuels');
 const distVisuelsDir = path.join(root, 'dist', 'visuels');
 const categoriesPath = path.join(visuelsDir, 'categories.json');
 const distCategoriesPath = path.join(distVisuelsDir, 'categories.json');
-const catalogPath = path.join(visuelsDir, 'catalog.json');
 
-export const DEFAULT_CATEGORIES = ['Nouveau', 'Fleurs', 'Licornes', 'Animaux & Art', 'Illustrations', 'Motifs', 'Logos'];
+export const DEFAULT_CATEGORIES = [
+  { name: 'Nouveau', subs: [] },
+  { name: 'Animaux', subs: ['Chats', 'Chiens', 'Girafe', 'Licorne'] },
+  { name: 'Fleurs', subs: [] },
+  { name: 'Illustrations', subs: [] },
+  { name: 'Motifs', subs: [] },
+  { name: 'Logos', subs: [] }
+];
 
 export function inferCategory(name) {
   const n = String(name || '').toLowerCase();
   if (/nouveau|new|recent|nouveaut/i.test(n)) return 'Nouveau';
   if (/flower|fleur|rose|floral|plante|feuille/i.test(n)) return 'Fleurs';
-  if (/unicorn|licorne|enfant|kids|magic/i.test(n)) return 'Licornes';
-  if (/pig|cochon|cerf|deer|animal|valentine|art|jpg/i.test(n)) return 'Animaux & Art';
+  if (/unicorn|licorne|chat|cat|chien|dog|girafe|giraffe|pig|cochon|cerf|deer|animal|baleine|requin|lemur|panda/i.test(n)) return 'Animaux';
   if (/motif|pattern|wrap|trame/i.test(n)) return 'Motifs';
   if (/logo|marque|brand|badge/i.test(n)) return 'Logos';
   return 'Illustrations';
+}
+
+export function inferSubcategory(name) {
+  const n = String(name || '').toLowerCase();
+  if (/chat|cat|kitten/i.test(n)) return 'Chats';
+  if (/chien|dog|puppy/i.test(n)) return 'Chiens';
+  if (/girafe|giraffe/i.test(n)) return 'Girafe';
+  if (/unicorn|licorne/i.test(n)) return 'Licorne';
+  return '';
+}
+
+export function normalizeCategories(rawList) {
+  if (!Array.isArray(rawList)) return DEFAULT_CATEGORIES;
+  const map = new Map();
+  for (const it of rawList) {
+    if (!it) continue;
+    let name = typeof it === 'string' ? it.trim() : String(it.name || '').trim();
+    if (!name) continue;
+    if (name === 'Licornes' || name === 'Animaux & Art') name = 'Animaux';
+    let subs = typeof it === 'object' && Array.isArray(it.subs) ? it.subs.map(s => String(s).trim()).filter(Boolean) : [];
+    if (name === 'Animaux' && !subs.length) subs = ['Chats', 'Chiens', 'Girafe', 'Licorne'];
+    if (!map.has(name)) {
+      map.set(name, { name, subs: Array.from(new Set(subs)) });
+    } else {
+      const cur = map.get(name);
+      cur.subs = Array.from(new Set([...cur.subs, ...subs]));
+    }
+  }
+  return Array.from(map.values());
 }
 
 export async function loadCategoriesList() {
@@ -29,39 +63,23 @@ export async function loadCategoriesList() {
   try {
     const raw = await fs.readFile(categoriesPath, 'utf8');
     const list = JSON.parse(raw);
-    if (Array.isArray(list) && list.length > 0) return list;
+    if (Array.isArray(list) && list.length > 0) return normalizeCategories(list);
   } catch {}
-
-  const set = new Set(DEFAULT_CATEGORIES);
-  try {
-    const catalogRaw = await fs.readFile(catalogPath, 'utf8');
-    const items = JSON.parse(catalogRaw);
-    if (Array.isArray(items)) {
-      items.forEach(it => { if (it.category && typeof it.category === 'string') set.add(it.category.trim()); });
-    }
-  } catch {}
-
-  const initial = Array.from(set);
-  await fs.writeFile(categoriesPath, JSON.stringify(initial, null, 2), 'utf8');
-  try { await fs.writeFile(distCategoriesPath, JSON.stringify(initial, null, 2), 'utf8'); } catch {}
-  return initial;
+  await fs.writeFile(categoriesPath, JSON.stringify(DEFAULT_CATEGORIES, null, 2), 'utf8');
+  try { await fs.writeFile(distCategoriesPath, JSON.stringify(DEFAULT_CATEGORIES, null, 2), 'utf8'); } catch {}
+  return DEFAULT_CATEGORIES;
 }
 
 export async function getCategories(req, res) {
-  try {
-    const list = await loadCategoriesList();
-    return json(res, 200, list);
-  } catch {
-    return json(res, 200, DEFAULT_CATEGORIES);
-  }
+  try { return json(res, 200, await loadCategoriesList()); }
+  catch { return json(res, 200, DEFAULT_CATEGORIES); }
 }
 
 export async function saveCategories(req, res) {
   if (!authorizeAdmin(req, res)) return;
   try {
     const body = await readJson(req);
-    if (!Array.isArray(body)) return json(res, 400, { error: 'Format de catégories invalide.' });
-    const cleanList = Array.from(new Set(body.map(c => String(c).trim()).filter(Boolean)));
+    const cleanList = normalizeCategories(body);
     if (!cleanList.length) return json(res, 400, { error: 'La liste ne peut pas être vide.' });
     await fs.mkdir(visuelsDir, { recursive: true });
     await fs.mkdir(distVisuelsDir, { recursive: true });

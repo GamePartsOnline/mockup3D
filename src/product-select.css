@@ -43,3 +43,15 @@
 [data-theme="dark"] .catalog-item-card{background:#1c2633;border-color:#2d3c50}
 [data-theme="dark"] .catalog-item-card img{background:#111822}
 [data-theme="dark"] .close-explorer-btn{color:#f1f5f9;border-color:#2d3c50}
+.catalog-subcategories{display:flex;gap:6px;overflow-x:auto;padding:6px 0 2px;border-top:1px dashed #e2e8f0}
+.subcat-pill{padding:3px 10px;border-radius:14px;border:1px solid #ddd6fe;background:#f5f3ff;font-size:11px;font-weight:600;color:#7c3aed;cursor:pointer;white-space:nowrap;transition:all .15s ease}
+.subcat-pill:hover{background:#ede9fe;border-color:#c4b5fd}
+.subcat-pill.active{background:#7c3aed;color:#fff;border-color:#6d28d9}
+.subcat-pill-action{padding:3px 8px;border-radius:14px;border:1px dashed #cbd5e1;background:transparent;font-size:10px;font-weight:700;color:#64748b;cursor:pointer;white-space:nowrap}
+.subcat-pill-action:hover{border-color:#8b5cf6;color:#8b5cf6}
+.subcat-pill-danger{border-color:#fca5a5;color:#ef4444}
+.subcat-pill-danger:hover{background:#fee2e2;border-color:#dc2626;color:#dc2626}
+[data-theme="dark"] .catalog-subcategories{border-top-color:#243040}
+[data-theme="dark"] .subcat-pill{background:#1e1b4b;border-color:#4338ca;color:#c7d2fe}
+[data-theme="dark"] .subcat-pill.active{background:#8b5cf6;color:#fff;border-color:#7c3aed}
+[data-theme="dark"] .subcat-pill-action{border-color:#334155;color:#94a3b8}

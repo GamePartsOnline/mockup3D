@@ -1,28 +1,25 @@
-import { formatCleanTitle, inferCategory } from './21-catalog-categories.js';
+import { formatCleanTitle, inferCategory, inferSubcategory } from './21-catalog-categories.js';
 
 export function register(app) {
-  app.catalogImages = [];
-  app.activeCatalogCategory = 'all';
+  app.catalogImages = []; app.activeCatalogCategory = 'all';
 
-  app.addImageFromUrl = function(url, name, options = {}) {
+  app.addImageFromUrl = function(url, name, opt = {}) {
     return new Promise(resolve => {
       const img = new Image(); img.crossOrigin = 'anonymous';
       img.onload = () => {
         app.imagesList.push({
           id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, name: name || 'Visuel', img,
-          scale: options.scale || 1, scaleX: options.scale || 1, scaleY: options.scale || 1,
-          x: options.x || 0, y: options.y || 0, rotation: options.rotation || 0,
-          fitMode: options.fitMode || (options.repeatPattern ? 'cover' : 'contain'),
-          repeatPattern: !!options.repeatPattern, repeatCount: options.repeatCount || 3,
-          side: app.product.zones ? app.product.zones[0].id : 'both'
+          scale: opt.scale || 1, scaleX: opt.scale || 1, scaleY: opt.scale || 1, x: opt.x || 0, y: opt.y || 0, rotation: opt.rotation || 0,
+          fitMode: opt.fitMode || (opt.repeatPattern ? 'cover' : 'contain'),
+          repeatPattern: !!opt.repeatPattern, repeatCount: opt.repeatCount || 3, side: app.product.zones ? app.product.zones[0].id : 'both'
         });
         app.activeImageIndex = app.imagesList.length - 1;
         app.renderImagesList(); app.syncActiveControls(); app.buildTexture();
         app.setOverlayVisible(document.querySelector('#showTransformFrame')?.checked || false);
-        if (!options.silent) app.showToast(`Visuel "${name}" appliqué`);
+        if (!opt.silent) app.showToast(`Visuel "${name}" appliqué`);
         resolve(true);
       };
-      img.onerror = () => { if (!options.silent) app.showToast('Erreur de chargement du visuel'); resolve(false); };
+      img.onerror = () => { if (!opt.silent) app.showToast('Erreur chargement'); resolve(false); };
       img.src = url;
     });
   };
@@ -32,34 +29,26 @@ export function register(app) {
       const dataUrl = await new Promise(res => {
         const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => res(null); r.readAsDataURL(file);
       });
-      if (!dataUrl) continue;
-      try {
-        await fetch('/api/catalog-images/propose', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: formatCleanTitle(file.name), url: dataUrl })
-        });
-      } catch {}
+      if (dataUrl) {
+        try {
+          await fetch('/api/catalog-images/propose', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: formatCleanTitle(file.name), url: dataUrl }) });
+        } catch {}
+      }
     }
   };
 }
 
 export function initialize(app) {
-  const explorer = document.querySelector('#catalogExplorer');
-  const openBtn = document.querySelector('#openCatalogBtn'), closeBtn = document.querySelector('#closeExplorerBtn');
-  const grid = document.querySelector('#catalogGrid'), addBtn = document.querySelector('#adminAddLibraryBtn');
-  const addInput = document.querySelector('#adminLibraryInput'), catSelect = document.querySelector('#adminCategorySelect');
-  const searchInput = document.querySelector('#catalogSearchInput'), countLabel = document.querySelector('#catalogCount');
-  const catBar = document.querySelector('#catalogCategories');
+  const explorer = document.querySelector('#catalogExplorer'), openBtn = document.querySelector('#openCatalogBtn'), closeBtn = document.querySelector('#closeExplorerBtn');
+  const grid = document.querySelector('#catalogGrid'), addBtn = document.querySelector('#adminAddLibraryBtn'), addInput = document.querySelector('#adminLibraryInput');
+  const catSelect = document.querySelector('#adminCategorySelect'), searchInput = document.querySelector('#catalogSearchInput'), countLabel = document.querySelector('#catalogCount'), catBar = document.querySelector('#catalogCategories');
 
-  if (app.clientMode) {
-    if (addBtn) addBtn.style.display = 'none';
-    if (catSelect) catSelect.style.display = 'none';
-  }
+  if (app.clientMode) { if (addBtn) addBtn.style.display = 'none'; if (catSelect) catSelect.style.display = 'none'; }
 
   openBtn?.addEventListener('click', () => {
     if (explorer) { explorer.hidden = false; explorer.removeAttribute('hidden'); }
     app.activeCatalogCategory = (!app.currentProductKey || app.currentProductKey === 'showcase') ? 'all' : 'current_product';
-    loadCatalog();
+    app.activeSubcategory = 'all'; loadCatalog();
   });
   closeBtn?.addEventListener('click', () => { if (explorer) { explorer.hidden = true; explorer.setAttribute('hidden', ''); } });
   searchInput?.addEventListener('input', () => renderCatalog());
@@ -95,15 +84,16 @@ export function initialize(app) {
     }
     pills.push({ id: 'all', label: `Tous (${visibleItems.filter(x => x.status !== 'pending').length})` });
     if (!app.clientMode && pendingCount > 0) pills.push({ id: 'pending', label: `À valider (${pendingCount})`, warn: true });
-    const cats = app.catalogCategories || ['Nouveau', 'Fleurs', 'Licornes', 'Animaux & Art', 'Illustrations', 'Motifs', 'Logos'];
-    for (const c of cats) if (counts[c] || !app.clientMode) pills.push({ id: c, label: `${c} (${counts[c] || 0})` });
+    const catNames = app.getCategoryNames ? app.getCategoryNames() : (app.catalogCategories || []).map(c => typeof c === 'string' ? c : c.name);
+    for (const c of catNames) if (counts[c] || !app.clientMode) pills.push({ id: c, label: `${c} (${counts[c] || 0})` });
     pills.forEach(p => {
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'cat-pill' + (app.activeCatalogCategory === p.id ? ' active' : '');
       if (p.warn) b.style.cssText = 'background:#f59e0b;color:#fff;font-weight:700;';
-      b.textContent = p.label; b.onclick = () => { app.activeCatalogCategory = p.id; renderCatalog(); };
+      b.textContent = p.label; b.onclick = () => { app.activeCatalogCategory = p.id; app.activeSubcategory = 'all'; renderCatalog(); };
       catBar.appendChild(b);
     });
+    app.renderSubcategoryPills?.(visibleItems);
   }
 
   function renderCatalog() {
@@ -123,7 +113,10 @@ export function initialize(app) {
         const matchCat = app.activeCatalogCategory === 'Motifs' ? (item.repeatPattern || item.category === 'Motifs') : item.category === app.activeCatalogCategory;
         if (!matchCat) return false;
       }
-      return !q || item.name.toLowerCase().includes(q) || (item.category || '').toLowerCase().includes(q);
+      if (app.activeSubcategory && app.activeSubcategory !== 'all') {
+        if ((item.subcategory || '').toLowerCase() !== app.activeSubcategory.toLowerCase()) return false;
+      }
+      return !q || item.name.toLowerCase().includes(q) || (item.category || '').toLowerCase().includes(q) || (item.subcategory || '').toLowerCase().includes(q);
     });
 
     if (countLabel) countLabel.textContent = `${filtered.length} visuel(s) affiché(s)` + (!app.clientMode && pendingCount ? ` • ${pendingCount} en attente` : '');
@@ -133,12 +126,12 @@ export function initialize(app) {
       const thumb = document.createElement('img'); thumb.src = item.url; thumb.alt = item.name; card.appendChild(thumb);
       const title = document.createElement('span'); title.className = 'catalog-item-name';
       title.title = !app.clientMode ? `Renommer • Objets : ${app.getCompatibilityLabel ? app.getCompatibilityLabel(item) : 'Tous'}` : item.name;
-      title.textContent = `${item.category || 'Illustrations'} · ${item.name}`;
+      const subTxt = item.subcategory ? ` › ${item.subcategory}` : '';
+      title.textContent = `${item.category || 'Illustrations'}${subTxt} · ${item.name}`;
       if (!app.clientMode) {
         title.style.cursor = 'pointer';
         title.onclick = e => {
-          e.stopPropagation();
-          const n = prompt('Renommer le visuel du catalogue :', item.name);
+          e.stopPropagation(); const n = prompt('Renommer le visuel :', item.name);
           if (n && n.trim()) { item.name = n.trim(); persistCatalog(); app.showToast(`Visuel renommé en "${item.name}"`); }
         };
       }
@@ -163,17 +156,20 @@ export function initialize(app) {
           actions.appendChild(okBtn);
         }
         const renBtn = document.createElement('button'); renBtn.type = 'button'; renBtn.className = 'card-btn'; renBtn.title = 'Renommer'; renBtn.textContent = '✎';
-        renBtn.onclick = e => { e.stopPropagation(); const n = prompt('Renommer le visuel :', item.name); if (n && n.trim()) { item.name = n.trim(); persistCatalog(); app.showToast(`Renommé en "${item.name}"`); } };
-        const catSel = document.createElement('select'); catSel.style.cssText = 'font-size:9px;padding:1px 2px;border-radius:4px;background:#0f172a;color:#fff;border:1px solid #334155;max-width:68px;';
-        (app.catalogCategories || []).forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; if (item.category === c) o.selected = true; catSel.appendChild(o); });
-        catSel.onchange = e => { e.stopPropagation(); item.category = e.target.value; persistCatalog(); };
+        renBtn.onclick = e => { e.stopPropagation(); const n = prompt('Renommer :', item.name); if (n && n.trim()) { item.name = n.trim(); persistCatalog(); app.showToast(`Renommé en "${item.name}"`); } };
+        const catSel = document.createElement('select'); catSel.style.cssText = 'font-size:9px;padding:1px 2px;border-radius:4px;background:#0f172a;color:#fff;border:1px solid #334155;max-width:64px;';
+        const catNames = app.getCategoryNames ? app.getCategoryNames() : (app.catalogCategories || []).map(c => typeof c === 'string' ? c : c.name);
+        catNames.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; if (item.category === c) o.selected = true; catSel.appendChild(o); });
+        catSel.onchange = e => { e.stopPropagation(); item.category = e.target.value; item.subcategory = ''; persistCatalog(); };
         const repBtn = document.createElement('button'); repBtn.type = 'button'; repBtn.className = 'card-btn' + (item.repeatPattern ? ' active' : ''); repBtn.title = 'Basculer Motif'; repBtn.textContent = 'M';
         repBtn.onclick = e => { e.stopPropagation(); item.repeatPattern = !item.repeatPattern; persistCatalog(); };
-        const objBtn = document.createElement('button'); objBtn.type = 'button'; objBtn.className = 'card-btn card-btn-wide'; objBtn.title = 'Définir les objets compatibles'; objBtn.textContent = app.getCompatibilityLabel ? app.getCompatibilityLabel(item) : 'Objets';
+        const objBtn = document.createElement('button'); objBtn.type = 'button'; objBtn.className = 'card-btn card-btn-wide'; objBtn.title = 'Objets compatibles'; objBtn.textContent = app.getCompatibilityLabel ? app.getCompatibilityLabel(item) : 'Objets';
         objBtn.onclick = e => { e.stopPropagation(); app.openCompatibilityModal?.(item, async () => { await persistCatalog(); objBtn.textContent = app.getCompatibilityLabel(item); }); };
         const delBtn = document.createElement('button'); delBtn.type = 'button'; delBtn.className = 'card-btn danger'; delBtn.title = 'Supprimer'; delBtn.textContent = '✕';
         delBtn.onclick = e => { e.stopPropagation(); app.catalogImages = app.catalogImages.filter(x => x.id !== item.id); persistCatalog(); app.showToast(`"${item.name}" supprimé`); };
-        actions.append(renBtn, catSel, repBtn, objBtn, delBtn);
+        actions.append(renBtn, catSel);
+        app.buildSubcatCardControl?.(item, actions, persistCatalog);
+        actions.append(repBtn, objBtn, delBtn);
         card.appendChild(actions);
       }
       grid.appendChild(card);
@@ -185,12 +181,13 @@ export function initialize(app) {
   addInput?.addEventListener('change', async e => {
     const files = Array.from(e.target.files || []); if (!files.length) return;
     const chosenCat = catSelect?.value || 'auto';
+    const subSel = document.querySelector('#adminSubcategorySelect'), chosenSub = subSel?.value || 'auto';
     for (const file of files) {
       const dataUrl = await new Promise(res => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => res(null); r.readAsDataURL(file); });
       if (!dataUrl) continue;
-      const cleanName = formatCleanTitle(file.name);
-      const cat = chosenCat === 'auto' ? inferCategory(cleanName) : chosenCat;
-      app.catalogImages.unshift({ id: `visuel-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, name: cleanName, url: dataUrl, category: cat, repeatPattern: cat === 'Motifs', status: 'approved', compatibleProducts: ['all'] });
+      const clean = formatCleanTitle(file.name), cat = chosenCat === 'auto' ? inferCategory(clean) : chosenCat;
+      const sub = (chosenSub && chosenSub !== 'auto') ? chosenSub : inferSubcategory(clean);
+      app.catalogImages.unshift({ id: `visuel-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, name: clean, url: dataUrl, category: cat, subcategory: sub, repeatPattern: cat === 'Motifs', status: 'approved', compatibleProducts: ['all'] });
     }
     e.target.value = ''; await persistCatalog(); app.showToast(`${files.length} visuel(s) classé(s) et enregistré(s)`);
   });

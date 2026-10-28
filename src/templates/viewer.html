@@ -45,6 +45,9 @@
               <select id="adminCategorySelect" title="Catégorie pour les prochains ajouts" style="padding:5px 8px; font-size:11px; border-radius:6px; border:1px solid #cbd5e1; background:#f8fafc; color:#1e293b;">
                 <option value="auto">Catégorie : Auto</option>
               </select>
+              <select id="adminSubcategorySelect" title="Sous-catégorie pour les prochains ajouts" style="padding:5px 8px; font-size:11px; border-radius:6px; border:1px solid #cbd5e1; background:#f8fafc; color:#1e293b; display:none;">
+                <option value="auto">Sous-cat : Auto</option>
+              </select>
               <button type="button" id="adminAddCategoryBtn" class="secondary" title="Ajouter une nouvelle catégorie" style="padding:6px 10px; font-size:11px; width:auto; font-weight:700;">+ Catégorie</button>
               <button type="button" id="adminEditCategoryBtn" class="secondary" title="Modifier ou renommer une catégorie" style="padding:6px 10px; font-size:11px; width:auto; font-weight:700;">Modifier catégorie</button>
               <button type="button" id="adminDeleteCategoryBtn" class="secondary" title="Supprimer une catégorie" style="padding:6px 10px; font-size:11px; width:auto; font-weight:700; color:#ef4444; border-color:#fca5a5;">Supprimer catégorie</button>
@@ -61,6 +64,7 @@
               <button type="button" class="cat-pill" data-cat="Illustrations">Illustrations</button>
               <button type="button" class="cat-pill" data-cat="Logos">Logos</button>
             </div>
+            <div id="catalogSubcategories" class="catalog-subcategories" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;" hidden></div>
           </div>
           <div id="catalogGrid" class="catalog-explorer-grid"></div>
         </aside>

@@ -10,22 +10,47 @@ export function inferCategory(name) {
   const n = String(name || '').toLowerCase();
   if (/nouveau|new|recent|nouveaut/i.test(n)) return 'Nouveau';
   if (/flower|fleur|rose|floral|plante/i.test(n)) return 'Fleurs';
-  if (/unicorn|licorne|enfant|kids/i.test(n)) return 'Licornes';
-  if (/pig|cochon|cerf|deer|animal|baleine|requin|lemur|panda|art/i.test(n)) return 'Animaux & Art';
+  if (/unicorn|licorne|chat|cat|chien|dog|girafe|giraffe|pig|cerf|deer|animal|baleine|requin|lemur|panda/i.test(n)) return 'Animaux';
   if (/motif|pattern|wrap/i.test(n)) return 'Motifs';
   if (/logo|marque|brand/i.test(n)) return 'Logos';
   return 'Illustrations';
 }
 
+export function inferSubcategory(name) {
+  const n = String(name || '').toLowerCase();
+  if (/chat|cat|kitten/i.test(n)) return 'Chats';
+  if (/chien|dog|puppy/i.test(n)) return 'Chiens';
+  if (/girafe|giraffe/i.test(n)) return 'Girafe';
+  if (/licorne|unicorn/i.test(n)) return 'Licorne';
+  return '';
+}
+
 export function register(app) {
-  app.catalogCategories = ['Nouveau', 'Fleurs', 'Licornes', 'Animaux & Art', 'Illustrations', 'Motifs', 'Logos'];
+  app.catalogCategories = [
+    { name: 'Nouveau', subs: [] },
+    { name: 'Animaux', subs: ['Chats', 'Chiens', 'Girafe', 'Licorne'] },
+    { name: 'Fleurs', subs: [] },
+    { name: 'Illustrations', subs: [] },
+    { name: 'Motifs', subs: [] },
+    { name: 'Logos', subs: [] }
+  ];
+
+  app.getCategoryNames = () => (app.catalogCategories || []).map(c => typeof c === 'string' ? c : c.name);
+
+  app.normalizeCategoryItems = list => {
+    if (!Array.isArray(list)) return [];
+    return list.map(c => {
+      if (typeof c === 'string') return { name: c.trim(), subs: [] };
+      return { name: String(c.name || '').trim(), subs: Array.isArray(c.subs) ? c.subs.map(s => String(s).trim()).filter(Boolean) : [] };
+    }).filter(c => Boolean(c.name));
+  };
 
   app.loadCatalogCategories = async function loadCatalogCategories() {
     try {
       const res = await fetch('/api/catalog-categories');
       if (res.ok) {
         const list = await res.json();
-        if (Array.isArray(list) && list.length) app.catalogCategories = list;
+        if (Array.isArray(list) && list.length) app.catalogCategories = app.normalizeCategoryItems(list);
       }
     } catch {}
     app.updateAdminCategorySelect?.();
@@ -47,8 +72,9 @@ export function register(app) {
     if (!sel) return;
     const cur = sel.value;
     sel.innerHTML = '<option value="auto">Catégorie : Auto</option>' +
-      app.catalogCategories.map(c => `<option value="${c}">${c}</option>`).join('');
-    if (app.catalogCategories.includes(cur)) sel.value = cur;
+      app.getCategoryNames().map(c => `<option value="${c}">${c}</option>`).join('');
+    if (app.getCategoryNames().includes(cur)) sel.value = cur;
+    app.updateAdminSubcategorySelect?.();
   };
 }
 
@@ -68,22 +94,20 @@ export function initialize(app) {
     const val = prompt('Nom de la nouvelle catégorie :');
     if (!val || !val.trim()) return;
     const clean = val.trim();
-    if (app.catalogCategories.some(c => c.toLowerCase() === clean.toLowerCase())) {
+    if (app.getCategoryNames().some(c => c.toLowerCase() === clean.toLowerCase())) {
       return app.showToast('Cette catégorie existe déjà.');
     }
-    app.catalogCategories.push(clean);
+    app.catalogCategories.push({ name: clean, subs: [] });
     await app.persistCatalogCategories();
     app.renderCatalog?.();
     app.showToast(`Catégorie "${clean}" créée`);
   });
 
   function pickCategory(title, filterFn) {
-    const pool = (app.catalogCategories || []).filter(filterFn || (() => true));
+    const pool = app.getCategoryNames().filter(filterFn || (() => true));
     if (!pool.length) return null;
     const act = app.activeCatalogCategory;
-    if (act && act !== 'all' && act !== 'pending' && act !== 'current_product' && pool.includes(act)) {
-      return act;
-    }
+    if (act && act !== 'all' && act !== 'pending' && act !== 'current_product' && pool.includes(act)) return act;
     const list = pool.map((c, i) => `${i + 1}. ${c}`).join('\n');
     const input = prompt(`${title}\n\n${list}`);
     if (!input || !input.trim()) return null;
@@ -99,8 +123,13 @@ export function initialize(app) {
     if (val === null) return;
     const clean = val.trim();
     if (clean && clean !== target) {
-      const idx = app.catalogCategories.indexOf(target);
-      if (idx !== -1) app.catalogCategories[idx] = clean;
+      const catObj = app.catalogCategories.find(c => (typeof c === 'string' ? c : c.name) === target);
+      if (catObj) {
+        if (typeof catObj === 'string') {
+          const idx = app.catalogCategories.indexOf(catObj);
+          app.catalogCategories[idx] = { name: clean, subs: [] };
+        } else catObj.name = clean;
+      }
       app.catalogImages.forEach(it => { if (it.category === target) it.category = clean; });
       if (app.activeCatalogCategory === target) app.activeCatalogCategory = clean;
       await Promise.all([app.persistCatalogCategories(), app.persistCatalog?.()]);
@@ -114,8 +143,8 @@ export function initialize(app) {
     if (!target) return;
     const ok = confirm(`Confirmez-vous la suppression de la catégorie "${target}" ?\nLes visuels associés seront transférés dans "Illustrations".`);
     if (!ok) return;
-    app.catalogCategories = app.catalogCategories.filter(c => c !== target);
-    app.catalogImages.forEach(it => { if (it.category === target) it.category = 'Illustrations'; });
+    app.catalogCategories = app.catalogCategories.filter(c => (typeof c === 'string' ? c : c.name) !== target);
+    app.catalogImages.forEach(it => { if (it.category === target) { it.category = 'Illustrations'; it.subcategory = ''; } });
     if (app.activeCatalogCategory === target) app.activeCatalogCategory = 'all';
     await Promise.all([app.persistCatalogCategories(), app.persistCatalog?.()]);
     app.renderCatalog?.();

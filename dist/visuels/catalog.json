@@ -3,45 +3,121 @@
     "id": "visuel-1793114254019-oawk",
     "name": "Cerf Polygonal (Art)",
     "url": "/visuels/JPG-mvqtxhcx.jpg",
-    "category": "Animaux & Art",
+    "category": "Animaux",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "mug11oz"
+    ],
+    "subcategory": ""
+  },
+  {
+    "id": "visuel-1793114488723-r26f",
+    "name": "Licorne Magique (3)",
+    "url": "/visuels/UNICORN-MUG-3-mvqu2iln.png",
+    "category": "Animaux",
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": "Licorne"
+  },
+  {
+    "id": "visuel-1793114488734-34sl",
+    "name": "Licorne Magique (4)",
+    "url": "/visuels/UNICORN-MUG-4-mvqu2ilj.png",
+    "category": "Animaux",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "all"
+    ],
+    "subcategory": "Licorne"
+  },
+  {
+    "id": "visuel-1793114488742-o5n6",
+    "name": "Licorne Magique (5)",
+    "url": "/visuels/UNICORN-MUG-5-mvqu2ild.png",
+    "category": "Animaux",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "all"
+    ],
+    "subcategory": "Licorne"
+  },
+  {
+    "id": "visuel-1793114488752-003k",
+    "name": "Licorne Magique (6)",
+    "url": "/visuels/UNICORN-MUG-6-mvqu2il7.png",
+    "category": "Animaux",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "all"
+    ],
+    "subcategory": "Licorne"
+  },
+  {
+    "id": "visuel-1793114488760-ahfn",
+    "name": "Licorne Magique (8)",
+    "url": "/visuels/UNICORN-MUG-8-mvqu2il3.png",
+    "category": "Animaux",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "all"
+    ],
+    "subcategory": "Licorne"
+  },
+  {
+    "id": "visuel-1793114488768-y6eb",
+    "name": "Licorne Magique (9)",
+    "url": "/visuels/UNICORN-MUG-9-mvqu2iks.png",
+    "category": "Animaux",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "all"
+    ],
+    "subcategory": "Licorne"
   },
   {
     "id": "visuel-1793114254031-b0yj",
     "name": "Valentine Pig",
     "url": "/visuels/Valentine-pig-2-mvqtxhcp.png",
-    "category": "Animaux & Art",
+    "category": "Animaux",
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793179083449-4nhf",
     "name": "Visuel",
     "url": "/visuels/Visuel-mvrwj00j.jpg",
-    "category": "Animaux & Art",
+    "category": "Animaux",
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793179275589-f4ua",
     "name": "Visuel",
     "url": "/visuels/Visuel-mvrwn49q.jpg",
-    "category": "Animaux & Art",
+    "category": "Animaux",
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793179083450-m3z4",
@@ -52,7 +128,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "pending-1793176512829-0o1h",
@@ -63,7 +140,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "pending-1793173527840-6wjp",
@@ -74,7 +152,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "pending-1793173729314-lg57",
@@ -85,7 +164,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "pending-1793173729288-n4ys",
@@ -96,7 +176,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "pending-1793173729251-odbi",
@@ -107,7 +188,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "pending-1793173728180-lq0x",
@@ -118,7 +200,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "pending-1793173729197-ik9h",
@@ -129,7 +212,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "pending-1793173728200-mqpo",
@@ -140,7 +224,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": "Licorne"
   },
   {
     "id": "pending-1793173729182-a43f",
@@ -151,7 +236,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "pending-1793173729392-j82o",
@@ -162,7 +248,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "pending-1793173528169-bs1o",
@@ -173,7 +260,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "pending-1793173729269-8b7s",
@@ -184,7 +272,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "pending-1793173728305-im5l",
@@ -195,7 +284,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "pending-1793173728353-soba",
@@ -206,7 +296,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "pending-1793173729359-tm7i",
@@ -217,7 +308,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "pending-1793173729335-fplq",
@@ -228,7 +320,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "pending-1793173729413-t8fa",
@@ -239,7 +332,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "pending-1793173728141-nen6",
@@ -250,7 +344,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "pending-1793173728264-gutk",
@@ -261,7 +356,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793179083451-gixg",
@@ -272,7 +368,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793179275583-4ts0",
@@ -283,7 +380,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793179275588-6m1d",
@@ -294,7 +392,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793179275586-gazw",
@@ -305,7 +404,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793179275585-eocn",
@@ -316,7 +416,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793179275584-9av7",
@@ -327,7 +428,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793179083447-fiwe",
@@ -338,18 +440,20 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793179083452-ty1w",
     "name": "Visuel",
     "url": "/visuels/Visuel-mvrwj00c.jpg",
-    "category": "Films",
+    "category": "Dessin animés",
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793117214065-gc4g",
@@ -360,7 +464,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793117214076-j8d4",
@@ -371,7 +476,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793117214087-050z",
@@ -382,7 +488,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793117214096-gmkb",
@@ -393,7 +500,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793117214107-n0xh",
@@ -404,7 +512,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793117214114-6lvo",
@@ -415,7 +524,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793179083451-g89u",
@@ -426,73 +536,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
-  },
-  {
-    "id": "visuel-1793114488723-r26f",
-    "name": "Licorne Magique (3)",
-    "url": "/visuels/UNICORN-MUG-3-mvqu2iln.png",
-    "category": "Licornes",
-    "repeatPattern": false,
-    "status": "approved",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793114488734-34sl",
-    "name": "Licorne Magique (4)",
-    "url": "/visuels/UNICORN-MUG-4-mvqu2ilj.png",
-    "category": "Licornes",
-    "repeatPattern": false,
-    "status": "approved",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793114488742-o5n6",
-    "name": "Licorne Magique (5)",
-    "url": "/visuels/UNICORN-MUG-5-mvqu2ild.png",
-    "category": "Licornes",
-    "repeatPattern": false,
-    "status": "approved",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793114488752-003k",
-    "name": "Licorne Magique (6)",
-    "url": "/visuels/UNICORN-MUG-6-mvqu2il7.png",
-    "category": "Licornes",
-    "repeatPattern": false,
-    "status": "approved",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793114488760-ahfn",
-    "name": "Licorne Magique (8)",
-    "url": "/visuels/UNICORN-MUG-8-mvqu2il3.png",
-    "category": "Licornes",
-    "repeatPattern": false,
-    "status": "approved",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793114488768-y6eb",
-    "name": "Licorne Magique (9)",
-    "url": "/visuels/UNICORN-MUG-9-mvqu2iks.png",
-    "category": "Licornes",
-    "repeatPattern": false,
-    "status": "approved",
-    "compatibleProducts": [
-      "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793173123569-6lci",
@@ -503,7 +548,8 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   },
   {
     "id": "visuel-1793179275590-8gc4",
@@ -514,6 +560,7 @@
     "status": "approved",
     "compatibleProducts": [
       "all"
-    ]
+    ],
+    "subcategory": ""
   }
 ]
