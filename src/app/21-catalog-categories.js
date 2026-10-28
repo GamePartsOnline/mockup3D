@@ -1,5 +1,21 @@
 // Gestion des catégories du catalogue en mode administrateur
 
+export function formatCleanTitle(raw) {
+  return String(raw || 'Visuel').replace(/\.[^/.]+$/, '').replace(/[-_.]+/g, ' ')
+    .replace(/\b[0-9a-f]{4,}\b/gi, '').replace(/\s+/g, ' ').trim()
+    .replace(/\b\w/g, l => l.toUpperCase()) || 'Visuel';
+}
+
+export function inferCategory(name) {
+  const n = String(name || '').toLowerCase();
+  if (/flower|fleur|rose|floral|plante/i.test(n)) return 'Fleurs';
+  if (/unicorn|licorne|enfant|kids/i.test(n)) return 'Licornes';
+  if (/pig|cochon|cerf|deer|animal|baleine|requin|lemur|panda|art/i.test(n)) return 'Animaux & Art';
+  if (/motif|pattern|wrap/i.test(n)) return 'Motifs';
+  if (/logo|marque|brand/i.test(n)) return 'Logos';
+  return 'Illustrations';
+}
+
 export function register(app) {
   app.catalogCategories = ['Fleurs', 'Licornes', 'Animaux & Art', 'Illustrations', 'Motifs', 'Logos'];
 

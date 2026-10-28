@@ -64,7 +64,8 @@ async function syncCatalogWithDisk() {
   const validList = savedList.filter(item => diskUrlSet.has(item.url)).map(item => {
     const autoCat = inferCategory(item.name);
     const cat = (!item.category || (item.category === 'Illustrations' && autoCat !== 'Illustrations')) ? autoCat : item.category;
-    return { ...item, name: item.name === 'JPG' ? 'Cerf Polygonal (Art)' : item.name, category: cat, status: item.status === 'pending' ? 'pending' : 'approved' };
+    const targets = Array.isArray(item.compatibleProducts) && item.compatibleProducts.length ? item.compatibleProducts : ['all'];
+    return { ...item, name: item.name === 'JPG' ? 'Cerf Polygonal (Art)' : item.name, category: cat, status: item.status === 'pending' ? 'pending' : 'approved', compatibleProducts: targets };
   });
   const knownUrls = new Set(validList.map(item => item.url));
 
@@ -72,7 +73,7 @@ async function syncCatalogWithDisk() {
     const url = `/visuels/${fileName}`;
     if (!knownUrls.has(url)) {
       const cleanName = fileName.replace(/\.[^/.]+$/, '');
-      validList.push({ id: `visuel-${fileName}`, name: cleanName, url, category: inferCategory(cleanName), repeatPattern: /motif|pattern|wrap/i.test(cleanName), status: 'approved' });
+      validList.push({ id: `visuel-${fileName}`, name: cleanName, url, category: inferCategory(cleanName), repeatPattern: /motif|pattern|wrap/i.test(cleanName), status: 'approved', compatibleProducts: ['all'] });
     }
   }
 
@@ -135,9 +136,7 @@ export async function proposeCatalogItem(req, res) {
 
 export async function saveCatalog(req, res) {
   if (!authorizeAdmin(req, res)) return;
-  const limit = 60 * 1024 * 1024;
-  let size = 0;
-  const chunks = [];
+  let size = 0; const limit = 60 * 1024 * 1024, chunks = [];
   try {
     for await (const chunk of req) {
       size += chunk.length;
@@ -146,9 +145,7 @@ export async function saveCatalog(req, res) {
     }
     const parsed = JSON.parse(Buffer.concat(chunks).toString('utf8'));
     if (!Array.isArray(parsed)) return json(res, 400, { error: 'Format invalide.' });
-
-    await fs.mkdir(visuelsDir, { recursive: true });
-    await fs.mkdir(distVisuelsDir, { recursive: true });
+    await fs.mkdir(visuelsDir, { recursive: true }); await fs.mkdir(distVisuelsDir, { recursive: true });
     const finalItems = [], keptFiles = new Set();
 
     for (const item of parsed) {
@@ -168,10 +165,12 @@ export async function saveCatalog(req, res) {
         const fileName = path.basename(url);
         keptFiles.add(fileName);
         const cleanName = String(item.name || fileName.replace(/\.[^/.]+$/, ''));
+        const targets = Array.isArray(item.compatibleProducts) && item.compatibleProducts.length ? item.compatibleProducts : ['all'];
         finalItems.push({
           id: String(item.id || `visuel-${fileName}`), name: cleanName, url: `/visuels/${fileName}`,
           category: String(item.category || inferCategory(cleanName)),
-          repeatPattern: Boolean(item.repeatPattern), status: item.status === 'pending' ? 'pending' : 'approved'
+          repeatPattern: Boolean(item.repeatPattern), status: item.status === 'pending' ? 'pending' : 'approved',
+          compatibleProducts: targets
         });
       }
     }
