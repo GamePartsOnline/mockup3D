@@ -42,6 +42,8 @@ app.projectPoint = function projectPoint([x, y]) {
     const z = side === 'B' ? -0.015 : 0.015;
     const xPos = side === 'B' ? -x : x;
     p = new app.THREE.Vector3(xPos, y + 0.35, z).project(app.camera);
+  } else if (app.product.yOffset) {
+    p = new app.THREE.Vector3(x, y + app.product.yOffset, 0.008).project(app.camera);
   } else {
     p = new app.THREE.Vector3(x, -0.002, y).project(app.camera);
   }

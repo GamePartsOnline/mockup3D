@@ -14,115 +14,44 @@ import { keychainHeartProduct } from './keychainHeart.js';
 import { eventWristbandProduct } from './eventWristband.js';
 import { arcadeCabinetProduct } from './arcadeCabinet.js';
 import { posterProduct } from './poster.js';
+import { photoFrameProduct } from './photoFrame.js';
+import { createTshirtStand, createStudioRoom } from './showcaseRoom.js';
 
-const SHOWCASE_LAYOUT = [
-  // Accroché au mur derrière la table : Poster 80×60 cm vendu sans cadre (800×600 mm)
-  { key: 'poster', def: posterProduct, label: 'Poster 80 × 60 cm (Sans cadre)', price: '25,00 €', pos: [0.05, 1.48, -1.05], scale: 0.8333, rot: [Math.PI / 2, 0, 0], wallMounted: true },
-  // Rangée arrière : T-shirt agrandi sur présentoir, Mug posé sur la table juste à côté du T-shirt, Coussin 40×40 cm, Casquette
-  { key: 'tshirt3D', def: tshirt3DProduct, label: 'T-shirt 3D (A4 210×297 mm)', price: '17,00 € - 21,00 €', pos: [-1.35, 0.517, -0.45], scale: 2.35, rot: [0, 0.12, 0], withStand: true },
-  { key: 'mug11oz', def: mug11ozProduct, label: 'Mug blanc 11 oz (Ø 82×95 mm)', price: '13,00 €', pos: [-0.62, 0.001, -0.28], scale: 0.165, rot: [0, -0.45, 0] },
-  { key: 'cushion', def: cushionProduct, label: 'Housse de coussin (400×400×150 mm)', price: '17,00 €', pos: [0.18, 0.111, -0.45], scale: 0.50, rot: [0, -0.04, 0] },
-  { key: 'cap', def: capProduct, label: 'Casquette 3D (Front 120×65 mm)', price: '15,00 €', pos: [1.32, 0.024, -0.46], scale: 0.30, rot: [0, -0.22, 0] },
-  // Rangée centrale : Puzzle (280×195×2 mm), Tapis de souris (240×200×3 mm), Trousse (210×130×10 mm), Sous-verres (90×90×3 mm)
-  { key: 'puzzle', def: puzzleProduct, label: 'Puzzle 120 pièces (280×195×2 mm)', price: '15,00 €', pos: [-1.38, 0.005, 0.32], scale: 0.25, rot: [0, 0.02, 0] },
-  { key: 'mousePad', def: mousePadProduct, label: 'Tapis de souris (240×200×3 mm)', price: '10,00 €', pos: [-0.48, 0.022, 0.32], scale: 0.2463, rot: [0, -0.02, 0] },
-  { key: 'pencilCase', def: pencilCaseProduct, label: 'Trousse (210×130×10 mm)', price: '11,00 €', pos: [0.35, 0.013, 0.32], scale: 0.25, rot: [0, -0.03, 0] },
-  { key: 'coaster', def: coasterProduct, label: 'Sous-verre carré (90×90×3 mm)', price: '8,00 €', pos: [1.05, 0.013, 0.25], scale: 0.2473, rot: [0, 0.05, 0] },
-  { key: 'coasterRound', def: coasterRoundProduct, label: 'Sous-verre rond (90×90×3 mm)', price: '8,00 €', pos: [1.45, 0.008, 0.32], scale: 0.225, rot: [0, 0, 0] },
-  // Rangée avant : Porte-clés Unisub (40.6 à 63.5 mm) et Bracelet événementiel (250×20×1 mm)
-  { key: 'keychainRect', def: keychainRectProduct, label: 'Porte-clés rectangle (40.6×57.15×1.14 mm)', price: '6,00 €', pos: [-1.15, 0.002, 0.82], scale: 0.2479, rot: [-Math.PI / 2, 0, 0.05] },
-  { key: 'keychainRound', def: keychainRoundProduct, label: 'Porte-clés rond (63.5×63.5×2.29 mm)', price: '6,00 €', pos: [-0.82, 0.004, 0.82], scale: 0.2484, rot: [-Math.PI / 2, 0, 0] },
-  { key: 'keychainHeart', def: keychainHeartProduct, label: 'Porte-clés Cœur (57.2×63.5×2.29 mm)', price: '6,00 €', pos: [-0.48, 0.003, 0.82], scale: 0.1424, rot: [-Math.PI / 2, 0, -0.05] },
-  { key: 'eventWristband', def: eventWristbandProduct, label: 'Bracelet tissu (250×20×1 mm)', price: '6,50 €', pos: [0.85, 0.003, 0.78], scale: 0.25, rot: [0, 0.03, 0] },
-  // Posée au sol à gauche de la table : Borne d'Arcade (600×1700×700 mm)
-  { key: 'arcadeCabinet', def: arcadeCabinetProduct, label: "Borne d'Arcade (Décoration spécifique)", price: '2290,00 €', pos: [-3.25, 0.790, -0.20], scale: 1.95, rot: [0, 0.42, 0], floorY: -0.835 }
+export const SHOWCASE_LAYOUT = [
+  // Accroché au mur décalé vers la droite et surélevé : Poster 80×60 cm sans cadre
+  { key: 'poster', def: posterProduct, label: 'Poster 80 × 60 cm (Sans cadre)', price: '25,00 €', pos: [1.25, 0.95, -1.10], scale: 0.92, rot: [0, 0, 0], wallMounted: true },
+  // Rangée arrière (décalée à droite sur la table) : T-shirt, Coussin, Poster A4, Casquette, Mug
+  { key: 'tshirt3D', def: tshirt3DProduct, label: 'T-shirt 3D (A4 210×297 mm)', price: '17,00 € - 21,00 €', pos: [-0.63, 0.517, -0.45], scale: 2.35, rot: [0, 0.12, 0], withStand: true },
+  { key: 'cushion', def: cushionProduct, label: 'Housse de coussin (400×400×150 mm)', price: '17,00 €', pos: [0.80, 0.111, -0.45], scale: 0.50, rot: [0, -0.04, 0] },
+  { key: 'photoFrame', def: photoFrameProduct, label: 'Poster A4 (21×29,7 cm)', price: '20,00 €', pos: [1.57, 0.001, -0.44], scale: 0.56, rot: [0, -0.18, 0] },
+  { key: 'cap', def: capProduct, label: 'Casquette 3D (Front 120×65 mm)', price: '15,00 €', pos: [2.21, 0.024, -0.45], scale: 0.30, rot: [0, -0.22, 0] },
+  { key: 'mug11oz', def: mug11ozProduct, label: 'Mug blanc 11 oz (Ø 82×95 mm)', price: '13,00 €', pos: [2.65, 0.001, -0.42], scale: 0.165, rot: [0, 2.70, 0] },
+  // Rangée centrale : Puzzle, Tapis de souris, Trousse, Sous-verres
+  { key: 'puzzle', def: puzzleProduct, label: 'Puzzle 120 pièces (280×195×2 mm)', price: '15,00 €', pos: [-0.63, 0.005, 0.32], scale: 0.25, rot: [0, 0.02, 0] },
+  { key: 'mousePad', def: mousePadProduct, label: 'Tapis de souris (240×200×3 mm)', price: '10,00 €', pos: [0.27, 0.022, 0.32], scale: 0.2463, rot: [0, -0.02, 0] },
+  { key: 'pencilCase', def: pencilCaseProduct, label: 'Trousse (210×130×10 mm)', price: '11,00 €', pos: [1.10, 0.013, 0.32], scale: 0.25, rot: [0, -0.03, 0] },
+  { key: 'coaster', def: coasterProduct, label: 'Sous-verre carré (90×90×3 mm)', price: '8,00 €', pos: [1.80, 0.013, 0.25], scale: 0.2473, rot: [0, 0.05, 0] },
+  { key: 'coasterRound', def: coasterRoundProduct, label: 'Sous-verre rond (90×90×3 mm)', price: '8,00 €', pos: [2.20, 0.008, 0.32], scale: 0.225, rot: [0, 0, 0] },
+  // Rangée avant : Porte-clés Unisub et Bracelet événementiel
+  { key: 'keychainRect', def: keychainRectProduct, label: 'Porte-clés rectangle (40.6×57.15×1.14 mm)', price: '6,00 €', pos: [-0.40, 0.002, 0.82], scale: 0.2479, rot: [-Math.PI / 2, 0, 0.05] },
+  { key: 'keychainRound', def: keychainRoundProduct, label: 'Porte-clés rond (63.5×63.5×2.29 mm)', price: '6,00 €', pos: [-0.07, 0.004, 0.82], scale: 0.2484, rot: [-Math.PI / 2, 0, 0] },
+  { key: 'keychainHeart', def: keychainHeartProduct, label: 'Porte-clés Cœur (57.2×63.5×2.29 mm)', price: '6,00 €', pos: [0.27, 0.003, 0.82], scale: 0.1424, rot: [-Math.PI / 2, 0, -0.05] },
+  { key: 'eventWristband', def: eventWristbandProduct, label: 'Bracelet tissu (250×20×1 mm)', price: '6,50 €', pos: [1.60, 0.003, 0.78], scale: 0.25, rot: [0, 0.03, 0] },
+  // Posée au sol à gauche : Borne d'Arcade avec dos noir collé contre le mur arrière
+  { key: 'arcadeCabinet', def: arcadeCabinetProduct, label: "Borne d'Arcade (Décoration spécifique)", price: '2290,00 €', pos: [-2.55, 0.790, -0.60], scale: 1.85, rot: [0, 0, 0], floorY: -0.835 }
 ];
 
-function createTshirtStand() {
-  const stand = new THREE.Group();
-  const metalMat = new THREE.MeshStandardMaterial({ color: 0x26303d, roughness: 0.35, metalness: 0.75 });
-  const woodMat = new THREE.MeshStandardMaterial({ color: 0xd8b88c, roughness: 0.45, metalness: 0.05 });
-  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.16, 0.022, 32), metalMat);
-  base.position.set(0, -0.209, -0.02); base.castShadow = true; base.receiveShadow = true; stand.add(base);
-  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.71, 16), metalMat);
-  pole.position.set(0, 0.145, -0.025); pole.castShadow = true; stand.add(pole);
-  // Cintre en bois logé à l'intérieur des épaules et du col du T-shirt (sans dépasser au-dessus)
-  const neckBlock = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.018, 0.032, 20), woodMat);
-  neckBlock.position.set(0, 0.525, -0.025); stand.add(neckBlock);
-  const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, 0.30, 16), woodMat);
-  bar.rotation.z = Math.PI / 2; bar.position.set(0, 0.50, -0.02); stand.add(bar);
-  return stand;
-}
-
-function createBusinessCard() {
-  const canvas = document.createElement('canvas');
-  canvas.width = 1024; canvas.height = 640;
-  const ctx = canvas.getContext('2d');
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  const drawCard = (logoImg) => {
-    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, 1024, 640);
-    ctx.strokeStyle = '#1caa88'; ctx.lineWidth = 18; ctx.strokeRect(18, 18, 988, 604);
-    ctx.fillStyle = '#111820'; ctx.fillRect(18, 520, 988, 102);
-    if (logoImg) {
-      const ratio = logoImg.width / logoImg.height, h = 290, w = Math.min(760, h * ratio);
-      ctx.drawImage(logoImg, (1024 - w) / 2, 65, w, h);
-    }
-    ctx.fillStyle = '#111820'; ctx.font = 'bold 44px Inter, Arial, sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('GRAPH2PRINT • IMPRESSION & SUBLIMATION 3D', 512, 445);
-    ctx.fillStyle = '#65dfc0'; ctx.font = 'bold 54px Inter, Arial, sans-serif';
-    ctx.fillText('www.graph2print.com', 512, 590);
-    tex.needsUpdate = true;
-  };
-  drawCard(null);
-  const img = new Image(); img.onload = () => drawCard(img); img.src = '/logo-graph2print.png';
-  const cardGeo = new THREE.BoxGeometry(0.36, 0.004, 0.225);
-  const sideMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.4 });
-  const topMat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.35, metalness: 0.02 });
-  const card = new THREE.Mesh(cardGeo, [sideMat, sideMat, topMat, sideMat, sideMat, sideMat]);
-  card.position.set(0.08, 0.003, 0.80); card.rotation.y = -0.06; card.castShadow = true; card.receiveShadow = true;
-  card.userData = { showcaseProductKey: 'businessCard', isBusinessCard: true, showcaseLabel: 'www.graph2print.com', showcasePrice: 'GPO SARL', showcaseSub: 'Tél : 06.73.54.03.94', baseScale: 1 };
-  return card;
-}
-
-function createStudioTable() {
-  const tableGroup = new THREE.Group();
-  const c = document.createElement('canvas'); c.width = 512; c.height = 512;
-  const ctx = c.getContext('2d');
-  ctx.fillStyle = '#1b2028'; ctx.fillRect(0, 0, 512, 512);
-  for (let i = 0; i < 90; i++) {
-    ctx.fillStyle = i % 2 === 0 ? 'rgba(15, 18, 23, 0.35)' : 'rgba(42, 50, 62, 0.25)';
-    ctx.fillRect(0, (i * 6) % 512, 512, 2 + (i % 4));
-  }
-  const woodTex = new THREE.CanvasTexture(c);
-  woodTex.colorSpace = THREE.SRGBColorSpace;
-  const woodMat = new THREE.MeshStandardMaterial({ map: woodTex, color: 0x222831, roughness: 0.42, metalness: 0.08 });
-  const edgeMat = new THREE.MeshStandardMaterial({ color: 0x151920, roughness: 0.48, metalness: 0.1 });
-  const legMat = new THREE.MeshStandardMaterial({ color: 0x0f1318, roughness: 0.4, metalness: 0.35 });
-  const topMesh = new THREE.Mesh(new THREE.BoxGeometry(4.6, 0.08, 2.1), [edgeMat, edgeMat, woodMat, edgeMat, edgeMat, edgeMat]);
-  topMesh.position.set(0, -0.04, 0); topMesh.receiveShadow = true; topMesh.castShadow = true; tableGroup.add(topMesh);
-  const frameMesh = new THREE.Mesh(new THREE.BoxGeometry(4.3, 0.045, 1.85), legMat);
-  frameMesh.position.set(0, -0.10, 0); tableGroup.add(frameMesh);
-  const legGeo = new THREE.CylinderGeometry(0.055, 0.042, 0.75, 20);
-  for (const [lx, lz] of [[-2.05, -0.82], [2.05, -0.82], [-2.05, 0.82], [2.05, 0.82]]) {
-    const leg = new THREE.Mesh(legGeo, legMat);
-    leg.position.set(lx, -0.46, lz); leg.castShadow = true; leg.receiveShadow = true; tableGroup.add(leg);
-  }
-  tableGroup.add(createBusinessCard());
-  return tableGroup;
-}
-
 export const showcaseTableProduct = {
-  id: 'showcase', name: "Table d'accueil (Tous les produits)",
-  dimensions: 'Cliquez sur un objet de la table pour le personnaliser',
+  id: 'showcase', name: 'Le Showroom 3D (Tous les objets)',
+  dimensions: 'Cliquez sur un objet pour le personnaliser',
   printable: [240, 200], icon: '🏠', printAspect: 1.0, isShowcase: true,
   create() {
     const group = new THREE.Group();
     const dummyMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
-    const tableGroup = createStudioTable();
-    group.add(tableGroup);
+    const room = createStudioRoom();
+    group.add(room);
     const subProducts = [], interactiveWrappers = [];
-    tableGroup.traverse(c => { if (c.userData?.isBusinessCard) interactiveWrappers.push(c); });
+    room.traverse(c => { if (c.userData?.isBusinessCard) interactiveWrappers.push(c); });
     let oneSidedCanvas = null, oneSidedTex = null, twoSidedCanvas = null, twoSidedTex = null, arcadeCanvas = null, arcadeTex = null, bandCanvas = null, bandTex = null;
 
     for (const item of SHOWCASE_LAYOUT) {
@@ -147,27 +76,50 @@ export const showcaseTableProduct = {
       if (!oneSidedCanvas) oneSidedCanvas = document.createElement('canvas');
       oneSidedCanvas.width = canvas.width; oneSidedCanvas.height = canvas.height;
       const oCtx = oneSidedCanvas.getContext('2d');
+      oCtx.imageSmoothingEnabled = true; oCtx.imageSmoothingQuality = 'high';
       oCtx.fillStyle = '#ffffff'; oCtx.fillRect(0, 0, canvas.width, canvas.height);
       oCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
-      if (!oneSidedTex) { oneSidedTex = new THREE.CanvasTexture(oneSidedCanvas); oneSidedTex.colorSpace = THREE.SRGBColorSpace; }
-      else oneSidedTex.needsUpdate = true;
+      if (!oneSidedTex) {
+        oneSidedTex = new THREE.CanvasTexture(oneSidedCanvas);
+        oneSidedTex.colorSpace = THREE.SRGBColorSpace;
+        oneSidedTex.generateMipmaps = false;
+        oneSidedTex.minFilter = THREE.LinearFilter;
+        oneSidedTex.magFilter = THREE.LinearFilter;
+        oneSidedTex.anisotropy = 16;
+      } else oneSidedTex.needsUpdate = true;
 
       if (!twoSidedCanvas) twoSidedCanvas = document.createElement('canvas');
       twoSidedCanvas.width = canvas.width * 2; twoSidedCanvas.height = canvas.height;
       const tCtx = twoSidedCanvas.getContext('2d');
+      tCtx.imageSmoothingEnabled = true; tCtx.imageSmoothingQuality = 'high';
       tCtx.fillStyle = '#ffffff'; tCtx.fillRect(0, 0, twoSidedCanvas.width, twoSidedCanvas.height);
       tCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
       tCtx.drawImage(canvas, canvas.width, 0, canvas.width, canvas.height);
-      if (!twoSidedTex) { twoSidedTex = new THREE.CanvasTexture(twoSidedCanvas); twoSidedTex.colorSpace = THREE.SRGBColorSpace; }
-      else twoSidedTex.needsUpdate = true;
+      if (!twoSidedTex) {
+        twoSidedTex = new THREE.CanvasTexture(twoSidedCanvas);
+        twoSidedTex.colorSpace = THREE.SRGBColorSpace;
+        twoSidedTex.generateMipmaps = false;
+        twoSidedTex.minFilter = THREE.LinearFilter;
+        twoSidedTex.magFilter = THREE.LinearFilter;
+        twoSidedTex.anisotropy = 16;
+      } else twoSidedTex.needsUpdate = true;
 
       if (!arcadeCanvas) arcadeCanvas = document.createElement('canvas');
       arcadeCanvas.width = 3072; arcadeCanvas.height = 2048;
       const aCtx = arcadeCanvas.getContext('2d');
+      aCtx.imageSmoothingEnabled = true; aCtx.imageSmoothingQuality = 'high';
       aCtx.fillStyle = '#ffffff'; aCtx.fillRect(0, 0, 3072, 2048);
-      for (const [col, row] of [[0, 1], [1, 1], [2, 1], [2, 0]]) aCtx.drawImage(canvas, col * 1024, row * 1024, 1024, 1024);
-      if (!arcadeTex) { arcadeTex = new THREE.CanvasTexture(arcadeCanvas); arcadeTex.colorSpace = THREE.SRGBColorSpace; }
-      else arcadeTex.needsUpdate = true;
+      for (const [col, row] of [[0, 1], [1, 1], [2, 0]]) aCtx.drawImage(canvas, col * 1024, row * 1024, 1024, 1024);
+      // Fronton haut (col: 2, row: 1) : cadrage optimisé haute netteté
+      aCtx.drawImage(canvas, 2048, 1024, 1024, 1024);
+      if (!arcadeTex) {
+        arcadeTex = new THREE.CanvasTexture(arcadeCanvas);
+        arcadeTex.colorSpace = THREE.SRGBColorSpace;
+        arcadeTex.generateMipmaps = true;
+        arcadeTex.minFilter = THREE.LinearMipmapLinearFilter;
+        arcadeTex.magFilter = THREE.LinearFilter;
+        arcadeTex.anisotropy = 16;
+      } else arcadeTex.needsUpdate = true;
 
       if (!bandCanvas) bandCanvas = document.createElement('canvas');
       bandCanvas.width = 2000; bandCanvas.height = 160;

@@ -102,6 +102,7 @@ app.productDefinitions = {
   tshirt3D: app.tshirt3DProduct,
   cap: app.capProduct,
   poster: app.posterProduct,
+  photoFrame: app.photoFrameProduct,
   puzzle: app.puzzleProduct,
   coaster: app.coasterProduct,
   coasterRound: app.coasterRoundProduct,

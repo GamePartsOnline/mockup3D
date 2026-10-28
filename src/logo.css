@@ -3,8 +3,8 @@
 .topbar-btn{width:auto!important;padding:8px 16px!important;font-size:12px!important;border-radius:6px!important;cursor:pointer;white-space:nowrap;transition:background .15s ease}
 .topbar-btn.primary{background:#253443}
 .topbar-btn.primary:hover{background:#35495e}
-.topbar-btn.mp4{background:#18a985}
-.topbar-btn.mp4:hover{background:#13896b}
+.topbar-btn.mp4{background:#8b5cf6}
+.topbar-btn.mp4:hover{background:#7c3aed}
 .topbar-btn:disabled{opacity:.55;cursor:not-allowed}
 .topbar-status{font-size:11px;color:#8e9ba7;margin-left:4px}
 @media(max-width:850px){.topbar-status{display:none}}

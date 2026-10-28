@@ -15,6 +15,8 @@ import './interface-modes.css';
 import './responsive.css';
 import './dark-mode.css';
 import './app-menu.css';
+import './shop-2d.css';
+import './business-card.css';
 import { CanvasTexture, CircleGeometry, Color, DirectionalLight, GridHelper, HemisphereLight, LinearToneMapping, MathUtils, Mesh, PCFSoftShadowMap, PerspectiveCamera, Raycaster, SRGBColorSpace, Scene, ShadowMaterial, Sprite, SpriteMaterial, Vector2, Vector3, WebGLRenderer } from 'three';
 const THREE = { CanvasTexture, CircleGeometry, Color, DirectionalLight, GridHelper, HemisphereLight, LinearToneMapping, MathUtils, Mesh, PCFSoftShadowMap, PerspectiveCamera, Raycaster, SRGBColorSpace, Scene, ShadowMaterial, Sprite, SpriteMaterial, Vector2, Vector3, WebGLRenderer };
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -34,6 +36,7 @@ import { arcadeCabinetProduct } from './products/arcadeCabinet.js';
 import { eventWristbandProduct } from './products/eventWristband.js';
 import { capProduct } from './products/cap.js';
 import { posterProduct } from './products/poster.js';
+import { photoFrameProduct } from './products/photoFrame.js';
 import { showcaseTableProduct } from './products/showcaseTable.js';
 
 export const dependencies = {
@@ -49,6 +52,7 @@ export const dependencies = {
   tshirt3DProduct,
   capProduct,
   posterProduct,
+  photoFrameProduct,
   showcaseTableProduct,
   puzzleProduct,
   coasterProduct,

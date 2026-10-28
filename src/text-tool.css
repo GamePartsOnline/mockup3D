@@ -16,8 +16,8 @@
 #textSection .control textarea:focus,
 #textSection select:focus {
   outline: none;
-  border-color: #18a985;
-  box-shadow: 0 0 0 2px rgba(24, 169, 133, 0.2);
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.25);
 }
 .panel #textSection input[type="text"],
 .panel #textSection textarea,

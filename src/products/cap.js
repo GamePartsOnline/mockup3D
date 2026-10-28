@@ -60,7 +60,7 @@ export const capProduct = {
       isLoaded = true;
 
       if (pendingTexture) {
-        applyDecals(pendingTexture.texture);
+        applyDecals(pendingTexture.texture, pendingTexture.isTwoSided, pendingTexture.canvas);
         pendingTexture = null;
       }
     };
@@ -84,13 +84,13 @@ export const capProduct = {
       });
     }
 
-    function applyDecals(texture) {
+    function applyDecals(texture, isTwoSided, canvas) {
       if (!isLoaded || !group.userData.mainMesh) {
-        pendingTexture = { texture };
+        pendingTexture = { texture, isTwoSided, canvas };
         return;
       }
       clearDecals();
-      if (!texture) return;
+      if (!texture && !canvas) return;
 
       const mainMesh = group.userData.mainMesh;
       const localTarget = new THREE.Mesh(mainMesh.geometry);
@@ -102,7 +102,17 @@ export const capProduct = {
       try {
         const decalGeo = new DecalGeometry(localTarget, pFront, oFront, sFront);
         const mat = decalMaterial.clone();
-        mat.map = texture;
+        const capTex = canvas ? new THREE.CanvasTexture(canvas) : (texture ? texture.clone() : null);
+        if (capTex) {
+          capTex.colorSpace = THREE.SRGBColorSpace;
+          capTex.generateMipmaps = false;
+          capTex.minFilter = THREE.LinearFilter;
+          capTex.magFilter = THREE.LinearFilter;
+          capTex.anisotropy = 16;
+          capTex.needsUpdate = true;
+        }
+        mat.map = capTex;
+        mat.roughness = 0.45;
         mat.needsUpdate = true;
         const decalMesh = new THREE.Mesh(decalGeo, mat);
         decalsGroup.add(decalMesh);

@@ -17,7 +17,7 @@ export const coasterRoundProduct = {
     // Glossy top surface
     const topGeo = new THREE.CylinderGeometry(radius, radius, 0.002, 64);
     const topMaterial = new THREE.MeshStandardMaterial({
-      color: 0xffffff, roughness: 0.8, metalness: 0.1
+      color: 0xffffff, roughness: 0.22, metalness: 0.02
     });
     const top = new THREE.Mesh(topGeo, topMaterial);
     top.position.y = 0.001;

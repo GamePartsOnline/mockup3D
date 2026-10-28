@@ -3,7 +3,7 @@ import { profilePoints } from './arcadeProfile.js';
 export const arcadeCabinetProduct = {
   id: 'arcade-cabinet',
   name: "Borne d'Arcade (Décoration spécifique)",
-  dimensions: '600 × 1700 × 700 mm • Décoration spécifique',
+  dimensions: 'Hauteur 168 cm × Largeur 61 cm × Profondeur 56 cm',
   printable: [600, 1700],
   icon: '🕹️',
   printAspect: 1,
@@ -92,10 +92,22 @@ export const arcadeCabinetProduct = {
     const leftGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
     leftGeo.translate(0, 0, 0.285);
     normalizeAndMapUV(leftGeo, minX, maxX, minY, maxY, 0, 1, false);
+    const halfLeft = leftGeo.groups[0].count / 2;
+    leftGeo.groups = [
+      { start: 0, count: halfLeft, materialIndex: 1 },
+      { start: halfLeft, count: halfLeft, materialIndex: 0 },
+      leftGeo.groups[1]
+    ];
     const leftMesh = new THREE.Mesh(leftGeo, [topMaterial, baseMaterial]);
     const rightGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
     rightGeo.translate(0, 0, -0.303);
     normalizeAndMapUV(rightGeo, minX, maxX, minY, maxY, 1, 1, true);
+    const halfRight = rightGeo.groups[0].count / 2;
+    rightGeo.groups = [
+      { start: 0, count: halfRight, materialIndex: 0 },
+      { start: halfRight, count: halfRight, materialIndex: 1 },
+      rightGeo.groups[1]
+    ];
     const rightMesh = new THREE.Mesh(rightGeo, [topMaterial, baseMaterial]);
     const pFrontDoorB = { x: 0.5128 - 0.03, y: 0.0 };
     const pFrontDoorT = { x: 0.5618 - 0.03, y: 0.9731 };

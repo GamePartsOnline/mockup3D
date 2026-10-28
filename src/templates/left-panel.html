@@ -1,8 +1,27 @@
-<aside class="panel"><div class="drawer-heading"><strong>Personnaliser</strong><button type="button" data-close-panel="left" aria-label="Fermer le menu de gauche">✕</button></div>
+<aside class="panel"><div class="drawer-heading"><strong>Atelier de création</strong><button type="button" data-close-panel="left" aria-label="Fermer le menu de gauche">✕</button></div>
         <div id="clientGuide" class="client-guide" hidden>
           <strong id="clientGuideTitle">Étape 1 · Choisir un produit</strong>
-          <p id="clientGuideText">Sélectionnez le produit à personnaliser.</p>
-          <ol class="client-guide-steps"><li data-guide-step="1">Produit</li><li data-guide-step="2">Visuel</li><li data-guide-step="3">Ajustement</li><li data-guide-step="4">Envoi</li></ol>
+          <div class="client-timeline" role="progressbar" aria-label="Progression de création">
+            <div class="timeline-track">
+              <div class="timeline-fill" id="timelineProgressFill"></div>
+            </div>
+            <div class="timeline-step" data-guide-step="1" role="button" tabindex="0" title="Étape 1 : Choix du produit">
+              <div class="step-bubble"><span class="step-num">1</span><span class="step-check">✓</span></div>
+              <span class="step-label">Produit</span>
+            </div>
+            <div class="timeline-step" data-guide-step="2" role="button" tabindex="0" title="Étape 2 : Vos visuels">
+              <div class="step-bubble"><span class="step-num">2</span><span class="step-check">✓</span></div>
+              <span class="step-label">Visuel</span>
+            </div>
+            <div class="timeline-step" data-guide-step="3" role="button" tabindex="0" title="Étape 3 : Ajuster">
+              <div class="step-bubble"><span class="step-num">3</span><span class="step-check">✓</span></div>
+              <span class="step-label">Ajuster</span>
+            </div>
+            <div class="timeline-step" data-guide-step="4" role="button" tabindex="0" title="Étape 4 : Envoyer la création">
+              <div class="step-bubble"><span class="step-num">4</span><span class="step-check">✓</span></div>
+              <span class="step-label">Envoi</span>
+            </div>
+          </div>
           <button id="clientGuideAction" class="primary" type="button">Choisir ce produit</button>
         </div>
         <section id="sectionProduct" class="collapsible-section" data-section="1">
@@ -12,28 +31,28 @@
           </button>
           <div class="section-content">
             <div class="product-card">
-              <div class="product-icon" id="productIcon">▰</div>
               <label>
                 <span>Objet 3D</span>
                 <select id="productSelect">
-                  <option value="showcase" selected>Table d'accueil (Tous les produits)</option>
-                  <option value="mousePad">Tapis de souris</option>
-                  <option value="mug11oz">Mug blanc 11 oz</option>
-                  <option value="keychainRect">Porte-clés rectangle Unisub</option>
-                  <option value="keychainRound">Porte-clés rond Unisub</option>
-                  <option value="keychainHeart">Porte-clés Cœur Unisub</option>
+                  <option value="showcase" selected>Le Showroom 3D</option>
                   <option value="tshirt3D">T-shirt 3D</option>
+                  <option value="mug11oz">Mug blanc 11 oz</option>
+                  <option value="photoFrame">Poster A4</option>
+                  <option value="poster">Poster 80 × 60 cm</option>
+                  <option value="cushion">Housse de coussin</option>
                   <option value="cap">Casquette 3D</option>
-                  <option value="poster">Poster 80 × 60 cm (800 × 600 mm)</option>
-                  <option value="puzzle">Puzzle 120 pièces (280 × 195 × 2 mm)</option>
+                  <option value="mousePad">Tapis de souris</option>
+                  <option value="puzzle">Puzzle 120 pièces</option>
+                  <option value="pencilCase">Trousse</option>
                   <option value="coaster">Sous-verre carré</option>
                   <option value="coasterRound">Sous-verre rond</option>
-                  <option value="pencilCase">Trousse</option>
-                  <option value="cushion">Housse de coussin</option>
-                  <option value="eventWristband">Bracelet événementiel en tissu</option>
-                  <option value="arcadeCabinet">Borne d'Arcade (Multi-zones)</option>
+                  <option value="keychainRect">Porte-clés rectangle</option>
+                  <option value="keychainRound">Porte-clés rond</option>
+                  <option value="keychainHeart">Porte-clés Cœur</option>
+                  <option value="eventWristband">Bracelet événementiel</option>
+                  <option value="arcadeCabinet">Borne d'Arcade</option>
                 </select>
-                <small id="productDimensions">Taille L (Poitrine 280 à 350 mm)</small><br><div style="margin-top: 6px; font-size: 13px; font-weight: 600; color: #4ade80; background: #16202a; padding: 4px 8px; border-radius: 4px; display: inline-block;">Prix de vente TTC : <span id="productPrice">13,00 €</span></div>
+                <small id="productDimensions">Taille L (Poitrine 280 à 350 mm)</small><br><div id="productPriceContainer" style="margin-top: 6px; font-size: 13px; font-weight: 600; color: #c084fc; background: #16202a; padding: 4px 8px; border-radius: 4px; display: none;">Prix de vente TTC : <span id="productPrice">-- €</span></div>
               </label>
             </div>
             <label id="tshirtOrientationWrap" class="control" hidden><span>Impression T-shirt A4</span><select id="tshirtOrientation"><option value="portrait">Portrait 210 × 297 mm</option><option value="landscape">Paysage 297 × 210 mm</option></select></label>

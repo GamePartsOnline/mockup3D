@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&family=Cinzel:wght@700&family=Dancing+Script:wght@700&family=Great+Vibes&family=Lobster&family=Montserrat:ital,wght@0,400;0,700;1,400&family=Oswald:wght@600&family=Pacifico&family=Playfair+Display:ital,wght@0,700;1,700&family=Righteous&family=Roboto:wght@400;700&family=Satisfy&display=swap" rel="stylesheet">
   <title>MockUp3D C3</title>
-  <script type="module" crossorigin src="/assets/index-89kzVyvI.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BUtMHapO.css">
+  <script type="module" crossorigin src="/assets/index-RB6R-GZi.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-C1urLwqx.css">
 </head>
 <body>
   <div id="app">
@@ -19,8 +19,7 @@
     <span class="logo-card"><img src="/logo-graph2print.png" alt="Graph2Print"></span>
     <div>
       <strong>MockUp3D</strong>
-      <span id="localBadge" style="background:#f86900;color:white;padding:2px 6px;border-radius:4px;font-size:10px;margin-left:8px;vertical-align:middle;text-transform:uppercase;font-weight:bold;">Site en local</span>
-      <small>Présentation produit locale</small>
+      <small>Graph2Print • Personnalisation 3D</small>
       <span id="modeLabel" class="mode-label"></span>
     </div>
     <nav class="app-menu-bar" aria-label="Menu principal">
@@ -42,7 +41,7 @@
           <button type="button" id="exportMp4">Exporter en vidéo MP4</button>
           <button type="button" id="exportMugViews">Exporter 3 faces (Mug)</button>
           <hr>
-          <button type="button" id="exportAll" style="font-weight:700; color:#0d9488;">Tout Exporter (PNG + MP4)</button>
+          <button type="button" id="exportAll" style="font-weight:700; color:#7c3aed;">Tout Exporter (PNG + MP4)</button>
         </div>
       </div>
       <div class="menu-dropdown">
@@ -60,7 +59,7 @@
         <div class="menu-dropdown-content">
           <button type="button" id="themeToggle">Mode Nuit</button>
           <hr>
-          <button type="button" id="menuViewShowcase">Table d'accueil (Tous les produits)</button>
+          <button type="button" id="menuViewShowcase">Le Showroom 3D (Tous les objets)</button>
           <button type="button" id="menuViewHome">Réinitialiser la vue 3D</button>
           <button type="button" id="menuViewSave" style="font-weight:700; color:#0284c7;">Sauvegarder la vue actuelle</button>
           <button type="button" id="menuViewClearSave">Oublier la vue sauvegardée</button>
@@ -82,6 +81,7 @@
     </nav>
   </div>
   <div class="topbar-actions">
+    <button type="button" id="btnShop2D" class="topbar-shop-btn" title="Ouvrir la Boutique 2D">Boutique 2D</button>
     <span id="exportStatus" class="topbar-status" style="font-size:12px; color:#94a3b8; margin-right:8px;">Prêt</span>
     <a id="clientModeLink" class="client-mode-btn" href="/">Interface Client</a>
     <button id="submitCreation" class="topbar-btn primary client-submit" type="button" hidden>Envoyer ma création</button>
@@ -90,11 +90,30 @@
 
 
     <main class="workspace">
-<aside class="panel"><div class="drawer-heading"><strong>Personnaliser</strong><button type="button" data-close-panel="left" aria-label="Fermer le menu de gauche">✕</button></div>
+<aside class="panel"><div class="drawer-heading"><strong>Atelier de création</strong><button type="button" data-close-panel="left" aria-label="Fermer le menu de gauche">✕</button></div>
         <div id="clientGuide" class="client-guide" hidden>
           <strong id="clientGuideTitle">Étape 1 · Choisir un produit</strong>
-          <p id="clientGuideText">Sélectionnez le produit à personnaliser.</p>
-          <ol class="client-guide-steps"><li data-guide-step="1">Produit</li><li data-guide-step="2">Visuel</li><li data-guide-step="3">Ajustement</li><li data-guide-step="4">Envoi</li></ol>
+          <div class="client-timeline" role="progressbar" aria-label="Progression de création">
+            <div class="timeline-track">
+              <div class="timeline-fill" id="timelineProgressFill"></div>
+            </div>
+            <div class="timeline-step" data-guide-step="1" role="button" tabindex="0" title="Étape 1 : Choix du produit">
+              <div class="step-bubble"><span class="step-num">1</span><span class="step-check">✓</span></div>
+              <span class="step-label">Produit</span>
+            </div>
+            <div class="timeline-step" data-guide-step="2" role="button" tabindex="0" title="Étape 2 : Vos visuels">
+              <div class="step-bubble"><span class="step-num">2</span><span class="step-check">✓</span></div>
+              <span class="step-label">Visuel</span>
+            </div>
+            <div class="timeline-step" data-guide-step="3" role="button" tabindex="0" title="Étape 3 : Ajuster">
+              <div class="step-bubble"><span class="step-num">3</span><span class="step-check">✓</span></div>
+              <span class="step-label">Ajuster</span>
+            </div>
+            <div class="timeline-step" data-guide-step="4" role="button" tabindex="0" title="Étape 4 : Envoyer la création">
+              <div class="step-bubble"><span class="step-num">4</span><span class="step-check">✓</span></div>
+              <span class="step-label">Envoi</span>
+            </div>
+          </div>
           <button id="clientGuideAction" class="primary" type="button">Choisir ce produit</button>
         </div>
         <section id="sectionProduct" class="collapsible-section" data-section="1">
@@ -104,28 +123,28 @@
           </button>
           <div class="section-content">
             <div class="product-card">
-              <div class="product-icon" id="productIcon">▰</div>
               <label>
                 <span>Objet 3D</span>
                 <select id="productSelect">
-                  <option value="showcase" selected>Table d'accueil (Tous les produits)</option>
-                  <option value="mousePad">Tapis de souris</option>
-                  <option value="mug11oz">Mug blanc 11 oz</option>
-                  <option value="keychainRect">Porte-clés rectangle Unisub</option>
-                  <option value="keychainRound">Porte-clés rond Unisub</option>
-                  <option value="keychainHeart">Porte-clés Cœur Unisub</option>
+                  <option value="showcase" selected>Le Showroom 3D</option>
                   <option value="tshirt3D">T-shirt 3D</option>
+                  <option value="mug11oz">Mug blanc 11 oz</option>
+                  <option value="photoFrame">Poster A4</option>
+                  <option value="poster">Poster 80 × 60 cm</option>
+                  <option value="cushion">Housse de coussin</option>
                   <option value="cap">Casquette 3D</option>
-                  <option value="poster">Poster 80 × 60 cm (800 × 600 mm)</option>
-                  <option value="puzzle">Puzzle 120 pièces (280 × 195 × 2 mm)</option>
+                  <option value="mousePad">Tapis de souris</option>
+                  <option value="puzzle">Puzzle 120 pièces</option>
+                  <option value="pencilCase">Trousse</option>
                   <option value="coaster">Sous-verre carré</option>
                   <option value="coasterRound">Sous-verre rond</option>
-                  <option value="pencilCase">Trousse</option>
-                  <option value="cushion">Housse de coussin</option>
-                  <option value="eventWristband">Bracelet événementiel en tissu</option>
-                  <option value="arcadeCabinet">Borne d'Arcade (Multi-zones)</option>
+                  <option value="keychainRect">Porte-clés rectangle</option>
+                  <option value="keychainRound">Porte-clés rond</option>
+                  <option value="keychainHeart">Porte-clés Cœur</option>
+                  <option value="eventWristband">Bracelet événementiel</option>
+                  <option value="arcadeCabinet">Borne d'Arcade</option>
                 </select>
-                <small id="productDimensions">Taille L (Poitrine 280 à 350 mm)</small><br><div style="margin-top: 6px; font-size: 13px; font-weight: 600; color: #4ade80; background: #16202a; padding: 4px 8px; border-radius: 4px; display: inline-block;">Prix de vente TTC : <span id="productPrice">13,00 €</span></div>
+                <small id="productDimensions">Taille L (Poitrine 280 à 350 mm)</small><br><div id="productPriceContainer" style="margin-top: 6px; font-size: 13px; font-weight: 600; color: #c084fc; background: #16202a; padding: 4px 8px; border-radius: 4px; display: none;">Prix de vente TTC : <span id="productPrice">-- €</span></div>
               </label>
             </div>
             <label id="tshirtOrientationWrap" class="control" hidden><span>Impression T-shirt A4</span><select id="tshirtOrientation"><option value="portrait">Portrait 210 × 297 mm</option><option value="landscape">Paysage 297 × 210 mm</option></select></label>
@@ -252,11 +271,11 @@
             <span class="collapse-icon">▾</span>
           </button>
           <div class="section-content">
-            <p class="stock-note">Objets blancs uniquement.<br>Modification de couleur : <strong>non disponible pour le moment.</strong></p>
+            <p id="stockNote" class="stock-note">Objets blancs uniquement.<br>Modification de couleur : <strong>non disponible pour le moment.</strong></p>
             <div class="color-grid">
-              <label><input id="topColor" type="color" value="#ffffff"><span>Surface</span></label>
-              <label><input id="baseColor" type="color" value="#101318"><span>Base</span></label>
-              <label><input id="sceneColor" type="color" value="#e9edf0"><span>Fond</span></label>
+              <label id="topColorWrap"><input id="topColor" type="color" value="#ffffff"><span>Surface</span></label>
+              <label id="baseColorWrap"><input id="baseColor" type="color" value="#101318"><span>Base</span></label>
+              <label id="sceneColorWrap"><input id="sceneColor" type="color" value="#e9edf0"><span>Fond</span></label>
               <label id="handleColorWrap" hidden><input id="handleColor" type="color" value="#ffffff"><span>Anse</span></label>
               <label id="innerColorWrap" hidden><input id="innerColor" type="color" value="#ffffff"><span>Intérieur</span></label>
             </div>
@@ -294,7 +313,7 @@
               <button id="bgPresetPodium" class="secondary" type="button" style="background:#fff1f2; border-color:#fecdd3; color:#9f1239; font-weight:700; font-size:11px; padding:6px 4px;" title="Podium coloré studio pour le mug">Podium (Mug)</button>
               <button id="bgPresetMug" class="secondary" type="button" style="background:#f1f5f9; border-color:#cbd5e1; color:#334155; font-weight:600; font-size:11px; padding:6px 4px;" title="Cuisine moderne pour le mug">Cuisine (Mug)</button>
               <button id="bgPresetBureau" class="secondary" type="button" style="background:#eff6ff; border-color:#bfdbfe; color:#1e40af; font-weight:600; font-size:11px; padding:6px 4px;" title="Bureau moderne avec ordi pour le tapis de souris">Bureau (Tapis)</button>
-              <button id="bgPresetSalon" class="secondary" type="button" style="background:#f0fdf9; border-color:#a7f3d0; color:#065f46; font-weight:600; font-size:11px; padding:6px 4px;" title="Salon moderne pour la borne">Salon (Arcade)</button>
+              <button id="bgPresetSalon" class="secondary" type="button" style="background:#f5f3ff; border-color:#ddd6fe; color:#6d28d9; font-weight:600; font-size:11px; padding:6px 4px;" title="Salon moderne pour la borne">Salon (Arcade)</button>
             </div>
             <label class="control" id="bgOpacityControl" hidden><span>Opacité du fond <output id="bgOpacityValue">100 %</output></span><input id="bgOpacity" type="range" min="0" max="100" value="100"></label>
           </div>
@@ -311,12 +330,15 @@
             <label class="control"><span>Vitesse d’animation <output id="speedValue">1×</output></span><input id="speed" type="range" min="2" max="30" value="12"></label>
             <label class="rotation-mode"><span>Sens de rotation</span><select id="rotationMode"><option value="horizontal">Horizontal</option><option value="vertical">Vertical</option><option value="diagonal">Diagonal</option><option value="swing">Va-et-vient</option></select></label>
             <label class="option-check"><input id="reverse" type="checkbox"> Sens inverse</label>
-            <button id="resetViewSide" class="secondary" style="margin-top:10px;">Réinitialiser la vue</button>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
+              <button id="saveViewBtn" class="secondary" type="button" style="background:#f0f9ff; border-color:#bae6fd; color:#0369a1; font-weight:700;" title="Sauvegarder l'angle et le zoom actuels pour ce produit">💾 Sauvegarder vue</button>
+              <button id="resetViewSide" class="secondary" type="button">Réinitialiser vue</button>
+            </div>
           </div>
         </section>
       </aside>
 
-<section class="viewer-wrap"><button id="toggleLeftSidebar" class="panel-menu panel-menu-left" type="button" aria-label="Masquer le menu de gauche" aria-expanded="true" title="Menu de gauche">☰</button><button id="btnShowcaseTable" class="btn-showcase-floating" type="button" title="Retourner à la table de présentation de tous les produits">Table d'accueil</button><button id="saveViewBtn" class="btn-showcase-floating btn-save-view" type="button" title="Sauvegarder l'angle et le zoom actuels pour ce produit">Sauvegarder la vue</button>
+<section class="viewer-wrap"><button id="toggleLeftSidebar" class="panel-menu panel-menu-left" type="button" aria-label="Masquer le menu de gauche" aria-expanded="true" title="Menu de gauche">☰</button><button id="btnShowcaseTable" class="btn-showcase-floating" type="button" title="Retourner au Showroom 3D">Showroom 3D</button>
         <div id="viewer" aria-label="Aperçu 3D interactif"></div><div id="submissionMask" class="submission-mask" hidden><img src="/logo-graph2print.png" alt="Graph2Print"><strong>Préparation des fichiers</strong><span>Votre création sera envoyée à Graph2Print.</span></div>
         <svg id="transformOverlay" aria-label="Cadre d’ajustement du visuel" hidden>
           <polygon id="transformBox"></polygon>
@@ -369,7 +391,7 @@
                 <option value="Motifs">Motifs</option>
                 <option value="Logos">Logos</option>
               </select>
-              <button type="button" id="adminAddLibraryBtn" class="primary" style="padding:6px 12px; font-size:11px; background:#1caa88; width:auto; font-weight:700;">+ Ajouter un visuel</button>
+              <button type="button" id="adminAddLibraryBtn" class="primary" style="padding:6px 12px; font-size:11px; background:#8b5cf6; width:auto; font-weight:700;">+ Ajouter un visuel</button>
               <input id="adminLibraryInput" type="file" accept="image/png,image/jpeg,image/svg+xml" multiple style="display:none;" />
               <button type="button" id="closeExplorerBtn" class="close-explorer-btn" title="Fermer le catalogue" aria-label="Fermer">✕</button>
             </div>
@@ -385,6 +407,77 @@
           </div>
           <div id="catalogGrid" class="catalog-explorer-grid"></div>
         </aside>
+        <div id="shop2DOverlay" class="shop-2d-overlay" hidden>
+          <div class="shop-2d-dialog">
+            <header class="shop-2d-header">
+              <div class="shop-2d-title">
+                <h2>Boutique & Objets personnalisés</h2>
+                <small>Choisissez un objet pour le personnaliser instantanément en 3D</small>
+              </div>
+              <button type="button" id="closeShop2DBtn" class="shop-2d-close" aria-label="Fermer la boutique">✕</button>
+            </header>
+            <nav class="shop-2d-filters" aria-label="Catégories boutique">
+              <button type="button" class="shop-cat-btn active" data-shop-cat="all">Tous nos produits (16)</button>
+              <button type="button" class="shop-cat-btn" data-shop-cat="mode">Vêtements & Mode</button>
+              <button type="button" class="shop-cat-btn" data-shop-cat="deco">Maison & Déco</button>
+              <button type="button" class="shop-cat-btn" data-shop-cat="bureau">Bureau & Accessoires</button>
+              <button type="button" class="shop-cat-btn" data-shop-cat="jeux">Jeux & Événements</button>
+            </nav>
+            <div id="shop2DGrid" class="shop-2d-grid"></div>
+          </div>
+        </div>
+        <div id="businessCardModal" class="bcard-modal-overlay" hidden>
+          <div class="bcard-container">
+            <button type="button" id="closeBusinessCardBtn" class="bcard-close" aria-label="Fermer la carte de visite">✕</button>
+            <div class="bcard-card">
+              <div class="bcard-card-inner">
+                <div class="bcard-header">
+                  <div class="bcard-brand">
+                    <img src="/logo-graph2print.png" alt="Graph2Print" class="bcard-logo" />
+                    <div>
+                      <h2 class="bcard-name">GRAPH2PRINT</h2>
+                      <span class="bcard-sub">Atelier d'Impression Numérique & 3D</span>
+                    </div>
+                  </div>
+                  <span class="bcard-badge-entity">GPO SARL</span>
+                </div>
+                <div class="bcard-body">
+                  <p class="bcard-activity">Spécialiste de la personnalisation d'objets, textiles, décoration et bornes d'arcade sur mesure.</p>
+                  <div class="bcard-contact-grid">
+                    <a href="tel:0673540394" class="bcard-contact-item bcard-contact-call">
+                      <div>
+                        <small>Téléphone direct</small>
+                        <strong>06 73 54 03 94</strong>
+                      </div>
+                    </a>
+                    <a href="mailto:sarlgpo@gmail.com" class="bcard-contact-item">
+                      <div>
+                        <small>Adresse e-mail</small>
+                        <strong>sarlgpo@gmail.com</strong>
+                      </div>
+                    </a>
+                    <a href="https://www.graph2print.com" target="_blank" rel="noopener" class="bcard-contact-item">
+                      <div>
+                        <small>Site internet officiel</small>
+                        <strong>www.graph2print.com</strong>
+                      </div>
+                    </a>
+                    <div class="bcard-contact-item">
+                      <div>
+                        <small>Atelier & Expéditions</small>
+                        <strong>Livraison partout en France</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="bcard-footer">
+                  <a href="tel:0673540394" class="bcard-btn-action bcard-primary">Appeler</a>
+                  <a href="mailto:sarlgpo@gmail.com" class="bcard-btn-action bcard-secondary">Envoyer un e-mail</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
 

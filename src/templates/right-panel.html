@@ -4,11 +4,11 @@
             <span class="collapse-icon">▾</span>
           </button>
           <div class="section-content">
-            <p class="stock-note">Objets blancs uniquement.<br>Modification de couleur : <strong>non disponible pour le moment.</strong></p>
+            <p id="stockNote" class="stock-note">Objets blancs uniquement.<br>Modification de couleur : <strong>non disponible pour le moment.</strong></p>
             <div class="color-grid">
-              <label><input id="topColor" type="color" value="#ffffff"><span>Surface</span></label>
-              <label><input id="baseColor" type="color" value="#101318"><span>Base</span></label>
-              <label><input id="sceneColor" type="color" value="#e9edf0"><span>Fond</span></label>
+              <label id="topColorWrap"><input id="topColor" type="color" value="#ffffff"><span>Surface</span></label>
+              <label id="baseColorWrap"><input id="baseColor" type="color" value="#101318"><span>Base</span></label>
+              <label id="sceneColorWrap"><input id="sceneColor" type="color" value="#e9edf0"><span>Fond</span></label>
               <label id="handleColorWrap" hidden><input id="handleColor" type="color" value="#ffffff"><span>Anse</span></label>
               <label id="innerColorWrap" hidden><input id="innerColor" type="color" value="#ffffff"><span>Intérieur</span></label>
             </div>
@@ -46,7 +46,7 @@
               <button id="bgPresetPodium" class="secondary" type="button" style="background:#fff1f2; border-color:#fecdd3; color:#9f1239; font-weight:700; font-size:11px; padding:6px 4px;" title="Podium coloré studio pour le mug">Podium (Mug)</button>
               <button id="bgPresetMug" class="secondary" type="button" style="background:#f1f5f9; border-color:#cbd5e1; color:#334155; font-weight:600; font-size:11px; padding:6px 4px;" title="Cuisine moderne pour le mug">Cuisine (Mug)</button>
               <button id="bgPresetBureau" class="secondary" type="button" style="background:#eff6ff; border-color:#bfdbfe; color:#1e40af; font-weight:600; font-size:11px; padding:6px 4px;" title="Bureau moderne avec ordi pour le tapis de souris">Bureau (Tapis)</button>
-              <button id="bgPresetSalon" class="secondary" type="button" style="background:#f0fdf9; border-color:#a7f3d0; color:#065f46; font-weight:600; font-size:11px; padding:6px 4px;" title="Salon moderne pour la borne">Salon (Arcade)</button>
+              <button id="bgPresetSalon" class="secondary" type="button" style="background:#f5f3ff; border-color:#ddd6fe; color:#6d28d9; font-weight:600; font-size:11px; padding:6px 4px;" title="Salon moderne pour la borne">Salon (Arcade)</button>
             </div>
             <label class="control" id="bgOpacityControl" hidden><span>Opacité du fond <output id="bgOpacityValue">100 %</output></span><input id="bgOpacity" type="range" min="0" max="100" value="100"></label>
           </div>
@@ -63,7 +63,10 @@
             <label class="control"><span>Vitesse d’animation <output id="speedValue">1×</output></span><input id="speed" type="range" min="2" max="30" value="12"></label>
             <label class="rotation-mode"><span>Sens de rotation</span><select id="rotationMode"><option value="horizontal">Horizontal</option><option value="vertical">Vertical</option><option value="diagonal">Diagonal</option><option value="swing">Va-et-vient</option></select></label>
             <label class="option-check"><input id="reverse" type="checkbox"> Sens inverse</label>
-            <button id="resetViewSide" class="secondary" style="margin-top:10px;">Réinitialiser la vue</button>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
+              <button id="saveViewBtn" class="secondary" type="button" style="background:#f0f9ff; border-color:#bae6fd; color:#0369a1; font-weight:700;" title="Sauvegarder l'angle et le zoom actuels pour ce produit">💾 Sauvegarder vue</button>
+              <button id="resetViewSide" class="secondary" type="button">Réinitialiser vue</button>
+            </div>
           </div>
         </section>
       </aside>

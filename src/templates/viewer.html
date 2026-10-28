@@ -1,4 +1,4 @@
-<section class="viewer-wrap"><button id="toggleLeftSidebar" class="panel-menu panel-menu-left" type="button" aria-label="Masquer le menu de gauche" aria-expanded="true" title="Menu de gauche">☰</button><button id="btnShowcaseTable" class="btn-showcase-floating" type="button" title="Retourner à la table de présentation de tous les produits">Table d'accueil</button><button id="saveViewBtn" class="btn-showcase-floating btn-save-view" type="button" title="Sauvegarder l'angle et le zoom actuels pour ce produit">Sauvegarder la vue</button>
+<section class="viewer-wrap"><button id="toggleLeftSidebar" class="panel-menu panel-menu-left" type="button" aria-label="Masquer le menu de gauche" aria-expanded="true" title="Menu de gauche">☰</button><button id="btnShowcaseTable" class="btn-showcase-floating" type="button" title="Retourner au Showroom 3D">Showroom 3D</button>
         <div id="viewer" aria-label="Aperçu 3D interactif"></div><div id="submissionMask" class="submission-mask" hidden><img src="/logo-graph2print.png" alt="Graph2Print"><strong>Préparation des fichiers</strong><span>Votre création sera envoyée à Graph2Print.</span></div>
         <svg id="transformOverlay" aria-label="Cadre d’ajustement du visuel" hidden>
           <polygon id="transformBox"></polygon>
@@ -51,7 +51,7 @@
                 <option value="Motifs">Motifs</option>
                 <option value="Logos">Logos</option>
               </select>
-              <button type="button" id="adminAddLibraryBtn" class="primary" style="padding:6px 12px; font-size:11px; background:#1caa88; width:auto; font-weight:700;">+ Ajouter un visuel</button>
+              <button type="button" id="adminAddLibraryBtn" class="primary" style="padding:6px 12px; font-size:11px; background:#8b5cf6; width:auto; font-weight:700;">+ Ajouter un visuel</button>
               <input id="adminLibraryInput" type="file" accept="image/png,image/jpeg,image/svg+xml" multiple style="display:none;" />
               <button type="button" id="closeExplorerBtn" class="close-explorer-btn" title="Fermer le catalogue" aria-label="Fermer">✕</button>
             </div>
@@ -67,4 +67,75 @@
           </div>
           <div id="catalogGrid" class="catalog-explorer-grid"></div>
         </aside>
+        <div id="shop2DOverlay" class="shop-2d-overlay" hidden>
+          <div class="shop-2d-dialog">
+            <header class="shop-2d-header">
+              <div class="shop-2d-title">
+                <h2>Boutique & Objets personnalisés</h2>
+                <small>Choisissez un objet pour le personnaliser instantanément en 3D</small>
+              </div>
+              <button type="button" id="closeShop2DBtn" class="shop-2d-close" aria-label="Fermer la boutique">✕</button>
+            </header>
+            <nav class="shop-2d-filters" aria-label="Catégories boutique">
+              <button type="button" class="shop-cat-btn active" data-shop-cat="all">Tous nos produits (16)</button>
+              <button type="button" class="shop-cat-btn" data-shop-cat="mode">Vêtements & Mode</button>
+              <button type="button" class="shop-cat-btn" data-shop-cat="deco">Maison & Déco</button>
+              <button type="button" class="shop-cat-btn" data-shop-cat="bureau">Bureau & Accessoires</button>
+              <button type="button" class="shop-cat-btn" data-shop-cat="jeux">Jeux & Événements</button>
+            </nav>
+            <div id="shop2DGrid" class="shop-2d-grid"></div>
+          </div>
+        </div>
+        <div id="businessCardModal" class="bcard-modal-overlay" hidden>
+          <div class="bcard-container">
+            <button type="button" id="closeBusinessCardBtn" class="bcard-close" aria-label="Fermer la carte de visite">✕</button>
+            <div class="bcard-card">
+              <div class="bcard-card-inner">
+                <div class="bcard-header">
+                  <div class="bcard-brand">
+                    <img src="/logo-graph2print.png" alt="Graph2Print" class="bcard-logo" />
+                    <div>
+                      <h2 class="bcard-name">GRAPH2PRINT</h2>
+                      <span class="bcard-sub">Atelier d'Impression Numérique & 3D</span>
+                    </div>
+                  </div>
+                  <span class="bcard-badge-entity">GPO SARL</span>
+                </div>
+                <div class="bcard-body">
+                  <p class="bcard-activity">Spécialiste de la personnalisation d'objets, textiles, décoration et bornes d'arcade sur mesure.</p>
+                  <div class="bcard-contact-grid">
+                    <a href="tel:0673540394" class="bcard-contact-item bcard-contact-call">
+                      <div>
+                        <small>Téléphone direct</small>
+                        <strong>06 73 54 03 94</strong>
+                      </div>
+                    </a>
+                    <a href="mailto:sarlgpo@gmail.com" class="bcard-contact-item">
+                      <div>
+                        <small>Adresse e-mail</small>
+                        <strong>sarlgpo@gmail.com</strong>
+                      </div>
+                    </a>
+                    <a href="https://www.graph2print.com" target="_blank" rel="noopener" class="bcard-contact-item">
+                      <div>
+                        <small>Site internet officiel</small>
+                        <strong>www.graph2print.com</strong>
+                      </div>
+                    </a>
+                    <div class="bcard-contact-item">
+                      <div>
+                        <small>Atelier & Expéditions</small>
+                        <strong>Livraison partout en France</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="bcard-footer">
+                  <a href="tel:0673540394" class="bcard-btn-action bcard-primary">Appeler</a>
+                  <a href="mailto:sarlgpo@gmail.com" class="bcard-btn-action bcard-secondary">Envoyer un e-mail</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>

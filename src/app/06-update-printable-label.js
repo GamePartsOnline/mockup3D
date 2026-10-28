@@ -44,14 +44,12 @@ document.querySelector('#productSelect').onchange = e => {
   app.currentProductKey = e.target.value; app.scene.remove(app.product.group); app.product.group.traverse(child => child.geometry?.dispose());
   const definition = app.productDefinitions[app.currentProductKey]; app.product = definition.create(); app.scene.add(app.product.group);
   document.querySelector('#productDimensions').textContent = Array.isArray(definition.dimensions) ? `${definition.dimensions.join(' × ')} mm` : definition.dimensions;
-  document.querySelector('#productIcon').textContent = definition.icon || (app.currentProductKey === 'mousePad' ? '▰' : app.currentProductKey === 'mug11oz' ? '☕' : '👕');
   document.querySelector('#tshirtOrientationWrap').hidden = app.currentProductKey !== 'tshirt3D';
   document.querySelector('#loadTshirtExample').hidden = app.currentProductKey !== 'tshirt3D';
   if (app.currentProductKey === 'tshirt3D') document.querySelector('#tshirtOrientation').value = 'portrait';
   app.updatePrintableLabel();
 
   const priceMap = {
-    'showcase': 'Catalogue complet (6 € à 2290 €)',
     'mug11oz': '13,00 €',
     'mousePad': '10,00 €',
     'keychainRect': '6,00 €',
@@ -68,20 +66,39 @@ document.querySelector('#productSelect').onchange = e => {
     'arcadeCabinet': '2290,00 € (Décoration spécifique)',
     'eventWristband': '6,50 €'
   };
+  const priceContainer = document.querySelector('#productPriceContainer');
   const priceEl = document.querySelector('#productPrice');
-  if (priceEl) priceEl.textContent = priceMap[app.currentProductKey] || '-- €';
+  if (priceContainer) {
+    priceContainer.style.display = app.currentProductKey === 'showcase' ? 'none' : 'inline-block';
+    if (priceEl && app.currentProductKey !== 'showcase') priceEl.textContent = priceMap[app.currentProductKey] || '-- €';
+  }
 
   const isMug = app.currentProductKey === 'mug11oz';
   const isArcade = app.currentProductKey === 'arcadeCabinet';
   const isShowcase = app.currentProductKey === 'showcase';
+  if (app.controls) {
+    app.controls.enableRotate = !isShowcase;
+    app.controls.enablePan = !isShowcase;
+    app.controls.enableZoom = !isShowcase;
+  }
+  if (isShowcase && app.backgroundTexture) {
+    app.backgroundTexture.dispose();
+    app.backgroundTexture = null;
+    app.updateSceneBackground?.();
+  }
   const btnShowcase = document.querySelector('#btnShowcaseTable');
   if (btnShowcase) btnShowcase.style.display = isShowcase ? 'none' : 'inline-block';
-  const saveViewBtn = document.querySelector('#saveViewBtn');
-  if (saveViewBtn) saveViewBtn.style.left = isShowcase ? '66px' : '188px';
 
   document.querySelector('#handleColorWrap').hidden = !isMug;
   document.querySelector('#innerColorWrap').hidden = !isMug;
   document.querySelector('#quickPalette').hidden = !isMug;
+
+  const stockNote = document.querySelector('#stockNote');
+  if (stockNote) stockNote.style.display = (isArcade || isShowcase) ? 'none' : 'block';
+  const topColorWrap = document.querySelector('#topColorWrap');
+  if (topColorWrap) topColorWrap.style.display = (isArcade || isShowcase) ? 'none' : 'flex';
+  const baseColorWrap = document.querySelector('#baseColorWrap');
+  if (baseColorWrap) baseColorWrap.style.display = (isArcade || isShowcase || !app.product.hasBaseColor) ? 'none' : 'flex';
 
   const arcadeControlsWrap = document.querySelector('#arcadeControlsWrap');
   if (arcadeControlsWrap) arcadeControlsWrap.hidden = !isArcade;
@@ -89,15 +106,10 @@ document.querySelector('#productSelect').onchange = e => {
   if (arcadeGlowWrap) arcadeGlowWrap.hidden = !isArcade;
 
   document.querySelector('#baseColor').value = '#ffffff'; document.querySelector('#topColor').value = '#ffffff';
-  if (isMug) {
-    document.querySelector('#handleColor').value = '#ffffff';
-    document.querySelector('#innerColor').value = '#ffffff';
-  }
+  if (isMug) { document.querySelector('#handleColor').value = '#ffffff'; document.querySelector('#innerColor').value = '#ffffff'; }
   if (isArcade) {
-    if (document.querySelector('#j1Color')) document.querySelector('#j1Color').value = '#ff0000';
-    if (document.querySelector('#j2Color')) document.querySelector('#j2Color').value = '#0055ff';
-    if (document.querySelector('#b1Color')) document.querySelector('#b1Color').value = '#0055ff';
-    if (document.querySelector('#b2Color')) document.querySelector('#b2Color').value = '#ff0000';
+    ['#j1Color','#b2Color'].forEach(id => { const el = document.querySelector(id); if (el) el.value = '#ff0000'; });
+    ['#j2Color','#b1Color'].forEach(id => { const el = document.querySelector(id); if (el) el.value = '#0055ff'; });
     if (document.querySelector('#arcadeGlow')) document.querySelector('#arcadeGlow').checked = false;
   }
 

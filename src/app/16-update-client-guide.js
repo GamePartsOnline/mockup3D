@@ -15,13 +15,15 @@ app.updateClientGuide = function updateClientGuide() {
     'Vérifiez les faces, la position et le rendu. Confirmez quand votre création vous convient.',
     'Les fichiers PNG et la vidéo seront préparés puis envoyés à Graph2Print.'
   ];
-  document.querySelector('#clientGuideTitle').textContent = titles[step];
-  document.querySelector('#clientGuideText').textContent = instructions[step];
+  const titleEl = document.querySelector('#clientGuideTitle'); if (titleEl) titleEl.textContent = titles[step];
+  const textEl = document.querySelector('#clientGuideText'); if (textEl) textEl.textContent = instructions[step];
   document.querySelectorAll('[data-guide-step]').forEach(el => {
     const number = Number(el.dataset.guideStep);
     el.classList.toggle('active', number === step);
     el.classList.toggle('done', number < step);
   });
+  const fill = document.querySelector('#timelineProgressFill');
+  if (fill) fill.style.width = step === 1 ? '12%' : step === 2 ? '38%' : step === 3 ? '68%' : '100%';
   const action = document.querySelector('#clientGuideAction');
   action.hidden = step === 2 || (step === 1 && app.currentProductKey === 'showcase');
   action.textContent = step === 1 ? 'Choisir ce produit' : step === 3 ? 'Mon visuel est prêt' : 'Envoyer ma création';
@@ -36,6 +38,20 @@ document.querySelector('#clientGuideAction').addEventListener('click', () => {
   if (step === 3) app.clientDesignConfirmed = true;
   if (step === 4) document.querySelector('#submitCreation').click();
   app.updateClientGuide();
+});
+document.querySelectorAll('.timeline-step').forEach(stepEl => {
+  stepEl.addEventListener('click', () => {
+    const targetStep = Number(stepEl.dataset.guideStep);
+    const secMap = { 1: '#sectionProduct', 2: '#sectionImages', 3: '#adjustments', 4: '#sectionAppearance' };
+    const sec = document.querySelector(secMap[targetStep]);
+    if (sec && sec.classList.contains('collapsed')) {
+      sec.querySelector('.section-title-btn')?.click();
+    }
+    sec?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (targetStep === 1 && app.currentProductKey === 'showcase') {
+      app.openShop2D?.();
+    }
+  });
 });
 app.updateClientGuide();
 document.querySelector('#loadTshirtExample').addEventListener('click', async () => {

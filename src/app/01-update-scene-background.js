@@ -43,7 +43,8 @@ app.updateSceneBackground = function updateSceneBackground() {
       const wmCtx = app._wmCanvas.getContext("2d");
       wmCtx.drawImage(app.watermarkImg, 0, 0);
       wmCtx.globalCompositeOperation = "source-in";
-      wmCtx.fillStyle = "#425260";
+      const isDark = typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'dark';
+      wmCtx.fillStyle = isDark ? "#060608" : "#425260";
       wmCtx.fillRect(0, 0, app._wmCanvas.width, app._wmCanvas.height);
     }
 
@@ -99,7 +100,7 @@ if (clientLink) {
   clientLink.textContent = app.clientMode ? 'Retour Atelier (Admin)' : 'Interface Client';
   if (app.clientMode && !isLocal) clientLink.style.display = 'none';
 }
-document.querySelector('#modeLabel').textContent = app.clientMode ? 'ESPACE CLIENT' : 'ATELIER PROPRIÉTAIRE';
+document.querySelector('#modeLabel').textContent = app.clientMode ? 'Espace Client' : 'Atelier de création';
 if (app.clientMode) {
   for (const id of ['topColor','baseColor']) {
     const input = document.getElementById(id);
@@ -114,15 +115,25 @@ if (app.clientMode) { app.watermarkControl.checked = true; app.watermarkControl.
 const savedTheme = localStorage.getItem('mockup3d_theme') || 'light';
 const applyTheme = theme => {
   document.documentElement.setAttribute('data-theme', theme);
+  app._wmCanvas = null;
   const btn = document.querySelector('#themeToggle');
   if (btn) btn.textContent = theme === 'dark' ? 'Mode Jour' : 'Mode Nuit';
   localStorage.setItem('mockup3d_theme', theme);
   if (!app.bgImageObj) {
     const sceneColorInput = document.querySelector('#sceneColor');
     if (sceneColorInput) {
-      sceneColorInput.value = theme === 'dark' ? '#0f141a' : '#e9edf0';
+      sceneColorInput.value = theme === 'dark' ? '#000000' : '#e9edf0';
       app.updateSceneBackground();
     }
+  }
+  if (app.floor?.material) {
+    app.floor.material.color.set(theme === 'dark' ? 0x000000 : 0x55616b);
+    app.floor.material.needsUpdate = true;
+  }
+  const sf = app.scene?.getObjectByName('studioFloor');
+  if (sf?.material) {
+    sf.material.color.set(theme === 'dark' ? 0x000000 : 0xdde3ea);
+    sf.material.needsUpdate = true;
   }
 };
 applyTheme(savedTheme);

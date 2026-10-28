@@ -58,8 +58,8 @@ html[data-theme="dark"] #arcadeControlsWrap {
 }
 
 html[data-theme="dark"] .image-item.active {
-  background: #0f2926 !important;
-  border-color: #10b981 !important;
+  background: #25133d !important;
+  border-color: #8b5cf6 !important;
 }
 
 html[data-theme="dark"] .image-item-name,
@@ -88,14 +88,14 @@ html[data-theme="dark"] .actions label {
 }
 
 html[data-theme="dark"] .layer-header {
-  background: #0f2926 !important;
-  color: #34d399 !important;
-  border: 1px solid #059669 !important;
+  background: #25133d !important;
+  color: #c084fc !important;
+  border: 1px solid #7c3aed !important;
 }
 
 html[data-theme="dark"] .product-icon {
   background: #243040 !important;
-  color: #6ee7b7 !important;
+  color: #c084fc !important;
 }
 
 html[data-theme="dark"] .segmented button {
@@ -103,7 +103,7 @@ html[data-theme="dark"] .segmented button {
 }
 
 html[data-theme="dark"] .segmented button.active {
-  background: #0d9488 !important;
+  background: #7c3aed !important;
   color: #ffffff !important;
   font-weight: 700 !important;
 }
@@ -129,7 +129,7 @@ html[data-theme="dark"] .actions .angles button:hover {
 }
 
 html[data-theme="dark"] .viewer-wrap {
-  background: #0d1217 !important;
+  background: #000000 !important;
 }
 
 html[data-theme="dark"] .viewer-tools button,
@@ -166,4 +166,32 @@ html[data-theme="dark"] .wrap-preview-header {
 html[data-theme="dark"] .drag-hint {
   background: rgba(20, 28, 38, 0.9) !important;
   color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .timeline-track {
+  background: #334155 !important;
+}
+html[data-theme="dark"] .step-bubble {
+  background: #1e293b !important;
+  border-color: #475569 !important;
+  color: #94a3b8 !important;
+}
+html[data-theme="dark"] .step-label {
+  color: #94a3b8 !important;
+}
+html[data-theme="dark"] .timeline-step.active .step-bubble {
+  background: #8b5cf6 !important;
+  border-color: #a78bfa !important;
+  color: #ffffff !important;
+}
+html[data-theme="dark"] .timeline-step.active .step-label {
+  color: #c084fc !important;
+}
+html[data-theme="dark"] .timeline-step.done .step-bubble {
+  background: #3b0764 !important;
+  border-color: #7c3aed !important;
+  color: #c084fc !important;
+}
+html[data-theme="dark"] .timeline-step.done .step-label {
+  color: #c084fc !important;
 }

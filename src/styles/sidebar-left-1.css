@@ -75,14 +75,14 @@
 }
 
 .image-item:hover {
-  background: #f0f7f5;
-  border-color: #a8dfd2;
+  background: #faf5ff;
+  border-color: #ddd6fe;
 }
 
 .image-item.active {
-  background: #edf7f4;
-  border-color: #18a985;
-  box-shadow: 0 0 0 1px #18a985;
+  background: #f5f3ff;
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 1px #8b5cf6;
 }
 
 .image-item-thumb {
@@ -136,8 +136,9 @@
 .layer-header {
   font-size: 12px;
   font-weight: 700;
-  color: #18a985;
-  background: #edf7f4;
+  color: #6d28d9;
+  background: #f5f3ff;
+  border: 1px solid #ddd6fe;
   border-radius: 6px;
   padding: 6px 10px;
   margin-bottom: 12px;

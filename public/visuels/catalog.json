@@ -1,5 +1,29 @@
 [
   {
+    "id": "pending-1793176512829-0o1h",
+    "name": "57d2.342051_4000",
+    "url": "/visuels/57d2-342051_4000-mvruzwhl.jpg",
+    "category": "Illustrations",
+    "repeatPattern": false,
+    "status": "pending"
+  },
+  {
+    "id": "pending-1793173527840-6wjp",
+    "name": "Baleine Abyssale & Plongeur",
+    "url": "/visuels/2fb0-356160_ori_2000-mvrt7x95.jpg",
+    "category": "Animaux & Art",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
+    "id": "pending-1793173729376-9o4m",
+    "name": "Callisto Arts Vol. 1",
+    "url": "/visuels/fc7a2fd776c2481aa4e889fcde4ea714-mvrtc8rj.jpg",
+    "category": "Animaux & Art",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
     "id": "visuel-1793114254019-oawk",
     "name": "Cerf Polygonal (Art)",
     "url": "/visuels/JPG-mvqtxhcx.jpg",
@@ -8,8 +32,72 @@
     "status": "approved"
   },
   {
+    "id": "pending-1793173729182-a43f",
+    "name": "Grand Requin Blanc",
+    "url": "/visuels/806e-301826-mvrtc8m4.jpg",
+    "category": "Animaux & Art",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
+    "id": "pending-1793173528169-bs1o",
+    "name": "Lémurien en Plein Vol",
+    "url": "/visuels/6ca3-359230-1-mvrt7xie.jpg",
+    "category": "Animaux & Art",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
+    "id": "pending-1793173729269-8b7s",
+    "name": "Mygale Rouge Sang",
+    "url": "/visuels/b2c6-287706_2000-mvrtc8oj.jpg",
+    "category": "Animaux & Art",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
+    "id": "pending-1793173728353-soba",
+    "name": "Œil de Félin & Tour Eiffel",
+    "url": "/visuels/139d-pl187446_2000-mvrtc7z1.jpg",
+    "category": "Animaux & Art",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
+    "id": "pending-1793173729359-tm7i",
+    "name": "Panda dans la Forêt d'Émeraudes",
+    "url": "/visuels/f750-292269-mvrtc8r2.jpg",
+    "category": "Animaux & Art",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
+    "id": "pending-1793173729335-fplq",
+    "name": "Poissons Tropicaux Coraux",
+    "url": "/visuels/e0c2-132516-mvrtc8qd.jpg",
+    "category": "Animaux & Art",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
+    "id": "pending-1793173728141-nen6",
+    "name": "Shadow Party Space Mission",
+    "url": "/visuels/010d-307657-mvrtc7t7.jpg",
+    "category": "Animaux & Art",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
+    "id": "pending-1793173728264-gutk",
+    "name": "Souris au Clair de Lune",
+    "url": "/visuels/57d2-342051_4000-mvrtc7wh.jpg",
+    "category": "Animaux & Art",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
     "id": "visuel-1793114254031-b0yj",
-    "name": "Valentine pig 2",
+    "name": "Valentine Pig",
     "url": "/visuels/Valentine-pig-2-mvqtxhcp.png",
     "category": "Animaux & Art",
     "repeatPattern": false,
@@ -17,7 +105,7 @@
   },
   {
     "id": "visuel-1793117214065-gc4g",
-    "name": "Flower mug (1)",
+    "name": "Floral Pastel (1)",
     "url": "/visuels/Flower-mug-1-mvqvoxgy.png",
     "category": "Fleurs",
     "repeatPattern": false,
@@ -25,7 +113,7 @@
   },
   {
     "id": "visuel-1793117214076-j8d4",
-    "name": "Flower mug (2)",
+    "name": "Floral Pastel (2)",
     "url": "/visuels/Flower-mug-2-mvqvoxgu.png",
     "category": "Fleurs",
     "repeatPattern": false,
@@ -33,7 +121,7 @@
   },
   {
     "id": "visuel-1793117214087-050z",
-    "name": "Flower mug (3)",
+    "name": "Floral Pastel (3)",
     "url": "/visuels/Flower-mug-3-mvqvoxgr.png",
     "category": "Fleurs",
     "repeatPattern": false,
@@ -41,7 +129,7 @@
   },
   {
     "id": "visuel-1793117214096-gmkb",
-    "name": "Flower mug (4)",
+    "name": "Floral Pastel (4)",
     "url": "/visuels/Flower-mug-4-mvqvoxgn.png",
     "category": "Fleurs",
     "repeatPattern": false,
@@ -49,7 +137,7 @@
   },
   {
     "id": "visuel-1793117214107-n0xh",
-    "name": "Flower mug (5)",
+    "name": "Floral Pastel (5)",
     "url": "/visuels/Flower-mug-5-mvqvoxgh.png",
     "category": "Fleurs",
     "repeatPattern": false,
@@ -57,15 +145,87 @@
   },
   {
     "id": "visuel-1793117214114-6lvo",
-    "name": "Flower mug (6)",
+    "name": "Floral Pastel (6)",
     "url": "/visuels/Flower-mug-6-mvqvoxgc.png",
     "category": "Fleurs",
     "repeatPattern": false,
     "status": "approved"
   },
   {
+    "id": "pending-1793173729314-lg57",
+    "name": "Between Dream and Reality",
+    "url": "/visuels/d55f-332511-mvrtc8pt.jpg",
+    "category": "Illustrations",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
+    "id": "pending-1793173729288-n4ys",
+    "name": "Callisto & Bus Error Prod",
+    "url": "/visuels/Callisto-and-bus-error-prod-mvrtc8p2.jpg",
+    "category": "Illustrations",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
+    "id": "pending-1793173729251-odbi",
+    "name": "Cité Futuriste & Silhouette",
+    "url": "/visuels/7398-316044-mvrtc8o0.png",
+    "category": "Illustrations",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
+    "id": "pending-1793173728180-lq0x",
+    "name": "Cyber City Baie Spatiale",
+    "url": "/visuels/10f4-335214_4000-mvrtc7u9.jpg",
+    "category": "Illustrations",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
+    "id": "pending-1793173729197-ik9h",
+    "name": "Épave & Sirène Callisto",
+    "url": "/visuels/2492-264277-mvrtc8mk.jpg",
+    "category": "Illustrations",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
+    "id": "pending-1793173729392-j82o",
+    "name": "Inercia - Remorquage Planeur",
+    "url": "/visuels/ff62-371716-mvrtc8rz.jpg",
+    "category": "Illustrations",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
+    "id": "pending-1793173728305-im5l",
+    "name": "Nuit Japonaise & Papillons",
+    "url": "/visuels/91ca-325483-mvrtc7xq.jpg",
+    "category": "Illustrations",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
+    "id": "pending-1793173729413-t8fa",
+    "name": "Resolution Demoscene",
+    "url": "/visuels/Re_soul_tion-1920x1080-mvrtc8sj.jpg",
+    "category": "Illustrations",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
+    "id": "pending-1793173728200-mqpo",
+    "name": "Fée & Licornes Ailées",
+    "url": "/visuels/25aa-264370-mvrtc7uu.jpg",
+    "category": "Licornes",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
     "id": "visuel-1793114488723-r26f",
-    "name": "UNICORN MUG  (3)",
+    "name": "Licorne Magique (3)",
     "url": "/visuels/UNICORN-MUG-3-mvqu2iln.png",
     "category": "Licornes",
     "repeatPattern": false,
@@ -73,7 +233,7 @@
   },
   {
     "id": "visuel-1793114488734-34sl",
-    "name": "UNICORN MUG  (4)",
+    "name": "Licorne Magique (4)",
     "url": "/visuels/UNICORN-MUG-4-mvqu2ilj.png",
     "category": "Licornes",
     "repeatPattern": false,
@@ -81,7 +241,7 @@
   },
   {
     "id": "visuel-1793114488742-o5n6",
-    "name": "UNICORN MUG  (5)",
+    "name": "Licorne Magique (5)",
     "url": "/visuels/UNICORN-MUG-5-mvqu2ild.png",
     "category": "Licornes",
     "repeatPattern": false,
@@ -89,7 +249,7 @@
   },
   {
     "id": "visuel-1793114488752-003k",
-    "name": "UNICORN MUG  (6)",
+    "name": "Licorne Magique (6)",
     "url": "/visuels/UNICORN-MUG-6-mvqu2il7.png",
     "category": "Licornes",
     "repeatPattern": false,
@@ -97,7 +257,7 @@
   },
   {
     "id": "visuel-1793114488760-ahfn",
-    "name": "UNICORN MUG  (8)",
+    "name": "Licorne Magique (8)",
     "url": "/visuels/UNICORN-MUG-8-mvqu2il3.png",
     "category": "Licornes",
     "repeatPattern": false,
@@ -105,9 +265,17 @@
   },
   {
     "id": "visuel-1793114488768-y6eb",
-    "name": "UNICORN MUG  (9)",
+    "name": "Licorne Magique (9)",
     "url": "/visuels/UNICORN-MUG-9-mvqu2iks.png",
     "category": "Licornes",
+    "repeatPattern": false,
+    "status": "approved"
+  },
+  {
+    "id": "visuel-1793173123569-6lci",
+    "name": "Logo Graph2Print",
+    "url": "/visuels/logo-Graph-2-print-mvrsz9bs.png",
+    "category": "Logos",
     "repeatPattern": false,
     "status": "approved"
   }

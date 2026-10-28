@@ -81,7 +81,7 @@ app.clearSavedView = () => {
   } catch {}
 };
 app.homeView = (ignoreSaved = false) => {
-  if (!ignoreSaved) {
+  if (!ignoreSaved && app.currentProductKey !== 'showcase') {
     try {
       const saved = JSON.parse(localStorage.getItem('mockup3d_saved_views') || '{}')[app.currentProductKey];
       if (saved?.pos && saved?.target) {
@@ -93,8 +93,9 @@ app.homeView = (ignoreSaved = false) => {
     } catch {}
   }
   if (app.currentProductKey === 'showcase') {
-    app.camera.position.set(-0.55, 2.75, 5.35);
-    app.controls.target.set(-0.55, 0.30, -0.05);
+    // Vue plongeante dezoomee d un cran supplementaire englobant confortablement la scene
+    app.camera.position.set(0.10, 6.00, 5.35);
+    app.controls.target.set(0.10, 0.15, -0.10);
   } else if (app.currentProductKey === 'cap') {
     app.camera.position.set(0.3, 1.35, 2.75);
     app.controls.target.set(0, 0.48, 0.05);

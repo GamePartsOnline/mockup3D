@@ -45,10 +45,8 @@ export const coasterProduct = {
     uv.needsUpdate = true;
 
     // Glossy finish for the print
-    const topMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xffffff, roughness: 0.15, metalness: 0,
-      clearcoat: 0.5, clearcoatRoughness: 0.2,
-      polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1
+    const topMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffffff, roughness: 0.22, metalness: 0.02
     });
 
     const top = new THREE.Mesh(topGeo, topMaterial);

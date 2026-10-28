@@ -37,10 +37,10 @@ export function initialize(app) {
     app.showToast('Texte effacé');
   });
 
-  // Menu Affichage & Table d'accueil
+  // Menu Affichage & Showroom 3D
   const goShowcase = () => {
     app.switchToProduct('showcase');
-    app.showToast("Table d'accueil affichée : cliquez sur un objet");
+    app.showToast("Showroom 3D : cliquez sur un objet pour le personnaliser");
   };
   document.querySelector('#menuViewShowcase')?.addEventListener('click', goShowcase);
   document.querySelector('#btnShowcaseTable')?.addEventListener('click', goShowcase);
@@ -58,22 +58,13 @@ export function initialize(app) {
     document.querySelector('#viewFaceB')?.click();
   });
 
-  // Fond d'accueil et visuel sauvegardé (ou photo d'art par défaut) chargés automatiquement au démarrage
-  app.setBackgroundImageFromUrl?.('/background-salon.jpg?v=4');
-  let startupVis = { url: '/visuels/JPG-mvqtxhcx.jpg', name: 'Cerf Polygonal (Art)', fitMode: 'cover', scale: 1 };
-  try {
-    const saved = JSON.parse(localStorage.getItem('mockup3d_saved_views') || '{}')._savedVisual;
-    if (saved?.url) startupVis = saved;
-  } catch {}
+  // Image de test par défaut chargée automatiquement au démarrage : Logo Graph2Print
+  const startupVis = { url: '/logo-graph2print.png', name: 'Logo Graph2Print', fitMode: 'contain', scale: 0.85 };
   app.addImageFromUrl?.(startupVis.url, startupVis.name, {
-    fitMode: startupVis.fitMode || 'cover',
-    scale: startupVis.scale || 1,
-    repeatPattern: !!startupVis.repeatPattern,
+    fitMode: startupVis.fitMode,
+    scale: startupVis.scale,
+    repeatPattern: false,
     silent: true
-  }).then(ok => {
-    if (!ok && startupVis.url !== '/logo-graph2print.png') {
-      app.addImageFromUrl?.('/logo-graph2print.png', 'Exemple Graph2Print', { fitMode: 'contain', scale: 0.85, silent: true });
-    }
   });
   document.querySelector('#menuViewGrid')?.addEventListener('click', () => {
     const cb = document.querySelector('#showGrid');
@@ -165,7 +156,7 @@ export function initialize(app) {
     const wrapper = findShowcaseWrapper(e);
     if (wrapper?.userData?.isBusinessCard) {
       resetHoveredWrapper();
-      app.showToast('Contact : www.graph2print.com / Tél 06.73.54.03.94 - GPO SARL');
+      app.openBusinessCardModal?.();
       return;
     }
     if (wrapper?.userData?.showcaseProductKey) {
