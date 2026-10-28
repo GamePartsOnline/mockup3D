@@ -16,7 +16,9 @@ app.renderImagesList = function renderImagesList() {
 
     const info = document.createElement('div');
     info.className = 'image-item-info';
-    info.innerHTML = `<span class="image-item-name">${item.name}</span><small class="image-item-meta">Calque #${index + 1} • ${Math.round(item.scale * 100)}%</small>`;
+    const res = app.getImageResolutionInfo?.(item);
+    const metaText = res ? `${res.width}×${res.height} px • <span style="color:${res.color}; font-weight:700;">${res.dpi} DPI</span>` : `${Math.round(item.scale * 100)}%`;
+    info.innerHTML = `<span class="image-item-name">${item.name}</span><small class="image-item-meta">Calque #${index + 1} • ${metaText}</small>`;
     const sideSelect = document.createElement('select');
     sideSelect.className = 'layer-side-select';
     if (app.product.zones) {

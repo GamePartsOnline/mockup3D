@@ -63,8 +63,8 @@ export const keychainRoundProduct = {
     // On le pose sur le sol
     baseGeo.translate(0, r + bevelThickness, 0);
 
-    const printMaterial = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.15, metalness: 0, clearcoat: 0.6, clearcoatRoughness: 0.2 });
-    const sideMaterial = new THREE.MeshPhysicalMaterial({ color: 0xf0f0f0, roughness: 0.3, metalness: 0, clearcoat: 0.3 });
+    const printMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.45, metalness: 0.0 });
+    const sideMaterial = new THREE.MeshStandardMaterial({ color: 0xf0f0f0, roughness: 0.6 });
 
     const mesh = new THREE.Mesh(baseGeo, [printMaterial, sideMaterial]);
     mesh.castShadow = true;

@@ -17,6 +17,7 @@ export function register(app) {
       if (saved.email) document.querySelector('#orderEmail').value = saved.email;
       if (saved.telephone) document.querySelector('#orderTelephone').value = saved.telephone;
     } catch {}
+    app.updateOrderResolutionNotice?.();
     modal.hidden = false;
     setTimeout(() => document.querySelector('#orderNom')?.focus(), 50);
   };

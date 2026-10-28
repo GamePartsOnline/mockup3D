@@ -48,11 +48,17 @@
           <div id="productPriceContainer"><span id="productPrice"></span></div>
           <label id="tshirtOrientationWrap"><select id="tshirtOrientation"><option value="portrait">Portrait</option><option value="landscape">Paysage</option></select></label>
         </div>
-        <div id="activeProductBanner" style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:8px 12px; border-radius:8px; margin-bottom:12px; border:1px solid #e2e8f0;">
-          <div><small style="color:#64748b; font-size:10px; font-weight:700; text-transform:uppercase;">Objet sélectionné</small><strong id="activeProductName" style="display:block; font-size:13px; color:#0f172a;">Le Showroom 3D</strong></div>
-          <button type="button" id="btnChangeProductShop" class="cat-btn-sm" style="background:#8b5cf6; color:#fff; font-weight:700; padding:5px 10px;">Changer</button>
+        <div id="activeProductBanner" class="active-product-banner">
+          <div class="active-product-meta">
+            <small class="active-product-subtitle">Objet en cours de personnalisation</small>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <strong id="activeProductName" class="active-product-name">Le Showroom 3D</strong>
+              <span id="activeProductPriceBadge" class="active-product-price-badge" style="display:none;"></span>
+            </div>
+          </div>
+          <button type="button" id="btnChangeProductShop" class="cat-btn-sm btn-change-product" title="Changer d'objet dans la Boutique 2D">Changer d'objet</button>
         </div>
-        <section id="sectionImages" class="collapsible-section" data-section="2">
+        <section id="sectionImages" class="collapsible-section" data-section="1">
           <button type="button" class="section-title-btn" aria-expanded="true">
             <div class="section-title"><span>1</span><h2>Vos visuels</h2></div>
             <span class="collapse-icon">▾</span>
@@ -73,19 +79,32 @@
             <button id="loadTshirtExample" class="secondary" type="button" hidden>Voir un exemple sur le T-shirt</button><div id="imagesList" class="images-list"></div>
           </div>
         </section>
-        <section id="adjustments" class="collapsible-section disabled" data-section="3">
+        <section id="adjustments" class="collapsible-section disabled" data-section="2">
           <button type="button" class="section-title-btn" aria-expanded="true">
-            <div class="section-title"><span>3</span><h2>Ajuster</h2></div>
+            <div class="section-title"><span>2</span><h2>Ajuster</h2></div>
             <span class="collapse-icon">▾</span>
           </button>
           <div class="section-content">
             <div class="layer-header" id="activeImageLabel">Aucune image active</div>
+            <div id="imageResolutionBadge" style="margin:6px 0 8px; padding:6px 10px; border-radius:6px; font-size:11px; display:none; align-items:center; justify-content:space-between; gap:6px;"></div>
             <div class="segmented" role="group" aria-label="Mode d’ajustement">
               <button class="active" data-fit="contain">Image entière</button><button data-fit="cover">Remplir la surface</button><button data-fit="fill">Plein wrap (Étirer)</button>
             </div>
             <label class="frame-option"><input id="showTransformFrame" type="checkbox" checked> Cadre d'ajustement direct (Drag & Drop)</label>
-            <div style="font-size:11px; color:#6d28d9; background:#f5f3ff; border:1px solid #ddd6fe; border-radius:6px; padding:6px 10px; margin:4px 0 8px;">Glissez-déplacez votre visuel directement à la souris sur l'objet.</div>
-            <label class="frame-option"><input id="showWatermark" type="checkbox"> Filigrane sous le visuel (en fond)</label>
+            <div class="drag-hint-box" style="font-size:11px; color:#6d28d9; background:#f5f3ff; border:1px solid #ddd6fe; border-radius:6px; padding:6px 10px; margin:4px 0 8px;">Glissez-déplacez votre visuel directement à la souris sur l'objet.</div>
+            <div class="watermark-config-row" style="margin:8px 0; padding:8px 10px; background:rgba(0,0,0,0.02); border:1px solid #e2e8f0; border-radius:6px;">
+              <label class="frame-option" style="margin:0 0 6px 0; font-weight:600;">
+                <input id="showWatermark" type="checkbox" checked> Filigrane & signature
+              </label>
+              <div id="watermarkStyleWrap" style="display:flex; align-items:center; justify-content:space-between; gap:6px; font-size:11px; color:#64748b;">
+                <span>Style :</span>
+                <select id="watermarkStyle" class="custom-select" style="padding:3px 8px; font-size:11px; border-radius:4px; border:1px solid #cbd5e1; background:#fff; color:#1e293b;">
+                  <option value="both" selected>Réduit + Tag discret</option>
+                  <option value="reduced">Filigrane réduit seul</option>
+                  <option value="tag">Tag discret seul</option>
+                </select>
+              </div>
+            </div>
             <label class="frame-option"><input id="repeatPattern" type="checkbox"> Répéter en motif (Mosaïque)</label>
             <div id="repeatCountControl" hidden>
               <label class="control" style="margin:6px 0 10px;"><span>Densité du motif <output id="repeatCountValue">3 × 3</output></span><input id="repeatCount" type="range" min="2" max="8" value="3" /></label>
@@ -102,9 +121,9 @@
             <button id="resetImage" class="text-button">Réinitialiser l'image active</button>
           </div>
         </section>
-        <section id="textSection" class="collapsible-section" data-section="4">
+        <section id="textSection" class="collapsible-section" data-section="3">
           <button type="button" class="section-title-btn" aria-expanded="true">
-            <div class="section-title"><span>4</span><h2>Texte personnalisé</h2></div>
+            <div class="section-title"><span>3</span><h2>Texte personnalisé</h2></div>
             <span class="collapse-icon">▾</span>
           </button>
           <div class="section-content">

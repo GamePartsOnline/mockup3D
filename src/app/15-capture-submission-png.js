@@ -113,10 +113,22 @@ app.executeSubmission = async function executeSubmission(clientData) {
       if (video?.size) files.push({ name: 'animation-' + key + '.mp4', type: 'video/mp4', data: await app.blobToDataUrl(video) });
     } catch {}
 
+    const imagesInfo = (app.imagesList || []).map(item => {
+      const info = app.getImageResolutionInfo?.(item);
+      return {
+        name: item.name,
+        width: info?.width || item.img?.naturalWidth || 0,
+        height: info?.height || item.img?.naturalHeight || 0,
+        dpi: info?.dpi || 0,
+        quality: info?.qualityLabel || 'Standard',
+        status: info?.status || 'unknown'
+      };
+    });
+
     const response = await fetch('/api/submissions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ product: app.productDefinitions?.[key]?.name || key, files, client: clientData })
+      body: JSON.stringify({ product: app.productDefinitions?.[key]?.name || key, files, client: clientData, imagesInfo })
     });
     const result = await response.json();
     if (!response.ok || !result.ok) throw new Error(result.error || "L'envoi a échoué.");

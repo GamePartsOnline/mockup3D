@@ -126,6 +126,8 @@ const applyTheme = theme => {
   app._wmCanvas = null;
   const btn = document.querySelector('#themeToggle');
   if (btn) btn.textContent = theme === 'dark' ? 'Mode Jour' : 'Mode Nuit';
+  const clientBtn = document.querySelector('#clientThemeToggle');
+  if (clientBtn) clientBtn.textContent = theme === 'dark' ? 'Mode Jour' : 'Mode Nuit';
   localStorage.setItem('mockup3d_theme', theme);
   if (!app.bgImageObj) {
     const sceneColorInput = document.querySelector('#sceneColor');
@@ -138,6 +140,14 @@ const applyTheme = theme => {
   app.updateSceneBackground();
 };
 applyTheme(savedTheme);
+const clientThemeBtn = document.querySelector('#clientThemeToggle');
+if (clientThemeBtn) {
+  if (app.clientMode) clientThemeBtn.style.display = 'inline-flex';
+  clientThemeBtn.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  });
+}
 document.querySelector('#themeToggle')?.addEventListener('click', () => {
   const current = document.documentElement.getAttribute('data-theme') || 'light';
   applyTheme(current === 'dark' ? 'light' : 'dark');

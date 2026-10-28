@@ -7,8 +7,8 @@ app.imageLocalCorners = function imageLocalCorners() {
   const isTshirt = app.currentProductKey.startsWith('tshirt');
   const isKeychain = app.currentProductKey.startsWith('keychain');
   const sr = app.product.printAspect || 1.2;
-  const meshW = app.product.meshWidth || (isTshirt ? 1.45 : isKeychain ? 1.2 : 2.4);
-  const meshH = app.product.meshHeight || (isTshirt ? 1.85 : isKeychain ? 1.2 / sr : 2.0);
+  const meshW = app.product.meshWidth || (isTshirt ? 1.45 : isKeychain ? 1.2 : app.currentProductKey === 'poster' ? 1.44 : app.currentProductKey === 'photoFrame' ? 0.70 : 2.4);
+  const meshH = app.product.meshHeight || (isTshirt ? 1.85 : isKeychain ? 1.2 / sr : app.currentProductKey === 'poster' ? 1.08 : app.currentProductKey === 'photoFrame' ? 0.99 : 2.0);
 
   let w, h;
   if ((active.fitMode === 'contain') === (ir > sr)) {
@@ -25,27 +25,43 @@ app.imageLocalCorners = function imageLocalCorners() {
   const cx = active.x * (meshW / 2);
   const cy = active.y * (meshH / 2);
   const a = app.THREE.MathUtils.degToRad(active.rotation), c = Math.cos(a), s = Math.sin(a);
-  return [[-w/2,-h/2],[w/2,-h/2],[w/2,h/2],[-w/2,h/2]].map(([x,y]) => [cx+x*c-y*s, cy+x*s+y*c]);
+  return [[-w/2, h/2], [w/2, h/2], [w/2, -h/2], [-w/2, -h/2]].map(([x,y]) => [cx+x*c-y*s, cy+x*s+y*c]);
 };
 
 app.projectPoint = function projectPoint([x, y]) {
   let p;
   const active = app.getActiveImage();
   const side = active?.side || 'A';
-  if (app.currentProductKey.startsWith('keychain')) {
+  const key = app.currentProductKey;
+
+  if (key.startsWith('keychain')) {
     const yOffsets = { keychainHeart: 0.45, keychainRound: 0.32, keychainRect: 0.29 };
-    const yOff = yOffsets[app.currentProductKey] || 0.32;
+    const yOff = yOffsets[key] || 0.32;
     const z = side === 'B' ? -0.015 : 0.015;
     const xPos = side === 'B' ? -x : x;
     p = new app.THREE.Vector3(xPos, y + yOff, z).project(app.camera);
-  } else if (app.currentProductKey.startsWith('tshirt')) {
+  } else if (key.startsWith('tshirt')) {
     const z = side === 'B' ? -0.015 : 0.015;
     const xPos = side === 'B' ? -x : x;
     p = new app.THREE.Vector3(xPos, y + 0.35, z).project(app.camera);
-  } else if (app.product.yOffset) {
-    p = new app.THREE.Vector3(x, y + app.product.yOffset, 0.008).project(app.camera);
+  } else if (key === 'poster') {
+    // Poster mural vertical (plan XY centre a Y = 0.55)
+    p = new app.THREE.Vector3(x, y + 0.55, 0.003).project(app.camera);
+  } else if (key === 'photoFrame') {
+    // Poster A4 vertical sur chevalet (plan XY à Y = 0.52)
+    p = new app.THREE.Vector3(x, y + 0.52, 0.008).project(app.camera);
+  } else if (key === 'cushion') {
+    // Coussin horizontal face imprimable unique au-dessus
+    p = new app.THREE.Vector3(x, 0.12, -y).project(app.camera);
+  } else if (key === 'pencilCase') {
+    // Trousse horizontale
+    const zPos = side === 'B' ? y : -y;
+    const yLev = side === 'B' ? -0.06 : 0.06;
+    p = new app.THREE.Vector3(x, yLev, zPos).project(app.camera);
   } else {
-    p = new app.THREE.Vector3(x, -0.002, y).project(app.camera);
+    // Produits à plat horizontaux (tapis de souris, puzzle, sous-verres, bracelet)
+    // En 3D, le haut de l'image (y > 0) est à Z < 0
+    p = new app.THREE.Vector3(x, 0.004, -y).project(app.camera);
   }
   return [(p.x * 0.5 + 0.5) * app.viewer.clientWidth, (-p.y * 0.5 + 0.5) * app.viewer.clientHeight];
 };
@@ -54,7 +70,19 @@ app.updateOverlay = function updateOverlay() {
   const active = app.getActiveImage();
   if (!active || !app.isOverlayVisible() || app.product.type !== 'flat') return;
   const side = active.side || 'A';
-  if ((side === 'A' && app.camera.position.z < -0.1) || (side === 'B' && app.camera.position.z > 0.1)) {
+  const key = app.currentProductKey;
+  const isTwoSided = !!app.product.twoSided;
+  const isVertical = key.startsWith('tshirt') || key.startsWith('keychain') || key === 'poster' || key === 'photoFrame';
+  if (isTwoSided) {
+    if ((side === 'A' && app.camera.position.z < -0.1) || (side === 'B' && app.camera.position.z > 0.1)) {
+      app.box.setAttribute('points', '');
+      app.handles.forEach(h => { h.setAttribute('cx', -9999); h.setAttribute('cy', -9999); });
+      app.edgeHandles.forEach(eh => { eh.setAttribute('cx', -9999); eh.setAttribute('cy', -9999); });
+      app.rotateStem.setAttribute('x1', -9999); app.rotateStem.setAttribute('y1', -9999); app.rotateStem.setAttribute('x2', -9999); app.rotateStem.setAttribute('y2', -9999);
+      app.rotateHandle.setAttribute('cx', -9999); app.rotateHandle.setAttribute('cy', -9999);
+      return;
+    }
+  } else if (!isVertical && app.camera.position.y < -0.05) {
     app.box.setAttribute('points', '');
     app.handles.forEach(h => { h.setAttribute('cx', -9999); h.setAttribute('cy', -9999); });
     app.edgeHandles.forEach(eh => { eh.setAttribute('cx', -9999); eh.setAttribute('cy', -9999); });

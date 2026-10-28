@@ -17,16 +17,20 @@ document.querySelector('#imageInput').addEventListener('change', async e => {
   const files = Array.from(e.target.files || []);
   if (!files.length) return;
   if (app.clientMode) app.proposeClientImages?.(files);
+  const lowRes = [];
   for (const file of files) {
     const url = URL.createObjectURL(file);
     await new Promise(resolve => {
       const img = new Image();
       img.onload = () => {
-        app.imagesList.push({
+        const item = {
           id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
           name: file.name, img, scale: 1, scaleX: 1, scaleY: 1, x: 0, y: 0, rotation: 0, fitMode: 'contain',
           side: app.product.zones ? app.product.zones[0].id : 'both'
-        });
+        };
+        app.imagesList.push(item);
+        const res = app.getImageResolutionInfo?.(item);
+        if (res && res.status === 'danger') lowRes.push(`${file.name} (${res.width}×${res.height} px)`);
         resolve();
       };
       img.onerror = () => { URL.revokeObjectURL(url); resolve(); };
@@ -37,7 +41,11 @@ document.querySelector('#imageInput').addEventListener('change', async e => {
   app.activeImageIndex = app.imagesList.length - 1;
   app.renderImagesList(); app.syncActiveControls(); app.buildTexture();
   app.setOverlayVisible(document.querySelector('#showTransformFrame').checked);
-  app.showToast(app.clientMode ? `${files.length} image(s) ajoutée(s) (soumise(s) à validation catalogue)` : `${files.length} image(s) ajoutée(s)`);
+  if (lowRes.length) {
+    app.showToast(`Attention : résolution faible détectée sur ${lowRes.join(', ')}. Risque de flou à l'impression.`);
+  } else {
+    app.showToast(app.clientMode ? `${files.length} image(s) ajoutée(s) (soumise(s) à validation catalogue)` : `${files.length} image(s) ajoutée(s)`);
+  }
 });
 document.querySelector('#productSelect').onchange = e => {
   if (app.clientMode && !e.detail?.initial) app.clientSelectedProduct = e.target.value !== 'showcase';
@@ -50,21 +58,10 @@ document.querySelector('#productSelect').onchange = e => {
   app.updatePrintableLabel();
 
   const priceMap = {
-    'mug11oz': '13,00 €',
-    'mousePad': '10,00 €',
-    'keychainRect': '6,00 €',
-    'keychainRound': '6,00 €',
-    'keychainHeart': '6,00 €',
-    'tshirt3D': '17,00 € - 21,00 €',
-    'cap': '15,00 €',
-    'poster': '25,00 €',
-    'puzzle': '15,00 €',
-    'coaster': '8,00 €',
-    'coasterRound': '8,00 €',
-    'pencilCase': '11,00 €',
-    'cushion': '17,00 €',
-    'arcadeCabinet': '2290,00 € (Décoration spécifique)',
-    'eventWristband': '6,50 €'
+    mug11oz: '13,00 €', mousePad: '10,00 €', keychainRect: '6,00 €', keychainRound: '6,00 €',
+    keychainHeart: '6,00 €', tshirt3D: '17,00 € - 21,00 €', cap: '15,00 €', poster: '25,00 €',
+    puzzle: '15,00 €', coaster: '8,00 €', coasterRound: '8,00 €', pencilCase: '11,00 €',
+    cushion: '17,00 €', arcadeCabinet: '2290,00 € (Décoration spécifique)', eventWristband: '6,50 €'
   };
   const priceContainer = document.querySelector('#productPriceContainer');
   const priceEl = document.querySelector('#productPrice');
@@ -87,6 +84,15 @@ document.querySelector('#productSelect').onchange = e => {
   if (btnShowcase) { btnShowcase.style.opacity = isShowcase ? '0.6' : '1'; btnShowcase.title = isShowcase ? 'Showroom 3D actif' : 'Retourner au Showroom 3D'; }
   if (btnBack) btnBack.style.display = isShowcase ? 'none' : 'inline-flex';
   const nameEl = document.querySelector('#activeProductName'); if (nameEl) nameEl.textContent = isShowcase ? 'Le Showroom 3D' : (definition.name || 'Objet personnalisé');
+  const priceBadge = document.querySelector('#activeProductPriceBadge');
+  if (priceBadge) {
+    if (isShowcase || !priceMap[app.currentProductKey]) {
+      priceBadge.style.display = 'none';
+    } else {
+      priceBadge.style.display = 'inline-block';
+      priceBadge.textContent = priceMap[app.currentProductKey];
+    }
+  }
 
   document.querySelector('#handleColorWrap').hidden = !isMug;
   document.querySelector('#innerColorWrap').hidden = !isMug;
@@ -104,16 +110,70 @@ document.querySelector('#productSelect').onchange = e => {
   const arcadeGlowWrap = document.querySelector('#arcadeGlowWrap');
   if (arcadeGlowWrap) arcadeGlowWrap.hidden = !isArcade;
 
-  document.querySelector('#baseColor').value = '#ffffff'; document.querySelector('#topColor').value = '#ffffff';
-  if (isMug) { document.querySelector('#handleColor').value = '#ffffff'; document.querySelector('#innerColor').value = '#ffffff'; }
+  const defaultBaseColors = {
+    mousePad: '#101318', coaster: '#3d2b1f', coasterRound: '#3d2b1f',
+    puzzle: '#e0d6c8', arcadeCabinet: '#111111', cap: '#1e293b'
+  };
+  const baseCol = defaultBaseColors[app.currentProductKey] || '#ffffff';
+  document.querySelector('#baseColor').value = baseCol;
+  document.querySelector('#topColor').value = '#ffffff';
+  if (app.product.baseMaterial) app.product.baseMaterial.color.set(baseCol);
+  if (app.product.topMaterial && !isArcade) app.product.topMaterial.color.set('#ffffff');
+
+  if (isMug) {
+    document.querySelector('#handleColor').value = '#ffffff';
+    document.querySelector('#innerColor').value = '#ffffff';
+    if (app.product.handleMaterial) app.product.handleMaterial.color.set('#ffffff');
+    if (app.product.innerMaterial) app.product.innerMaterial.color.set('#ffffff');
+  }
   if (isArcade) {
     ['#j1Color','#b2Color'].forEach(id => { const el = document.querySelector(id); if (el) el.value = '#ff0000'; });
     ['#j2Color','#b1Color'].forEach(id => { const el = document.querySelector(id); if (el) el.value = '#0055ff'; });
     if (document.querySelector('#arcadeGlow')) document.querySelector('#arcadeGlow').checked = false;
   }
 
+  // Réinitialisation de l'animation de rotation
+  const autoRotateEl = document.querySelector('#autoRotate');
+  if (autoRotateEl && autoRotateEl.checked) {
+    autoRotateEl.checked = false;
+    if (app.controls) app.controls.autoRotate = false;
+  }
+  const viewAngleEl = document.querySelector('#viewAngle');
+  if (viewAngleEl) { viewAngleEl.value = 45; document.querySelector('#angleValue').value = '45°'; }
+  const rotModeEl = document.querySelector('#rotationMode');
+  if (rotModeEl) rotModeEl.value = 'horizontal';
+  const revEl = document.querySelector('#reverse');
+  if (revEl) revEl.checked = false;
+
   const isTwoSided = !!app.product.twoSided;
   const hasZones = !!app.product.zones;
+
+  // Réinitialisation des faces/zones orphelines pour les calques existants
+  app.imagesList.forEach(item => {
+    if (hasZones) {
+      if (!app.product.zones.some(z => z.id === item.side) && item.side !== 'both') {
+        item.side = app.product.zones[0].id;
+      }
+    } else if (isTwoSided) {
+      if (item.side !== 'A' && item.side !== 'B' && item.side !== 'both') item.side = 'both';
+    } else {
+      item.side = 'both';
+    }
+  });
+
+  if (app.textParams) {
+    if (hasZones) {
+      if (!app.product.zones.some(z => z.id === app.textParams.side) && app.textParams.side !== 'both') {
+        app.textParams.side = app.product.zones[0].id;
+      }
+    } else if (isTwoSided) {
+      if (app.textParams.side !== 'A' && app.textParams.side !== 'B' && app.textParams.side !== 'both') {
+        app.textParams.side = 'both';
+      }
+    } else {
+      app.textParams.side = 'both';
+    }
+  }
 
   const viewFaceA = document.querySelector('#viewFaceA');
   const viewFaceB = document.querySelector('#viewFaceB');
@@ -137,8 +197,9 @@ document.querySelector('#productSelect').onchange = e => {
   app.floor.position.y = isMug ? -0.002 : (isArcade || isShowcase) ? -0.835 : -0.09;
 
   app.renderImagesList();
+  app.syncActiveControls?.();
   if (app.imagesList.length > 0 || app.textParams.text.trim()) app.buildTexture();
-  app.homeView(); app.setOverlayVisible(document.querySelector('#showTransformFrame').checked);
+  app.homeView(true); app.setOverlayVisible(document.querySelector('#showTransformFrame').checked);
   app.updateWrapPreviewWidget(app.texture?.image);
   app.updateClientGuide();
 };

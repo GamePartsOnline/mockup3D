@@ -7,10 +7,12 @@ body.client-mode #exportStatus,
 body.client-mode #saveViewBtn,
 body.client-mode #downloadWrapBtn,
 body.client-mode #wrapPreviewWidget,
-body.client-mode .frame-option:has(#showWatermark),
+body.client-mode .watermark-config-row,
 body.client-mode .background-actions { display:none !important; }
 body:not(.client-mode) .stock-note { display:none !important; }
 body.client-mode .client-submit { display:inline-flex !important; justify-content:center; align-items:center; }
+.client-theme-toggle-btn { display:inline-flex; align-items:center; justify-content:center; height:36px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; background:#f8fafc; color:#334155; font-size:12px; font-weight:600; cursor:pointer; transition:all .15s ease; }
+.client-theme-toggle-btn:hover { background:#f1f5f9; border-color:#94a3b8; color:#0f172a; }
 .panel-menu { position:absolute; z-index:5; top:18px; width:40px; height:40px; border:1px solid #d5dce0; border-radius:8px; background:#fff; color:#17212a; font-size:21px; cursor:pointer; box-shadow:0 4px 16px #52616d22; }
 .panel-menu-left { left:18px; }
 .btn-showcase-floating { position:absolute; z-index:5; top:18px; left:66px; height:40px; padding:0 14px; border:1px solid #d5dce0; border-radius:8px; background:#fff; color:#17212a; font-size:12px; font-weight:700; cursor:pointer; box-shadow:0 4px 16px #52616d22; transition:background .15s ease; }
@@ -61,9 +63,17 @@ html[data-theme="dark"] .btn-showcase-floating { background:#1c2633 !important; 
 .timeline-step.done .step-check { display:inline; }
 .timeline-step.done .step-label { color:#7c3aed; }
 .client-guide .primary { background:#7c3aed; }
-body.client-mode[data-client-step="1"] #sectionProduct,
+.active-product-banner { display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:10px 14px; border-radius:10px; margin-bottom:12px; border:1px solid #e2e8f0; box-shadow:0 1px 3px rgba(0,0,0,0.04); }
+.active-product-meta { display:flex; flex-direction:column; gap:2px; }
+.active-product-subtitle { display:block; color:#64748b; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; }
+.active-product-name { display:block; font-size:13px; color:#0f172a; }
+.active-product-price-badge { font-size:11px; font-weight:700; color:#6d28d9; background:#ede9fe; padding:2px 7px; border-radius:4px; border:1px solid #ddd6fe; }
+.btn-change-product { background:#8b5cf6; color:#fff; font-weight:700; padding:6px 12px; border-radius:6px; border:none; cursor:pointer; transition:all .15s ease; }
+.btn-change-product:hover { background:#7c3aed; transform:translateY(-1px); }
+
+body.client-mode[data-client-step="1"] #activeProductBanner,
 body.client-mode[data-client-step="2"] #sectionImages,
-body.client-mode[data-client-step="3"] #adjustments { outline:2px solid #a78bfa; outline-offset:5px; border-radius:4px; }
+body.client-mode[data-client-step="3"] #adjustments { outline:2px solid #a78bfa; outline-offset:4px; border-radius:8px; }
 body.client-mode[data-client-step="4"] #submitCreation { box-shadow:0 0 0 4px rgba(139,92,246,0.5),0 0 22px #a78bfa; }
 body.client-mode .workspace.left-collapsed .panel-menu-left { box-shadow:0 0 0 4px rgba(139,92,246,0.5),0 0 20px #a78bfa; }
 @media (max-width:1100px) { .topbar .privacy { display:none; } .topbar { padding:0 12px; } }

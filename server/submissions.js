@@ -62,7 +62,7 @@ function validateClient(client) {
   return { nom, prenom, adresse, codePostal, ville, email, telephone, note: note.slice(0, 1000) };
 }
 
-async function sendMailNotification(client, product, attachments) {
+async function sendMailNotification(client, product, attachments, imagesInfo) {
   if (!mailConfigured()) return { sent: false, reason: 'smtp_not_configured' };
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -88,6 +88,11 @@ async function sendMailNotification(client, product, attachments) {
       `Email : ${client.email}`,
       `Téléphone : ${client.telephone}`,
       client.note ? `Note du client : ${client.note}` : '',
+      Array.isArray(imagesInfo) && imagesInfo.length ? [
+        ``,
+        `RÉSOLUTION DES IMAGES :`,
+        ...imagesInfo.map(img => `- ${img.name} : ${img.width} × ${img.height} px (${img.dpi} DPI - ${img.quality})`)
+      ].join('\n') : '',
       ``,
       `Fichiers joints (${attachments.length}) :`,
       attachments.map(a => '- ' + a.filename).join('\n')
@@ -140,7 +145,7 @@ export async function submit(req, res) {
       savedFiles.push({ name: file.filename, size: file.content.length, type: file.contentType });
     }
 
-    const mailResult = await sendMailNotification(client, body.product, attachments);
+    const mailResult = await sendMailNotification(client, body.product, attachments, body.imagesInfo);
 
     const submissionData = {
       id: folderName,
@@ -150,6 +155,7 @@ export async function submit(req, res) {
       product: body.product,
       client,
       files: savedFiles,
+      imagesInfo: Array.isArray(body.imagesInfo) ? body.imagesInfo : [],
       emailStatus: mailResult.sent ? 'sent' : (mailResult.reason || 'not_sent')
     };
     fs.writeFileSync(path.join(targetDir, 'submission.json'), JSON.stringify(submissionData, null, 2), 'utf8');

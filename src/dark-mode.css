@@ -195,3 +195,69 @@ html[data-theme="dark"] .timeline-step.done .step-bubble {
 html[data-theme="dark"] .timeline-step.done .step-label {
   color: #c084fc !important;
 }
+
+html[data-theme="dark"] .client-theme-toggle-btn {
+  background: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+html[data-theme="dark"] .client-theme-toggle-btn:hover {
+  background: #28364d !important;
+  border-color: #64748b !important;
+}
+html[data-theme="dark"] .client-guide {
+  background: linear-gradient(135deg, #1e1b4b, #2e1065) !important;
+  border-color: #6d28d9 !important;
+}
+html[data-theme="dark"] .client-guide strong {
+  color: #e9d5ff !important;
+}
+html[data-theme="dark"] .active-product-banner {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+html[data-theme="dark"] .active-product-name {
+  color: #f8fafc !important;
+}
+html[data-theme="dark"] .active-product-subtitle {
+  color: #94a3b8 !important;
+}
+html[data-theme="dark"] .active-product-price-badge {
+  background: #2e1065 !important;
+  color: #c084fc !important;
+  border-color: #581c87 !important;
+}
+html[data-theme="dark"] .drag-hint-box {
+  background: #25133d !important;
+  border-color: #6d28d9 !important;
+  color: #c084fc !important;
+}
+html[data-theme="dark"] .watermark-config-row {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+html[data-theme="dark"] .watermark-config-row select {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+html[data-theme="dark"] .visual-edit-dialog {
+  background: #141c26 !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+html[data-theme="dark"] .visual-edit-header strong {
+  color: #ffffff !important;
+}
+html[data-theme="dark"] .visual-edit-header p {
+  color: #94a3b8 !important;
+}
+html[data-theme="dark"] #clientOrderForm label {
+  color: #cbd5e1 !important;
+}
+html[data-theme="dark"] #clientOrderForm input,
+html[data-theme="dark"] #clientOrderForm textarea {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}

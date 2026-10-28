@@ -58,6 +58,7 @@ export const photoFrameProduct = {
       meshWidth: w,
       meshHeight: h,
       yOffset: yCenter,
+      vertical: true,
       type: 'flat'
     };
   }

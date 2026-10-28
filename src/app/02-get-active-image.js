@@ -17,10 +17,12 @@ app.syncActiveControls = function syncActiveControls() {
   if (!active) {
     adjustmentsSection?.classList.add('disabled');
     if (activeLabel) activeLabel.textContent = 'Aucune image active';
+    app.updateActiveImageResolutionBadge?.();
     return;
   }
   adjustmentsSection?.classList.remove('disabled');
   if (activeLabel) activeLabel.textContent = `Image active : ${active.name}`;
+  app.updateActiveImageResolutionBadge?.();
 
   const avgScale = Math.round(((active.scaleX + active.scaleY) / 2) * 100);
   document.querySelector('#scale').value = avgScale;
@@ -75,17 +77,17 @@ app.removeImageByIndex = function removeImageByIndex(index, e) {
 
 export function initialize(app) {
 app.controls.target.set(0, -.04, 0);
-app.scene.add(new app.THREE.HemisphereLight(0xffffff, 0xe2e8f0, 2.0));
-app.key = new app.THREE.DirectionalLight(0xffffff, 2.8);
+app.scene.add(new app.THREE.HemisphereLight(0xffffff, 0xe2e8f0, 1.8));
+app.key = new app.THREE.DirectionalLight(0xffffff, 1.9);
 app.key.position.set(-3, 5, 4);
 app.key.castShadow = true;
 app.key.shadow.mapSize.set(2048, 2048);
 app.scene.add(app.key);
-app.fill = new app.THREE.DirectionalLight(0xffffff, 1.6);
+app.fill = new app.THREE.DirectionalLight(0xffffff, 1.2);
 app.fill.position.set(4, 2, -3);
 app.scene.add(app.fill);
-app.frontLight = new app.THREE.DirectionalLight(0xffffff, 0.8);
-app.frontLight.position.set(0, 0, 5);
+app.frontLight = new app.THREE.DirectionalLight(0xffffff, 0.35);
+app.frontLight.position.set(0, 2, 5);
 app.scene.add(app.frontLight);
 app.floor = new app.THREE.Mesh(new app.THREE.CircleGeometry(5, 64), new app.THREE.ShadowMaterial({ color: 0x55616b, opacity: .15 }));
 app.floor.rotation.x = -Math.PI / 2;

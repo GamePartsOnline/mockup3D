@@ -92,16 +92,19 @@ document.querySelectorAll('.quick-palette .swatch').forEach(swatch => {
   });
 });
 document.querySelector('#sceneColor').oninput = () => app.requestUpdateSceneBackground();
-document.querySelector('#showGrid').onchange = e => app.grid.visible = e.target.checked;
-document.querySelector('#showShadow')?.addEventListener('change', e => {
-  app.floor.visible = e.target.checked;
-  app.showToast(e.target.checked ? 'Ombre au sol activée' : 'Ombre au sol masquée');
-});
+document.querySelector('#showGrid')?.addEventListener('change', e => { if (app.grid) app.grid.visible = e.target.checked; });
+document.querySelector('#showShadow')?.addEventListener('change', e => { if (app.floor) app.floor.visible = e.target.checked; });
 document.querySelector('#showWatermark')?.addEventListener('change', () => {
   if (app.clientMode) { app.watermarkControl.checked = true; return; }
   app.updateSceneBackground();
   app.buildTexture();
   app.showToast(document.querySelector('#showWatermark').checked ? 'Filigrane activé' : 'Filigrane retiré');
+});
+document.querySelector('#watermarkStyle')?.addEventListener('change', e => {
+  app.watermarkStyle = e.target.value;
+  app.buildTexture();
+  const labels = { both: 'Réduit + Tag discret', reduced: 'Filigrane réduit', tag: 'Tag discret seul' };
+  app.showToast(`Style de filigrane : ${labels[e.target.value] || e.target.value}`);
 });
 document.querySelector('#speed').oninput = e => { app.controls.autoRotateSpeed = Number(e.target.value) / 9.6 * (document.querySelector('#reverse').checked ? -1 : 1); document.querySelector('#speedValue').value = `${(Number(e.target.value) / 12).toFixed(1)}×`; };
 document.querySelector('#reverse').onchange = e => app.controls.autoRotateSpeed = Math.abs(app.controls.autoRotateSpeed) * (e.target.checked ? -1 : 1);

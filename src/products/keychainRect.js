@@ -67,9 +67,9 @@ export const keychainRectProduct = {
     // Elevate so it stands on the floor
     baseGeo.translate(0, h / 2 + bevelThickness, 0);
 
-    // Smooth, somewhat glossy plastic material
-    const printMaterial = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.15, metalness: 0, clearcoat: 0.6, clearcoatRoughness: 0.2 });
-    const sideMaterial = new THREE.MeshPhysicalMaterial({ color: 0xf0f0f0, roughness: 0.3, metalness: 0, clearcoat: 0.3 });
+    // Smooth, satiny sublimation material (anti-glare)
+    const printMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.45, metalness: 0 });
+    const sideMaterial = new THREE.MeshStandardMaterial({ color: 0xf0f0f0, roughness: 0.6 });
 
     // Materials mapping: front/back faces get printMaterial, sides get sideMaterial
     const mesh = new THREE.Mesh(baseGeo, [printMaterial, sideMaterial]);

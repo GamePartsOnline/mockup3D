@@ -45,14 +45,16 @@ document.querySelector('#clientGuideAction')?.addEventListener('click', () => {
 document.querySelectorAll('.timeline-step').forEach(stepEl => {
   stepEl.addEventListener('click', () => {
     const targetStep = Number(stepEl.dataset.guideStep);
-    const secMap = { 1: '#sectionProduct', 2: '#sectionImages', 3: '#adjustments', 4: '#sectionAppearance' };
+    const secMap = { 1: '#activeProductBanner', 2: '#sectionImages', 3: '#adjustments', 4: '#sectionAppearance' };
     const sec = document.querySelector(secMap[targetStep]);
     if (sec && sec.classList.contains('collapsed')) {
       sec.querySelector('.section-title-btn')?.click();
     }
     sec?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    if (targetStep === 1 && app.currentProductKey === 'showcase') {
+    if (targetStep === 1) {
       app.openShop2D?.();
+    } else if (targetStep === 4) {
+      document.querySelector('#submitCreation')?.click();
     }
   });
 });

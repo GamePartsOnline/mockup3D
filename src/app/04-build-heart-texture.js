@@ -42,8 +42,10 @@ app.buildHeartTexture = function buildHeartTexture() {
   }
   if (app.clientMode && !app.suppressClientWatermarkForOwnerExport && app.isWatermarkLoaded) {
     ctx.save();
-    ctx.globalAlpha = 0.16;
-    ctx.drawImage(app.watermarkImg, 320, 320, 384, 384 * app.watermarkImg.height / app.watermarkImg.width);
+    ctx.globalAlpha = 0.07;
+    const logoW = 130;
+    const logoH = Math.round(logoW * (app.watermarkImg.height / app.watermarkImg.width));
+    ctx.drawImage(app.watermarkImg, 512 - logoW / 2, 512 - logoH / 2, logoW, logoH);
     ctx.restore();
   }
   app.heartTexture = new app.THREE.CanvasTexture(canvas);

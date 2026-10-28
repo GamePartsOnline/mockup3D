@@ -84,7 +84,7 @@ app.homeView = (ignoreSaved = false) => {
   if (!ignoreSaved && app.currentProductKey !== 'showcase') {
     try {
       const saved = JSON.parse(localStorage.getItem('mockup3d_saved_views') || '{}')[app.currentProductKey];
-      if (saved?.pos && saved?.target) {
+      if (saved?.pos && saved?.target && saved.pos[1] < 3.5 && saved.pos[2] > 0.1) {
         app.camera.position.fromArray(saved.pos);
         app.controls.target.fromArray(saved.target);
         app.controls.update();
@@ -93,20 +93,43 @@ app.homeView = (ignoreSaved = false) => {
     } catch {}
   }
   if (app.currentProductKey === 'showcase') {
-    // Vue plongeante dezoomee d un cran supplementaire englobant confortablement la scene
+    // Vue plongeante dezoomee englobant confortablement la scene d'accueil
     app.camera.position.set(0.10, 6.00, 5.35);
     app.controls.target.set(0.10, 0.15, -0.10);
   } else if (app.currentProductKey === 'cap') {
-    app.camera.position.set(0.3, 1.35, 2.75);
-    app.controls.target.set(0, 0.48, 0.05);
+    app.camera.position.set(0, 0.75, 2.3);
+    app.controls.target.set(0, 0.35, 0);
   } else if (app.currentProductKey === 'mug11oz') {
-    app.camera.position.set(0.6, 2.76, 6.2);
-    app.controls.target.set(0, 0.88, 0);
-  } else if (app.currentProductKey === 'mousePad' || app.currentProductKey === 'puzzle' || app.currentProductKey === 'coaster' || app.currentProductKey === 'poster') {
-    app.camera.position.set(0, 4.5, 0.001);
+    app.camera.position.set(0, 1.4, 4.6);
+    app.controls.target.set(0, 0.45, 0);
+  } else if (app.currentProductKey === 'poster') {
+    // Poster 80x60 cm mural vertical : vue face a hauteur des yeux face au poster
+    app.camera.position.set(0, 0.55, 2.4);
+    app.controls.target.set(0, 0.55, 0);
+  } else if (app.currentProductKey === 'photoFrame') {
+    // Poster A4 vertical sur chevalet a Y = 0.52
+    app.camera.position.set(0, 0.52, 2.0);
+    app.controls.target.set(0, 0.52, 0);
+  } else if (app.currentProductKey === 'mousePad') {
+    // Tapis de souris horizontal 240x200 mm : vue plongeante avant face au visuel
+    app.camera.position.set(0, 2.4, 2.6);
+    app.controls.target.set(0, 0, 0);
+  } else if (app.currentProductKey === 'puzzle') {
+    // Puzzle 280x195 mm : vue plongeante avant face au visuel
+    app.camera.position.set(0, 2.4, 2.6);
+    app.controls.target.set(0, 0, 0);
+  } else if (app.currentProductKey === 'coaster' || app.currentProductKey === 'coasterRound') {
+    app.camera.position.set(0, 1.4, 1.5);
+    app.controls.target.set(0, 0, 0);
+  } else if (app.currentProductKey === 'cushion') {
+    // Coussin horizontal face imprimable unique au-dessus
+    app.camera.position.set(0, 2.2, 2.4);
+    app.controls.target.set(0, 0, 0);
+  } else if (app.currentProductKey === 'pencilCase') {
+    app.camera.position.set(0, 1.8, 2.0);
     app.controls.target.set(0, 0, 0);
   } else if (app.currentProductKey === 'eventWristband') {
-    app.camera.position.set(0, 2.5, 0.001);
+    app.camera.position.set(0, 1.8, 1.8);
     app.controls.target.set(0, 0, 0);
   } else if (app.currentProductKey === 'keychainHeart') {
     app.camera.position.set(0, 0.45, 1.15);
@@ -118,19 +141,19 @@ app.homeView = (ignoreSaved = false) => {
     app.camera.position.set(0, 0.29, 0.7);
     app.controls.target.set(0, 0.29, 0);
   } else if (app.currentProductKey.startsWith('tshirt')) {
-    app.camera.position.set(0, 0.35, 1.6);
+    app.camera.position.set(0, 0.35, 1.7);
     app.controls.target.set(0, 0.35, 0);
   } else if (app.currentProductKey === 'arcadeCabinet') {
-    app.camera.position.set(0.7, -0.05, 3.4);
-    app.controls.target.set(0, -0.05, 0);
+    app.camera.position.set(0, 0.15, 3.2);
+    app.controls.target.set(0, 0.15, 0);
   } else {
-    app.camera.position.set(3.4, 2.8, 3.8);
-    app.controls.target.set(0, -.04, 0);
+    app.camera.position.set(0, 2.0, 3.0);
+    app.controls.target.set(0, 0, 0);
   }
   app.controls.update();
 };
-document.querySelector('#resetView')?.addEventListener('click', app.homeView);
-document.querySelector('#resetViewSide')?.addEventListener('click', app.homeView);
+document.querySelector('#resetView')?.addEventListener('click', () => app.homeView(true));
+document.querySelector('#resetViewSide')?.addEventListener('click', () => app.homeView(true));
 document.querySelector('#viewFaceA')?.addEventListener('click', () => {
   app.homeView();
   if (app.currentProductKey === 'arcadeCabinet') {

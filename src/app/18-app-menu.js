@@ -68,22 +68,6 @@ export function initialize(app) {
     repeatPattern: false,
     silent: true
   });
-  document.querySelector('#menuViewGrid')?.addEventListener('click', () => {
-    const cb = document.querySelector('#showGrid');
-    if (cb) {
-      cb.checked = !cb.checked;
-      cb.dispatchEvent(new Event('change'));
-      app.showToast(cb.checked ? 'Grille affichée' : 'Grille masquée');
-    }
-  });
-  document.querySelector('#menuViewShadow')?.addEventListener('click', () => {
-    const cb = document.querySelector('#showShadow');
-    if (cb) {
-      cb.checked = !cb.checked;
-      cb.dispatchEvent(new Event('change'));
-      app.showToast(cb.checked ? 'Ombre affichée' : 'Ombre masquée');
-    }
-  });
 
   // Menu Catalogue
   document.querySelector('#menuCatOpen')?.addEventListener('click', () => {

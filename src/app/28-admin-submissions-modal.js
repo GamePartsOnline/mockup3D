@@ -44,6 +44,22 @@ function renderItem(sub) {
           <div><strong style="color:#0f172a;">E-mail :</strong> <a href="mailto:${c.email || ''}" style="color:#0284c7; text-decoration:none;">${c.email || 'Non renseigné'}</a></div>
           <div><strong style="color:#0f172a;">Adresse :</strong> ${c.adresse || ''}, ${c.codePostal || ''} ${c.ville || ''}</div>
           ${c.note ? `<div style="margin-top:4px; padding:6px 10px; background:#f1f5f9; border-radius:6px; font-size:12px; font-style:italic;"><strong>Note client :</strong> ${c.note}</div>` : ''}
+          ${Array.isArray(sub.imagesInfo) && sub.imagesInfo.length ? `
+            <div style="margin-top:4px; padding:6px 8px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; font-size:11px;">
+              <strong style="color:#0f172a;">Résolution des images :</strong>
+              <div style="display:flex; flex-direction:column; gap:2px; margin-top:2px;">
+                ${sub.imagesInfo.map(img => `
+                  <div>
+                    <span>${img.name} : <strong>${img.width} × ${img.height} px</strong></span>
+                    <span style="display:inline-block; margin-left:4px; padding:1px 5px; border-radius:3px; font-size:10px; font-weight:700; ${
+                      img.status === 'danger' ? 'background:#fee2e2; color:#dc2626;' :
+                      img.status === 'warning' ? 'background:#fef3c7; color:#d97706;' :
+                      'background:#dcfce7; color:#15803d;'
+                    }">${img.dpi} DPI • ${img.quality}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>` : ''}
           <div style="font-size:11px; color:#64748b; margin-top:4px;">Courriel : ${sub.emailStatus === 'sent' ? 'Envoyé par SMTP' : 'Enregistré localement'}</div>
         </div>
         <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">

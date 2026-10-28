@@ -61,8 +61,8 @@ export const keychainHeartProduct = {
     }
     uv.needsUpdate = true;
 
-    const printMaterial = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.15, clearcoat: 0.8, clearcoatRoughness: 0.1 });
-    const sideMaterial = new THREE.MeshPhysicalMaterial({ color: 0x222222, roughness: 0.4 });
+    const printMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.45, metalness: 0.0 });
+    const sideMaterial = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.6 });
     const mesh = new THREE.Mesh(geo, [printMaterial, sideMaterial]);
     mesh.castShadow = true;
     mesh.receiveShadow = true;

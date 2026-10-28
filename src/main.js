@@ -26,6 +26,7 @@ import * as feature23 from './app/24-category-manager-modal.js';
 import * as feature24 from './app/26-visual-edit-modal.js';
 import * as feature25 from './app/27-client-order-modal.js';
 import * as feature26 from './app/28-admin-submissions-modal.js';
+import * as feature27 from './app/29-image-resolution-checker.js';
 
 const app = { ...dependencies };
 if (typeof window !== 'undefined') window.app = app;
@@ -56,7 +57,8 @@ const features = [
   feature23,
   feature24,
   feature25,
-  feature26
+  feature26,
+  feature27
 ];
 
 for (const feature of features) feature.register(app);
