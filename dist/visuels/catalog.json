@@ -1,77 +1,5 @@
 [
   {
-    "id": "visuel-1793181632096-86mq",
-    "name": "Visuel",
-    "url": "/visuels/Visuel-mvry1mkk.jpg",
-    "category": "Nouveau",
-    "subcategory": "",
-    "repeatPattern": false,
-    "status": "pending",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793181632095-5y2t",
-    "name": "Visuel",
-    "url": "/visuels/Visuel-mvry1mkn.jpg",
-    "category": "Nouveau",
-    "subcategory": "",
-    "repeatPattern": false,
-    "status": "pending",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793181632094-8kp0",
-    "name": "Visuel",
-    "url": "/visuels/Visuel-mvry1mkq.jpg",
-    "category": "Nouveau",
-    "subcategory": "",
-    "repeatPattern": false,
-    "status": "pending",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793181632089-kbg8",
-    "name": "Visuel",
-    "url": "/visuels/Visuel-mvry1mkr.jpg",
-    "category": "Nouveau",
-    "subcategory": "",
-    "repeatPattern": false,
-    "status": "pending",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793181632087-ilvx",
-    "name": "Visuel",
-    "url": "/visuels/Visuel-mvry1mks.jpg",
-    "category": "Nouveau",
-    "subcategory": "",
-    "repeatPattern": false,
-    "status": "pending",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793181632086-dr97",
-    "name": "Visuel",
-    "url": "/visuels/Visuel-mvry1mkt.jpg",
-    "category": "Nouveau",
-    "subcategory": "",
-    "repeatPattern": false,
-    "status": "pending",
-    "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
     "id": "visuel-1793114254031-b0yj",
     "name": "Valentine Pig",
     "url": "/visuels/Valentine-pig-2-mvqtxhcp.png",
@@ -80,7 +8,7 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz"
     ]
   },
   {
@@ -92,7 +20,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -116,7 +52,16 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cap",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -128,7 +73,7 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz"
     ]
   },
   {
@@ -140,7 +85,7 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz"
     ]
   },
   {
@@ -152,7 +97,7 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz"
     ]
   },
   {
@@ -164,7 +109,7 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz"
     ]
   },
   {
@@ -176,7 +121,7 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz"
     ]
   },
   {
@@ -188,7 +133,7 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz"
     ]
   },
   {
@@ -200,7 +145,7 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "arcadeCabinet"
     ]
   },
   {
@@ -212,7 +157,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -224,7 +177,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -236,7 +197,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -248,7 +217,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -260,7 +237,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -272,7 +257,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -284,7 +277,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -296,7 +297,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -308,7 +317,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -320,7 +337,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -332,7 +357,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -344,7 +377,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -356,7 +397,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -368,7 +417,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -380,7 +437,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -392,7 +457,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -404,7 +477,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -416,7 +497,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -428,7 +517,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -440,7 +537,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -452,7 +557,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -464,7 +577,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -476,7 +597,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -488,7 +617,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -500,7 +637,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -512,7 +657,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -524,7 +677,35 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793181632086-dr97",
+    "name": "Taz",
+    "url": "/visuels/Visuel-mvry1mkt.jpg",
+    "category": "Dessins animés",
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -536,19 +717,46 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793181632087-ilvx",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvry1mks.jpg",
+    "category": "Films",
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "mug11oz",
+      "coaster",
+      "coasterRound",
+      "mousePad",
+      "keychainRect",
+      "keychainRound",
+      "keychainHeart",
+      "eventWristband"
     ]
   },
   {
     "id": "visuel-1793117214065-gc4g",
-    "name": "Floral Pastel (1)",
+    "name": "Floral Pastel",
     "url": "/visuels/Flower-mug-1-mvqvoxgy.png",
     "category": "Fleurs",
     "subcategory": "",
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz"
     ]
   },
   {
@@ -560,7 +768,7 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz"
     ]
   },
   {
@@ -572,7 +780,7 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz"
     ]
   },
   {
@@ -584,7 +792,7 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz"
     ]
   },
   {
@@ -596,7 +804,7 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz"
     ]
   },
   {
@@ -608,7 +816,7 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz"
     ]
   },
   {
@@ -620,7 +828,35 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793181632096-86mq",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvry1mkk.jpg",
+    "category": "Humour",
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -632,19 +868,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
-    ]
-  },
-  {
-    "id": "visuel-1793179275590-8gc4",
-    "name": "Noel 01",
-    "url": "/visuels/Visuel-mvrwn49p.jpg",
-    "category": "Noel",
-    "subcategory": "",
-    "repeatPattern": false,
-    "status": "approved",
-    "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -668,7 +900,15 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   },
   {
@@ -680,7 +920,93 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "all"
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793179275590-8gc4",
+    "name": "Noel 01",
+    "url": "/visuels/Visuel-mvrwn49p.jpg",
+    "category": "Noël",
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793181632095-5y2t",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvry1mkn.jpg",
+    "category": "Nouveau",
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793181632094-8kp0",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvry1mkq.jpg",
+    "category": "Nouveau",
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793181632089-kbg8",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvry1mkr.jpg",
+    "category": "Nouveau",
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
     ]
   }
 ]

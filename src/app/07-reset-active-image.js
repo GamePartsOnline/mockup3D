@@ -81,6 +81,7 @@ app.clearSavedView = () => {
   } catch {}
 };
 app.homeView = (ignoreSaved = false) => {
+  app.camera.up.set(0, 1, 0);
   if (!ignoreSaved && app.currentProductKey !== 'showcase') {
     try {
       const saved = JSON.parse(localStorage.getItem('mockup3d_saved_views') || '{}')[app.currentProductKey];
@@ -93,9 +94,9 @@ app.homeView = (ignoreSaved = false) => {
     } catch {}
   }
   if (app.currentProductKey === 'showcase') {
-    // Vue plongeante dezoomee englobant confortablement la scene d'accueil
-    app.camera.position.set(0.10, 6.00, 5.35);
-    app.controls.target.set(0.10, 0.15, -0.10);
+    // Vue d ensemble a l interieur du Showroom 3D complet (murs gauche/droite, arcade, table, plafond)
+    app.camera.position.set(0.50, 2.30, 6.40);
+    app.controls.target.set(0.50, 1.00, 0.0);
   } else if (app.currentProductKey === 'cap') {
     app.camera.position.set(0, 0.75, 2.3);
     app.controls.target.set(0, 0.35, 0);
@@ -155,6 +156,7 @@ app.homeView = (ignoreSaved = false) => {
 document.querySelector('#resetView')?.addEventListener('click', () => app.homeView(true));
 document.querySelector('#resetViewSide')?.addEventListener('click', () => app.homeView(true));
 document.querySelector('#viewFaceA')?.addEventListener('click', () => {
+  app.camera.up.set(0, 1, 0);
   app.homeView();
   if (app.currentProductKey === 'arcadeCabinet') {
     app.camera.position.set(0, -0.05, 3.4);
@@ -176,6 +178,7 @@ document.querySelector('#viewFaceB')?.addEventListener('click', () => {
     app.controls.target.set(0, 0.25, 0);
   } else if (app.currentProductKey === 'cushion' || app.currentProductKey === 'pencilCase') {
     app.camera.position.set(0, -3.8, -0.01);
+    app.camera.up.set(0, 0, -1);
     app.controls.target.set(0, 0, 0);
   } else {
     app.camera.position.z = -Math.abs(app.camera.position.z);

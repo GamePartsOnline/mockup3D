@@ -59,6 +59,17 @@ const server = http.createServer(async (req, res) => {
 });
 server.requestTimeout = 60_000;
 server.headersTimeout = 15_000;
-server.listen(Number(process.env.PORT || 4173), process.env.HOST || '0.0.0.0', () => {
+const port = Number(process.env.PORT || 8088);
+const host = process.env.HOST || '0.0.0.0';
+server.listen(port, host, () => {
   console.log('MockUp3D prêt sur le port ' + server.address().port);
 });
+
+if (!process.env.PORT) {
+  const mirror = http.createServer(server.listeners('request')[0]);
+  mirror.requestTimeout = 60_000;
+  mirror.headersTimeout = 15_000;
+  mirror.listen(4173, host, () => {
+    console.log('MockUp3D miroir actif sur le port 4173');
+  }).on('error', () => {});
+}

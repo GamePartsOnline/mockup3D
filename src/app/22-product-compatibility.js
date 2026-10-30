@@ -22,8 +22,11 @@ export const PRODUCTS_LIST = [
 export function isVisualCompatible(visual, currentProductKey) {
   if (!currentProductKey || currentProductKey === 'showcase') return true;
   const list = visual?.compatibleProducts;
-  if (!Array.isArray(list) || !list.length || list.includes('all')) return true;
-  return list.includes(currentProductKey);
+  if (!Array.isArray(list) || !list.length) return false;
+  if (['arcadeCabinet', 'eventWristband', 'cap'].includes(currentProductKey)) {
+    return list.includes(currentProductKey);
+  }
+  return list.includes('all') || list.includes(currentProductKey);
 }
 
 export function getCompatibilityLabel(visual) {

@@ -1,4 +1,300 @@
-<aside class="panel"><div class="drawer-heading"><strong>Atelier de création</strong><button type="button" data-close-panel="left" aria-label="Fermer le menu de gauche">✕</button></div>
+<aside class="panel">
+<div class="mobile-sheet-handle" id="mobileSheetHandle">
+  <span class="sheet-drag-pill" title="Glisser ou cliquer pour réduire"></span>
+  <button type="button" class="sheet-close-btn" id="mobileSheetClose" aria-label="Réduire le tiroir">✕</button>
+</div>
+<div class="drawer-heading"><strong>Atelier de création</strong><button type="button" data-close-panel="left" aria-label="Fermer le menu de gauche">✕</button></div>
+
+<div class="panel-mode-switcher-wrap" id="panelModeSwitcherWrap">
+  <div class="panel-mode-switcher" role="group" aria-label="Choix du mode d'interface">
+    <button type="button" class="mode-switch-btn active" id="btnModeSimple" data-mode="simple">
+      Mode Simplifié
+    </button>
+    <button type="button" class="mode-switch-btn" id="btnModeAdvanced" data-mode="advanced">
+      Mode Expert
+    </button>
+  </div>
+</div>
+
+<div style="display:none;">
+  <select id="productSelect">
+    <option value="showcase" selected>Le Showroom 3D</option>
+    <option value="tshirt3D">T-shirt 3D</option>
+    <option value="mug11oz">Mug blanc 11 oz</option>
+    <option value="photoFrame">Poster A4</option>
+    <option value="poster">Poster 80 × 60 cm</option>
+    <option value="cushion">Housse de coussin</option>
+    <option value="cap">Casquette 3D</option>
+    <option value="mousePad">Tapis de souris</option>
+    <option value="puzzle">Puzzle 120 pièces</option>
+    <option value="pencilCase">Trousse</option>
+    <option value="coaster">Sous-verre carré</option>
+    <option value="coasterRound">Sous-verre rond</option>
+    <option value="keychainRect">Porte-clés rectangle</option>
+    <option value="keychainRound">Porte-clés rond</option>
+    <option value="keychainHeart">Porte-clés Cœur</option>
+    <option value="eventWristband">Bracelet événementiel</option>
+    <option value="arcadeCabinet">Borne d'Arcade</option>
+  </select>
+  <small id="productDimensions"></small>
+  <div id="productPriceContainer"><span id="productPrice"></span></div>
+  <label id="tshirtOrientationWrap"><select id="tshirtOrientation"><option value="portrait">Portrait</option><option value="landscape">Paysage</option></select></label>
+</div>
+
+<!-- NOUVEAU PANNEAU SIMPLIFIÉ (Style Mocka3D) -->
+<div id="panelContentSimple" class="simple-panel-container">
+  <div class="simple-card simple-product-card">
+    <div class="simple-product-info">
+      <small class="simple-card-subtitle">Produit sélectionné</small>
+      <div class="simple-product-title-row">
+        <h3 id="simpleProductName" class="simple-product-name">Le Showroom 3D</h3>
+        <span id="simpleProductPrice" class="simple-price-tag" style="display:none;"></span>
+      </div>
+    </div>
+    <button type="button" id="simpleBtnChangeProduct" class="simple-btn-outline" title="Changer d'objet dans la Boutique 2D">Changer</button>
+  </div>
+
+  <div class="simple-card" id="simpleSectionVisual">
+    <div class="simple-card-header">
+      <div class="simple-step-num">1</div>
+      <div class="simple-card-title-wrap">
+        <h4>Vos visuels</h4>
+        <small>PNG, JPG ou SVG sans perte</small>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <button type="button" id="simpleUploadTrigger" class="simple-btn-primary-large">
+        + Ajouter une photo ou un logo
+      </button>
+      <button type="button" id="simpleOpenCatalogBtn" class="simple-btn-secondary">
+        Catalogue de visuels
+      </button>
+    </div>
+
+    <!-- Liste complète des visuels importés (calques) avec aperçus et sélecteurs de zone Cœur / Ventre / Dos -->
+    <div id="simpleImagesList" class="images-list" style="margin-top:8px;"></div>
+
+    <!-- Boîte d'ajustement du visuel sélectionné -->
+    <div id="simpleVisualAdjustBox" class="simple-visual-adjust-box" style="display:none; margin-top:8px; padding-top:8px; border-top:1px solid #e2e8f0;">
+      <div style="font-size:11px; font-weight:700; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">Ajuster le visuel actif</div>
+      <div class="simple-quick-actions-grid">
+        <button type="button" id="simpleBtnKnockout" class="simple-action-chip" title="Supprimer automatiquement le fond blanc en 1 clic">Détourer fond</button>
+        <button type="button" id="simpleBtnCenter" class="simple-action-chip" title="Recentrer le visuel">Centrer</button>
+        <button type="button" id="simpleBtnPattern" class="simple-action-chip" title="Répéter le visuel en motif mosaïque">Mosaïque</button>
+        <button type="button" id="simpleBtnReplace" class="simple-action-chip" title="Remplacer par une autre image">Remplacer</button>
+        <button type="button" id="simpleBtnRemoveVisual" class="simple-action-chip simple-action-danger" title="Supprimer ce visuel du produit">Retirer</button>
+      </div>
+
+      <div class="simple-slider-group">
+        <div class="simple-slider-row">
+          <label for="simpleScale">Taille</label>
+          <input type="range" id="simpleScale" min="20" max="250" value="100" />
+          <output id="simpleScaleVal">100 %</output>
+        </div>
+        <div class="simple-slider-row">
+          <label for="simpleRotation">Rotation</label>
+          <input type="range" id="simpleRotation" min="-180" max="180" value="0" />
+          <output id="simpleRotationVal">0°</output>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="simple-card" id="simpleArcadeCard" style="display:none;">
+    <div class="simple-card-header">
+      <div class="simple-step-num" style="background:#6366f1; color:#fff;">🕹️</div>
+      <div class="simple-card-title-wrap">
+        <h4>Options Borne Arcade</h4>
+        <small>Joysticks, boutons et côtés</small>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:11px; margin-bottom:8px;">
+      <label style="display:flex; flex-direction:column; gap:2px; font-weight:600; color:#475569;">
+        <span>J1 Joystick</span>
+        <select id="simpleJ1Color" class="custom-select" style="padding:4px; border-radius:4px; font-size:11px;">
+          <option value="#ff0000" selected>Rouge</option>
+          <option value="#0055ff">Bleu</option>
+          <option value="#00ff00">Vert</option>
+          <option value="#ffa500">Orange</option>
+          <option value="#ffff00">Jaune</option>
+          <option value="#111111">Noir</option>
+          <option value="#ffffff">Blanc</option>
+          <option value="#ffc0cb">Rose</option>
+        </select>
+      </label>
+      <label style="display:flex; flex-direction:column; gap:2px; font-weight:600; color:#475569;">
+        <span>J2 Joystick</span>
+        <select id="simpleJ2Color" class="custom-select" style="padding:4px; border-radius:4px; font-size:11px;">
+          <option value="#0055ff" selected>Bleu</option>
+          <option value="#ff0000">Rouge</option>
+          <option value="#00ff00">Vert</option>
+          <option value="#ffa500">Orange</option>
+          <option value="#ffff00">Jaune</option>
+          <option value="#111111">Noir</option>
+          <option value="#ffffff">Blanc</option>
+          <option value="#ffc0cb">Rose</option>
+        </select>
+      </label>
+      <label style="display:flex; flex-direction:column; gap:2px; font-weight:600; color:#475569;">
+        <span>J1 Boutons</span>
+        <select id="simpleB1Color" class="custom-select" style="padding:4px; border-radius:4px; font-size:11px;">
+          <option value="#0055ff" selected>Bleu</option>
+          <option value="#ff0000">Rouge</option>
+          <option value="#00ff00">Vert</option>
+          <option value="#ffa500">Orange</option>
+          <option value="#ffff00">Jaune</option>
+          <option value="#111111">Noir</option>
+          <option value="#ffffff">Blanc</option>
+          <option value="#ffc0cb">Rose</option>
+        </select>
+      </label>
+      <label style="display:flex; flex-direction:column; gap:2px; font-weight:600; color:#475569;">
+        <span>J2 Boutons</span>
+        <select id="simpleB2Color" class="custom-select" style="padding:4px; border-radius:4px; font-size:11px;">
+          <option value="#ff0000" selected>Rouge</option>
+          <option value="#0055ff">Bleu</option>
+          <option value="#00ff00">Vert</option>
+          <option value="#ffa500">Orange</option>
+          <option value="#ffff00">Jaune</option>
+          <option value="#111111">Noir</option>
+          <option value="#ffffff">Blanc</option>
+          <option value="#ffc0cb">Rose</option>
+        </select>
+      </label>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px; font-size:11px; padding-top:6px; border-top:1px solid #f1f5f9;">
+      <label class="simple-toggle-label">
+        <input type="checkbox" id="simpleArcadeGlow" />
+        <span>Boutons & manettes lumineux (LED)</span>
+      </label>
+      <label class="simple-toggle-label">
+        <input type="checkbox" id="simpleArcadeMirrorSideB" checked />
+        <span>Miroir Côté B (Inverser Côté Droit)</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="simple-card" id="simpleSectionText">
+    <div class="simple-card-header">
+      <div class="simple-step-num">2</div>
+      <div class="simple-card-title-wrap">
+        <h4>Texte personnalisé</h4>
+        <small>Message, prénom ou citation</small>
+      </div>
+    </div>
+
+    <div class="simple-text-content">
+      <div id="simpleTextSideWrap" style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; font-size:11px;">
+        <span style="font-weight:600; color:#475569;">Zone du texte :</span>
+        <select id="simpleTextSide" class="custom-select" style="padding:3px 8px; font-size:11px; border-radius:4px; border:1px solid #cbd5e1; background:#fff; color:#1e293b;">
+          <option value="both">Deux faces</option>
+          <option value="A">Face A (Avant)</option>
+          <option value="B">Face B (Arrière)</option>
+        </select>
+      </div>
+
+      <input type="text" id="simpleTextInput" class="simple-input-text" placeholder="Tapez votre texte ici..." autocomplete="off" />
+
+      <div class="simple-text-style-bar">
+        <div class="simple-btn-group" role="group" aria-label="Alignement du texte">
+          <button type="button" class="simple-style-btn" data-simple-align="left" title="Aligner à gauche">Gauche</button>
+          <button type="button" class="simple-style-btn active" data-simple-align="center" title="Centrer">Centré</button>
+          <button type="button" class="simple-style-btn" data-simple-align="right" title="Aligner à droite">Droite</button>
+        </div>
+        <label class="simple-toggle-mini">
+          <input type="checkbox" id="simpleTextBold" />
+          <strong>Gras</strong>
+        </label>
+        <label class="simple-toggle-mini">
+          <input type="checkbox" id="simpleTextItalic" />
+          <em>Italique</em>
+        </label>
+      </div>
+
+      <div class="simple-form-row">
+        <div class="simple-form-field">
+          <label for="simpleTextFont">Police de caractères</label>
+          <select id="simpleTextFont" class="simple-select">
+            <optgroup label="Sans-Serif & Modernes">
+              <option value="Inter, sans-serif" selected>Inter</option>
+              <option value="Montserrat, sans-serif">Montserrat</option>
+              <option value="Roboto, sans-serif">Roboto</option>
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="'Trebuchet MS', sans-serif">Trebuchet</option>
+            </optgroup>
+            <optgroup label="Titres & Impact">
+              <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
+              <option value="Oswald, sans-serif">Oswald</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Righteous, cursive">Righteous</option>
+            </optgroup>
+            <optgroup label="Manuscrites & Calligraphie">
+              <option value="'Dancing Script', cursive">Dancing Script</option>
+              <option value="Pacifico, cursive">Pacifico</option>
+              <option value="'Great Vibes', cursive">Great Vibes</option>
+              <option value="Caveat, cursive">Caveat</option>
+              <option value="Satisfy, cursive">Satisfy</option>
+              <option value="Lobster, cursive">Lobster</option>
+              <option value="'Comic Sans MS', cursive">Comic Sans</option>
+            </optgroup>
+            <optgroup label="Serif & Élégance">
+              <option value="'Playfair Display', serif">Playfair Display</option>
+              <option value="Cinzel, serif">Cinzel</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="'Times New Roman', serif">Times</option>
+              <option value="'Courier New', monospace">Courier</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="simple-form-field simple-color-field">
+          <label>Couleur</label>
+          <div class="simple-color-swatches">
+            <button type="button" class="simple-swatch active" data-color="#111820" style="background:#111820" title="Noir"></button>
+            <button type="button" class="simple-swatch" data-color="#ffffff" style="background:#ffffff; border:1px solid #cbd5e1" title="Blanc"></button>
+            <button type="button" class="simple-swatch" data-color="#0284c7" style="background:#0284c7" title="Bleu"></button>
+            <button type="button" class="simple-swatch" data-color="#dc2626" style="background:#dc2626" title="Rouge"></button>
+            <button type="button" class="simple-swatch" data-color="#ca8a04" style="background:#ca8a04" title="Doré"></button>
+            <label class="simple-swatch-picker" title="Couleur libre">
+              <input type="color" id="simpleTextColorPicker" value="#111820" />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="simple-slider-row">
+        <label for="simpleTextSize">Taille</label>
+        <input type="range" id="simpleTextSize" min="16" max="220" value="60" />
+        <output id="simpleTextSizeVal">60 px</output>
+      </div>
+
+      <div class="simple-checkboxes-row">
+        <label class="simple-toggle-label">
+          <input type="checkbox" id="simpleCurvedText" />
+          <span>Courber (Arc)</span>
+        </label>
+        <label class="simple-toggle-label">
+          <input type="checkbox" id="simpleShadowText" />
+          <span>Ombre portée 3D</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="simple-card simple-actions-card">
+    <button type="button" id="simpleBtnOrder" class="simple-btn-cta">
+      Valider ma création
+    </button>
+  </div>
+  <div class="legal-footer-links client-only-legal" style="margin-top:8px; padding-top:8px; text-align:center; font-size:11px; color:#94a3b8;">
+    <button type="button" class="btn-open-cgv" style="background:none; border:none; color:#64748b; text-decoration:underline; font-size:11px; cursor:pointer;">Conditions Générales de Vente</button>
+    &nbsp;•&nbsp;
+    <button type="button" class="btn-open-mentions" style="background:none; border:none; color:#64748b; text-decoration:underline; font-size:11px; cursor:pointer;">Mentions Légales</button>
+  </div>
+</div>
+
+<!-- PANNEAU EXPERT COMPLET CONSERVÉ SANS MODIFICATION -->
+<div id="panelContentAdvanced" style="display:none;">
         <div id="clientGuide" class="client-guide" hidden>
           <strong id="clientGuideTitle">Étape 1 · Choisir un produit</strong>
           <div class="client-timeline" role="progressbar" aria-label="Progression de création">
@@ -23,30 +319,6 @@
             </div>
           </div>
           <button id="clientGuideAction" class="primary" type="button">Choisir ce produit</button>
-        </div>
-        <div style="display:none;">
-          <select id="productSelect">
-            <option value="showcase" selected>Le Showroom 3D</option>
-            <option value="tshirt3D">T-shirt 3D</option>
-            <option value="mug11oz">Mug blanc 11 oz</option>
-            <option value="photoFrame">Poster A4</option>
-            <option value="poster">Poster 80 × 60 cm</option>
-            <option value="cushion">Housse de coussin</option>
-            <option value="cap">Casquette 3D</option>
-            <option value="mousePad">Tapis de souris</option>
-            <option value="puzzle">Puzzle 120 pièces</option>
-            <option value="pencilCase">Trousse</option>
-            <option value="coaster">Sous-verre carré</option>
-            <option value="coasterRound">Sous-verre rond</option>
-            <option value="keychainRect">Porte-clés rectangle</option>
-            <option value="keychainRound">Porte-clés rond</option>
-            <option value="keychainHeart">Porte-clés Cœur</option>
-            <option value="eventWristband">Bracelet événementiel</option>
-            <option value="arcadeCabinet">Borne d'Arcade</option>
-          </select>
-          <small id="productDimensions"></small>
-          <div id="productPriceContainer"><span id="productPrice"></span></div>
-          <label id="tshirtOrientationWrap"><select id="tshirtOrientation"><option value="portrait">Portrait</option><option value="landscape">Paysage</option></select></label>
         </div>
         <div id="activeProductBanner" class="active-product-banner">
           <div class="active-product-meta">
@@ -89,6 +361,24 @@
             <div id="imageResolutionBadge" style="margin:6px 0 8px; padding:6px 10px; border-radius:6px; font-size:11px; display:none; align-items:center; justify-content:space-between; gap:6px;"></div>
             <div class="segmented" role="group" aria-label="Mode d’ajustement">
               <button class="active" data-fit="contain">Image entière</button><button data-fit="cover">Remplir la surface</button><button data-fit="fill">Plein wrap (Étirer)</button>
+            </div>
+            <div class="studio-tools-box" style="margin: 8px 0 10px; padding: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+              <div style="font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em;">Retouche Express du Visuel</div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px;">
+                <button type="button" id="btnRemoveWhiteBg" class="secondary" style="padding: 6px 4px; font-size: 11px; font-weight: 700; background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8;" title="Supprimer automatiquement le fond blanc de l'image">Détourer fond</button>
+                <button type="button" id="btnRevertBg" class="secondary" style="padding: 6px 4px; font-size: 11px;" title="Rétablir l'image originale sans filtre">Original</button>
+                <button type="button" id="btnDeleteActiveImage" class="secondary danger" style="padding: 6px 4px; font-size: 11px; font-weight: 700; color: #dc2626; border-color: #fecaca; background: #fef2f2; grid-column: span 2;" title="Supprimer ce visuel du produit">Supprimer ce visuel</button>
+              </div>
+              <label style="font-size: 11px; color: #64748b; display: flex; align-items: center; justify-content: space-between; gap: 6px;">
+                <span>Filtre d'ambiance :</span>
+                <select id="imageFilterSelect" class="custom-select" style="padding: 3px 6px; font-size: 11px; border-radius: 4px; border: 1px solid #cbd5e1; background: #fff; color: #1e293b;">
+                  <option value="none">Normal (Couleur)</option>
+                  <option value="grayscale">Noir & Blanc studio</option>
+                  <option value="sepia">Sépia vintage</option>
+                  <option value="contrast">Contraste élevé</option>
+                  <option value="invert">Négatif / Inversé</option>
+                </select>
+              </label>
             </div>
             <label class="frame-option"><input id="showTransformFrame" type="checkbox" checked> Cadre d'ajustement direct (Drag & Drop)</label>
             <div class="drag-hint-box" style="font-size:11px; color:#6d28d9; background:#f5f3ff; border:1px solid #ddd6fe; border-radius:6px; padding:6px 10px; margin:4px 0 8px;">Glissez-déplacez votre visuel directement à la souris sur l'objet.</div>
@@ -181,6 +471,20 @@
                 </select>
               </label>
             </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0 6px;">
+              <label class="option-check mini-check" style="margin: 0;">
+                <input id="textCurved" type="checkbox"> <span>Texte courbé (Arc)</span>
+              </label>
+              <label class="option-check mini-check" style="margin: 0;">
+                <input id="textShadow" type="checkbox"> <span>Ombre portée</span>
+              </label>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin: 6px 0 10px; padding: 6px 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;">
+              <label class="option-check mini-check" style="margin: 0;">
+                <input id="textStroke" type="checkbox"> <span>Contour du texte</span>
+              </label>
+              <input id="textStrokeColor" type="color" value="#ffffff" style="width: 32px; height: 24px; padding: 0; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer;">
+            </div>
             <label class="control">
               <span>Taille <output id="textSizeValue">60 px</output></span>
               <input id="textSize" type="range" min="16" max="220" value="60" />
@@ -191,3 +495,88 @@
             <button id="resetText" class="text-button" type="button">Effacer le texte</button>
           </div>
         </section>
+        <section id="sectionAppearance" class="collapsible-section reference-options actions" data-section="4">
+          <button type="button" class="section-title-btn" aria-expanded="true">
+            <div class="section-title"><span>4</span><h2>Apparence & Fond</h2></div>
+            <span class="collapse-icon">▾</span>
+          </button>
+          <div class="section-content">
+            <p id="stockNote" class="stock-note">Objets blancs uniquement.<br>Modification de couleur : <strong>non disponible pour le moment.</strong></p>
+            <div class="color-grid">
+              <label id="topColorWrap"><input id="topColor" type="color" value="#ffffff"><span>Surface</span></label>
+              <label id="baseColorWrap"><input id="baseColor" type="color" value="#101318"><span>Base</span></label>
+              <label id="sceneColorWrap"><input id="sceneColor" type="color" value="#e9edf0"><span>Fond</span></label>
+              <label id="handleColorWrap" hidden><input id="handleColor" type="color" value="#ffffff"><span>Anse</span></label>
+              <label id="innerColorWrap" hidden><input id="innerColor" type="color" value="#ffffff"><span>Intérieur</span></label>
+            </div>
+            <div style="margin: 10px 0; padding: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+              <div style="font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em;">Finition de la Matière</div>
+              <label style="font-size: 11px; color: #64748b; display: flex; align-items: center; justify-content: space-between; gap: 6px;">
+                <span>Aspect de surface :</span>
+                <select id="materialFinishSelect" class="custom-select" style="padding: 4px 8px; font-size: 11px; border-radius: 4px; border: 1px solid #cbd5e1; background: #fff; color: #1e293b;">
+                  <option value="auto" selected>Auto (Recommandé)</option>
+                  <option value="ceramic">Céramique brillante / Verni</option>
+                  <option value="fabric">Textile mat (Coton sans reflet)</option>
+                  <option value="satin">Satiné / Métal doux</option>
+                </select>
+              </label>
+            </div>
+            <div id="arcadeControlsWrap" hidden style="margin-top:10px; margin-bottom:8px; padding:10px; border-radius:8px; background:rgba(0,0,0,0.05); border:1px solid #dce1e5;">
+              <div style="font-weight:700; font-size:11px; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em; color:#475569;">Contrôles de la Borne Arcade</div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:11px;">
+                <label style="display:flex; flex-direction:column; gap:2px;"><strong>J1 Joystick</strong><select id="j1Color" class="custom-select" style="padding:4px; border-radius:4px;"><option value="#0055ff">Bleu</option><option value="#ff0000" selected>Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
+                <label style="display:flex; flex-direction:column; gap:2px;"><strong>J2 Joystick</strong><select id="j2Color" class="custom-select" style="padding:4px; border-radius:4px;"><option value="#0055ff" selected>Bleu</option><option value="#ff0000">Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
+                <label style="display:flex; flex-direction:column; gap:2px;"><strong>J1 Boutons</strong><select id="b1Color" class="custom-select" style="padding:4px; border-radius:4px;"><option value="#0055ff" selected>Bleu</option><option value="#ff0000">Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
+                <label style="display:flex; flex-direction:column; gap:2px;"><strong>J2 Boutons</strong><select id="b2Color" class="custom-select" style="padding:4px; border-radius:4px;"><option value="#0055ff">Bleu</option><option value="#ff0000" selected>Rouge</option><option value="#00ff00">Vert</option><option value="#ffa500">Orange</option><option value="#ffff00">Jaune</option><option value="#111111">Noir</option><option value="#ffffff">Blanc</option><option value="#ffc0cb">Rose</option></select></label>
+              </div>
+              <div id="arcadeGlowWrap" style="margin-top:8px; display:flex; flex-direction:column; gap:4px;">
+                <label class="option-check mini-check" style="margin:0;"><input id="arcadeGlow" type="checkbox"> Boutons/Manettes lumineux</label>
+                <label class="option-check mini-check" style="margin:0;"><input id="arcadeMirrorSideB" type="checkbox" checked> Miroir Côté B (Inverser Côté Droit)</label>
+              </div>
+            </div>
+            <div id="quickPalette" class="quick-palette" hidden>
+              <span class="quick-palette-title">Palette mug rapide :</span>
+              <div class="quick-palette-colors">
+                <button type="button" class="swatch" data-color="#ffffff" style="background:#ffffff" title="Blanc"></button>
+                <button type="button" class="swatch" data-color="#000000" style="background:#000000" title="Noir"></button>
+                <button type="button" class="swatch" data-color="#df1212" style="background:#df1212" title="Rouge"></button>
+                <button type="button" class="swatch" data-color="#7a0205" style="background:#7a0205" title="Bordeaux"></button>
+                <button type="button" class="swatch" data-color="#f86900" style="background:#f86900" title="Orange"></button>
+                <button type="button" class="swatch" data-color="#edd900" style="background:#edd900" title="Jaune"></button>
+                <button type="button" class="swatch" data-color="#075103" style="background:#075103" title="Vert"></button>
+                <button type="button" class="swatch" data-color="#1d85d0" style="background:#1d85d0" title="Bleu"></button>
+                <button type="button" class="swatch" data-color="#270e68" style="background:#270e68" title="Marine"></button>
+                <button type="button" class="swatch" data-color="#ffc2c2" style="background:#ffc2c2" title="Rose"></button>
+              </div>
+            </div>
+            <div class="background-actions"><label for="bgInput" class="secondary">Ajouter une image de fond</label><button id="clearBg" class="secondary">Effacer le fond</button></div><input id="bgInput" type="file" accept="image/png,image/jpeg">
+            <div class="background-actions" style="margin-top:6px; display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+              <button id="bgPresetPodium" class="secondary" type="button" style="background:#fff1f2; border-color:#fecdd3; color:#9f1239; font-weight:700; font-size:11px; padding:6px 4px;" title="Podium coloré studio pour le mug">Podium (Mug)</button>
+              <button id="bgPresetMug" class="secondary" type="button" style="background:#f1f5f9; border-color:#cbd5e1; color:#334155; font-weight:600; font-size:11px; padding:6px 4px;" title="Cuisine moderne pour le mug">Cuisine (Mug)</button>
+              <button id="bgPresetBureau" class="secondary" type="button" style="background:#eff6ff; border-color:#bfdbfe; color:#1e40af; font-weight:600; font-size:11px; padding:6px 4px;" title="Bureau moderne avec ordi pour le tapis de souris">Bureau (Tapis)</button>
+              <button id="bgPresetSalon" class="secondary" type="button" style="background:#f5f3ff; border-color:#ddd6fe; color:#6d28d9; font-weight:600; font-size:11px; padding:6px 4px;" title="Salon moderne pour la borne">Salon (Arcade)</button>
+            </div>
+            <label class="control" id="bgOpacityControl" hidden><span>Opacité du fond <output id="bgOpacityValue">100 %</output></span><input id="bgOpacity" type="range" min="0" max="100" value="100"></label>
+          </div>
+        </section>
+        <section id="sectionAnimation" class="collapsible-section actions" data-section="5">
+          <button type="button" class="section-title-btn" aria-expanded="true">
+            <div class="section-title"><span>5</span><h2>Animation & Angles</h2></div>
+            <span class="collapse-icon">▾</span>
+          </button>
+          <div class="section-content">
+            <label class="switch-row animation-switch"><span><strong>Animer le produit</strong><small>Active ou arrête la rotation</small></span><input id="autoRotate" type="checkbox" /><i></i></label>
+            <div class="angle-title">Angles de vue</div>
+            <div class="angles"><button data-angle="45">45°</button><button data-angle="90">90°</button><button data-angle="135">135°</button><button data-angle="225">225°</button><button data-angle="270">270°</button><button data-angle="315">315°</button></div>
+            <label class="control"><span>Angle personnalisé <output id="angleValue">45°</output></span><input id="viewAngle" type="range" min="0" max="360" value="45"></label>
+            <label class="control"><span>Vitesse d’animation <output id="speedValue">1×</output></span><input id="speed" type="range" min="2" max="30" value="12"></label>
+            <label class="rotation-mode"><span>Sens de rotation</span><select id="rotationMode"><option value="horizontal">Horizontal</option><option value="vertical">Vertical</option><option value="diagonal">Diagonal</option><option value="swing">Va-et-vient</option></select></label>
+            <label class="option-check"><input id="reverse" type="checkbox"> Sens inverse</label>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
+              <button id="saveViewBtn" class="secondary" type="button" style="background:#f0f9ff; border-color:#bae6fd; color:#0369a1; font-weight:700;" title="Sauvegarder l'angle et le zoom actuels pour ce produit">Sauvegarder vue</button>
+              <button id="resetViewSide" class="secondary" type="button">Réinitialiser vue</button>
+            </div>
+          </div>
+        </section>
+</div>
+</aside>

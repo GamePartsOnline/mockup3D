@@ -77,7 +77,7 @@ app.updateSceneBackground = function updateSceneBackground() {
   app.scene.background = app.sceneWatermarkTexture;
 
   const sf = app.scene?.getObjectByName('studioFloor');
-  if (sf?.material) {
+  if (sf?.material && !sf.userData?.customFloor) {
     if (showWatermark && app.sceneWatermarkTexture) {
       sf.material.map = app.sceneWatermarkTexture;
       sf.material.color.set(0xffffff);

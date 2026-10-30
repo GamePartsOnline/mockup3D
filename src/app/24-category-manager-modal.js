@@ -80,8 +80,15 @@ export function register(app) {
       subInput.onkeydown = async e => {
         if (e.key === 'Enter' && subInput.value.trim()) {
           const val = subInput.value.trim();
-          if (typeof catObj === 'string') { cats[catIdx] = { name: catName, subs: [val] }; }
-          else { if (!Array.isArray(catObj.subs)) catObj.subs = []; if (!catObj.subs.includes(val)) catObj.subs.push(val); }
+          const clean = val.charAt(0).toUpperCase() + val.slice(1);
+          if (typeof catObj === 'string') { cats[catIdx] = { name: catName, subs: [clean] }; }
+          else {
+            if (!Array.isArray(catObj.subs)) catObj.subs = [];
+            if (!catObj.subs.includes(clean)) {
+              catObj.subs.push(clean);
+              catObj.subs.sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
+            }
+          }
           subInput.value = ''; await sync();
         }
       };
@@ -150,9 +157,11 @@ export function initialize(app) {
     const val = prompt('Nom de la nouvelle catégorie principale :');
     if (!val || !val.trim()) return;
     if (!Array.isArray(app.catalogCategories)) app.catalogCategories = [];
-    app.catalogCategories.push({ name: val.trim(), subs: [] });
+    const clean = val.trim().charAt(0).toUpperCase() + val.trim().slice(1);
+    app.catalogCategories.push({ name: clean, subs: [] });
+    app.catalogCategories.sort((a, b) => (a.name || a).localeCompare(b.name || b, 'fr', { sensitivity: 'base' }));
     await app.persistCatalogCategories?.();
     app.renderCategoryManagerList?.(); app.renderCatalog?.();
-    app.showToast(`Catégorie "${val.trim()}" créée`);
+    app.showToast(`Catégorie "${clean}" créée`);
   });
 }

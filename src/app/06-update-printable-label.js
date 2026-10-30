@@ -16,6 +16,10 @@ export function initialize(app) {
 document.querySelector('#imageInput').addEventListener('change', async e => {
   const files = Array.from(e.target.files || []);
   if (!files.length) return;
+  const hadDefaultLogo = (app.imagesList || []).some(i => i.isDefaultLogo || i.url === '/logo-graph2print.png' || i.id?.startsWith('default-logo-') || (i.name && i.name.toLowerCase().includes('graph2print')));
+  if (hadDefaultLogo) {
+    app.imagesList = (app.imagesList || []).filter(i => !i.isDefaultLogo && i.url !== '/logo-graph2print.png' && !i.id?.startsWith('default-logo-') && !(i.name && i.name.toLowerCase().includes('graph2print')));
+  }
   if (app.clientMode) app.proposeClientImages?.(files);
   const lowRes = [];
   for (const file of files) {
@@ -23,10 +27,22 @@ document.querySelector('#imageInput').addEventListener('change', async e => {
     await new Promise(resolve => {
       const img = new Image();
       img.onload = () => {
+        let defSide = 'both';
+        if (app.product.zones) {
+          const used = new Set(app.imagesList.map(i => i.side));
+          const nextZone = app.product.zones.find(z => !used.has(z.id));
+          defSide = nextZone ? nextZone.id : app.product.zones[0].id;
+        } else if (app.product.twoSided) {
+          const used = new Set(app.imagesList.map(i => i.side));
+          defSide = (used.has('A') && !used.has('B')) ? 'B' : (used.size === 0 ? 'A' : 'both');
+        } else if (app.currentProductKey === 'tshirt3D') {
+          const used = new Set(app.imagesList.map(i => i.side));
+          defSide = (used.has('A') && !used.has('B')) ? 'B' : ((used.has('A') && !used.has('heart')) ? 'heart' : 'A');
+        }
         const item = {
           id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
           name: file.name, img, scale: 1, scaleX: 1, scaleY: 1, x: 0, y: 0, rotation: 0, fitMode: 'contain',
-          side: app.product.zones ? app.product.zones[0].id : 'both'
+          side: defSide
         };
         app.imagesList.push(item);
         const res = app.getImageResolutionInfo?.(item);
@@ -59,9 +75,9 @@ document.querySelector('#productSelect').onchange = e => {
 
   const priceMap = {
     mug11oz: '13,00 €', mousePad: '10,00 €', keychainRect: '6,00 €', keychainRound: '6,00 €',
-    keychainHeart: '6,00 €', tshirt3D: '17,00 € - 21,00 €', cap: '15,00 €', poster: '25,00 €',
+    keychainHeart: '6,00 €', tshirt3D: '20,00 €', cap: '15,00 €', poster: '25,00 €',
     puzzle: '15,00 €', coaster: '8,00 €', coasterRound: '8,00 €', pencilCase: '11,00 €',
-    cushion: '17,00 €', arcadeCabinet: '2290,00 € (Décoration spécifique)', eventWristband: '6,50 €'
+    cushion: '17,00 €', arcadeCabinet: '2 290,00 €', eventWristband: '6,50 €'
   };
   const priceContainer = document.querySelector('#productPriceContainer');
   const priceEl = document.querySelector('#productPrice');
@@ -74,9 +90,13 @@ document.querySelector('#productSelect').onchange = e => {
   const isArcade = app.currentProductKey === 'arcadeCabinet';
   const isShowcase = app.currentProductKey === 'showcase';
   if (app.controls) {
-    app.controls.enableRotate = !isShowcase;
-    app.controls.enablePan = !isShowcase;
-    app.controls.enableZoom = !isShowcase;
+    app.controls.enableRotate = true; app.controls.enablePan = true; app.controls.enableZoom = true;
+    app.controls.minDistance = isShowcase ? 1.0 : 0.2;
+    app.controls.maxDistance = isShowcase ? 8.2 : 12.0;
+    app.controls.minPolarAngle = isShowcase ? Math.PI * 0.15 : 0;
+    app.controls.maxPolarAngle = isShowcase ? Math.PI * 0.60 : Math.PI;
+    app.controls.minAzimuthAngle = isShowcase ? -Math.PI * 0.35 : -Infinity;
+    app.controls.maxAzimuthAngle = isShowcase ? Math.PI * 0.35 : Infinity;
   }
   if (isShowcase && app.backgroundTexture) { app.backgroundTexture.dispose(); app.backgroundTexture = null; }
   app.updateSceneBackground?.();
@@ -109,6 +129,13 @@ document.querySelector('#productSelect').onchange = e => {
   if (arcadeControlsWrap) arcadeControlsWrap.hidden = !isArcade;
   const arcadeGlowWrap = document.querySelector('#arcadeGlowWrap');
   if (arcadeGlowWrap) arcadeGlowWrap.hidden = !isArcade;
+  if (isArcade) {
+    if (app.arcadeMirrorSideB === undefined) app.arcadeMirrorSideB = true;
+    const chk = document.querySelector('#arcadeMirrorSideB');
+    if (chk) chk.checked = app.arcadeMirrorSideB;
+    const sChk = document.querySelector('#simpleArcadeMirrorSideB');
+    if (sChk) sChk.checked = app.arcadeMirrorSideB;
+  }
 
   const defaultBaseColors = {
     mousePad: '#101318', coaster: '#3d2b1f', coasterRound: '#3d2b1f',
@@ -185,14 +212,24 @@ document.querySelector('#productSelect').onchange = e => {
   if (viewFaceB) viewFaceB.innerHTML = hasZones ? '<span style="font-weight:900;margin-right:4px;">B</span> Côtés' : '<span style="font-weight:900;margin-right:4px;">B</span> Face B';
 
   const textSideSelect = document.querySelector('#textSideSelect');
-  if (textSideSelect) {
-    textSideSelect.style.display = (isTwoSided || hasZones) ? 'inline-block' : 'none';
-    if (hasZones) {
-      textSideSelect.innerHTML = '<option value="both">Toutes zones</option>' + app.product.zones.map(z => `<option value="${z.id}">${z.label}</option>`).join('');
-    } else {
-      textSideSelect.innerHTML = '<option value="both">2 faces</option><option value="A">Face A</option><option value="B">Face B</option>' + (app.currentProductKey === 'tshirt3D' ? '<option value="heart">Cœur (petit)</option>' : '');
-    }
+  const simpleTextSide = document.querySelector('#simpleTextSide');
+  const simpleTextSideWrap = document.querySelector('#simpleTextSideWrap');
+  const showTextSide = (isTwoSided || hasZones);
+  if (textSideSelect) textSideSelect.style.display = showTextSide ? 'inline-block' : 'none';
+  if (simpleTextSideWrap) simpleTextSideWrap.style.display = showTextSide ? 'flex' : 'none';
+
+  let sideHtml = '';
+  if (app.currentProductKey === 'tshirt3D') {
+    sideHtml = '<option value="A">Ventre (Devant)</option><option value="B">Dos</option><option value="heart">Cœur</option><option value="both">Deux faces (Ventre + Dos)</option>';
+  } else if (app.currentProductKey === 'arcadeCabinet') {
+    sideHtml = '<option value="sides">Les deux côtés (Miroir auto)</option><option value="left">Côté Gauche (Côté A)</option><option value="right">Côté Droit (Côté B)</option><option value="marquee">Fronton Haut (Marquee)</option><option value="front">Porte / Face Avant</option><option value="both">Toutes zones</option>';
+  } else if (hasZones) {
+    sideHtml = '<option value="both">Toutes zones</option>' + app.product.zones.map(z => `<option value="${z.id}">${z.label}</option>`).join('');
+  } else if (isTwoSided) {
+    sideHtml = '<option value="both">Deux faces</option><option value="A">Face A (Avant)</option><option value="B">Face B (Arrière)</option>';
   }
+  if (textSideSelect && sideHtml) textSideSelect.innerHTML = sideHtml;
+  if (simpleTextSide && sideHtml) simpleTextSide.innerHTML = sideHtml;
 
   app.floor.position.y = isMug ? -0.002 : (isArcade || isShowcase) ? -0.835 : -0.09;
 

@@ -32,6 +32,7 @@ app.updateExportStatus = function updateExportStatus(text) {
 };
 
 app.runExportPng = function runExportPng() {
+  if (app.clientMode) { app.showToast("L'export direct est réservé à l'atelier. Cliquez sur 'Valider ma création'."); return; }
   const overlayWasVisible = app.isOverlayVisible(), gridWasVisible = app.grid.visible;
   const scaleMultiplier = app.getSelectedResolution();
   app.setOverlayVisible(false);
@@ -82,6 +83,21 @@ if (document.querySelector('#arcadeGlow')) {
     });
   };
 }
+const arcadeMirrorCb = document.querySelector('#arcadeMirrorSideB');
+const simpleArcadeMirrorCb = document.querySelector('#simpleArcadeMirrorSideB');
+const onArcadeMirrorChange = e => {
+  app.arcadeMirrorSideB = e.target.checked;
+  if (arcadeMirrorCb) arcadeMirrorCb.checked = app.arcadeMirrorSideB;
+  if (simpleArcadeMirrorCb) simpleArcadeMirrorCb.checked = app.arcadeMirrorSideB;
+  app.buildTexture();
+};
+if (arcadeMirrorCb) arcadeMirrorCb.onchange = onArcadeMirrorChange;
+if (simpleArcadeMirrorCb) simpleArcadeMirrorCb.onchange = onArcadeMirrorChange;
+const simpleArcadeGlowCb = document.querySelector('#simpleArcadeGlow');
+if (simpleArcadeGlowCb) simpleArcadeGlowCb.onchange = e => {
+  const g = document.querySelector('#arcadeGlow');
+  if (g) { g.checked = e.target.checked; g.dispatchEvent(new Event('change')); }
+};
 document.querySelectorAll('.quick-palette .swatch').forEach(swatch => {
   swatch.addEventListener('click', () => {
     const col = swatch.dataset.color;

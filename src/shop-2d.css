@@ -100,12 +100,42 @@ html[data-theme="dark"] .panel::-webkit-scrollbar-thumb { background: #475569; b
   width: 100%; height: 135px; display: flex; align-items: center; justify-content: center;
   background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 72%);
   border-radius: 10px; margin: 4px 0 10px; overflow: hidden;
+  position: relative;
 }
 .shop-thumb-3d-img {
   max-width: 100%; max-height: 125px; object-fit: contain;
   filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.16)); transition: transform .25s ease;
 }
+.shop-thumb-logo-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.20));
+  transition: transform .25s ease;
+  user-select: none;
+}
 .shop-card:hover .shop-thumb-3d-img { transform: scale(1.08) translateY(-3px); }
+.shop-card:hover .shop-thumb-logo-overlay { transform: translate(-50%, -50%) scale(1.08) translateY(-3px); }
+
+.shop-thumb-logo-tshirt3D { top: 48%; left: 50%; width: 28%; }
+.shop-thumb-logo-mug11oz { top: 54%; left: 47%; width: 27%; }
+.shop-thumb-logo-mousePad { top: 57%; left: 50%; width: 34%; }
+.shop-thumb-logo-cushion { top: 50%; left: 50%; width: 28%; }
+.shop-thumb-logo-poster { top: 48%; left: 50%; width: 32%; }
+.shop-thumb-logo-photoFrame { top: 48%; left: 50%; width: 28%; }
+.shop-thumb-logo-cap { top: 40%; left: 50%; width: 22%; }
+.shop-thumb-logo-puzzle { top: 50%; left: 50%; width: 30%; }
+.shop-thumb-logo-pencilCase { top: 56%; left: 50%; width: 30%; }
+.shop-thumb-logo-coaster { top: 56%; left: 50%; width: 28%; }
+.shop-thumb-logo-coasterRound { top: 56%; left: 50%; width: 28%; }
+.shop-thumb-logo-keychainRect { top: 62%; left: 50%; width: 20%; }
+.shop-thumb-logo-keychainRound { top: 60%; left: 50%; width: 22%; }
+.shop-thumb-logo-keychainHeart { top: 59%; left: 50%; width: 22%; }
+.shop-thumb-logo-eventWristband { top: 52%; left: 50%; width: 30%; }
+.shop-thumb-logo-arcadeCabinet { top: 24%; left: 50%; width: 17%; }
 
 .shop-card-body { flex: 1; margin-top: 8px; }
 .shop-card-title { margin: 0 0 6px 0; font-size: 15px; font-weight: 700; color: #0f172a; }

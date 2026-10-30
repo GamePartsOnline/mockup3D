@@ -1,7 +1,7 @@
 import { getProductThumbnail } from './19-shop-product-thumbs.js';
 
 const SHOP_ITEMS = [
-  { key: 'tshirt3D', cat: 'mode', name: 'T-shirt 3D', price: '17,00 € - 21,00 €', dim: 'A4 (210 × 297 mm)', badge: 'Populaire', desc: 'Impression recto/verso personnalisée en haute définition.' },
+  { key: 'tshirt3D', cat: 'mode', name: 'T-shirt 3D', price: '20,00 €', dim: 'A4 (210 × 297 mm)', badge: 'Populaire', desc: 'Impression recto/verso personnalisée en haute définition.' },
   { key: 'mug11oz', cat: 'deco', name: 'Mug blanc 11 oz', price: '13,00 €', dim: 'Ø 82 × 95 mm (325 ml)', badge: 'Best-seller', desc: 'Céramique de qualité supérieure, résistant au micro-ondes et lave-vaisselle.' },
   { key: 'photoFrame', cat: 'deco', name: 'Poster A4 (Sans cadre)', price: '12,00 €', dim: '210 × 297 mm', badge: 'Art', desc: 'Poster A4 sur papier d\'art satiné 250g, vendu sans cadre.' },
   { key: 'poster', cat: 'deco', name: 'Poster mural 80 × 60 cm', price: '25,00 €', dim: '800 × 600 mm (Sans cadre)', badge: 'Grand format', desc: 'Papier satiné épais 250g, rendu éclatant pour vos œuvres d\'art.' },
@@ -24,6 +24,51 @@ export function register(app) {
   SHOP_ITEMS.forEach(it => {
     app.shopThumbnails[it.key] = getProductThumbnail(it.key);
   });
+
+  app.applyDefaultProductLogo = async function(productKey = app.currentProductKey) {
+    if (!productKey || productKey === 'showcase') return;
+    const hasCustomImages = (app.imagesList || []).some(img => !img.isDefaultLogo && img.url !== '/logo-graph2print.png' && !img.id?.startsWith('default-logo-') && !(img.name && img.name.toLowerCase().includes('graph2print')));
+    if (hasCustomImages) return;
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = '/logo-graph2print.png';
+    try {
+      await img.decode();
+    } catch (_) {
+      await new Promise(r => { img.onload = r; img.onerror = r; });
+    }
+
+    app.imagesList = [];
+
+    let defSide = 'both';
+    if (productKey === 'tshirt3D') defSide = 'A';
+    else if (productKey === 'arcadeCabinet') defSide = 'marquee';
+    else if (app.product?.twoSided) defSide = 'A';
+    else if (app.product?.zones) defSide = app.product.zones[0]?.id || 'both';
+
+    app.imagesList.push({
+      id: `default-logo-${Date.now()}`,
+      name: 'Logo Graph2Print',
+      url: '/logo-graph2print.png',
+      isDefaultLogo: true,
+      img,
+      scale: 0.85,
+      scaleX: 0.85,
+      scaleY: 0.85,
+      x: 0,
+      y: 0,
+      rotation: 0,
+      fitMode: 'contain',
+      repeatPattern: false,
+      side: defSide
+    });
+
+    app.activeImageIndex = 0;
+    app.renderImagesList?.();
+    app.syncActiveControls?.();
+    app.buildTexture?.();
+  };
 
   app.openShop2D = function() {
     const el = document.querySelector('#shop2DOverlay');
@@ -62,7 +107,10 @@ export function initialize(app) {
 
       card.innerHTML = `
         <div class="shop-card-badge-wrap">${item.badge ? `<span class="shop-badge">${item.badge}</span>` : '<span></span>'}</div>
-        <div class="shop-thumb-3d-wrap"><img src="${thumb}" alt="${item.name}" class="shop-thumb-3d-img" /></div>
+        <div class="shop-thumb-3d-wrap">
+          <img src="${thumb}" alt="${item.name}" class="shop-thumb-3d-img" />
+          <img src="/logo-graph2print.png" alt="Graph2Print" class="shop-thumb-logo-overlay shop-thumb-logo-${item.key}" />
+        </div>
         <div class="shop-card-body">
           <h3 class="shop-card-title">${item.name}</h3>
           <p class="shop-card-desc">${item.desc}</p>
@@ -73,6 +121,9 @@ export function initialize(app) {
       card.onclick = () => {
         app.switchToProduct(item.key);
         app.closeShop2D();
+        setTimeout(() => {
+          app.applyDefaultProductLogo?.(item.key);
+        }, 120);
       };
       grid.appendChild(card);
     });

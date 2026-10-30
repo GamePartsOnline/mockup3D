@@ -1,19 +1,33 @@
 import * as THREE from 'three';
 
-const createPouchShape = (width, height, segmentsX, segmentsY) => {
+const createPouchHalf = (width, height, segmentsX, segmentsY, isBack = false) => {
   const geo = new THREE.PlaneGeometry(width, height, segmentsX, segmentsY);
   const pos = geo.attributes.position;
+  const uvs = geo.attributes.uv;
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i);
     const y = pos.getY(i);
-    // Normalize coordinates from -1 to 1
     const nx = x / (width / 2);
     const ny = y / (height / 2);
+    const bulge = Math.cos(nx * Math.PI / 2) * Math.cos(ny * Math.PI / 2) * 0.05;
 
-    // Create a bulge in the middle, tapering off at edges
-    const bulge = Math.cos(nx * Math.PI / 2) * Math.cos(ny * Math.PI / 2);
-    const z = bulge * 0.05; // 5cm thick in the middle
-    pos.setZ(i, z);
+    pos.setXYZ(i, x, isBack ? -bulge : bulge, -y);
+
+    const uNorm = uvs.getX(i);
+    const vNorm = uvs.getY(i);
+    if (!isBack) {
+      uvs.setXY(i, uNorm * 0.5, vNorm);
+    } else {
+      uvs.setXY(i, 1.0 - uNorm * 0.5, vNorm);
+    }
+  }
+  if (isBack) {
+    const idx = geo.index.array;
+    for (let i = 0; i < idx.length; i += 3) {
+      const tmp = idx[i];
+      idx[i] = idx[i + 1];
+      idx[i + 1] = tmp;
+    }
   }
   geo.computeVertexNormals();
   return geo;
@@ -27,28 +41,14 @@ export const pencilCaseProduct = {
     const width = 2.1; // 21 cm
     const height = 1.3; // 13 cm
 
-    // Front half (Printable)
-    const frontGeo = createPouchShape(width, height, 32, 32);
-    let uvs = frontGeo.attributes.uv;
-    for (let i = 0; i < uvs.count; i++) {
-        // Face A: 0 to 0.5
-        let u = uvs.getX(i);
-        uvs.setX(i, u * 0.5);
-    }
-    frontGeo.rotateX(-Math.PI / 2);
-    const topMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.95, metalness: 0.0 });
+    // Front half (Face A)
+    const frontGeo = createPouchHalf(width, height, 32, 32, false);
+    const topMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.95, metalness: 0.0, side: THREE.DoubleSide });
     const top = new THREE.Mesh(frontGeo, topMaterial);
     top.castShadow = true; top.receiveShadow = true; group.add(top);
 
-    // Back half (Printable)
-    const backGeo = createPouchShape(width, height, 32, 32);
-    uvs = backGeo.attributes.uv;
-    for (let i = 0; i < uvs.count; i++) {
-        // Face B: 0.5 to 1.0, miroir demandé (uniquement Face B)
-        let u = 1.0 - uvs.getX(i);
-        uvs.setX(i, u * 0.5 + 0.5);
-    }
-    backGeo.rotateX(Math.PI / 2); // Flip to back
+    // Back half (Face B)
+    const backGeo = createPouchHalf(width, height, 32, 32, true);
     const baseMaterial = new THREE.MeshStandardMaterial({ color: 0xeeeeee, roughness: 0.95, metalness: 0.0 });
     const back = new THREE.Mesh(backGeo, topMaterial);
     back.castShadow = true; back.receiveShadow = true; group.add(back);

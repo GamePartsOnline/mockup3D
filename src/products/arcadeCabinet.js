@@ -9,10 +9,10 @@ export const arcadeCabinetProduct = {
   printAspect: 1,
   twoSided: false,
   zones: [
-    { id: 'left', label: 'Côté Gauche', col: 0, row: 1, aspect: 561.8 / 1670.9 },
-    { id: 'right', label: 'Côté Droit', col: 1, row: 1, aspect: 561.8 / 1670.9 },
-    { id: 'marquee', label: 'Fronton (Haut)', col: 2, row: 1, aspect: 600 / 200 },
-    { id: 'front', label: 'Porte Avant', col: 2, row: 0, aspect: 600 / 800 }
+    { id: 'left', label: 'Côté Gauche (Côté A)', col: 0, row: 1, aspect: 561.8 / 1670.9 },
+    { id: 'right', label: 'Côté Droit (Côté B)', col: 1, row: 1, aspect: 561.8 / 1670.9 },
+    { id: 'marquee', label: 'Fronton Haut (Marquee)', col: 2, row: 1, aspect: 600 / 200 },
+    { id: 'front', label: 'Porte / Face Avant', col: 2, row: 0, aspect: 600 / 800 }
   ],
   create() {
     const group = new THREE.Group();

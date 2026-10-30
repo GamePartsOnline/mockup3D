@@ -6,7 +6,8 @@ export function register(app) {
   app.getSubcategories = function getSubcategories(catName) {
     if (!catName) return [];
     const found = (app.catalogCategories || []).find(c => (typeof c === 'string' ? c : c.name) === catName);
-    return (found && typeof found === 'object' && Array.isArray(found.subs)) ? found.subs : [];
+    const list = (found && typeof found === 'object' && Array.isArray(found.subs)) ? found.subs.slice() : [];
+    return list.sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
   };
 
   app.renderSubcategoryPills = function renderSubcategoryPills(visibleItems = []) {
@@ -53,6 +54,7 @@ export function register(app) {
         if (!Array.isArray(obj.subs)) obj.subs = [];
         if (obj.subs.some(s => s.toLowerCase() === clean.toLowerCase())) return app.showToast('Cette sous-catégorie existe déjà.');
         obj.subs.push(clean);
+        obj.subs.sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
         await app.persistCatalogCategories?.();
         app.activeSubcategory = clean;
         app.renderCatalog?.();

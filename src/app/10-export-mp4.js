@@ -1,6 +1,7 @@
 // Shared application state is supplied by the entry point.
 export function register(app) {
 app.exportMp4 = async function exportMp4({ download = true } = {}) {
+  if (app.clientMode && download) { app.showToast("L'export direct est réservé à l'atelier. Cliquez sur 'Valider ma création'."); return null; }
   const button = document.querySelector('#exportMp4');
   const buttonSide = document.querySelector('#exportMp4Side');
   const status = document.querySelector('#exportStatus');

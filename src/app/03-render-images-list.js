@@ -1,46 +1,54 @@
 // Shared application state is supplied by the entry point.
 export function register(app) {
 app.renderImagesList = function renderImagesList() {
-  const listEl = document.querySelector('#imagesList');
-  if (!listEl) return;
-  listEl.innerHTML = '';
-  app.imagesList.forEach((item, index) => {
-    const itemEl = document.createElement('div');
-    itemEl.className = `image-item${index === app.activeImageIndex ? ' active' : ''}`;
-    itemEl.onclick = () => app.selectActiveImage(index);
+  const listEls = document.querySelectorAll('.images-list');
+  if (!listEls.length) return;
+  listEls.forEach(listEl => {
+    listEl.innerHTML = '';
+    app.imagesList.forEach((item, index) => {
+      const itemEl = document.createElement('div');
+      itemEl.className = `image-item${index === app.activeImageIndex ? ' active' : ''}`;
+      itemEl.onclick = () => app.selectActiveImage(index);
 
-    const thumb = document.createElement('img');
-    thumb.className = 'image-item-thumb';
-    thumb.src = item.img.src;
-    thumb.alt = item.name;
+      const thumb = document.createElement('img');
+      thumb.className = 'image-item-thumb';
+      thumb.src = item.img.src;
+      thumb.alt = item.name;
 
-    const info = document.createElement('div');
-    info.className = 'image-item-info';
-    const res = app.getImageResolutionInfo?.(item);
-    const metaText = res ? `${res.width}×${res.height} px • <span style="color:${res.color}; font-weight:700;">${res.dpi} DPI</span>` : `${Math.round(item.scale * 100)}%`;
-    info.innerHTML = `<span class="image-item-name">${item.name}</span><small class="image-item-meta">Calque #${index + 1} • ${metaText}</small>`;
-    const sideSelect = document.createElement('select');
-    sideSelect.className = 'layer-side-select';
-    if (app.product.zones) {
-      sideSelect.innerHTML = '<option value="both">Toutes zones</option>' + app.product.zones.map(z => `<option value="${z.id}">${z.label}</option>`).join('');
-    } else {
-      sideSelect.innerHTML = '<option value="both">Deux faces</option><option value="A">Face A</option><option value="B">Face B</option>' + (app.currentProductKey === 'tshirt3D' ? '<option value="heart">Cœur (petit)</option>' : '');
-    }
-    sideSelect.value = item.side || 'both';
-    sideSelect.onclick = e => e.stopPropagation();
-    sideSelect.onchange = e => { item.side = e.target.value; app.buildTexture(); };
-    if (app.product.twoSided || app.product.zones) {
-      info.append(sideSelect);
-    }
+      const info = document.createElement('div');
+      info.className = 'image-item-info';
+      const res = app.getImageResolutionInfo?.(item);
+      const metaText = res ? `${res.width}×${res.height} px • <span style="color:${res.color}; font-weight:700;">${res.dpi} DPI</span>` : `${Math.round(item.scale * 100)}%`;
+      info.innerHTML = `<span class="image-item-name">${item.name}</span><small class="image-item-meta">Calque #${index + 1} • ${metaText}</small>`;
 
-    const removeBtn = document.createElement('button');
-    removeBtn.className = 'image-item-remove';
-    removeBtn.title = 'Supprimer cette image';
-    removeBtn.innerHTML = '×';
-    removeBtn.onclick = (e) => app.removeImageByIndex(index, e);
+      const sideSelect = document.createElement('select');
+      sideSelect.className = 'layer-side-select';
+      if (app.currentProductKey === 'arcadeCabinet') {
+        sideSelect.innerHTML = '<option value="sides">Les deux côtés (Miroir auto)</option><option value="left">Côté Gauche (Côté A)</option><option value="right">Côté Droit (Côté B)</option><option value="marquee">Fronton Haut (Marquee)</option><option value="front">Porte / Face Avant</option><option value="both">Toutes zones</option>';
+      } else if (app.product.zones) {
+        sideSelect.innerHTML = '<option value="both">Toutes zones</option>' + app.product.zones.map(z => `<option value="${z.id}">${z.label}</option>`).join('');
+      } else if (app.currentProductKey === 'tshirt3D') {
+        sideSelect.innerHTML = '<option value="A">Ventre (Devant)</option><option value="B">Dos</option><option value="heart">Cœur</option><option value="both">Deux faces (Ventre + Dos)</option>';
+      } else {
+        sideSelect.innerHTML = '<option value="both">Deux faces</option><option value="A">Face A (Avant)</option><option value="B">Face B (Arrière)</option>';
+      }
+      sideSelect.value = item.side || (app.currentProductKey === 'arcadeCabinet' ? 'sides' : (app.currentProductKey === 'tshirt3D' ? 'A' : 'both'));
+      sideSelect.onclick = e => e.stopPropagation();
+      sideSelect.onchange = e => { item.side = e.target.value; app.buildTexture(); };
 
-    itemEl.append(thumb, info, removeBtn);
-    listEl.append(itemEl);
+      if (app.product.twoSided || app.product.zones || app.currentProductKey === 'tshirt3D') {
+        info.append(sideSelect);
+      }
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'image-item-remove';
+      removeBtn.title = 'Supprimer cette image';
+      removeBtn.innerHTML = '×';
+      removeBtn.onclick = (e) => app.removeImageByIndex(index, e);
+
+      itemEl.append(thumb, info, removeBtn);
+      listEl.append(itemEl);
+    });
   });
 };
 

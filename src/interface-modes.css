@@ -63,12 +63,12 @@ html[data-theme="dark"] .btn-showcase-floating { background:#1c2633 !important; 
 .timeline-step.done .step-check { display:inline; }
 .timeline-step.done .step-label { color:#7c3aed; }
 .client-guide .primary { background:#7c3aed; }
-.active-product-banner { display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:10px 14px; border-radius:10px; margin-bottom:12px; border:1px solid #e2e8f0; box-shadow:0 1px 3px rgba(0,0,0,0.04); }
-.active-product-meta { display:flex; flex-direction:column; gap:2px; }
+.active-product-banner { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px; background:#f8fafc; padding:10px 14px; border-radius:10px; margin-bottom:12px; border:1px solid #e2e8f0; box-shadow:0 1px 3px rgba(0,0,0,0.04); }
+.active-product-meta { display:flex; flex-direction:column; gap:2px; min-width:0; flex:1 1 160px; }
 .active-product-subtitle { display:block; color:#64748b; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; }
-.active-product-name { display:block; font-size:13px; color:#0f172a; }
-.active-product-price-badge { font-size:11px; font-weight:700; color:#6d28d9; background:#ede9fe; padding:2px 7px; border-radius:4px; border:1px solid #ddd6fe; }
-.btn-change-product { background:#8b5cf6; color:#fff; font-weight:700; padding:6px 12px; border-radius:6px; border:none; cursor:pointer; transition:all .15s ease; }
+.active-product-name { display:block; font-size:13px; color:#0f172a; word-break:break-word; }
+.active-product-price-badge { font-size:11px; font-weight:700; color:#6d28d9; background:#ede9fe; padding:2px 7px; border-radius:4px; border:1px solid #ddd6fe; white-space:nowrap; }
+.btn-change-product { background:#8b5cf6; color:#fff; font-weight:700; padding:6px 12px; border-radius:6px; border:none; cursor:pointer; transition:all .15s ease; flex-shrink:0; margin-left:auto; align-self:center; }
 .btn-change-product:hover { background:#7c3aed; transform:translateY(-1px); }
 
 body.client-mode[data-client-step="1"] #activeProductBanner,

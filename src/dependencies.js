@@ -17,6 +17,8 @@ import './dark-mode.css';
 import './app-menu.css';
 import './shop-2d.css';
 import './business-card.css';
+import './mobile-studio.css';
+import './simple-panel.css';
 import { CanvasTexture, CircleGeometry, Color, DirectionalLight, GridHelper, HemisphereLight, LinearToneMapping, MathUtils, Mesh, PCFSoftShadowMap, PerspectiveCamera, Raycaster, SRGBColorSpace, Scene, ShadowMaterial, Sprite, SpriteMaterial, Vector2, Vector3, WebGLRenderer } from 'three';
 const THREE = { CanvasTexture, CircleGeometry, Color, DirectionalLight, GridHelper, HemisphereLight, LinearToneMapping, MathUtils, Mesh, PCFSoftShadowMap, PerspectiveCamera, Raycaster, SRGBColorSpace, Scene, ShadowMaterial, Sprite, SpriteMaterial, Vector2, Vector3, WebGLRenderer };
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';

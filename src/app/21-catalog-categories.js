@@ -40,10 +40,18 @@ export function register(app) {
   app.normalizeCategoryItems = list => {
     if (!Array.isArray(list)) return [];
     const items = list.map(c => {
-      if (typeof c === 'string') return { name: c.trim(), subs: [] };
-      const subs = Array.isArray(c.subs) ? c.subs.map(s => String(s).trim()).filter(Boolean) : [];
+      if (typeof c === 'string') {
+        const trimmed = c.trim();
+        return { name: trimmed.charAt(0).toUpperCase() + trimmed.slice(1), subs: [] };
+      }
+      const subs = Array.isArray(c.subs) ? c.subs.map(s => {
+        const str = String(s).trim();
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      }).filter(Boolean) : [];
       subs.sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
-      return { name: String(c.name || '').trim(), subs };
+      const cleanName = String(c.name || '').trim();
+      const capName = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+      return { name: capName, subs };
     }).filter(c => Boolean(c.name));
     items.sort((a, b) => a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' }));
     return items;

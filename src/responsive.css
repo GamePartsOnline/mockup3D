@@ -1,22 +1,26 @@
-
 .drawer-heading { display:none; }
 .stock-note { padding:10px; background:#fff8e7; border:1px solid #f1d899; border-radius:8px; font-size:12px; line-height:1.5; color:#624714; }
 .color-grid input:disabled,.color-grid select:disabled,.swatch:disabled { opacity:.4; cursor:not-allowed; }
-@media(max-width:900px) {
- body { overflow:hidden; }
- .topbar { height:72px; min-height:72px; padding:0 10px; gap:8px; }
- .brand { flex:none; gap:7px; max-width:135px; }
- .brand strong { font-size:14px; }
- .brand small,#localBadge,.topbar .privacy { display:none !important; }
- .mode-label { font-size:9px; }
- .logo-card { width:42px; height:36px; }
+
+@media(max-width:1050px) {
  .topbar-actions { display:flex; align-items:center; max-width:calc(100vw - 145px); overflow-x:auto; }
  .client-mode-link,#exportStatus { display:none; }
  .export-group { display:flex; flex-wrap:nowrap; width:max-content; gap:5px; }
  .topbar-btn { flex:none; min-height:40px; padding:7px 9px; }
  .client-submit { min-width:135px; width:auto; }
+ .panel input,.panel textarea,.panel select,.actions select { max-width:100%; }
+ .panel select,.panel textarea,.actions select { font-size:16px; }
+ input[type=range] { min-height:30px; }
+}
+
+@media(min-width:851px) and (max-width:1050px) {
+ body { overflow:hidden; }
+ .topbar { height:64px; min-height:64px; padding:0 12px; gap:8px; }
+ .brand { flex:none; gap:7px; max-width:135px; }
+ .brand strong { font-size:14px; }
+ .brand small,#localBadge,.topbar .privacy { display:none !important; }
  .workspace,.workspace.left-collapsed,.workspace.right-collapsed,.workspace.left-collapsed.right-collapsed {
-  display:block; position:relative; height:calc(100dvh - 72px); min-height:0; overflow:hidden;
+  display:block; position:relative; height:calc(100dvh - 64px); min-height:0; overflow:hidden;
  }
  .viewer-wrap { height:100%; min-height:0; }
  .workspace .panel,.workspace .actions {
@@ -34,13 +38,96 @@
  .panel-menu { top:12px; left:12px; }
  .viewer-tools button,.panel-menu { min-width:44px; min-height:44px; }
  .wrap-preview-widget { max-width:calc(100vw - 24px); right:12px; }
- .panel input,.panel textarea,.panel select,.actions select { max-width:100%; }
- .panel select,.panel textarea,.actions select { font-size:16px; }
- input[type=range] { min-height:30px; }
  .client-guide { margin-bottom:20px; }
 }
 
-@media(max-width:900px) {
+@media(max-width:850px) {
  .viewer-tools #viewFaceA span,.viewer-tools #viewFaceB span { display:none; }
  .wrap-preview-widget { max-height:65dvh; overflow:auto; }
+}
+
+body.client-mode .app-menu-bar,
+body.client-mode #exportStatus,
+body.client-mode .wrap-download-btn,
+body.client-mode #downloadWrapBtn,
+body.client-mode #downloadHeartBtn {
+ display: none !important;
+}
+
+/* CGV et Mentions Légales strictement réservées à la partie client */
+.client-only-legal {
+ display: none !important;
+}
+body.client-mode button.client-only-legal {
+ display: inline-block !important;
+}
+body.client-mode div.client-only-legal {
+ display: block !important;
+}
+
+/* Modale d'edition individuelle de visuel */
+.visual-edit-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10005;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.visual-edit-modal[hidden] {
+  display: none !important;
+}
+.visual-edit-dialog {
+  background: #ffffff;
+  border-radius: 14px;
+  width: 920px;
+  max-width: 95vw;
+  max-height: 92vh;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+.visual-edit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #f8fafc;
+}
+.visual-edit-body {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: calc(85vh - 120px);
+  overflow-y: auto;
+}
+.visual-edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.visual-edit-field label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+}
+.visual-edit-field input, .visual-edit-field select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+.visual-edit-actions {
+  padding: 12px 18px;
+  border-top: 1px solid #f1f5f9;
+  background: #f8fafc;
 }

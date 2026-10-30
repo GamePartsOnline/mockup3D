@@ -49,6 +49,10 @@ function getFormData() {
   if (!telephone || telephone.length < 6) {
     return { error: 'Veuillez saisir un numéro de téléphone valide.' };
   }
+  const acceptCgv = document.querySelector('#orderAcceptCgv');
+  if (acceptCgv && !acceptCgv.checked) {
+    return { error: 'Veuillez accepter les Conditions Générales de Vente pour valider votre commande.' };
+  }
   return {
     data: { nom, prenom, adresse, codePostal, ville, email, telephone, note }
   };
@@ -66,6 +70,42 @@ export function initialize(app) {
   cancelBtn?.addEventListener('click', close);
   modal?.addEventListener('click', (e) => {
     if (e.target === modal) close();
+  });
+
+  const cgvModal = document.querySelector('#cgvModal');
+  const mentionsModal = document.querySelector('#mentionsModal');
+
+  document.querySelectorAll('.btn-open-cgv').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (cgvModal) { cgvModal.hidden = false; cgvModal.removeAttribute('hidden'); }
+    });
+  });
+
+  document.querySelectorAll('.btn-open-mentions').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (mentionsModal) { mentionsModal.hidden = false; mentionsModal.removeAttribute('hidden'); }
+    });
+  });
+
+  document.querySelectorAll('.close-cgv-modal').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (cgvModal) { cgvModal.hidden = true; cgvModal.setAttribute('hidden', ''); }
+    });
+  });
+
+  document.querySelectorAll('.close-mentions-modal').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (mentionsModal) { mentionsModal.hidden = true; mentionsModal.setAttribute('hidden', ''); }
+    });
+  });
+
+  cgvModal?.addEventListener('click', (e) => {
+    if (e.target === cgvModal) { cgvModal.hidden = true; cgvModal.setAttribute('hidden', ''); }
+  });
+  mentionsModal?.addEventListener('click', (e) => {
+    if (e.target === mentionsModal) { mentionsModal.hidden = true; mentionsModal.setAttribute('hidden', ''); }
   });
 
   confirmBtn?.addEventListener('click', async () => {

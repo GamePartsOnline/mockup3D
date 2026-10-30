@@ -1,3 +1,5 @@
+import { drawTiledWatermark, drawWatermarkTags } from './watermark-utils.js';
+
 // Shared application state is supplied by the entry point.
 export function register(app) {
 app.buildTexture = function buildTexture() {
@@ -10,53 +12,16 @@ app.buildTexture = function buildTexture() {
 
   const isTwoSided = !!app.product.twoSided;
   const isMultiZone = !!app.product.zones;
-  const targetW = isMultiZone ? 3072 : (isTwoSided ? 3200 : 1600);
-  const targetH = isMultiZone ? 2048 : Math.round(1600 / app.product.printAspect);
+  const targetW = isMultiZone ? 3072 : (isTwoSided ? 3200 : 1600), targetH = isMultiZone ? 2048 : Math.round(1600 / app.product.printAspect);
   if (!app._buildCanvas) app._buildCanvas = document.createElement('canvas');
-  const canvas = app._buildCanvas;
-  const sizeChanged = canvas.width !== targetW || canvas.height !== targetH;
+  const canvas = app._buildCanvas, sizeChanged = canvas.width !== targetW || canvas.height !== targetH;
   if (canvas.width !== targetW) canvas.width = targetW;
   if (canvas.height !== targetH) canvas.height = targetH;
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  if (app.product.type !== '3d-decal') {
-    ctx.fillStyle = surfaceColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }
+  if (app.product.type !== '3d-decal') { ctx.fillStyle = surfaceColor; ctx.fillRect(0, 0, canvas.width, canvas.height); }
 
-  const showWatermark = !app.suppressClientWatermarkForOwnerExport && (app.clientMode || (document.querySelector('#showWatermark')?.checked ?? true));
-  const wmStyle = app.watermarkStyle || (app.clientMode ? 'both' : (document.querySelector('#watermarkStyle')?.value || 'both'));
-  if (showWatermark && app.isWatermarkLoaded && app.watermarkImg.width > 0 && app.product.type !== '3d-decal') {
-    if (wmStyle === 'reduced' || wmStyle === 'both') {
-      ctx.save();
-      const wmCanvas = document.createElement('canvas');
-      wmCanvas.width = app.watermarkImg.width;
-      wmCanvas.height = app.watermarkImg.height;
-      const wmCtx = wmCanvas.getContext('2d');
-      wmCtx.drawImage(app.watermarkImg, 0, 0);
-      wmCtx.globalCompositeOperation = 'source-in';
-      wmCtx.fillStyle = '#111820';
-      wmCtx.fillRect(0, 0, wmCanvas.width, wmCanvas.height);
-
-      ctx.globalAlpha = 0.045;
-      ctx.translate(canvas.width / 2, canvas.height / 2);
-      ctx.rotate(-25 * Math.PI / 180);
-      ctx.translate(-canvas.width / 2, -canvas.height / 2);
-
-      const stepX = 540;
-      const stepY = 320;
-      const wmWidth = 135;
-      const wmHeight = Math.round(wmWidth * (app.watermarkImg.height / app.watermarkImg.width));
-
-      for (let py = -canvas.height * 0.6; py < canvas.height * 1.6; py += stepY) {
-        const offsetX = (Math.floor(py / stepY) % 2) * (stepX / 2);
-        for (let px = -canvas.width * 0.6; px < canvas.width * 1.6; px += stepX) {
-          ctx.drawImage(wmCanvas, px + offsetX, py, wmWidth, wmHeight);
-        }
-      }
-      ctx.restore();
-    }
-  }
+  drawTiledWatermark(ctx, canvas, app);
 
   app.imagesList.forEach(item => {
     if (!item.img || (app.currentProductKey === 'tshirt3D' && item.side === 'heart')) return;
@@ -65,7 +30,27 @@ app.buildTexture = function buildTexture() {
     const imageRatio = item.img.width / item.img.height;
 
     let targetZones = [];
-    if (app.product.zones) {
+    if (app.currentProductKey === 'arcadeCabinet') {
+      const zL = app.product.zones.find(z => z.id === 'left');
+      const zR = app.product.zones.find(z => z.id === 'right');
+      const zM = app.product.zones.find(z => z.id === 'marquee');
+      const zF = app.product.zones.find(z => z.id === 'front');
+      const s = item.side || 'sides';
+      const otherR = app.imagesList.some(o => o !== item && o.img && o.side === 'right');
+      const otherL = app.imagesList.some(o => o !== item && o.img && o.side === 'left');
+      if (s === 'sides' || s === 'both') {
+        targetZones = [zL, { ...zR, isMirror: true }];
+        if (s === 'both') targetZones.push(zM, zF);
+      } else if (s === 'left') {
+        targetZones = [zL];
+        if (!otherR && zR) targetZones.push({ ...zR, isMirror: true });
+      } else if (s === 'right') {
+        targetZones = [zR];
+        if (!otherL && zL) targetZones.push({ ...zL, isMirror: true });
+      } else if (s === 'marquee') targetZones = [zM];
+      else if (s === 'front') targetZones = [zF];
+      targetZones = targetZones.filter(Boolean);
+    } else if (app.product.zones) {
       targetZones = (item.side === 'both' || !item.side) ? app.product.zones : app.product.zones.filter(z => z.id === item.side);
     } else {
       const sides = !isTwoSided ? [0] : (item.side === 'A' ? [0] : (item.side === 'B' ? [1] : [0, 1]));
@@ -93,7 +78,12 @@ app.buildTexture = function buildTexture() {
       w *= sx;
       h *= sy;
 
-      const x = xOffset + zoneWidth / 2 + item.x * zoneWidth * 0.5;
+      const mirrorActive = (app.arcadeMirrorSideB !== false);
+      const isMirrored = (zone.isMirror && mirrorActive) || (zone.id === 'right' && mirrorActive && app.currentProductKey === 'arcadeCabinet');
+      const effX = isMirrored ? -item.x : item.x;
+      const effRot = isMirrored ? -item.rotation : item.rotation;
+
+      const x = xOffset + zoneWidth / 2 + effX * zoneWidth * 0.5;
       const y = yOffset + zoneHeight / 2 - item.y * zoneHeight * 0.5;
 
       ctx.save();
@@ -102,7 +92,8 @@ app.buildTexture = function buildTexture() {
       ctx.clip();
 
       ctx.translate(x, y);
-      ctx.rotate(-item.rotation * Math.PI / 180);
+      ctx.rotate(-effRot * Math.PI / 180);
+      if (isMirrored) ctx.scale(-1, 1);
       if (item.repeatPattern) {
         const count = item.repeatCount || 3;
         const tw = Math.max(16, w / count), th = Math.max(16, h / count);
@@ -118,7 +109,18 @@ app.buildTexture = function buildTexture() {
 
   if (hasText && !(app.currentProductKey === 'tshirt3D' && app.textParams.side === 'heart')) {
     let targetZones = [];
-    if (app.product.zones) {
+    if (app.currentProductKey === 'arcadeCabinet') {
+      const zL = app.product.zones.find(z => z.id === 'left');
+      const zR = app.product.zones.find(z => z.id === 'right');
+      const zM = app.product.zones.find(z => z.id === 'marquee');
+      const zF = app.product.zones.find(z => z.id === 'front');
+      const s = app.textParams.side || 'sides';
+      if (s === 'sides' || s === 'left' || s === 'right') targetZones = [zL, zR];
+      else if (s === 'marquee') targetZones = [zM];
+      else if (s === 'front') targetZones = [zF];
+      else targetZones = [zL, zR, zM, zF];
+      targetZones = targetZones.filter(Boolean);
+    } else if (app.product.zones) {
       targetZones = (app.textParams.side === 'both' || !app.textParams.side) ? app.product.zones : app.product.zones.filter(z => z.id === app.textParams.side);
     } else {
       const sides = !isTwoSided ? [0] : (app.textParams.side === 'A' ? [0] : (app.textParams.side === 'B' ? [1] : [0, 1]));
@@ -143,58 +145,30 @@ app.buildTexture = function buildTexture() {
       const fontStyle = `${app.textParams.italic ? 'italic ' : ''}${app.textParams.bold ? 'bold ' : 'normal '}${app.textParams.size}px ${app.textParams.font}`;
       ctx.font = fontStyle;
       ctx.fillStyle = app.textParams.color;
-      ctx.textAlign = app.textParams.align || 'center';
-      ctx.textBaseline = 'middle';
+      const align = app.textParams.align || 'center';
       const lines = app.textParams.text.split('\n');
       const lineHeight = app.textParams.size * 1.25;
       const totalBlockHeight = (lines.length - 1) * lineHeight;
       const startY = -totalBlockHeight / 2;
+      const startX = align === 'left' ? -zoneWidth * 0.18 : (align === 'right' ? zoneWidth * 0.18 : 0);
+      ctx.textAlign = align;
+      ctx.textBaseline = 'middle';
+      if (app.textParams.shadow) { ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 8; ctx.shadowOffsetX = 3; ctx.shadowOffsetY = 3; }
+      if (app.textParams.stroke) { ctx.strokeStyle = app.textParams.strokeColor || '#ffffff'; ctx.lineWidth = Math.max(3, Math.round(app.textParams.size * 0.08)); }
       lines.forEach((line, index) => {
-        ctx.fillText(line, 0, startY + index * lineHeight);
+        const py = startY + index * lineHeight;
+        if (app.textParams.curved && typeof app.drawCurvedText === 'function') {
+          app.drawCurvedText(ctx, line, py);
+        } else {
+          if (app.textParams.stroke) ctx.strokeText(line, startX, py);
+          ctx.fillText(line, startX, py);
+        }
       });
       ctx.restore();
     });
   }
 
-  if (showWatermark && app.isWatermarkLoaded && app.watermarkImg.width > 0 && app.product.type !== '3d-decal' && (wmStyle === 'tag' || wmStyle === 'both')) {
-    const drawTagAt = (x, y) => {
-      ctx.save();
-      const tagW = 180, tagH = 30;
-      const tagX = x - tagW;
-      const tagY = y - tagH;
-
-      ctx.globalAlpha = 0.35;
-      ctx.fillStyle = '#0f172a';
-      ctx.beginPath();
-      if (typeof ctx.roundRect === 'function') ctx.roundRect(tagX, tagY, tagW, tagH, 6);
-      else ctx.rect(tagX, tagY, tagW, tagH);
-      ctx.fill();
-
-      ctx.globalAlpha = 0.90;
-      const logoH = 18;
-      const logoW = Math.round(logoH * (app.watermarkImg.width / app.watermarkImg.height));
-      ctx.drawImage(app.watermarkImg, tagX + 8, tagY + (tagH - logoH) / 2, logoW, logoH);
-
-      ctx.fillStyle = '#ffffff';
-      ctx.font = '600 11px system-ui, -apple-system, sans-serif';
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('Aperçu Graph2Print', tagX + logoW + 12, tagY + tagH / 2);
-      ctx.restore();
-    };
-
-    if (isMultiZone && app.product.zones) {
-      app.product.zones.forEach(z => {
-        const zw = 1024, zh = 1024;
-        drawTagAt((z.col + 1) * zw - 20, ((z.row || 0) + 1) * zh - 20);
-      });
-    } else if (isTwoSided) {
-      drawTagAt(1600 - 20, canvas.height - 20);
-      drawTagAt(3200 - 20, canvas.height - 20);
-    } else {
-      drawTagAt(canvas.width - 20, canvas.height - 20);
-    }
-  }
+  drawWatermarkTags(ctx, canvas, app, isMultiZone, isTwoSided);
 
   app.buildHeartTexture();
   if (!app.texture || app.texture.image !== canvas || sizeChanged) {
@@ -202,9 +176,7 @@ app.buildTexture = function buildTexture() {
     app.texture = new app.THREE.CanvasTexture(canvas);
     app.texture.colorSpace = app.THREE.SRGBColorSpace;
     app.texture.anisotropy = app.renderer.capabilities.getMaxAnisotropy();
-  } else {
-    app.texture.needsUpdate = true;
-  }
+  } else { app.texture.needsUpdate = true; }
   if (app.product.type === '3d-decal') {
     app.texture.needsUpdate = true;
     if (app.product.applyDecals) app.product.applyDecals(app.texture, isTwoSided, canvas, app.heartTexture);
@@ -218,13 +190,7 @@ app.buildTexture = function buildTexture() {
 let rafBuildId = null;
 app.requestBuildTexture = function requestBuildTexture() {
   if (rafBuildId) return;
-  rafBuildId = requestAnimationFrame(() => {
-    rafBuildId = null;
-    app.buildTexture();
-  });
+  rafBuildId = requestAnimationFrame(() => { rafBuildId = null; app.buildTexture(); });
 };
 }
-
-export function initialize(app) {
-
-}
+export function initialize(app) {}

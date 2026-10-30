@@ -28,6 +28,10 @@ app.animate = function animate(now = performance.now()) {
     app.camera.lookAt(app.controls.target);
   }
   app.controls.update();
+  if (app.currentProductKey === 'showcase') {
+    if (app.camera.position.y > 3.60) app.camera.position.y = 3.60;
+    if (app.camera.position.y < -0.40) app.camera.position.y = -0.40;
+  }
   app.renderer.render(app.scene, app.camera);
   app.updateOverlay();
 };

@@ -27,6 +27,10 @@ import * as feature24 from './app/26-visual-edit-modal.js';
 import * as feature25 from './app/27-client-order-modal.js';
 import * as feature26 from './app/28-admin-submissions-modal.js';
 import * as feature27 from './app/29-image-resolution-checker.js';
+import * as feature28 from './app/30-mobile-studio.js';
+import * as feature29 from './app/31-image-studio-tools.js';
+import * as feature30 from './app/32-material-and-contact-sheet.js';
+import * as feature31 from './app/33-simple-panel-toggle.js';
 
 const app = { ...dependencies };
 if (typeof window !== 'undefined') window.app = app;
@@ -58,7 +62,11 @@ const features = [
   feature24,
   feature25,
   feature26,
-  feature27
+  feature27,
+  feature28,
+  feature29,
+  feature30,
+  feature31
 ];
 
 for (const feature of features) feature.register(app);
