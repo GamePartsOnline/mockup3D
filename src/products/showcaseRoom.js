@@ -31,7 +31,7 @@ export function createBusinessCard() {
       ctx.drawImage(logoImg, (1024 - w) / 2, 175, w, h);
     }
     ctx.fillStyle = '#ffffff'; ctx.font = 'bold 38px Inter, Arial, sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('GRAPH2PRINT ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¢ GPO SARL', 512, 400);
+    ctx.fillText('GRAPH2PRINT • GPO SARL', 512, 400);
     ctx.fillStyle = '#fbbf24'; ctx.font = 'bold 44px Inter, Arial, sans-serif';
     ctx.fillText('06 73 54 03 94', 512, 470);
     ctx.fillStyle = '#d1d5db'; ctx.font = '30px Inter, Arial, sans-serif';
@@ -45,7 +45,7 @@ export function createBusinessCard() {
   const topMat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.35, metalness: 0.02 });
   const card = new THREE.Mesh(cardGeo, [sideMat, sideMat, topMat, sideMat, sideMat, sideMat]);
   card.position.set(0.83, 0.003, 0.80); card.rotation.y = -0.06; card.castShadow = true; card.receiveShadow = true;
-  card.userData = { showcaseProductKey: 'businessCard', isBusinessCard: true, showcaseLabel: 'GPO SARL ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¢ Graph2Print', showcasePrice: '06 73 54 03 94', showcaseSub: 'Cliquez pour ouvrir la carte de visite complÃÂÃÂÃÂÃÂ¨te', baseScale: 1 };
+  card.userData = { showcaseProductKey: 'businessCard', isBusinessCard: true, showcaseLabel: 'GPO SARL • Graph2Print', showcasePrice: '06 73 54 03 94', showcaseSub: 'Cliquez pour ouvrir la carte de visite complète', baseScale: 1 };
   return card;
 }
 
@@ -188,10 +188,10 @@ export function createStudioRoom() {
   warmAccent.position.set(3.40, ceilingY - 0.60, 1.0);
   roomGroup.add(warmAccent);
 
-  // Carte de visite interactive posÃÂÃÂÃÂÃÂ©e sur la table
+  // Carte de visite interactive posée sur la table
   roomGroup.add(createBusinessCard());
 
-  // OrchidÃÂÃÂÃÂÃÂ©e violette en pot
+  // Orchidée violette en pot
   const orchid = createOrchidPlant();
   orchid.scale.setScalar(1.5);
   orchid.position.set(0.12, 0.001, -0.42);
