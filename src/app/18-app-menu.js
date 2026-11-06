@@ -46,6 +46,35 @@ export function initialize(app) {
   document.querySelector('#btnShowcaseTable')?.addEventListener('click', goShowcase);
   document.querySelector('#btnBackToShowroom')?.addEventListener('click', goShowcase);
   document.querySelector('#btnChangeProductShop')?.addEventListener('click', () => app.openShop2D?.());
+
+  // Décoration festive de Noël pour le Showroom 3D
+  app.setChristmasDecor = function setChristmasDecor(enabled) {
+    localStorage.setItem('mockup3d_decor_noel', enabled ? '1' : '0');
+    if (app.scene) {
+      app.scene.traverse(c => {
+        if (c.name === 'christmasDecorGroup') {
+          c.visible = !!enabled;
+        }
+      });
+    }
+    const adminBox = document.querySelector('#adminNoelDecorToggle');
+    if (adminBox) adminBox.checked = !!enabled;
+    const simpleBox = document.querySelector('#simpleNoelToggle');
+    if (simpleBox) simpleBox.checked = !!enabled;
+    app.showToast(enabled ? 'Ambiance de Noël activée dans le Showroom 3D' : 'Décorations de Noël masquées');
+  };
+
+  const initialNoel = (localStorage.getItem('mockup3d_decor_noel') === '1');
+  const adminNoelBox = document.querySelector('#adminNoelDecorToggle');
+  if (adminNoelBox) {
+    adminNoelBox.checked = initialNoel;
+    adminNoelBox.addEventListener('change', e => app.setChristmasDecor(e.target.checked));
+  }
+  const simpleNoelBox = document.querySelector('#simpleNoelToggle');
+  if (simpleNoelBox) {
+    simpleNoelBox.checked = initialNoel;
+    simpleNoelBox.addEventListener('change', e => app.setChristmasDecor(e.target.checked));
+  }
   document.querySelector('#menuViewHome')?.addEventListener('click', () => {
     app.homeView?.();
     app.showToast('Vue 3D réinitialisée');

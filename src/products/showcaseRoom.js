@@ -202,5 +202,89 @@ export function createStudioRoom() {
   monstera.position.set(3.40, -0.835, -0.05);
   roomGroup.add(monstera);
 
+  // Decoration festive de Noel (Sapin & Guirlandes)
+  const noelDecor = createChristmasDecorGroup();
+  const noelActive = (localStorage.getItem('mockup3d_decor_noel') === '1');
+  noelDecor.visible = noelActive;
+  roomGroup.add(noelDecor);
+  roomGroup.userData.christmasDecor = noelDecor;
+
   return roomGroup;
+}
+
+export function createChristmasDecorGroup() {
+  const decor = new THREE.Group();
+  decor.name = 'christmasDecorGroup';
+
+  const treeGroup = new THREE.Group();
+  treeGroup.position.set(3.35, -0.835, -0.65);
+
+  const trunkMat = new THREE.MeshStandardMaterial({ color: 0x451a03, roughness: 0.9 });
+  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.10, 0.40, 16), trunkMat);
+  trunk.position.y = 0.20;
+  trunk.castShadow = true;
+  treeGroup.add(trunk);
+
+  const pineMat = new THREE.MeshStandardMaterial({ color: 0x064e3b, roughness: 0.75, metalness: 0.1 });
+  const tiers = [
+    { r: 0.55, h: 0.65, y: 0.55 },
+    { r: 0.45, h: 0.55, y: 0.90 },
+    { r: 0.35, h: 0.45, y: 1.20 },
+    { r: 0.22, h: 0.38, y: 1.48 }
+  ];
+  tiers.forEach(t => {
+    const cone = new THREE.Mesh(new THREE.ConeGeometry(t.r, t.h, 16), pineMat);
+    cone.position.y = t.y;
+    cone.castShadow = true;
+    treeGroup.add(cone);
+  });
+
+  const starMat = new THREE.MeshStandardMaterial({
+    color: 0xfde047, emissive: 0xeab308, emissiveIntensity: 0.9,
+    metalness: 0.8, roughness: 0.2
+  });
+  const star = new THREE.Mesh(new THREE.OctahedronGeometry(0.09, 0), starMat);
+  star.position.y = 1.72;
+  treeGroup.add(star);
+
+  const colors = [0xdc2626, 0xfacc15, 0xffffff, 0x2563eb, 0x16a34a];
+  for (let i = 0; i < 28; i++) {
+    const angle = (i * 2.399);
+    const t = i / 28;
+    const y = 0.42 + t * 1.15;
+    const r = (1 - t * 0.75) * 0.42;
+    const x = Math.cos(angle) * r;
+    const z = Math.sin(angle) * r;
+
+    const ballMat = new THREE.MeshStandardMaterial({
+      color: colors[i % colors.length],
+      emissive: (i % 2 === 0) ? colors[i % colors.length] : 0x000000,
+      emissiveIntensity: 0.3,
+      metalness: 0.85,
+      roughness: 0.15
+    });
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(0.032, 12, 12), ballMat);
+    ball.position.set(x, y, z);
+    treeGroup.add(ball);
+  }
+
+  const lightsGroup = new THREE.Group();
+  for (let i = 0; i < 18; i++) {
+    const lx = -3.2 + i * 0.42;
+    const ly = 1.62 + Math.sin(i * 0.9) * 0.08;
+    const lz = -1.12;
+    const glowMat = new THREE.MeshStandardMaterial({
+      color: (i % 3 === 0) ? 0xef4444 : (i % 3 === 1 ? 0xfacc15 : 0x22c55e),
+      emissive: (i % 3 === 0) ? 0xef4444 : (i % 3 === 1 ? 0xfacc15 : 0x22c55e),
+      emissiveIntensity: 1.4,
+      roughness: 0.2
+    });
+    const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.024, 8, 8), glowMat);
+    bulb.position.set(lx, ly, lz);
+    lightsGroup.add(bulb);
+  }
+
+  decor.add(treeGroup);
+  decor.add(lightsGroup);
+  return decor;
 }

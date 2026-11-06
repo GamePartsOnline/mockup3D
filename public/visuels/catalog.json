@@ -20,15 +20,7 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "mug11oz",
-      "tshirt3D",
-      "cushion",
-      "poster",
-      "photoFrame",
-      "puzzle",
-      "coaster",
-      "coasterRound",
-      "mousePad"
+      "mug11oz"
     ]
   },
   {
@@ -945,6 +937,102 @@
     ]
   },
   {
+    "id": "visuel-1793967353750-fq7p",
+    "name": "MUG NOEL 01",
+    "url": "/visuels/MUG-NOEL-01-mw4xudkg.png",
+    "category": "Nouveau",
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793967353762-v4n8",
+    "name": "MUG NOEL 02",
+    "url": "/visuels/MUG-NOEL-02-mw4xudke.png",
+    "category": "Nouveau",
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793967353776-w1mz",
+    "name": "MUG NOEL 04",
+    "url": "/visuels/MUG-NOEL-04-mw4xudk9.png",
+    "category": "Nouveau",
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793967353789-sloh",
+    "name": "MUG NOEL 05",
+    "url": "/visuels/MUG-NOEL-05-mw4xudk0.png",
+    "category": "Nouveau",
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793967353801-hd64",
+    "name": "MUG NOEL 06",
+    "url": "/visuels/MUG-NOEL-06-mw4xudjx.png",
+    "category": "Nouveau",
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793967353813-da5w",
+    "name": "MUG NOEL 07",
+    "url": "/visuels/MUG-NOEL-07-mw4xudjr.png",
+    "category": "Nouveau",
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793967353828-yibc",
+    "name": "MUG NOEL 08",
+    "url": "/visuels/MUG-NOEL-08-mw4xudjn.png",
+    "category": "Nouveau",
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793967353840-dn1x",
+    "name": "MUG NOEL 09",
+    "url": "/visuels/MUG-NOEL-09-mw4xudji.png",
+    "category": "Nouveau",
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
     "id": "visuel-1793181632095-5y2t",
     "name": "Visuel",
     "url": "/visuels/Visuel-mvry1mkn.jpg",
@@ -973,15 +1061,7 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "mug11oz",
-      "tshirt3D",
-      "cushion",
-      "poster",
-      "photoFrame",
-      "puzzle",
-      "coaster",
-      "coasterRound",
-      "mousePad"
+      "mug11oz"
     ]
   },
   {
@@ -993,13 +1073,7 @@
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "mug11oz",
-      "tshirt3D",
-      "cushion",
-      "puzzle",
-      "coaster",
-      "coasterRound",
-      "mousePad"
+      "mug11oz"
     ]
   }
 ]

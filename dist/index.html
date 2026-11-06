@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&family=Cinzel:wght@700&family=Dancing+Script:wght@700&family=Great+Vibes&family=Lobster&family=Montserrat:ital,wght@0,400;0,700;1,400&family=Oswald:wght@600&family=Pacifico&family=Playfair+Display:ital,wght@0,700;1,700&family=Righteous&family=Roboto:wght@400;700&family=Satisfy&display=swap" rel="stylesheet">
   <title>MockUp3D C3</title>
-  <script type="module" crossorigin src="/assets/index-zP2AhAV8.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-DsS3H7Aq.css">
+  <script type="module" crossorigin src="/assets/index-CpbXu1oZ.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-g9IXX8bs.css">
 </head>
 <body>
   <div id="app">
@@ -81,6 +81,10 @@
     <button type="button" class="btn-open-cgv client-only-legal" title="Conditions Générales de Vente" style="background:transparent; border:none; color:#64748b; font-size:11px; text-decoration:underline; cursor:pointer; padding:4px 6px;">CGV</button>
     <button type="button" class="btn-open-mentions client-only-legal" title="Mentions Légales" style="background:transparent; border:none; color:#64748b; font-size:11px; text-decoration:underline; cursor:pointer; padding:4px 6px;">Mentions Légales</button>
     <button type="button" id="clientThemeToggle" class="client-theme-toggle-btn" title="Basculer entre Mode Jour et Mode Nuit" style="display:none;">Mode Nuit</button>
+    <label id="adminNoelDecorWrap" style="display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; color:#b91c1c; background:#fef2f2; border:1px solid #fecaca; border-radius:6px; padding:3px 8px; cursor:pointer;" title="Activer les décorations festives de Noël dans le Showroom 3D">
+      <input type="checkbox" id="adminNoelDecorToggle" style="accent-color:#dc2626; cursor:pointer; width:14px; height:14px;" />
+      <span>Mode Noël</span>
+    </label>
     <button type="button" id="btnShowcaseTable" class="topbar-showcase-btn" title="Le Showroom 3D (Tous les objets sur la table)">Showroom 3D</button>
     <button type="button" id="btnShop2D" class="topbar-shop-btn" title="Ouvrir la Boutique 2D">Boutique 2D</button>
     <span id="exportStatus" class="topbar-status" style="font-size:12px; color:#94a3b8; margin-right:8px;">Prêt</span>
@@ -144,6 +148,10 @@
         <h3 id="simpleProductName" class="simple-product-name">Le Showroom 3D</h3>
         <span id="simpleProductPrice" class="simple-price-tag" style="display:none;"></span>
       </div>
+      <label id="simpleNoelToggleWrap" style="display:none; align-items:center; gap:6px; font-size:11px; font-weight:700; color:#b91c1c; background:#fef2f2; border:1px solid #fecaca; border-radius:6px; padding:3px 8px; cursor:pointer; margin-top:6px;" title="Activer l'ambiance et les décorations de Noël dans le Showroom 3D">
+        <input type="checkbox" id="simpleNoelToggle" style="accent-color:#dc2626; cursor:pointer; width:14px; height:14px;" />
+        <span>Décoration Mode Noël</span>
+      </label>
     </div>
     <button type="button" id="simpleBtnChangeProduct" class="simple-btn-outline" title="Changer d'objet dans la Boutique 2D">Changer</button>
   </div>

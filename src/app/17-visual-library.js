@@ -201,7 +201,22 @@ export function initialize(app) {
 
       card.addEventListener('click', e => {
         if (!e.target.closest('button') && !isTrash) {
-          app.addImageFromUrl(item.url, item.name, { repeatPattern: item.repeatPattern });
+          if (app.currentProductKey === 'showcase') {
+            const targets = Array.isArray(item.compatibleProducts) ? item.compatibleProducts.filter(p => p !== 'all') : [];
+            if (targets.length === 1 || (targets.length === 2 && targets.includes('coaster') && targets.includes('coasterRound'))) {
+              const targetKey = targets[0];
+              app.switchToProduct(targetKey);
+              app.addImageFromUrl(item.url, item.name, { repeatPattern: item.repeatPattern, compatibleProducts: item.compatibleProducts });
+              app.showToast(`Ouverture automatique : ${app.productDefinitions[targetKey]?.name || targetKey}`);
+            } else {
+              app.showToast('Sélectionnez d’abord un objet dans le Showroom 3D ou la Boutique pour appliquer ce visuel');
+              app.openShop2D?.();
+            }
+            if (explorer) { explorer.hidden = true; explorer.setAttribute('hidden', ''); }
+            return;
+          }
+
+          app.addImageFromUrl(item.url, item.name, { repeatPattern: item.repeatPattern, compatibleProducts: item.compatibleProducts });
           if (explorer) { explorer.hidden = true; explorer.setAttribute('hidden', ''); }
         }
       });

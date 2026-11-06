@@ -104,6 +104,8 @@ document.querySelector('#productSelect').onchange = e => {
   const btnShowcase = document.querySelector('#btnShowcaseTable'), btnBack = document.querySelector('#btnBackToShowroom');
   if (btnShowcase) { btnShowcase.style.opacity = isShowcase ? '0.6' : '1'; btnShowcase.title = isShowcase ? 'Showroom 3D actif' : 'Retourner au Showroom 3D'; }
   if (btnBack) btnBack.style.display = isShowcase ? 'none' : 'inline-flex';
+  const simpleNoelWrap = document.querySelector('#simpleNoelToggleWrap');
+  if (simpleNoelWrap) simpleNoelWrap.style.display = isShowcase ? 'inline-flex' : 'none';
   const nameEl = document.querySelector('#activeProductName'); if (nameEl) nameEl.textContent = isShowcase ? 'Le Showroom 3D' : (definition.name || 'Objet personnalisé');
   const priceBadge = document.querySelector('#activeProductPriceBadge');
   if (priceBadge) {

@@ -75,8 +75,17 @@ export function initialize(app) {
   document.querySelector('#btnModeSimple')?.addEventListener('click', () => app.setPanelMode('simple'));
   document.querySelector('#btnModeAdvanced')?.addEventListener('click', () => app.setPanelMode('advanced'));
 
-  document.querySelector('#simpleUploadTrigger')?.addEventListener('click', () => document.querySelector('#imageInput')?.click());
-  document.querySelector('#simpleOpenCatalogBtn')?.addEventListener('click', () => document.querySelector('#openCatalogBtn')?.click());
+  document.querySelector('#simpleUploadTrigger')?.addEventListener('click', () => {
+    if (app.currentProductKey === 'showcase') {
+      app.showToast('Cliquez d’abord sur un objet à personnaliser');
+      app.openShop2D?.();
+      return;
+    }
+    document.querySelector('#imageInput')?.click();
+  });
+  document.querySelector('#simpleOpenCatalogBtn')?.addEventListener('click', () => {
+    document.querySelector('#openCatalogBtn')?.click();
+  });
   document.querySelector('#simpleBtnReplace')?.addEventListener('click', () => document.querySelector('#imageInput')?.click());
   document.querySelector('#simpleBtnKnockout')?.addEventListener('click', () => {
     const active = app.getActiveImage();

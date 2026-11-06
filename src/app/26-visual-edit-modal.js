@@ -1,5 +1,6 @@
 // Modale de gestion propre et épurée d'un visuel individuel
 import { PRODUCTS_LIST } from './22-product-compatibility.js';
+import { getProductThumbnail } from './19-shop-product-thumbs.js';
 
 export function register(app) {
   let currentItem = null;
@@ -127,24 +128,46 @@ export function register(app) {
     if (productsGrid) {
       productsGrid.innerHTML = PRODUCTS_LIST.map(p => {
         const checked = (!isAll && currentTargets.includes(p.key));
+        const thumbSvg = getProductThumbnail(p.key);
         return `
-          <label class="visual-compat-card${checked ? ' is-checked' : ''}">
+          <label class="visual-compat-card${checked ? ' is-checked' : ''}" title="${p.label}">
             <input type="checkbox" class="visual-compat-prod-check" value="${p.key}" ${checked ? 'checked' : ''} />
-            <span>${p.label}</span>
+            <div class="visual-compat-preview-box">
+              <img src="${thumbSvg}" alt="${p.label}" class="compat-prod-base-icon" />
+              <img src="${item.url}" alt="" class="compat-prod-visual-overlay" />
+            </div>
+            <div class="visual-compat-label-wrap">
+              <span class="compat-prod-name">${p.label}</span>
+              <small class="compat-prod-status-tag ${checked ? 'tag-ok' : 'tag-no'}">${checked ? '✓ Autorisé' : '✕ Bloqué'}</small>
+            </div>
           </label>
         `;
       }).join('');
 
+      const updateCardTag = (chk) => {
+        const card = chk.closest('.visual-compat-card');
+        card?.classList.toggle('is-checked', chk.checked);
+        const tag = card?.querySelector('.compat-prod-status-tag');
+        if (tag) {
+          tag.textContent = chk.checked ? '✓ Autorisé' : '✕ Bloqué';
+          tag.className = `compat-prod-status-tag ${chk.checked ? 'tag-ok' : 'tag-no'}`;
+        }
+      };
+
       productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(chk => {
-        chk.addEventListener('change', () => {
-          chk.closest('.visual-compat-card')?.classList.toggle('is-checked', chk.checked);
-        });
+        chk.addEventListener('change', () => updateCardTag(chk));
       });
 
       const updateGridState = () => {
         const checked = compatAll ? compatAll.checked : false;
         productsGrid.style.opacity = checked ? '0.45' : '1';
         productsGrid.style.pointerEvents = checked ? 'none' : 'auto';
+        if (checked) {
+          productsGrid.querySelectorAll('.compat-prod-status-tag').forEach(t => {
+            t.textContent = '✓ Tous objets';
+            t.className = 'compat-prod-status-tag tag-ok';
+          });
+        }
       };
       updateGridState();
       if (compatAll) compatAll.onchange = updateGridState;
@@ -153,35 +176,35 @@ export function register(app) {
         if (compatAll) { compatAll.checked = false; updateGridState(); }
         productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(c => {
           c.checked = true;
-          c.closest('.visual-compat-card')?.classList.add('is-checked');
+          updateCardTag(c);
         });
       };
       document.querySelector('#compatDeselectAllBtn').onclick = () => {
         if (compatAll) { compatAll.checked = false; updateGridState(); }
         productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(c => {
           c.checked = false;
-          c.closest('.visual-compat-card')?.classList.remove('is-checked');
+          updateCardTag(c);
         });
       };
       document.querySelector('#compatCoasterOnlyBtn').onclick = () => {
         if (compatAll) { compatAll.checked = false; updateGridState(); }
         productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(c => {
           c.checked = (c.value === 'coaster' || c.value === 'coasterRound');
-          c.closest('.visual-compat-card')?.classList.toggle('is-checked', c.checked);
+          updateCardTag(c);
         });
       };
       document.querySelector('#compatMugOnlyBtn').onclick = () => {
         if (compatAll) { compatAll.checked = false; updateGridState(); }
         productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(c => {
           c.checked = (c.value === 'mug11oz');
-          c.closest('.visual-compat-card')?.classList.toggle('is-checked', c.checked);
+          updateCardTag(c);
         });
       };
       document.querySelector('#compatArcadeOnlyBtn').onclick = () => {
         if (compatAll) { compatAll.checked = false; updateGridState(); }
         productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(c => {
           c.checked = (c.value === 'arcadeCabinet');
-          c.closest('.visual-compat-card')?.classList.toggle('is-checked', c.checked);
+          updateCardTag(c);
         });
       };
     }
