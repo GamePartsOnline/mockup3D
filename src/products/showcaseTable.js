@@ -45,10 +45,10 @@ export const showcaseTableProduct = {
   id: 'showcase', name: 'Le Showroom 3D (Tous les objets)',
   dimensions: 'Cliquez sur un objet pour le personnaliser',
   printable: [240, 200], icon: '🏠', printAspect: 1.0, isShowcase: true,
-  create() {
+  create(app) {
     const group = new THREE.Group();
     const dummyMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
-    const room = createStudioRoom();
+    const room = createStudioRoom(app);
     group.add(room);
     const subProducts = [], interactiveWrappers = [];
     room.traverse(c => { if (c.userData?.isBusinessCard) interactiveWrappers.push(c); });
@@ -73,67 +73,106 @@ export const showcaseTableProduct = {
 
     function applyDecals(texture, isTwoSided, canvas, heartTexture) {
       if (!canvas) return;
-      if (!oneSidedCanvas) oneSidedCanvas = document.createElement('canvas');
-      oneSidedCanvas.width = canvas.width; oneSidedCanvas.height = canvas.height;
-      const oCtx = oneSidedCanvas.getContext('2d');
-      oCtx.imageSmoothingEnabled = true; oCtx.imageSmoothingQuality = 'high';
-      oCtx.fillStyle = '#ffffff'; oCtx.fillRect(0, 0, canvas.width, canvas.height);
-      oCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
-      if (!oneSidedTex) {
-        oneSidedTex = new THREE.CanvasTexture(oneSidedCanvas);
-        oneSidedTex.colorSpace = THREE.SRGBColorSpace;
-        oneSidedTex.generateMipmaps = false;
-        oneSidedTex.minFilter = THREE.LinearFilter;
-        oneSidedTex.magFilter = THREE.LinearFilter;
-        oneSidedTex.anisotropy = 16;
-      } else oneSidedTex.needsUpdate = true;
-
-      if (!twoSidedCanvas) twoSidedCanvas = document.createElement('canvas');
-      twoSidedCanvas.width = canvas.width * 2; twoSidedCanvas.height = canvas.height;
-      const tCtx = twoSidedCanvas.getContext('2d');
-      tCtx.imageSmoothingEnabled = true; tCtx.imageSmoothingQuality = 'high';
-      tCtx.fillStyle = '#ffffff'; tCtx.fillRect(0, 0, twoSidedCanvas.width, twoSidedCanvas.height);
-      tCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
-      tCtx.drawImage(canvas, canvas.width, 0, canvas.width, canvas.height);
-      if (!twoSidedTex) {
-        twoSidedTex = new THREE.CanvasTexture(twoSidedCanvas);
-        twoSidedTex.colorSpace = THREE.SRGBColorSpace;
-        twoSidedTex.generateMipmaps = false;
-        twoSidedTex.minFilter = THREE.LinearFilter;
-        twoSidedTex.magFilter = THREE.LinearFilter;
-        twoSidedTex.anisotropy = 16;
-      } else twoSidedTex.needsUpdate = true;
-
-      if (!arcadeCanvas) arcadeCanvas = document.createElement('canvas');
-      arcadeCanvas.width = 3072; arcadeCanvas.height = 2048;
-      const aCtx = arcadeCanvas.getContext('2d');
-      aCtx.imageSmoothingEnabled = true; aCtx.imageSmoothingQuality = 'high';
-      aCtx.fillStyle = '#ffffff'; aCtx.fillRect(0, 0, 3072, 2048);
-      for (const [col, row] of [[0, 1], [1, 1], [2, 0]]) aCtx.drawImage(canvas, col * 1024, row * 1024, 1024, 1024);
-      // Fronton haut (col: 2, row: 1) : cadrage optimisé haute netteté
-      aCtx.drawImage(canvas, 2048, 1024, 1024, 1024);
-      if (!arcadeTex) {
-        arcadeTex = new THREE.CanvasTexture(arcadeCanvas);
-        arcadeTex.colorSpace = THREE.SRGBColorSpace;
-        arcadeTex.generateMipmaps = true;
-        arcadeTex.minFilter = THREE.LinearMipmapLinearFilter;
-        arcadeTex.magFilter = THREE.LinearFilter;
-        arcadeTex.anisotropy = 16;
-      } else arcadeTex.needsUpdate = true;
-
-      if (!bandCanvas) bandCanvas = document.createElement('canvas');
-      bandCanvas.width = 2000; bandCanvas.height = 160;
-      const bCtx = bandCanvas.getContext('2d');
-      bCtx.fillStyle = '#ffffff'; bCtx.fillRect(0, 0, 2000, 160);
-      for (const xPos of [220, 760, 1300]) bCtx.drawImage(canvas, xPos, 4, 360, 152);
-      if (!bandTex) { bandTex = new THREE.CanvasTexture(bandCanvas); bandTex.colorSpace = THREE.SRGBColorSpace; }
-      else bandTex.needsUpdate = true;
 
       for (const { key, sub } of subProducts) {
-        if (sub.type === '3d-decal' && sub.applyDecals) sub.applyDecals(texture, false, canvas, heartTexture);
-        else if (key === 'arcadeCabinet' && sub.topMaterial) { sub.topMaterial.map = arcadeTex; sub.topMaterial.color.set(0xffffff); sub.topMaterial.needsUpdate = true; }
-        else if (key === 'eventWristband' && sub.topMaterial) { sub.topMaterial.map = bandTex; sub.topMaterial.color.set(0xffffff); sub.topMaterial.needsUpdate = true; }
-        else if (sub.topMaterial) { sub.topMaterial.map = sub.twoSided ? twoSidedTex : oneSidedTex; sub.topMaterial.color.set(0xffffff); sub.topMaterial.needsUpdate = true; }
+        // Filtrage strict : chaque objet du showroom ne reçoit le visuel QUE s'il est compatible avec cet objet
+        let isCompatible = true;
+        if (app && Array.isArray(app.imagesList) && app.imagesList.length > 0) {
+          isCompatible = app.imagesList.some(item => {
+            if (!item || !item.img) return false;
+            let compatList = item.compatibleProducts;
+            if (!compatList && app.catalogImages) {
+              const catItem = app.catalogImages.find(c => c.url === item.url || c.name === item.name);
+              if (catItem) compatList = catItem.compatibleProducts;
+            }
+            const visualMeta = { ...item, compatibleProducts: compatList || ['all'] };
+            return app.isVisualCompatible ? app.isVisualCompatible(visualMeta, key) : true;
+          });
+        }
+
+        if (!isCompatible) {
+          sub.clearDecals?.();
+          if (sub.topMaterial && sub.type !== '3d-decal') {
+            sub.topMaterial.map = null;
+            sub.topMaterial.needsUpdate = true;
+          }
+          continue;
+        }
+
+        if (sub.type === '3d-decal' && sub.applyDecals) {
+          sub.applyDecals(texture, false, canvas, heartTexture);
+          continue;
+        }
+
+        if (key === 'arcadeCabinet' && sub.topMaterial) {
+          if (!arcadeCanvas) arcadeCanvas = document.createElement('canvas');
+          arcadeCanvas.width = 3072; arcadeCanvas.height = 2048;
+          const aCtx = arcadeCanvas.getContext('2d');
+          aCtx.imageSmoothingEnabled = true; aCtx.imageSmoothingQuality = 'high';
+          aCtx.fillStyle = '#ffffff'; aCtx.fillRect(0, 0, 3072, 2048);
+          for (const [col, row] of [[0, 1], [1, 1], [2, 0]]) aCtx.drawImage(canvas, col * 1024, row * 1024, 1024, 1024);
+          aCtx.drawImage(canvas, 2048, 1024, 1024, 1024);
+          if (!arcadeTex) {
+            arcadeTex = new THREE.CanvasTexture(arcadeCanvas);
+            arcadeTex.colorSpace = THREE.SRGBColorSpace;
+            arcadeTex.generateMipmaps = true;
+            arcadeTex.minFilter = THREE.LinearMipmapLinearFilter;
+            arcadeTex.magFilter = THREE.LinearFilter;
+            arcadeTex.anisotropy = 16;
+          } else arcadeTex.needsUpdate = true;
+          sub.topMaterial.map = arcadeTex; sub.topMaterial.color.set(0xffffff); sub.topMaterial.needsUpdate = true;
+          continue;
+        }
+
+        if (key === 'eventWristband' && sub.topMaterial) {
+          if (!bandCanvas) bandCanvas = document.createElement('canvas');
+          bandCanvas.width = 2000; bandCanvas.height = 160;
+          const bCtx = bandCanvas.getContext('2d');
+          bCtx.fillStyle = '#ffffff'; bCtx.fillRect(0, 0, 2000, 160);
+          for (const xPos of [220, 760, 1300]) bCtx.drawImage(canvas, xPos, 4, 360, 152);
+          if (!bandTex) { bandTex = new THREE.CanvasTexture(bandCanvas); bandTex.colorSpace = THREE.SRGBColorSpace; }
+          else bandTex.needsUpdate = true;
+          sub.topMaterial.map = bandTex; sub.topMaterial.color.set(0xffffff); sub.topMaterial.needsUpdate = true;
+          continue;
+        }
+
+        if (sub.topMaterial) {
+          if (sub.twoSided) {
+            if (!twoSidedCanvas) twoSidedCanvas = document.createElement('canvas');
+            twoSidedCanvas.width = canvas.width * 2; twoSidedCanvas.height = canvas.height;
+            const tCtx = twoSidedCanvas.getContext('2d');
+            tCtx.imageSmoothingEnabled = true; tCtx.imageSmoothingQuality = 'high';
+            tCtx.fillStyle = '#ffffff'; tCtx.fillRect(0, 0, twoSidedCanvas.width, twoSidedCanvas.height);
+            tCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
+            tCtx.drawImage(canvas, canvas.width, 0, canvas.width, canvas.height);
+            if (!twoSidedTex) {
+              twoSidedTex = new THREE.CanvasTexture(twoSidedCanvas);
+              twoSidedTex.colorSpace = THREE.SRGBColorSpace;
+              twoSidedTex.generateMipmaps = false;
+              twoSidedTex.minFilter = THREE.LinearFilter;
+              twoSidedTex.magFilter = THREE.LinearFilter;
+              twoSidedTex.anisotropy = 16;
+            } else twoSidedTex.needsUpdate = true;
+            sub.topMaterial.map = twoSidedTex;
+          } else {
+            if (!oneSidedCanvas) oneSidedCanvas = document.createElement('canvas');
+            oneSidedCanvas.width = canvas.width; oneSidedCanvas.height = canvas.height;
+            const oCtx = oneSidedCanvas.getContext('2d');
+            oCtx.imageSmoothingEnabled = true; oCtx.imageSmoothingQuality = 'high';
+            oCtx.fillStyle = '#ffffff'; oCtx.fillRect(0, 0, canvas.width, canvas.height);
+            oCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
+            if (!oneSidedTex) {
+              oneSidedTex = new THREE.CanvasTexture(oneSidedCanvas);
+              oneSidedTex.colorSpace = THREE.SRGBColorSpace;
+              oneSidedTex.generateMipmaps = false;
+              oneSidedTex.minFilter = THREE.LinearFilter;
+              oneSidedTex.magFilter = THREE.LinearFilter;
+              oneSidedTex.anisotropy = 16;
+            } else oneSidedTex.needsUpdate = true;
+            sub.topMaterial.map = oneSidedTex;
+          }
+          sub.topMaterial.color.set(0xffffff); sub.topMaterial.needsUpdate = true;
+        }
       }
     }
 

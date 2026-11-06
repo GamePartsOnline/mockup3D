@@ -67,7 +67,7 @@ document.querySelector('#imageInput').addEventListener('change', async e => {
 document.querySelector('#productSelect').onchange = e => {
   if (app.clientMode && !e.detail?.initial) app.clientSelectedProduct = e.target.value !== 'showcase';
   app.currentProductKey = e.target.value; app.scene.remove(app.product.group); app.product.group.traverse(child => child.geometry?.dispose());
-  const definition = app.productDefinitions[app.currentProductKey]; app.product = definition.create(); app.scene.add(app.product.group);
+  const definition = app.productDefinitions[app.currentProductKey]; app.product = definition.create(app); app.scene.add(app.product.group);
   document.querySelector('#productDimensions').textContent = Array.isArray(definition.dimensions) ? `${definition.dimensions.join(' × ')} mm` : definition.dimensions;
   document.querySelector('#tshirtOrientationWrap').hidden = app.currentProductKey !== 'tshirt3D';
   document.querySelector('#loadTshirtExample').hidden = app.currentProductKey !== 'tshirt3D';
@@ -233,6 +233,34 @@ document.querySelector('#productSelect').onchange = e => {
   if (simpleTextSide && sideHtml) simpleTextSide.innerHTML = sideHtml;
 
   app.floor.position.y = isMug ? -0.002 : (isArcade || isShowcase) ? -0.835 : -0.09;
+
+  // Purge stricte des visuels non autorisés sur le nouveau produit sélectionné
+  if (app.imagesList && app.imagesList.length > 0 && app.currentProductKey && app.currentProductKey !== 'showcase') {
+    const kept = [];
+    const removedNames = [];
+    for (const item of app.imagesList) {
+      let isCompat = true;
+      if (app.isVisualCompatible) {
+        let targets = item.compatibleProducts;
+        if (!targets && app.catalogImages) {
+          const catItem = app.catalogImages.find(c => c.url === item.url || c.name === item.name);
+          if (catItem) targets = catItem.compatibleProducts;
+        }
+        const meta = { ...item, compatibleProducts: targets || ['all'] };
+        isCompat = app.isVisualCompatible(meta, app.currentProductKey);
+      }
+      if (isCompat) {
+        kept.push(item);
+      } else {
+        removedNames.push(item.name || 'Visuel');
+      }
+    }
+    if (removedNames.length > 0) {
+      app.imagesList = kept;
+      app.activeImageIndex = app.imagesList.length ? Math.max(0, app.imagesList.length - 1) : -1;
+      app.showToast(`Visuel non autorisé sur ce support retiré : ${removedNames.join(', ')}`);
+    }
+  }
 
   app.renderImagesList();
   app.syncActiveControls?.();

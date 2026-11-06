@@ -118,7 +118,7 @@ app.productDefinitions = {
 };
 app.defaultProductKey = document.querySelector('#productSelect')?.value || 'showcase';
 app.currentProductKey = app.defaultProductKey;
-app.product = app.productDefinitions[app.defaultProductKey].create();
+app.product = app.productDefinitions[app.defaultProductKey].create(app);
 app.scene.add(app.product.group);
 app.grid = new app.THREE.GridHelper(8, 24, 0x617078, 0x9aa6ac);
 app.grid.position.y = -.085;
