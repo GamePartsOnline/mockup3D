@@ -45,6 +45,7 @@ document.querySelector('#imageInput').addEventListener('change', async e => {
           side: defSide
         };
         app.imagesList.push(item);
+        app.autoKnockoutWhiteIfOpaque?.(item);
         const res = app.getImageResolutionInfo?.(item);
         if (res && res.status === 'danger') lowRes.push(`${file.name} (${res.width}×${res.height} px)`);
         resolve();

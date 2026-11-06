@@ -16,11 +16,15 @@ export function register(app) {
         else if (app.product.zones) defSide = app.product.zones.find(z => !used.has(z.id))?.id || app.product.zones[0].id;
         else if (app.product.twoSided) defSide = (used.has('A') && !used.has('B')) ? 'B' : (used.size === 0 ? 'A' : 'both');
         else if (app.currentProductKey === 'tshirt3D') defSide = (used.has('A') && !used.has('B')) ? 'B' : ((used.has('A') && !used.has('heart')) ? 'heart' : 'A');
-        app.imagesList.push({
+        const newItem = {
           id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, name: name || 'Visuel', img,
           scale: opt.scale || 1, scaleX: opt.scale || 1, scaleY: opt.scale || 1, x: opt.x || 0, y: opt.y || 0, rotation: opt.rotation || 0,
           fitMode: opt.fitMode || (opt.repeatPattern ? 'cover' : 'contain'), repeatPattern: !!opt.repeatPattern, repeatCount: opt.repeatCount || 3, side: opt.side || defSide
-        });
+        };
+        app.imagesList.push(newItem);
+        if (opt.removeWhite !== false) {
+          app.autoKnockoutWhiteIfOpaque?.(newItem);
+        }
         app.activeImageIndex = app.imagesList.length - 1;
         app.renderImagesList(); app.syncActiveControls(); app.buildTexture();
         app.setOverlayVisible(document.querySelector('#showTransformFrame')?.checked || false);

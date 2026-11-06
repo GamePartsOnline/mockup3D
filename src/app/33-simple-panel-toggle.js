@@ -78,7 +78,15 @@ export function initialize(app) {
   document.querySelector('#simpleUploadTrigger')?.addEventListener('click', () => document.querySelector('#imageInput')?.click());
   document.querySelector('#simpleOpenCatalogBtn')?.addEventListener('click', () => document.querySelector('#openCatalogBtn')?.click());
   document.querySelector('#simpleBtnReplace')?.addEventListener('click', () => document.querySelector('#imageInput')?.click());
-  document.querySelector('#simpleBtnKnockout')?.addEventListener('click', () => document.querySelector('#btnRemoveWhiteBg')?.click());
+  document.querySelector('#simpleBtnKnockout')?.addEventListener('click', () => {
+    const active = app.getActiveImage();
+    if (!active) return;
+    if (active.removeWhite) {
+      app.revertOriginalImage(active);
+    } else {
+      app.removeWhiteBackground(active, 32, false);
+    }
+  });
 
   document.querySelector('#simpleBtnCenter')?.addEventListener('click', () => {
     const active = app.getActiveImage?.();

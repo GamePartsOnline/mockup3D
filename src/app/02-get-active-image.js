@@ -46,6 +46,9 @@ app.syncActiveControls = function syncActiveControls() {
   }
 
   document.querySelectorAll('[data-fit]').forEach(x => x.classList.toggle('active', x.dataset.fit === active.fitMode));
+
+  const chkRemoveWhite = document.querySelector('#chkAutoRemoveWhiteBg');
+  if (chkRemoveWhite) chkRemoveWhite.checked = !!active.removeWhite;
 };
 
 app.selectActiveImage = function selectActiveImage(index) {
