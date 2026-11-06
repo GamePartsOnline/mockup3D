@@ -70,7 +70,10 @@ async function syncCatalogWithDisk() {
     if (cat === 'Licornes' || cat === 'Animaux & Art') cat = 'Animaux';
     let sub = String(item.subcategory || '').trim() || inferSubcategory(item.name);
     if (!sub && cat === 'Animaux' && /licorne/i.test(item.name)) sub = 'Licorne';
-    const targets = Array.isArray(item.compatibleProducts) && item.compatibleProducts.length ? item.compatibleProducts : ['all'];
+    let targets = Array.isArray(item.compatibleProducts) && item.compatibleProducts.length ? item.compatibleProducts : ['all'];
+    if (targets.length === 1 && targets[0] === 'all' && /sous-verre|coaster/i.test(item.name || '')) {
+      targets = ['coaster', 'coasterRound'];
+    }
     const st = item.status === 'trash' ? 'trash' : (item.status === 'pending' ? 'pending' : 'approved');
     return { ...item, name: item.name === 'JPG' ? 'Cerf Polygonal (Art)' : item.name, category: cat, subcategory: sub, status: st, compatibleProducts: targets };
   });
@@ -155,7 +158,10 @@ export async function saveCatalog(req, res) {
       if (url.startsWith('/visuels/')) {
         const fileName = path.basename(url); keptFiles.add(fileName);
         const clean = String(item.name || fileName.replace(/\.[^/.]+$/, ''));
-        const targets = Array.isArray(item.compatibleProducts) && item.compatibleProducts.length ? item.compatibleProducts : ['all'];
+        let targets = Array.isArray(item.compatibleProducts) && item.compatibleProducts.length ? item.compatibleProducts : ['all'];
+    if (targets.length === 1 && targets[0] === 'all' && /sous-verre|coaster/i.test(item.name || '')) {
+      targets = ['coaster', 'coasterRound'];
+    }
         const st = item.status === 'trash' ? 'trash' : (item.status === 'pending' ? 'pending' : 'approved');
         finalItems.push({
           id: String(item.id || `visuel-${fileName}`), name: clean, url: `/visuels/${fileName}`,

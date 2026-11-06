@@ -933,22 +933,15 @@
   },
   {
     "id": "visuel-1793179275590-8gc4",
-    "name": "Noel 01",
+    "name": "Sous-verre - Noel 01",
     "url": "/visuels/Visuel-mvrwn49p.jpg",
     "category": "Noël",
     "subcategory": "",
     "repeatPattern": false,
     "status": "approved",
     "compatibleProducts": [
-      "mug11oz",
-      "tshirt3D",
-      "cushion",
-      "poster",
-      "photoFrame",
-      "puzzle",
       "coaster",
-      "coasterRound",
-      "mousePad"
+      "coasterRound"
     ]
   },
   {

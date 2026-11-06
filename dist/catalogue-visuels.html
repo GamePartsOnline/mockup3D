@@ -1,0 +1,1149 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catalogue des Motifs & Visuels - Graph2Print</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Segoe+UI:wght@400;600;700&display=swap');
+    :root {
+      --primary: #8b5cf6;
+      --primary-dark: #6d28d9;
+      --accent: #06b6d4;
+      --dark: #0f172a;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-muted: #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f8fafc;
+      color: var(--text);
+      line-height: 1.5;
+      padding: 30px 20px;
+    }
+    .container { max-width: 1400px; margin: 0 auto; }
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      color: #ffffff;
+      border-radius: 16px;
+      padding: 36px 40px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25);
+    }
+    .brand h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 30px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #c084fc, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+    .brand p { color: #94a3b8; font-size: 15px; }
+    .header-actions { display: flex; gap: 12px; }
+    .btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .btn:hover { background: var(--primary-dark); }
+    .btn-outline { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); }
+    .btn-outline:hover { background: rgba(255,255,255,0.2); }
+
+    /* Barre de filtres et recherche */
+    .toolbar {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 25px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .search-box {
+      flex: 1;
+      min-width: 260px;
+      max-width: 400px;
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+    }
+    .search-input:focus { border-color: var(--primary); }
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; }
+    .filter-btn {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+    .stats-count { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+
+    /* Grille de visuels */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.04);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px -3px rgba(0,0,0,0.08);
+      border-color: #cbd5e1;
+    }
+    .card-thumb-wrap {
+      width: 100%;
+      height: 200px;
+      background: #f1f5f9;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .card-thumb {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      transition: transform .25s ease;
+    }
+    .card:hover .card-thumb { transform: scale(1.05); }
+    .card-cat-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(15, 23, 42, 0.75);
+      color: #fff;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      backdrop-filter: blur(4px);
+    }
+    .card-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+    }
+    .card-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-subcat {
+      font-size: 11.5px;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .card-compat {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid #f1f5f9;
+    }
+    .tag {
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .card-ref {
+      font-family: monospace;
+      font-size: 10px;
+      color: #94a3b8;
+      margin-top: 6px;
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .toolbar, .header-actions { display: none !important; }
+      header { box-shadow: none; border-radius: 0; margin-bottom: 20px; }
+      .grid { grid-template-columns: repeat(4, 1fr) !important; gap: 15px !important; }
+      .card { break-inside: avoid; box-shadow: none !important; border: 1px solid #ccc !important; }
+      .card-thumb-wrap { height: 160px !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <h1>GRAPH2PRINT • CATALOGUE DE MOTIFS</h1>
+        <p>Bibliotheque d'illustrations et visuels disponibles pour personnalisation sur nos objets et supports.</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-outline" onclick="window.print()">Imprimer / Sauvegarder en PDF</button>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <div class="search-box">
+        <input type="text" id="searchInput" class="search-input" placeholder="Rechercher un visuel ou theme..." oninput="filterVisuals()" />
+      </div>
+      <div class="filters" id="filterContainer">
+        <button class="filter-btn active" data-cat="all" onclick="setCategory('all', this)">Tous</button>
+      </div>
+      <div class="stats-count" id="countDisplay">57 motifs disponibles</div>
+    </div>
+
+    <div class="grid" id="visualsGrid">      <article class="card" data-cat="Animaux" data-title="Valentine Pig" data-sub="" data-ref="G2P-VIS-001">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Animaux</span>
+          <img src="visuels/Valentine-pig-2-mvqtxhcp.png" alt="Valentine Pig" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Valentine Pig">Valentine Pig</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span></div>
+            <div class="card-ref">Ref: G2P-VIS-001</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Animaux" data-title="Motif Visuel" data-sub="" data-ref="G2P-VIS-002">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Animaux</span>
+          <img src="visuels/Visuel-mvrwj00j.jpg" alt="Motif Visuel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Motif Visuel">Motif Visuel</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-002</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Animaux" data-title="Cerf Polygonal (Art)" data-sub="Cerf" data-ref="G2P-VIS-003">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Animaux</span>
+          <img src="visuels/JPG-mvqtxhcx.jpg" alt="Cerf Polygonal (Art)" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Cerf Polygonal (Art)">Cerf Polygonal (Art)</h3>
+            <div class='card-subcat'>Cerf</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span></div>
+            <div class="card-ref">Ref: G2P-VIS-003</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Animaux" data-title="Motif Visuel" data-sub="Chats" data-ref="G2P-VIS-004">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Animaux</span>
+          <img src="visuels/Visuel-mvrwn49q.jpg" alt="Motif Visuel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Motif Visuel">Motif Visuel</h3>
+            <div class='card-subcat'>Chats</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Casquette</span><span class='tag'>Coussin</span><span class='tag'>+5</span></div>
+            <div class="card-ref">Ref: G2P-VIS-004</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Animaux" data-title="Licorne Magique (3)" data-sub="Licorne" data-ref="G2P-VIS-005">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Animaux</span>
+          <img src="visuels/UNICORN-MUG-3-mvqu2iln.png" alt="Licorne Magique (3)" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Licorne Magique (3)">Licorne Magique (3)</h3>
+            <div class='card-subcat'>Licorne</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span></div>
+            <div class="card-ref">Ref: G2P-VIS-005</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Animaux" data-title="Licorne Magique (4)" data-sub="Licorne" data-ref="G2P-VIS-006">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Animaux</span>
+          <img src="visuels/UNICORN-MUG-4-mvqu2ilj.png" alt="Licorne Magique (4)" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Licorne Magique (4)">Licorne Magique (4)</h3>
+            <div class='card-subcat'>Licorne</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span></div>
+            <div class="card-ref">Ref: G2P-VIS-006</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Animaux" data-title="Licorne Magique (5)" data-sub="Licorne" data-ref="G2P-VIS-007">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Animaux</span>
+          <img src="visuels/UNICORN-MUG-5-mvqu2ild.png" alt="Licorne Magique (5)" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Licorne Magique (5)">Licorne Magique (5)</h3>
+            <div class='card-subcat'>Licorne</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span></div>
+            <div class="card-ref">Ref: G2P-VIS-007</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Animaux" data-title="Licorne Magique (6)" data-sub="Licorne" data-ref="G2P-VIS-008">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Animaux</span>
+          <img src="visuels/UNICORN-MUG-6-mvqu2il7.png" alt="Licorne Magique (6)" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Licorne Magique (6)">Licorne Magique (6)</h3>
+            <div class='card-subcat'>Licorne</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span></div>
+            <div class="card-ref">Ref: G2P-VIS-008</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Animaux" data-title="Licorne Magique (8)" data-sub="Licorne" data-ref="G2P-VIS-009">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Animaux</span>
+          <img src="visuels/UNICORN-MUG-8-mvqu2il3.png" alt="Licorne Magique (8)" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Licorne Magique (8)">Licorne Magique (8)</h3>
+            <div class='card-subcat'>Licorne</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span></div>
+            <div class="card-ref">Ref: G2P-VIS-009</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Animaux" data-title="Licorne Magique (9)" data-sub="Licorne" data-ref="G2P-VIS-010">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Animaux</span>
+          <img src="visuels/UNICORN-MUG-9-mvqu2iks.png" alt="Licorne Magique (9)" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Licorne Magique (9)">Licorne Magique (9)</h3>
+            <div class='card-subcat'>Licorne</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span></div>
+            <div class="card-ref">Ref: G2P-VIS-010</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Arcades" data-title="Motif Visuel" data-sub="" data-ref="G2P-VIS-011">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Arcades</span>
+          <img src="visuels/Visuel-mvrwj00i.jpg" alt="Motif Visuel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Motif Visuel">Motif Visuel</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Borne arcade</span></div>
+            <div class="card-ref">Ref: G2P-VIS-011</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="57d2.342051_4000" data-sub="" data-ref="G2P-VIS-012">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/57d2-342051_4000-mvruzwhl.jpg" alt="57d2.342051_4000" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="57d2.342051_4000">57d2.342051_4000</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-012</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="Baleine Abyssale & Plongeur" data-sub="" data-ref="G2P-VIS-013">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/2fb0-356160_ori_2000-mvrt7x95.jpg" alt="Baleine Abyssale & Plongeur" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Baleine Abyssale & Plongeur">Baleine Abyssale & Plongeur</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-013</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="Between Dream and Reality" data-sub="" data-ref="G2P-VIS-014">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/d55f-332511-mvrtc8pt.jpg" alt="Between Dream and Reality" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Between Dream and Reality">Between Dream and Reality</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-014</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="Callisto & Bus Error Prod" data-sub="" data-ref="G2P-VIS-015">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/Callisto-and-bus-error-prod-mvrtc8p2.jpg" alt="Callisto & Bus Error Prod" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Callisto & Bus Error Prod">Callisto & Bus Error Prod</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-015</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="Cité Futuriste & Silhouette" data-sub="" data-ref="G2P-VIS-016">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/7398-316044-mvrtc8o0.png" alt="Cité Futuriste & Silhouette" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Cité Futuriste & Silhouette">Cité Futuriste & Silhouette</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-016</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="Cyber City Baie Spatiale" data-sub="" data-ref="G2P-VIS-017">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/10f4-335214_4000-mvrtc7u9.jpg" alt="Cyber City Baie Spatiale" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Cyber City Baie Spatiale">Cyber City Baie Spatiale</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-017</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="Épave & Sirène Callisto" data-sub="" data-ref="G2P-VIS-018">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/2492-264277-mvrtc8mk.jpg" alt="Épave & Sirène Callisto" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Épave & Sirène Callisto">Épave & Sirène Callisto</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-018</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="Grand Requin Blanc" data-sub="" data-ref="G2P-VIS-019">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/806e-301826-mvrtc8m4.jpg" alt="Grand Requin Blanc" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Grand Requin Blanc">Grand Requin Blanc</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-019</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="Inercia - Remorquage Planeur" data-sub="" data-ref="G2P-VIS-020">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/ff62-371716-mvrtc8rz.jpg" alt="Inercia - Remorquage Planeur" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Inercia - Remorquage Planeur">Inercia - Remorquage Planeur</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-020</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="Lémurien en Plein Vol" data-sub="" data-ref="G2P-VIS-021">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/6ca3-359230-1-mvrt7xie.jpg" alt="Lémurien en Plein Vol" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Lémurien en Plein Vol">Lémurien en Plein Vol</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-021</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="Mygale Rouge Sang" data-sub="" data-ref="G2P-VIS-022">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/b2c6-287706_2000-mvrtc8oj.jpg" alt="Mygale Rouge Sang" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Mygale Rouge Sang">Mygale Rouge Sang</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-022</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="Nuit Japonaise & Papillons" data-sub="" data-ref="G2P-VIS-023">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/91ca-325483-mvrtc7xq.jpg" alt="Nuit Japonaise & Papillons" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Nuit Japonaise & Papillons">Nuit Japonaise & Papillons</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-023</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="Œil de Félin & Tour Eiffel" data-sub="" data-ref="G2P-VIS-024">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/139d-pl187446_2000-mvrtc7z1.jpg" alt="Œil de Félin & Tour Eiffel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Œil de Félin & Tour Eiffel">Œil de Félin & Tour Eiffel</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-024</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="Panda dans la Forêt d'Émeraudes" data-sub="" data-ref="G2P-VIS-025">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/f750-292269-mvrtc8r2.jpg" alt="Panda dans la Forêt d'Émeraudes" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Panda dans la Forêt d'Émeraudes">Panda dans la Forêt d'Émeraudes</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-025</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="Poissons Tropicaux Coraux" data-sub="" data-ref="G2P-VIS-026">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/e0c2-132516-mvrtc8qd.jpg" alt="Poissons Tropicaux Coraux" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Poissons Tropicaux Coraux">Poissons Tropicaux Coraux</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-026</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="Resolution Demoscene" data-sub="" data-ref="G2P-VIS-027">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/Re_soul_tion-1920x1080-mvrtc8sj.jpg" alt="Resolution Demoscene" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Resolution Demoscene">Resolution Demoscene</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-027</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="Shadow Party Space Mission" data-sub="" data-ref="G2P-VIS-028">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/010d-307657-mvrtc7t7.jpg" alt="Shadow Party Space Mission" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Shadow Party Space Mission">Shadow Party Space Mission</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-028</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="Souris au Clair de Lune" data-sub="" data-ref="G2P-VIS-029">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/57d2-342051_4000-mvrtc7wh.jpg" alt="Souris au Clair de Lune" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Souris au Clair de Lune">Souris au Clair de Lune</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-029</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Callisto Arts" data-title="Fée & Licornes Ailées" data-sub="Licorne" data-ref="G2P-VIS-030">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Callisto Arts</span>
+          <img src="visuels/25aa-264370-mvrtc7uu.jpg" alt="Fée & Licornes Ailées" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Fée & Licornes Ailées">Fée & Licornes Ailées</h3>
+            <div class='card-subcat'>Licorne</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-030</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Dessins animés" data-title="Motif Visuel" data-sub="" data-ref="G2P-VIS-031">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Dessins animés</span>
+          <img src="visuels/Visuel-mvrwj00g.jpg" alt="Motif Visuel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Motif Visuel">Motif Visuel</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-031</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Dessins animés" data-title="Motif Visuel" data-sub="" data-ref="G2P-VIS-032">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Dessins animés</span>
+          <img src="visuels/Visuel-mvrwn49x.jpg" alt="Motif Visuel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Motif Visuel">Motif Visuel</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-032</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Dessins animés" data-title="Motif Visuel" data-sub="" data-ref="G2P-VIS-033">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Dessins animés</span>
+          <img src="visuels/Visuel-mvrwn49r.jpg" alt="Motif Visuel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Motif Visuel">Motif Visuel</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-033</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Dessins animés" data-title="Motif Visuel" data-sub="" data-ref="G2P-VIS-034">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Dessins animés</span>
+          <img src="visuels/Visuel-mvrwn49t.jpg" alt="Motif Visuel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Motif Visuel">Motif Visuel</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-034</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Dessins animés" data-title="Motif Visuel" data-sub="" data-ref="G2P-VIS-035">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Dessins animés</span>
+          <img src="visuels/Visuel-mvrwn49u.jpg" alt="Motif Visuel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Motif Visuel">Motif Visuel</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-035</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Dessins animés" data-title="Motif Visuel" data-sub="" data-ref="G2P-VIS-036">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Dessins animés</span>
+          <img src="visuels/Visuel-mvrwn49v.jpg" alt="Motif Visuel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Motif Visuel">Motif Visuel</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-036</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Dessins animés" data-title="Motif Visuel" data-sub="" data-ref="G2P-VIS-037">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Dessins animés</span>
+          <img src="visuels/Visuel-mvrwj00l.jpg" alt="Motif Visuel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Motif Visuel">Motif Visuel</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-037</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Dessins animés" data-title="Motif Visuel" data-sub="" data-ref="G2P-VIS-038">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Dessins animés</span>
+          <img src="visuels/Visuel-mvrwj00c.jpg" alt="Motif Visuel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Motif Visuel">Motif Visuel</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-038</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Dessins animés" data-title="Taz" data-sub="" data-ref="G2P-VIS-039">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Dessins animés</span>
+          <img src="visuels/Visuel-mvry1mkt.jpg" alt="Taz" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Taz">Taz</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-039</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Fantaisie" data-title="Fée" data-sub="Fées" data-ref="G2P-VIS-040">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Fantaisie</span>
+          <img src="visuels/Visuel-mvry1mke.jpg" alt="Fée" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Fée">Fée</h3>
+            <div class='card-subcat'>Fées</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-040</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Films" data-title="Motif Visuel" data-sub="" data-ref="G2P-VIS-041">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Films</span>
+          <img src="visuels/Visuel-mvry1mks.jpg" alt="Motif Visuel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Motif Visuel">Motif Visuel</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>Sous-verre</span><span class='tag'>Tapis souris</span><span class='tag'>Porte-cle</span><span class='tag'>+1</span></div>
+            <div class="card-ref">Ref: G2P-VIS-041</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Fleurs" data-title="Floral Pastel" data-sub="" data-ref="G2P-VIS-042">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Fleurs</span>
+          <img src="visuels/Flower-mug-1-mvqvoxgy.png" alt="Floral Pastel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Floral Pastel">Floral Pastel</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span></div>
+            <div class="card-ref">Ref: G2P-VIS-042</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Fleurs" data-title="Floral Pastel (2)" data-sub="" data-ref="G2P-VIS-043">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Fleurs</span>
+          <img src="visuels/Flower-mug-2-mvqvoxgu.png" alt="Floral Pastel (2)" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Floral Pastel (2)">Floral Pastel (2)</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span></div>
+            <div class="card-ref">Ref: G2P-VIS-043</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Fleurs" data-title="Floral Pastel (3)" data-sub="" data-ref="G2P-VIS-044">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Fleurs</span>
+          <img src="visuels/Flower-mug-3-mvqvoxgr.png" alt="Floral Pastel (3)" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Floral Pastel (3)">Floral Pastel (3)</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span></div>
+            <div class="card-ref">Ref: G2P-VIS-044</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Fleurs" data-title="Floral Pastel (4)" data-sub="" data-ref="G2P-VIS-045">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Fleurs</span>
+          <img src="visuels/Flower-mug-4-mvqvoxgn.png" alt="Floral Pastel (4)" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Floral Pastel (4)">Floral Pastel (4)</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span></div>
+            <div class="card-ref">Ref: G2P-VIS-045</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Fleurs" data-title="Floral Pastel (5)" data-sub="" data-ref="G2P-VIS-046">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Fleurs</span>
+          <img src="visuels/Flower-mug-5-mvqvoxgh.png" alt="Floral Pastel (5)" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Floral Pastel (5)">Floral Pastel (5)</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span></div>
+            <div class="card-ref">Ref: G2P-VIS-046</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Fleurs" data-title="Floral Pastel (6)" data-sub="" data-ref="G2P-VIS-047">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Fleurs</span>
+          <img src="visuels/Flower-mug-6-mvqvoxgc.png" alt="Floral Pastel (6)" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Floral Pastel (6)">Floral Pastel (6)</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span></div>
+            <div class="card-ref">Ref: G2P-VIS-047</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Humour" data-title="Motif Visuel" data-sub="" data-ref="G2P-VIS-048">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Humour</span>
+          <img src="visuels/Visuel-mvrwj00e.jpg" alt="Motif Visuel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Motif Visuel">Motif Visuel</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-048</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Humour" data-title="Motif Visuel" data-sub="" data-ref="G2P-VIS-049">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Humour</span>
+          <img src="visuels/Visuel-mvry1mkk.jpg" alt="Motif Visuel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Motif Visuel">Motif Visuel</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-049</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Logos" data-title="Logo Graph2Print" data-sub="" data-ref="G2P-VIS-050">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Logos</span>
+          <img src="visuels/logo-Graph-2-print-mvrsz9bs.png" alt="Logo Graph2Print" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Logo Graph2Print">Logo Graph2Print</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-050</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Noël" data-title="Noel 02" data-sub="" data-ref="G2P-VIS-051">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Noël</span>
+          <img src="visuels/Pngtree-Ribbon-Christmas-Ball-Christmas-Decorative-mvry0e3o.png" alt="Noel 02" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Noel 02">Noel 02</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span></div>
+            <div class="card-ref">Ref: G2P-VIS-051</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Noël" data-title="Noel 03" data-sub="" data-ref="G2P-VIS-052">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Noël</span>
+          <img src="visuels/Visuel-mvry1mkj.jpg" alt="Noel 03" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Noel 03">Noel 03</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-052</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Noël" data-title="Noel 04" data-sub="" data-ref="G2P-VIS-053">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Noël</span>
+          <img src="visuels/Visuel-mvry1mki.jpg" alt="Noel 04" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Noel 04">Noel 04</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-053</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Noël" data-title="Noel 01" data-sub="" data-ref="G2P-VIS-054">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Noël</span>
+          <img src="visuels/Visuel-mvrwn49p.jpg" alt="Noel 01" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Noel 01">Noel 01</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-054</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Nouveau" data-title="Motif Visuel" data-sub="" data-ref="G2P-VIS-055">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Nouveau</span>
+          <img src="visuels/Visuel-mvry1mkn.jpg" alt="Motif Visuel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Motif Visuel">Motif Visuel</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-055</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Nouveau" data-title="Motif Visuel" data-sub="" data-ref="G2P-VIS-056">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Nouveau</span>
+          <img src="visuels/Visuel-mvry1mkq.jpg" alt="Motif Visuel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Motif Visuel">Motif Visuel</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Poster</span><span class='tag'>+4</span></div>
+            <div class="card-ref">Ref: G2P-VIS-056</div>
+          </div>
+        </div>
+      </article>      <article class="card" data-cat="Nouveau" data-title="Motif Visuel" data-sub="" data-ref="G2P-VIS-057">
+        <div class="card-thumb-wrap">
+          <span class="card-cat-badge">Nouveau</span>
+          <img src="visuels/Visuel-mvry1mkr.jpg" alt="Motif Visuel" class="card-thumb" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 class="card-title" title="Motif Visuel">Motif Visuel</h3>
+            <div class='card-subcat'>&nbsp;</div>
+          </div>
+          <div>
+            <div class="card-compat"><span class='tag'>Mug</span><span class='tag'>T-shirt</span><span class='tag'>Coussin</span><span class='tag'>Puzzle</span><span class='tag'>+2</span></div>
+            <div class="card-ref">Ref: G2P-VIS-057</div>
+          </div>
+        </div>
+      </article>    </div>
+  </div>
+
+  <script>
+    let currentCategory = 'all';
+
+    // Generer dynamiquement les boutons de categorie
+    const cards = Array.from(document.querySelectorAll('.card'));
+    const categories = ['all', ...new Set(cards.map(c => c.dataset.cat))];
+    const filterContainer = document.getElementById('filterContainer');
+    filterContainer.innerHTML = '';
+
+    categories.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn' + (cat === 'all' ? ' active' : '');
+      btn.textContent = (cat === 'all' ? 'Tous les motifs' : cat);
+      btn.dataset.cat = cat;
+      btn.onclick = () => setCategory(cat, btn);
+      filterContainer.appendChild(btn);
+    });
+
+    function setCategory(cat, btnEl) {
+      currentCategory = cat;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+      filterVisuals();
+    }
+
+    function filterVisuals() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const catMatch = (currentCategory === 'all' || card.dataset.cat === currentCategory);
+        const textMatch = !q || card.dataset.title.toLowerCase().includes(q) ||
+                               card.dataset.sub.toLowerCase().includes(q) ||
+                               card.dataset.cat.toLowerCase().includes(q) ||
+                               card.dataset.ref.toLowerCase().includes(q);
+
+        if (catMatch && textMatch) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      document.getElementById('countDisplay').textContent = visibleCount + ' motif' + (visibleCount > 1 ? 's' : '') + ' visible' + (visibleCount > 1 ? 's' : '');
+    }
+  </script>
+</body>
+</html>

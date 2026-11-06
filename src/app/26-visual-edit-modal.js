@@ -163,6 +163,13 @@ export function register(app) {
           c.closest('.visual-compat-card')?.classList.remove('is-checked');
         });
       };
+      document.querySelector('#compatCoasterOnlyBtn').onclick = () => {
+        if (compatAll) { compatAll.checked = false; updateGridState(); }
+        productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(c => {
+          c.checked = (c.value === 'coaster' || c.value === 'coasterRound');
+          c.closest('.visual-compat-card')?.classList.toggle('is-checked', c.checked);
+        });
+      };
       document.querySelector('#compatMugOnlyBtn').onclick = () => {
         if (compatAll) { compatAll.checked = false; updateGridState(); }
         productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(c => {
