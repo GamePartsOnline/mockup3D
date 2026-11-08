@@ -610,136 +610,136 @@ export function createRetroTechShelf(rightX, floorY, roomCenterZ) {
   const cameraLeatherMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.9 });
   const lensGlassMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.1, metalness: 0.5 });
 
-  // 1. Structure de l'étagère murale (3 niveaux en chêne avec montants verticaux en métal noir)
-  const shelfW = 1.65, shelfD = 0.36, shelfH = 0.035;
-  const levelsY = [0.45, 1.15, 1.85];
+  // 1. Structure murale en hauteur face caméra (3 niveaux en chêne avec montants verticaux en métal noir)
+  const shelfW = 1.55, shelfD = 0.28, shelfH = 0.03;
+  const levelsY = [0.90, 1.40, 1.90];
 
   levelsY.forEach(ly => {
-    const plank = new THREE.Mesh(new THREE.BoxGeometry(shelfD, shelfH, shelfW), woodShelfMat);
-    plank.position.set(-shelfD / 2, ly, 0);
+    const plank = new THREE.Mesh(new THREE.BoxGeometry(shelfW, shelfH, shelfD), woodShelfMat);
+    plank.position.set(0, ly, 0);
     plank.castShadow = true; plank.receiveShadow = true;
     shelfGroup.add(plank);
   });
 
-  // Montants verticaux en acier noir
-  [-shelfW / 2 + 0.08, shelfW / 2 - 0.08].forEach(mz => {
-    const bar = new THREE.Mesh(new THREE.BoxGeometry(shelfD + 0.04, 1.80, 0.03), darkMetalMat);
-    bar.position.set(-shelfD / 2, 1.15, mz);
+  // Montants latéraux en acier noir
+  [-shelfW / 2 + 0.02, shelfW / 2 - 0.02].forEach(mx => {
+    const bar = new THREE.Mesh(new THREE.BoxGeometry(0.03, 1.05, shelfD + 0.02), darkMetalMat);
+    bar.position.set(mx, 1.40, 0);
     bar.castShadow = true;
     shelfGroup.add(bar);
   });
 
-  // 2. NIVEAU 1 (ly = 0.45) : ATARI 520 ST & COMMODORE AMIGA 500
-  // A. Atari 520 ST (forme biseautée grise emblématique, fente disquette latérale)
+  // 2. NIVEAU 1 (ly = 0.90) : ATARI 520 ST & COMMODORE AMIGA 500
+  // A. Atari 520 ST (forme biseautée grise emblématique, face caméra)
   const atari = new THREE.Group();
   atari.name = 'atari520ST';
-  atari.position.set(-shelfD / 2, 0.47, -0.42);
+  atari.position.set(-0.38, 0.92, 0);
 
-  const atariBase = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.045, 0.42), atariGrayMat);
+  const atariBase = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.045, 0.22), atariGrayMat);
   atari.add(atariBase);
 
-  // Clavier incliné
+  // Clavier incliné face caméra
   const atariKeyboardMat = new THREE.MeshStandardMaterial({ color: 0x3d3935, roughness: 0.7 });
-  const atariKeys = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.015, 0.34), atariKeyboardMat);
-  atariKeys.position.set(0.04, 0.028, 0);
+  const atariKeys = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.015, 0.12), atariKeyboardMat);
+  atariKeys.position.set(0, 0.028, 0.04);
   atari.add(atariKeys);
 
-  // Fente lecteur disquette 3.5" latérale
-  const driveSlot = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.012, 0.005), darkMetalMat);
-  driveSlot.position.set(-0.06, 0.015, 0.211);
+  // Fente lecteur disquette 3.5" latérale droite
+  const driveSlot = new THREE.Mesh(new THREE.BoxGeometry(0.005, 0.012, 0.08), darkMetalMat);
+  driveSlot.position.set(0.181, 0.015, 0.02);
   atari.add(driveSlot);
 
   // Logo Atari stylisé (rouge)
   const atariBadge = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.004, 0.03), new THREE.MeshBasicMaterial({ color: 0xd92626 }));
-  atariBadge.position.set(-0.10, 0.025, -0.14);
+  atariBadge.position.set(-0.12, 0.025, -0.06);
   atari.add(atariBadge);
 
   shelfGroup.add(atari);
 
-  // B. Commodore Amiga 500 (boîtier beige emblématique, fentes de ventilation)
+  // B. Commodore Amiga 500 (boîtier beige emblématique, face caméra)
   const amiga = new THREE.Group();
   amiga.name = 'amiga500';
-  amiga.position.set(-shelfD / 2, 0.47, 0.42);
+  amiga.position.set(0.38, 0.92, 0);
 
-  const amigaBase = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.052, 0.43), amigaBeigeMat);
+  const amigaBase = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.052, 0.22), amigaBeigeMat);
   amiga.add(amigaBase);
 
   const amigaKeysMat = new THREE.MeshStandardMaterial({ color: 0xd8d2c2, roughness: 0.6 });
-  const amigaKeys = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.018, 0.36), amigaKeysMat);
-  amigaKeys.position.set(0.035, 0.032, 0);
+  const amigaKeys = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.018, 0.12), amigaKeysMat);
+  amigaKeys.position.set(0, 0.032, 0.04);
   amiga.add(amigaKeys);
 
   // LED Power et Floppy
   const ledPower = new THREE.Mesh(new THREE.SphereGeometry(0.005, 8, 8), new THREE.MeshBasicMaterial({ color: 0xef4444 }));
-  ledPower.position.set(-0.10, 0.030, -0.16);
+  ledPower.position.set(-0.14, 0.030, -0.06);
   amiga.add(ledPower);
 
   const ledDrive = new THREE.Mesh(new THREE.SphereGeometry(0.005, 8, 8), new THREE.MeshBasicMaterial({ color: 0x22c55e }));
-  ledDrive.position.set(-0.10, 0.030, -0.14);
+  ledDrive.position.set(-0.12, 0.030, -0.06);
   amiga.add(ledDrive);
 
   shelfGroup.add(amiga);
 
-  // 3. NIVEAU 2 (ly = 1.15) : VECTREX ET APPAREIL PHOTO VINTAGE
-  // A. Console Vectrex (borne vectorielle noire verticale compacte)
+  // 3. NIVEAU 2 (ly = 1.40) : VECTREX ET APPAREIL PHOTO VINTAGE
+  // A. Console Vectrex (borne vectorielle noire verticale compacte face caméra)
   const vectrex = new THREE.Group();
   vectrex.name = 'vectrexConsole';
-  vectrex.position.set(-shelfD / 2, 1.17, -0.42);
+  vectrex.position.set(-0.38, 1.42, 0);
 
   // Meuble vertical
-  const vxCabinet = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.38, 0.24), vectrexBlackMat);
+  const vxCabinet = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.38, 0.18), vectrexBlackMat);
   vxCabinet.position.y = 0.19;
   vxCabinet.castShadow = true;
   vectrex.add(vxCabinet);
 
-  // Écran vertical 9 pouces sombre
-  const vxScreen = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.20, 0.15), vectrexScreenMat);
-  vxScreen.position.set(0.10, 0.23, 0);
+  // Écran vertical 9 pouces face caméra
+  const vxScreen = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.20, 0.01), vectrexScreenMat);
+  vxScreen.position.set(0, 0.22, 0.091);
   vectrex.add(vxScreen);
 
   // Manette Vectrex posée devant avec joystick
-  const vxCtrl = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.025, 0.20), vectrexBlackMat);
-  vxCtrl.position.set(0.13, 0.013, 0);
+  const vxCtrl = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.025, 0.08), vectrexBlackMat);
+  vxCtrl.position.set(0, 0.013, 0.10);
   vectrex.add(vxCtrl);
 
   const vxStick = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.04, 8), cameraSilverMat);
-  vxStick.position.set(0.13, 0.040, -0.05);
+  vxStick.position.set(-0.04, 0.040, 0.10);
   vectrex.add(vxStick);
 
   shelfGroup.add(vectrex);
 
-  // B. Appareil photo vintage argenté et cuir noir
+  // B. Appareil photo vintage argenté et cuir noir (objectif face caméra)
   const camera = new THREE.Group();
   camera.name = 'vintageCamera';
-  camera.position.set(-shelfD / 2, 1.17, 0.40);
+  camera.position.set(0.36, 1.42, 0);
 
-  const camBody = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.10, 0.18), cameraLeatherMat);
+  const camBody = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.10, 0.10), cameraLeatherMat);
   camBody.position.y = 0.05;
   camBody.castShadow = true;
   camera.add(camBody);
 
-  const camTop = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.035, 0.18), cameraSilverMat);
+  const camTop = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.035, 0.095), cameraSilverMat);
   camTop.position.set(0, 0.11, 0);
   camera.add(camTop);
 
-  // Objectif en verre
-  const lensBarrel = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.048, 0.09, 20), cameraSilverMat);
-  lensBarrel.rotation.z = Math.PI / 2;
-  lensBarrel.position.set(0.09, 0.05, 0);
+  // Objectif en verre face caméra
+  const lensBarrel = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.048, 0.08, 20), cameraSilverMat);
+  lensBarrel.rotation.x = Math.PI / 2;
+  lensBarrel.position.set(0, 0.05, 0.08);
   camera.add(lensBarrel);
 
   const lensGlass = new THREE.Mesh(new THREE.CylinderGeometry(0.038, 0.038, 0.01, 16), lensGlassMat);
-  lensGlass.rotation.z = Math.PI / 2;
-  lensGlass.position.set(0.136, 0.05, 0);
+  lensGlass.rotation.x = Math.PI / 2;
+  lensGlass.position.set(0, 0.05, 0.121);
   camera.add(lensGlass);
 
   shelfGroup.add(camera);
 
-  // 4. NIVEAU 3 (ly = 1.85) : TROPHÉES DORÉS ET PORTFOLIO CALLISTO ARTS
+  // 4. NIVEAU 3 (ly = 1.90) : TROPHÉES DORÉS ET PORTFOLIO CALLISTO ARTS
   // A. Trophée doré étincelant avec anses
   const trophy = new THREE.Group();
   trophy.name = 'goldTrophy';
-  trophy.position.set(-shelfD / 2, 1.87, -0.40);
+  trophy.position.set(-0.36, 1.92, 0);
 
   const trophyBase = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.06, 0.10), marbleBaseMat);
   trophyBase.position.y = 0.03;
@@ -758,7 +758,7 @@ export function createRetroTechShelf(rightX, floorY, roomCenterZ) {
   // B. Grand livre relié Portfolio Callisto Arts (interactif vers www.callistoarts.com)
   const book = new THREE.Group();
   book.name = 'portfolioBookCallisto';
-  book.position.set(-shelfD / 2, 1.87, 0.28);
+  book.position.set(0.28, 1.92, 0);
 
   // Texture de couverture personnalisée avec typographie CALLISTO ARTS
   const bookCanvas = document.createElement('canvas'); bookCanvas.width = 512; bookCanvas.height = 512;
@@ -790,11 +790,12 @@ export function createRetroTechShelf(rightX, floorY, roomCenterZ) {
   const bookCoverMat = new THREE.MeshStandardMaterial({ map: bookTex, roughness: 0.45, metalness: 0.15 });
   const bookPagesMat = new THREE.MeshStandardMaterial({ color: 0xfbf8f3, roughness: 0.85 });
 
-  const bookMesh = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.05, 0.22), [
+  const bookMesh = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.045, 0.20), [
     bookCoverMat, bookCoverMat, bookCoverMat, bookCoverMat, bookPagesMat, bookCoverMat
   ]);
   bookMesh.position.y = 0.025;
-  bookMesh.rotation.y = -0.25;
+  bookMesh.rotation.x = 0.20;
+  bookMesh.rotation.y = -0.15;
   bookMesh.castShadow = true;
   book.add(bookMesh);
 
@@ -810,9 +811,9 @@ export function createRetroTechShelf(rightX, floorY, roomCenterZ) {
 
   shelfGroup.add(book);
 
-  // Positionnement sur le mur du fond entre le tableau (X: 1.25) et le grand sapin (X: 4.90)
-  shelfGroup.position.set(3.75, floorY, -0.78);
-  shelfGroup.rotation.y = -Math.PI / 2;
+  // Positionnement en hauteur sur le mur du fond, exactement entre le tableau et le sapin
+  shelfGroup.position.set(3.45, 0, -1.02);
+  shelfGroup.rotation.set(0, 0, 0);
   return shelfGroup;
 }
 
