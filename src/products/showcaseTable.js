@@ -51,7 +51,7 @@ export const showcaseTableProduct = {
     const room = createStudioRoom(app);
     group.add(room);
     const subProducts = [], interactiveWrappers = [];
-    room.traverse(c => { if (c.userData?.isBusinessCard) interactiveWrappers.push(c); });
+    room.traverse(c => { if (c.userData?.isBusinessCard || c.userData?.isCallistoBook) interactiveWrappers.push(c); });
     let oneSidedCanvas = null, oneSidedTex = null, twoSidedCanvas = null, twoSidedTex = null, arcadeCanvas = null, arcadeTex = null, bandCanvas = null, bandTex = null;
 
     for (const item of SHOWCASE_LAYOUT) {

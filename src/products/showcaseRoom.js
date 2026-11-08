@@ -755,59 +755,120 @@ export function createRetroTechShelf(rightX, floorY, roomCenterZ) {
 
   shelfGroup.add(trophy);
 
-  // B. Grand livre relié Portfolio Callisto Arts (interactif vers www.callistoarts.com)
+  // B. Grand livre relié Portfolio Callisto Arts (présenté debout face caméra, interactif vers www.callistoarts.com)
   const book = new THREE.Group();
   book.name = 'portfolioBookCallisto';
-  book.position.set(0.28, 1.92, 0);
+  book.position.set(0.30, 1.90, 0);
 
-  // Texture de couverture personnalisée avec typographie CALLISTO ARTS
-  const bookCanvas = document.createElement('canvas'); bookCanvas.width = 512; bookCanvas.height = 512;
+  // Chevalet / support d'exposition noir architectural derrière le livre
+  const standMat = new THREE.MeshStandardMaterial({ color: 0x15181e, roughness: 0.5, metalness: 0.6 });
+  const standBack = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.26, 0.015), standMat);
+  standBack.position.set(0, 0.14, -0.04);
+  standBack.rotation.x = -0.16;
+  book.add(standBack);
+  const standLip = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.025, 0.045), standMat);
+  standLip.position.set(0, 0.015, 0.02);
+  book.add(standLip);
+
+  // Texture de couverture haute définition 1024x1024
+  const bookCanvas = document.createElement('canvas'); bookCanvas.width = 1024; bookCanvas.height = 1024;
   const bCtx = bookCanvas.getContext('2d');
-  bCtx.fillStyle = '#161a24'; bCtx.fillRect(0, 0, 512, 512);
+  bCtx.fillStyle = '#0f172a'; bCtx.fillRect(0, 0, 1024, 1024);
 
-  // Cadre doré luxueux
-  bCtx.strokeStyle = '#d4af37'; bCtx.lineWidth = 10;
-  bCtx.strokeRect(24, 24, 464, 464);
-  bCtx.lineWidth = 3;
-  bCtx.strokeRect(38, 38, 436, 436);
+  // Dégradé radial subtil luxueux
+  const radG = bCtx.createRadialGradient(512, 512, 100, 512, 512, 600);
+  radG.addColorStop(0, '#1e293b');
+  radG.addColorStop(1, '#090d16');
+  bCtx.fillStyle = radG;
+  bCtx.fillRect(0, 0, 1024, 1024);
 
-  // Titres dorés
+  // Double cadre doré luxueux
+  bCtx.strokeStyle = '#d4af37'; bCtx.lineWidth = 14;
+  bCtx.strokeRect(36, 36, 952, 952);
+  bCtx.lineWidth = 4;
+  bCtx.strokeRect(60, 60, 904, 904);
+
+  // Coins décoratifs dorés
+  bCtx.lineWidth = 6;
+  [[80, 80], [944, 80], [80, 944], [944, 944]].forEach(([cx, cy]) => {
+    bCtx.strokeRect(cx - 15, cy - 15, 30, 30);
+  });
+
+  // Emblème central losange doré
   bCtx.fillStyle = '#f59e0b';
-  bCtx.font = 'bold 36px "Segoe UI", Arial, sans-serif';
+  bCtx.beginPath();
+  bCtx.moveTo(512, 150); bCtx.lineTo(540, 200); bCtx.lineTo(512, 250); bCtx.lineTo(484, 200);
+  bCtx.closePath();
+  bCtx.fill();
+
+  // Typographies
+  bCtx.fillStyle = '#f59e0b';
+  bCtx.font = 'bold 64px "Segoe UI", Arial, sans-serif';
   bCtx.textAlign = 'center';
-  bCtx.fillText('CALLISTO ARTS', 256, 180);
+  bCtx.fillText('CALLISTO ARTS', 512, 340);
 
-  bCtx.font = 'bold 22px "Segoe UI", Arial, sans-serif';
-  bCtx.fillStyle = '#cbd5e1';
-  bCtx.fillText('PORTFOLIO CRÉATIF', 256, 230);
+  // Ligne dorée
+  bCtx.strokeStyle = '#d4af37'; bCtx.lineWidth = 3;
+  bCtx.beginPath(); bCtx.moveTo(250, 380); bCtx.lineTo(774, 380); bCtx.stroke();
 
-  bCtx.font = '18px "Segoe UI", Arial, sans-serif';
+  bCtx.font = 'bold 40px "Segoe UI", Arial, sans-serif';
+  bCtx.fillStyle = '#f1f5f9';
+  bCtx.fillText('PORTFOLIO CRÉATIF', 512, 450);
+
+  bCtx.font = '28px "Segoe UI", Arial, sans-serif';
   bCtx.fillStyle = '#94a3b8';
-  bCtx.fillText('www.callistoarts.com', 256, 360);
+  bCtx.fillText('DESIGN • GRAPHISME • 3D', 512, 510);
+
+  // Badge URL web cliquable
+  bCtx.fillStyle = '#1e293b';
+  bCtx.strokeStyle = '#38bdf8';
+  bCtx.lineWidth = 3;
+  bCtx.beginPath();
+  if (bCtx.roundRect) {
+    bCtx.roundRect(160, 680, 704, 90, 20);
+  } else {
+    bCtx.rect(160, 680, 704, 90);
+  }
+  bCtx.fill();
+  bCtx.stroke();
+
+  bCtx.font = 'bold 36px "Segoe UI", Arial, sans-serif';
+  bCtx.fillStyle = '#38bdf8';
+  bCtx.fillText('www.callistoarts.com', 512, 738);
+
+  bCtx.font = 'italic 26px "Segoe UI", Arial, sans-serif';
+  bCtx.fillStyle = '#facc15';
+  bCtx.fillText('Cliquez pour visiter le portfolio', 512, 840);
 
   const bookTex = new THREE.CanvasTexture(bookCanvas);
   bookTex.colorSpace = THREE.SRGBColorSpace;
-  const bookCoverMat = new THREE.MeshStandardMaterial({ map: bookTex, roughness: 0.45, metalness: 0.15 });
-  const bookPagesMat = new THREE.MeshStandardMaterial({ color: 0xfbf8f3, roughness: 0.85 });
+  const bookCoverMat = new THREE.MeshStandardMaterial({ map: bookTex, roughness: 0.35, metalness: 0.15 });
+  const bookPagesMat = new THREE.MeshStandardMaterial({ color: 0xfdfaf5, roughness: 0.85 });
+  const bookSpineMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.45 });
+  const bookBackMat = new THREE.MeshStandardMaterial({ color: 0x0a0f18, roughness: 0.50 });
 
-  const bookMesh = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.045, 0.20), [
-    bookCoverMat, bookCoverMat, bookCoverMat, bookCoverMat, bookPagesMat, bookCoverMat
+  // BoxGeometry : [0: +X (pages), 1: -X (tranche/dos), 2: +Y (pages haut), 3: -Y (pages bas), 4: +Z (COUVERTURE FACE CAMERA), 5: -Z (quatrième de couverture)]
+  const bookMesh = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.38, 0.04), [
+    bookPagesMat, bookSpineMat, bookPagesMat, bookPagesMat, bookCoverMat, bookBackMat
   ]);
-  bookMesh.position.y = 0.025;
-  bookMesh.rotation.x = 0.20;
-  bookMesh.rotation.y = -0.15;
+  bookMesh.position.set(0, 0.20, 0);
+  bookMesh.rotation.x = -0.10; // Légère inclinaison arrière naturelle sur chevalet face caméra
   bookMesh.castShadow = true;
   book.add(bookMesh);
 
   // Métadonnées d'interaction au clic
-  book.userData = {
-    interactive: true,
-    cursor: 'pointer',
-    tooltip: 'Découvrir le Portfolio Callisto Arts (www.callistoarts.com)',
-    onClick: () => {
-      window.open('https://www.callistoarts.com', '_blank');
-    }
+  const bookMeta = {
+    showcaseProductKey: 'callistoBook',
+    isCallistoBook: true,
+    showcaseLabel: 'Portfolio Callisto Arts',
+    showcasePrice: 'callistoarts.com',
+    showcaseSub: 'Cliquez pour ouvrir le site www.callistoarts.com',
+    baseScale: 1
   };
+  book.userData = bookMeta;
+  bookMesh.userData = bookMeta;
+  standBack.userData = bookMeta;
+  standLip.userData = bookMeta;
 
   shelfGroup.add(book);
 

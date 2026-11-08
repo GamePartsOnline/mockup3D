@@ -153,7 +153,7 @@ export function initialize(app) {
       resetHoveredWrapper();
       if (wrapper) {
         hoveredWrapper = wrapper;
-        const hoverScale = wrapper.userData?.isBusinessCard ? 1.45 : 1.04;
+        const hoverScale = wrapper.userData?.isBusinessCard ? 1.45 : (wrapper.userData?.isCallistoBook ? 1.08 : 1.04);
         wrapper.scale.setScalar((wrapper.userData.baseScale || 1) * hoverScale);
         if (wrapper.userData?.isBusinessCard) {
           wrapper.position.y = 0.025;
@@ -184,6 +184,11 @@ export function initialize(app) {
     if (wrapper?.userData?.isBusinessCard) {
       resetHoveredWrapper();
       app.openBusinessCardModal?.();
+      return;
+    }
+    if (wrapper?.userData?.isCallistoBook) {
+      resetHoveredWrapper();
+      window.open('https://www.callistoarts.com', '_blank');
       return;
     }
     if (wrapper?.userData?.showcaseProductKey) {
