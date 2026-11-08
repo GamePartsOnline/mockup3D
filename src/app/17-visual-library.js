@@ -22,7 +22,8 @@ export function register(app) {
           fitMode: opt.fitMode || (opt.repeatPattern ? 'cover' : 'contain'), repeatPattern: !!opt.repeatPattern, repeatCount: opt.repeatCount || 3, side: opt.side || defSide
         };
         app.imagesList.push(newItem);
-        if (opt.removeWhite !== false) {
+        // Détourage automatique désactivé par défaut pour préserver les nuances de gris et dégradés
+        if (opt.removeWhite === true) {
           app.autoKnockoutWhiteIfOpaque?.(newItem);
         }
         app.activeImageIndex = app.imagesList.length - 1;
@@ -89,6 +90,8 @@ export function initialize(app) {
     renderCatalog();
   }
   app.persistCatalog = persistCatalog;
+  app.renderCatalog = renderCatalog;
+  app.loadCatalog = loadCatalog;
 
   function updateCategoryDropdown(activeItems, trashCount, pendingCount, privateCount) {
     if (!catSelect) return;
@@ -97,23 +100,27 @@ export function initialize(app) {
     const scopedActive = hasProduct ? activeItems.filter(x => (app.isVisualCompatible ? app.isVisualCompatible(x, app.currentProductKey) : true)) : activeItems;
 
     let html = `<option value="all">Tous les visuels (${scopedActive.length})</option>`;
-    if (!app.clientMode && pendingCount > 0) html += `<option value="pending" ${curVal === 'pending' ? 'selected' : ''} style="color:#d97706;font-weight:700;">Nouveaux à valider (${pendingCount})</option>`;
-    if (!app.clientMode && privateCount > 0) html += `<option value="private" ${curVal === 'private' ? 'selected' : ''} style="color:#6366f1;font-weight:700;">Visuels privés atelier (${privateCount})</option>`;
+    if (!app.clientMode) {
+      html += `<option value="pending" ${curVal === 'pending' ? 'selected' : ''} style="color:#d97706;font-weight:700;">Nouveaux à valider (${pendingCount})</option>`;
+      html += `<option value="private" ${curVal === 'private' ? 'selected' : ''} style="color:#6366f1;font-weight:700;">Visuels privés atelier (${privateCount})</option>`;
+    }
 
     const cats = (app.catalogCategories || []).slice().sort((a, b) => (typeof a === 'string' ? a : a.name).localeCompare(typeof b === 'string' ? b : b.name, 'fr', { sensitivity: 'base' }));
     cats.forEach(cat => {
       const name = typeof cat === 'string' ? cat : cat.name;
       const subs = ((typeof cat === 'object' && Array.isArray(cat.subs)) ? cat.subs.slice() : []).sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
-      const catCount = scopedActive.filter(x => x.category === name).length;
+      const catCount = scopedActive.filter(x => x.category === name || x.category2 === name || (Array.isArray(x.categories) && x.categories.includes(name))).length;
       if (catCount > 0) {
         html += `<option value="cat:${name}" ${curVal === name && curSub === 'all' ? 'selected' : ''}>${name} (${catCount})</option>`;
         subs.forEach(s => {
-          const subCount = scopedActive.filter(x => x.category === name && (x.subcategory || '').toLowerCase() === s.toLowerCase()).length;
+          const subCount = scopedActive.filter(x => (x.category === name || x.category2 === name || (Array.isArray(x.categories) && x.categories.includes(name))) && (x.subcategory || '').toLowerCase() === s.toLowerCase()).length;
           if (subCount > 0) html += `<option value="sub:${name}:${s}" ${curVal === name && curSub.toLowerCase() === s.toLowerCase() ? 'selected' : ''}>&nbsp;&nbsp;└ ${s} (${subCount})</option>`;
         });
       }
     });
-    if (!app.clientMode && trashCount > 0) html += `<option value="trash" ${curVal === 'trash' ? 'selected' : ''} style="color:#ef4444;font-weight:700;">Corbeille (${trashCount})</option>`;
+    if (!app.clientMode) {
+      html += `<option value="trash" ${curVal === 'trash' ? 'selected' : ''} style="color:#ef4444;font-weight:700;">Corbeille (${trashCount})</option>`;
+    }
     catSelect.innerHTML = html;
   }
 
@@ -143,10 +150,13 @@ export function initialize(app) {
       }
 
       if (app.activeCatalogCategory !== 'all' && app.activeCatalogCategory !== 'current_product') {
-        if (item.category !== app.activeCatalogCategory) return false;
+        const matchesCat = item.category === app.activeCatalogCategory ||
+          item.category2 === app.activeCatalogCategory ||
+          (Array.isArray(item.categories) && item.categories.includes(app.activeCatalogCategory));
+        if (!matchesCat) return false;
       }
       if (app.activeSubcategory && app.activeSubcategory !== 'all' && (item.subcategory || '').toLowerCase() !== app.activeSubcategory.toLowerCase()) return false;
-      return !q || item.name.toLowerCase().includes(q) || (item.category || '').toLowerCase().includes(q) || (item.subcategory || '').toLowerCase().includes(q);
+      return !q || item.name.toLowerCase().includes(q) || (item.category || '').toLowerCase().includes(q) || (item.category2 || '').toLowerCase().includes(q) || (item.subcategory || '').toLowerCase().includes(q);
     });
 
     if (batchApproveBtn && batchPrivateBtn) {
@@ -171,10 +181,11 @@ export function initialize(app) {
       card.appendChild(title);
       const subInfo = document.createElement('span'); subInfo.className = 'catalog-item-subcat';
       subInfo.textContent = item.subcategory ? `${item.category} › ${item.subcategory}` : (item.category || 'Nouveau'); card.appendChild(subInfo);
-      const badgeType = isTrash ? ['Corbeille', '#ef4444'] : item.status === 'pending' ? ['À valider', '#f59e0b'] : item.status === 'private' ? ['Privé', '#6366f1'] : item.category === 'Nouveau' ? ['Nouveau', '#10b981'] : item.repeatPattern ? ['Motif', ''] : null;
+      const badgeType = isTrash ? ['Corbeille', '#ef4444'] : item.status === 'pending' ? ['À valider', '#f59e0b'] : item.status === 'private' ? ['Privé', '#6366f1'] : (item.isNew || item.category === 'Nouveau') ? ['Nouveau', '#10b981'] : item.repeatPattern ? ['Motif', ''] : null;
       if (badgeType) { const b = document.createElement('span'); b.className = 'catalog-item-badge'; if (badgeType[1]) b.style.background = badgeType[1]; b.textContent = badgeType[0]; card.appendChild(b); }
 
-      if (!app.clientMode) {
+      const canEdit = !app.clientMode || window.location.pathname.startsWith('/admin') || ['localhost', '127.0.0.1'].includes(window.location.hostname);
+      if (canEdit) {
         if (isTrash) {
           const act = document.createElement('div'); act.style.cssText = 'display:flex;gap:4px;margin-top:6px;width:100%;';
           const resBtn = document.createElement('button'); resBtn.className = 'cat-btn-sm'; resBtn.style.cssText = 'flex:1;background:#10b981;color:#fff;'; resBtn.textContent = 'Restaurer';

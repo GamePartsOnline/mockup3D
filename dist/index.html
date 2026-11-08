@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&family=Cinzel:wght@700&family=Dancing+Script:wght@700&family=Great+Vibes&family=Lobster&family=Montserrat:ital,wght@0,400;0,700;1,400&family=Oswald:wght@600&family=Pacifico&family=Playfair+Display:ital,wght@0,700;1,700&family=Righteous&family=Roboto:wght@400;700&family=Satisfy&display=swap" rel="stylesheet">
   <title>MockUp3D C3</title>
-  <script type="module" crossorigin src="/assets/index-B4jm3s37.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BFgN67K7.css">
+  <script type="module" crossorigin src="/assets/index-CGy7C3IH.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-CEJBWmHM.css">
 </head>
 <body>
   <div id="app">
@@ -87,7 +87,10 @@
     </label>
     <button type="button" id="btnShowcaseTable" class="topbar-showcase-btn" title="Le Showroom 3D (Tous les objets sur la table)">Showroom 3D</button>
     <button type="button" id="btnShop2D" class="topbar-shop-btn" title="Ouvrir la Boutique 2D">Boutique 2D</button>
+    <button type="button" id="btnClientAccount" class="topbar-btn outline" title="Consulter mes commandes et échanger avec l'atelier" style="font-weight:700; font-size:11.5px; padding:4px 10px; border-radius:6px; cursor:pointer;">Mon Espace</button>
     <span id="exportStatus" class="topbar-status" style="font-size:12px; color:#94a3b8; margin-right:8px;">Prêt</span>
+    <select id="langSelect" class="lang-switch-select" title="Changer de langue / Switch language" style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; font-weight:700; font-size:12px; padding:3px 6px; cursor:pointer;"><option value="fr">FR</option><option value="en">EN</option></select>
+    <button type="button" id="btnAdminDashboard" class="topbar-btn primary" style="display:none; font-weight:700; background:#7c3aed;" title="Ouvrir le Tableau de bord de l'Atelier">Dashboard Atelier</button>
     <button type="button" id="btnAdminSubmissions" class="topbar-btn secondary" style="display:none; font-weight:700;" title="Consulter les créations et commandes reçues">Créations reçues (<span id="adminSubmissionsBadge">0</span>)</button>
     <a id="clientModeLink" class="client-mode-btn" href="/">Interface Client</a>
     <button id="submitCreation" class="topbar-btn primary client-submit" type="button" hidden>Envoyer ma création</button>
@@ -467,7 +470,7 @@
             <div class="studio-tools-box" style="margin: 8px 0 10px; padding: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
               <div style="font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em;">Retouche Express du Visuel</div>
               <label style="display: flex; align-items: center; gap: 8px; font-size: 11.5px; font-weight: 700; color: #0f172a; cursor: pointer; margin-bottom: 8px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 6px 10px;">
-                <input type="checkbox" id="chkAutoRemoveWhiteBg" style="width: 17px; height: 17px; cursor: pointer; accent-color: #2563eb;" checked />
+                <input type="checkbox" id="chkAutoRemoveWhiteBg" style="width: 17px; height: 17px; cursor: pointer; accent-color: #2563eb;" />
                 <span>Ignorer le fond blanc (détouré)</span>
               </label>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px;">
@@ -615,17 +618,10 @@
               <label id="handleColorWrap" hidden><input id="handleColor" type="color" value="#ffffff"><span>Anse</span></label>
               <label id="innerColorWrap" hidden><input id="innerColor" type="color" value="#ffffff"><span>Intérieur</span></label>
             </div>
-            <div style="margin: 10px 0; padding: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
-              <div style="font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em;">Finition de la Matière</div>
-              <label style="font-size: 11px; color: #64748b; display: flex; align-items: center; justify-content: space-between; gap: 6px;">
-                <span>Aspect de surface :</span>
-                <select id="materialFinishSelect" class="custom-select" style="padding: 4px 8px; font-size: 11px; border-radius: 4px; border: 1px solid #cbd5e1; background: #fff; color: #1e293b;">
-                  <option value="auto" selected>Auto (Recommandé)</option>
-                  <option value="ceramic">Céramique brillante / Verni</option>
-                  <option value="fabric">Textile mat (Coton sans reflet)</option>
-                  <option value="satin">Satiné / Métal doux</option>
-                </select>
-              </label>
+            <div id="materialFinishContainer" style="display: none !important;">
+              <select id="materialFinishSelect">
+                <option value="auto" selected>Auto</option>
+              </select>
             </div>
             <div id="arcadeControlsWrap" hidden style="margin-top:10px; margin-bottom:8px; padding:10px; border-radius:8px; background:rgba(0,0,0,0.05); border:1px solid #dce1e5;">
               <div style="font-weight:700; font-size:11px; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em; color:#475569;">Contrôles de la Borne Arcade</div>
@@ -703,7 +699,12 @@
           <circle class="resize-handle" data-corner="2" r="7" title="Coin bas-droit"></circle>
           <circle class="resize-handle" data-corner="3" r="7" title="Coin bas-gauche"></circle>
         </svg>
-        <div class="viewer-tools"><button id="viewFaceA" class="secondary" type="button" title="Voir Face A (Avant)"><span style="font-weight:900;margin-right:4px;">A</span> Face A</button><button id="viewFaceB" class="secondary" type="button" title="Voir Face B (Arrière)"><span style="font-weight:900;margin-right:4px;">B</span> Face B</button>
+        <div class="viewer-tools">
+          <button id="viewFaceA" class="secondary" type="button" title="Voir Face A (Avant)"><span style="font-weight:900;margin-right:4px;">A</span> Face A</button>
+          <button id="viewFaceB" class="secondary" type="button" title="Voir Face B (Arrière)"><span style="font-weight:900;margin-right:4px;">B</span> Face B</button>
+          <button id="viewAngleFront" class="secondary" type="button" title="Vue de Face Directe">Face</button>
+          <button id="viewAngleSide" class="secondary" type="button" title="Vue Profil 3/4">3/4</button>
+          <button id="viewAngleTop" class="secondary" type="button" title="Vue de Dessus">Dessus</button>
           <button id="zoomOut" type="button" title="Dézoomer" aria-label="Dézoomer">−</button><button id="zoomIn" type="button" title="Zoomer" aria-label="Zoomer">+</button><button id="resetView" type="button" title="Réinitialiser la vue" aria-label="Réinitialiser la vue">⌂</button><button id="btnQuickRotate" type="button" title="Activer ou arrêter la rotation automatique" aria-label="Rotation automatique">↻</button>
         </div>
         <div id="showcaseTooltip" class="showcase-tooltip" hidden></div>
@@ -758,101 +759,93 @@
         <div id="visualEditModal" class="visual-edit-modal" hidden>
           <div class="visual-edit-dialog">
             <div class="visual-edit-header">
-              <strong style="font-size:15px; color:#0f172a;">Modifier le visuel</strong>
+              <strong style="font-size:15px; color:#0f172a;" id="visualEditHeaderTitle">Fiche du visuel</strong>
               <button type="button" id="closeVisualEditBtn" class="close-explorer-btn" aria-label="Fermer">✕</button>
             </div>
             <div class="visual-edit-body visual-edit-grid-layout">
               <div class="visual-edit-left-col">
-                <div style="display:flex; justify-content:center; padding:6px 0;">
-                  <img id="visualEditThumb" src="" alt="Aperçu du visuel" style="max-height:220px; max-width:100%; object-fit:contain; border-radius:10px; border:1px solid #cbd5e1; background:#ffffff; box-shadow:0 4px 12px rgba(0,0,0,0.08);" />
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:4px;">
+                  <img id="visualEditThumb" src="" alt="Aperçu du visuel" style="width:100px; height:100px; object-fit:contain; border-radius:8px; border:1px solid #cbd5e1; background:#ffffff; box-shadow:0 2px 6px rgba(0,0,0,0.06); flex-shrink:0;" />
+                  <div style="flex:1 1 auto; min-width:0;">
+                    <div class="visual-edit-field">
+                      <label style="font-size:11px; font-weight:700; color:#475569;">Nom du visuel :</label>
+                      <input type="text" id="visualEditNameInput" style="padding:6px 8px; font-size:12.5px; font-weight:600;" />
+                    </div>
+                    <div style="display:flex; align-items:center; gap:6px; margin-top:6px;">
+                      <label style="display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:600; cursor:pointer;">
+                        <input type="checkbox" id="visualEditRepeatCheck" style="width:16px; height:16px; cursor:pointer; accent-color:#8b5cf6;" /> Motif répétable (wrap)
+                      </label>
+                    </div>
+                  </div>
                 </div>
-                <div class="visual-edit-field">
-                  <label>Nom du visuel :</label>
-                  <input type="text" id="visualEditNameInput" />
-                </div>
+
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
                   <div class="visual-edit-field">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
-                      <label style="margin:0;">Catégorie :</label>
+                      <label style="margin:0; font-size:11px; font-weight:700;">Catégorie principale :</label>
                       <button type="button" id="quickAddCatInEditBtn" class="cat-btn-sm" style="padding:1px 5px; font-size:10px; font-weight:700;" title="Créer une nouvelle catégorie">+ Cat</button>
                     </div>
-                    <select id="visualEditCategorySelect"></select>
+                    <select id="visualEditCategorySelect" style="padding:6px 8px; font-size:12px;"></select>
                   </div>
                   <div class="visual-edit-field">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
-                      <label style="margin:0;">Sous-catégorie :</label>
+                      <label style="margin:0; font-size:11px; font-weight:700;">Sous-catégorie :</label>
                       <button type="button" id="quickAddSubInEditBtn" class="cat-btn-sm" style="padding:1px 5px; font-size:10px; font-weight:700;" title="Créer une nouvelle sous-catégorie">+ Sous-cat</button>
                     </div>
-                    <select id="visualEditSubcategorySelect"></select>
+                    <select id="visualEditSubcategorySelect" style="padding:6px 8px; font-size:12px;"></select>
                   </div>
                 </div>
+
                 <div class="visual-edit-field" style="margin-top:4px;">
-                  <label>Visibilité / Statut :</label>
-                  <div class="visual-status-group" id="visualEditStatusGroup">
-                    <label class="visual-status-card" data-status="approved">
-                      <input type="checkbox" name="visualStatusCheck" class="visual-status-checkbox" value="approved" />
-                      <div class="visual-status-info">
-                        <span class="visual-status-badge visual-status-badge-approved">✓ Publié</span>
-                        <small>Visible par les clients dans le catalogue</small>
-                      </div>
+                  <label style="font-size:11px; font-weight:700; margin-bottom:2px;">Deuxième catégorie (optionnelle) :</label>
+                  <select id="visualEditCategorySelect2" style="width:100%; padding:6px 8px; font-size:12px;"></select>
+                </div>
+
+                <div class="visual-edit-field" style="margin-top:4px;">
+                  <label style="font-size:11px; font-weight:700; margin-bottom:4px;">Statut de publication :</label>
+                  <div class="visual-status-pills" id="visualEditStatusGroup" style="display:flex; gap:6px;">
+                    <label class="visual-status-pill" data-status="approved" style="flex:1; text-align:center; padding:6px 4px; border:1px solid #cbd5e1; border-radius:6px; cursor:pointer; font-size:11.5px; font-weight:700;">
+                      <input type="radio" name="visualStatusRadio" value="approved" style="display:none;" />
+                      <span>✓ Publié</span>
                     </label>
-                    <label class="visual-status-card" data-status="private">
-                      <input type="checkbox" name="visualStatusCheck" class="visual-status-checkbox" value="private" />
-                      <div class="visual-status-info">
-                        <span class="visual-status-badge visual-status-badge-private">🔒 Privé</span>
-                        <small>Atelier uniquement (invisible pour les clients)</small>
-                      </div>
+                    <label class="visual-status-pill" data-status="pending" style="flex:1; text-align:center; padding:6px 4px; border:1px solid #cbd5e1; border-radius:6px; cursor:pointer; font-size:11.5px; font-weight:700;">
+                      <input type="radio" name="visualStatusRadio" value="pending" style="display:none;" />
+                      <span>⏳ En attente</span>
                     </label>
-                    <label class="visual-status-card" data-status="pending">
-                      <input type="checkbox" name="visualStatusCheck" class="visual-status-checkbox" value="pending" />
-                      <div class="visual-status-info">
-                        <span class="visual-status-badge visual-status-badge-pending">⏳ En attente</span>
-                        <small>À valider avant publication</small>
-                      </div>
+                    <label class="visual-status-pill" data-status="private" style="flex:1; text-align:center; padding:6px 4px; border:1px solid #cbd5e1; border-radius:6px; cursor:pointer; font-size:11.5px; font-weight:700;">
+                      <input type="radio" name="visualStatusRadio" value="private" style="display:none;" />
+                      <span>🔒 Privé</span>
                     </label>
                   </div>
-                </div>
-                <div style="display:flex; align-items:center; margin-top:6px;">
-                  <label style="display:flex; align-items:center; gap:8px; font-size:12px; font-weight:600; cursor:pointer;">
-                    <input type="checkbox" id="visualEditRepeatCheck" style="width:18px; height:18px; cursor:pointer; accent-color:#8b5cf6;" /> Motif répétable (wrap)
-                  </label>
                 </div>
               </div>
 
               <div class="visual-edit-right-col">
-                <div class="visual-compat-panel">
-                  <div class="visual-compat-header">
+                <div class="visual-compat-panel" style="padding:10px 14px; gap:8px;">
+                  <div class="visual-compat-header" style="padding-bottom:6px; margin-bottom:2px;">
                     <div>
-                      <strong style="font-size:13px; color:#0f172a; display:block;">Produits autorisés pour ce visuel</strong>
-                      <small style="color:#64748b; font-size:11px;">Cochez les produits sur lesquels ce visuel peut être appliqué</small>
+                      <strong style="font-size:12.5px; color:#0f172a; display:block;">Produits compatibles</strong>
+                      <small style="color:#64748b; font-size:10.5px;">Cochez les supports autorisés pour ce visuel</small>
                     </div>
-                    <label class="visual-compat-all-label">
-                      <input type="checkbox" id="visualEditCompatAll" class="compat-big-checkbox" />
-                      <span>Tous les objets</span>
-                    </label>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <button type="button" id="compatSelectAllBtn" class="compat-quick-link" style="padding:3px 8px; font-size:11px;">Tout cocher</button>
+                      <button type="button" id="compatDeselectAllBtn" class="compat-quick-link" style="padding:3px 8px; font-size:11px;">Tout décocher</button>
+                      <label class="visual-compat-all-label" style="padding:4px 10px; font-size:11.5px;">
+                        <input type="checkbox" id="visualEditCompatAll" class="compat-big-checkbox" style="width:16px; height:16px;" />
+                        <span>Tous les objets</span>
+                      </label>
+                    </div>
                   </div>
-                  <div class="visual-compat-quick-bar">
-                    <button type="button" id="compatSelectAllBtn" class="compat-quick-link">Tout cocher</button>
-                    <span style="color:#cbd5e1;">•</span>
-                    <button type="button" id="compatDeselectAllBtn" class="compat-quick-link">Tout décocher</button>
-                    <span style="color:#cbd5e1;">•</span>
-                    <button type="button" id="compatCoasterOnlyBtn" class="compat-quick-link" style="background:#ede9fe; color:#6d28d9; font-weight:700; border-color:#c4b5fd;">Sous-verre uniquement</button>
-                    <span style="color:#cbd5e1;">•</span>
-                    <button type="button" id="compatMugOnlyBtn" class="compat-quick-link">Mug uniquement</button>
-                    <span style="color:#cbd5e1;">•</span>
-                    <button type="button" id="compatArcadeOnlyBtn" class="compat-quick-link">Arcade uniquement</button>
-                  </div>
-                  <div id="visualEditProductsGrid" class="visual-compat-grid"></div>
+                  <div id="visualEditProductsGrid" class="visual-compat-grid" style="gap:6px; max-height:280px; overflow-y:auto;"></div>
                 </div>
               </div>
             </div>
-            <div class="visual-edit-actions" style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px;">
-              <button type="button" id="visualEditTrashBtn" class="cat-btn-sm cat-btn-danger" style="padding:8px 12px;">Mettre à la corbeille</button>
-              <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                <button type="button" id="cancelVisualEditBtn" class="cat-btn-sm" style="padding:8px 12px;">Annuler</button>
-                <button type="button" id="saveVisualPrivateBtn" class="cat-btn-sm" style="padding:8px 12px; background:#fef3c7; border-color:#fde047; color:#92400e; font-weight:700;" title="Enregistrer et masquer aux clients">🔒 Privé</button>
-                <button type="button" id="saveAndApproveBtn" class="cat-btn-sm" style="padding:8px 14px; background:#10b981; color:#fff; border:none; font-weight:700;" title="Valider et publier immédiatement">✓ Valider & Publier</button>
-                <button type="button" id="saveAndNextBtn" class="primary" style="padding:8px 14px; background:#8b5cf6; font-weight:700;" title="Enregistrer et passer au visuel suivant">Suivant →</button>
+            <div class="visual-edit-actions" style="display:flex; justify-content:space-between; align-items:center; padding:10px 18px; border-top:1px solid #e2e8f0; background:#f8fafc;">
+              <button type="button" id="visualEditTrashBtn" class="cat-btn-sm cat-btn-danger" style="padding:6px 12px; font-size:11px;">Mettre à la corbeille</button>
+              <div style="display:flex; gap:8px; align-items:center;">
+                <button type="button" id="cancelVisualEditBtn" class="cat-btn-sm" style="padding:6px 12px; font-size:11px;">Annuler</button>
+                <button type="button" id="saveVisualEditBtn" class="admin-btn primary" style="padding:6px 16px; font-size:12px; font-weight:700; background:#4f46e5; border-color:#4f46e5;" title="Enregistrer les modifications">Enregistrer le visuel</button>
+                <button type="button" id="saveAndNextBtn" class="admin-btn secondary" style="padding:6px 12px; font-size:11px; font-weight:700;" title="Enregistrer et passer au visuel suivant">Suivant →</button>
               </div>
             </div>
           </div>
@@ -987,6 +980,26 @@
       <button type="button" id="closeOrderModalBtn" class="close-explorer-btn" aria-label="Fermer">✕</button>
     </div>
     <form id="clientOrderForm" class="visual-edit-body" style="display:flex; flex-direction:column; gap:12px;" onsubmit="return false;">
+      <div id="orderBatPreviewWrap" style="display:flex; align-items:center; gap:14px; padding:10px 14px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px;">
+        <img id="orderBatPreviewImg" alt="Aperçu BAT" style="width:76px; height:76px; object-fit:contain; border-radius:8px; background:#ffffff; border:1px solid #cbd5e1;" />
+        <div style="flex:1;">
+          <strong id="orderBatProductName" style="font-size:13px; color:#0f172a;">Objet personnalisé</strong><br>
+          <span id="orderBatProductPrice" style="font-size:13px; font-weight:700; color:#7c3aed;"></span>
+          <p style="margin:2px 0 0 0; font-size:11px; color:#64748b;">Simulation 3D conforme à votre configuration d'impression.</p>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; background:#f1f5f9; border-radius:8px; border:1px solid #cbd5e1;">
+        <label for="orderQuantity" style="font-size:12.5px; font-weight:700; color:#1e293b; margin:0;">Quantité souhaitée :</label>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <button type="button" id="btnOrderQtyDec" style="width:28px; height:28px; border-radius:6px; border:1px solid #cbd5e1; background:#ffffff; font-weight:700; cursor:pointer;" title="Diminuer">-</button>
+          <input type="number" id="orderQuantity" min="1" max="9999" value="1" style="width:60px; text-align:center; padding:5px 6px; font-size:13px; font-weight:700; border-radius:6px; border:1px solid #cbd5e1; background:#ffffff;" />
+          <button type="button" id="btnOrderQtyInc" style="width:28px; height:28px; border-radius:6px; border:1px solid #cbd5e1; background:#ffffff; font-weight:700; cursor:pointer;" title="Augmenter">+</button>
+        </div>
+        <div style="text-align:right;">
+          <small style="color:#64748b; font-size:10.5px; display:block;">Total estimé TTC :</small>
+          <strong id="orderTotalCalculatedPrice" style="font-size:14px; color:#7c3aed;">17,00 €</strong>
+        </div>
+      </div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
         <label style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-weight:600; color:#334155;">
           Nom *
@@ -1123,6 +1136,1186 @@
     </div>
     <div id="adminSubmissionsList" style="flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:16px; background:#f8fafc;">
       <p style="text-align:center; color:#64748b; font-size:13px; margin:40px 0;">Chargement des commandes…</p>
+    </div>
+  </div>
+</div>
+
+<!-- MODALE : ESPACE CLIENT & SUIVI DES COMMANDES -->
+<div id="clientAccountModal" class="visual-edit-modal" hidden>
+  <div class="visual-edit-dialog" style="max-width:820px; width:95vw; max-height:92vh; display:flex; flex-direction:column; background:#ffffff; border-radius:14px; overflow:hidden;">
+    <div class="visual-edit-header" style="flex-shrink:0; background:#0f172a; color:#ffffff; padding:14px 20px; display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <strong style="font-size:16px; color:#ffffff;">Mon Espace Client & Suivi de Fabrication</strong>
+        <p style="margin:2px 0 0 0; font-size:12px; color:#94a3b8;">Suivez l'état d'avancement de vos créations et échangez en direct avec l'atelier.</p>
+      </div>
+      <button type="button" id="closeClientAccountBtn" class="close-explorer-btn" style="color:#ffffff; font-size:20px;" aria-label="Fermer">✕</button>
+    </div>
+
+    <!-- Vue 1 : Saisie de l'adresse courriel -->
+    <div id="clientAccountLoginView" class="visual-edit-body" style="padding:32px 24px; display:flex; flex-direction:column; gap:16px; max-width:460px; margin:0 auto; width:100%; box-sizing:border-box;">
+      <div style="text-align:center;">
+        <div style="font-size:38px; margin-bottom:8px;">📦</div>
+        <h3 style="margin:0; font-size:18px; color:#0f172a;">Consulter mes commandes</h3>
+        <p style="margin:6px 0 0 0; font-size:13px; color:#64748b; line-height:1.5;">Indiquez l'adresse courriel utilisée lors de votre commande pour voir l'avancement et contacter l'atelier.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <label for="clientAccountEmailInput" style="font-size:12px; font-weight:700; color:#334155;">Adresse courriel :</label>
+        <input type="email" id="clientAccountEmailInput" placeholder="ex : jean.dupont@orange.fr" style="padding:10px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13.5px;" />
+      </div>
+      <button type="button" id="btnClientAccountLogin" class="admin-btn primary" style="padding:10px 16px; font-size:14px; font-weight:700; background:#7c3aed; color:#fff; border-radius:8px; border:none; cursor:pointer;">Accéder à mes commandes</button>
+      <div id="clientAccountLoginMsg" style="display:none; font-size:12px; text-align:center; padding:8px; border-radius:6px;"></div>
+    </div>
+
+    <!-- Vue 2 : Liste des commandes & Messagerie -->
+    <div id="clientAccountOrdersView" class="visual-edit-body" style="display:none; flex-direction:column; flex:1; overflow-y:auto; padding:18px; gap:16px; background:#f8fafc;">
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:10px 14px; flex-shrink:0;">
+        <div>
+          <span style="font-size:11px; text-transform:uppercase; font-weight:800; color:#64748b;">Client identifié :</span>
+          <strong id="clientAccountConnectedEmail" style="display:block; font-size:13.5px; color:#0f172a;">client@example.com</strong>
+        </div>
+        <button type="button" id="btnClientAccountLogout" style="font-size:11.5px; color:#dc2626; background:transparent; border:1px solid #fecaca; border-radius:6px; padding:4px 8px; cursor:pointer;">Changer de compte</button>
+      </div>
+
+      <div id="clientOrdersListContainer" style="display:flex; flex-direction:column; gap:16px;">
+        <!-- Rempli dynamiquement -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HUB CENTRALISÉ D'ADMINISTRATION MOCKUP3D -->
+<div id="adminDashboardOverlay" class="admin-dashboard-overlay" hidden>
+  <div class="admin-dashboard-window">
+    <!-- Barre supérieure de l'administration -->
+    <header class="admin-header">
+      <div class="admin-brand">
+        <span class="admin-logo-badge">Graph2Print</span>
+        <div class="admin-brand-text">
+          <h2>Espace Administration & Atelier</h2>
+          <small>MockUp3D C3 • Gestion centralisée</small>
+        </div>
+      </div>
+      <div class="admin-header-actions">
+        <span class="admin-status-pill"><span class="pill-dot"></span> Connecté (Atelier)</span>
+        <button type="button" id="btnAdminExportCsvQuick" class="admin-btn-header" title="Exporter toutes les commandes en CSV">Export CSV</button>
+        <button type="button" id="btnAdminCloseDashboard" class="admin-btn-close" title="Retourner au configurateur 3D">✕ Fermer</button>
+      </div>
+    </header>
+
+    <!-- Corps du Dashboard avec volet latéral et zone de contenu -->
+    <div class="admin-layout">
+      <!-- Volet latéral de navigation -->
+      <aside class="admin-sidebar">
+        <nav class="admin-nav">
+          <button type="button" class="admin-nav-item active" data-tab="tab-overview">
+            <span class="nav-icon">📊</span>
+            <span class="nav-label">Vue d'ensemble</span>
+          </button>
+          <button type="button" class="admin-nav-item" data-tab="tab-orders">
+            <span class="nav-icon">📦</span>
+            <span class="nav-label">Commandes & BAT</span>
+            <span id="adminOrdersBadge" class="nav-badge">0</span>
+          </button>
+          <button type="button" class="admin-nav-item" data-tab="tab-clients">
+            <span class="nav-icon">👥</span>
+            <span class="nav-label">Fichier Clients</span>
+            <span id="adminClientsBadge" class="nav-badge-info">0</span>
+          </button>
+          <button type="button" class="admin-nav-item" data-tab="tab-products">
+            <span class="nav-icon">🏷️</span>
+            <span class="nav-label">Gamme Produits</span>
+            <span class="nav-badge-info">16</span>
+          </button>
+          <button type="button" class="admin-nav-item" data-tab="tab-consignment">
+            <span class="nav-icon">🏪</span>
+            <span class="nav-label">Dépôt-Vente (2)</span>
+          </button>
+          <button type="button" class="admin-nav-item" data-tab="tab-catalog">
+            <span class="nav-icon">🎨</span>
+            <span class="nav-label">Catalogue de Visuels</span>
+            <span id="adminCatalogBadge" class="nav-badge-info">65</span>
+          </button>
+          <button type="button" class="admin-nav-item" data-tab="tab-stats">
+            <span class="nav-icon">📈</span>
+            <span class="nav-label">Statistiques Visuels</span>
+          </button>
+          <button type="button" class="admin-nav-item" data-tab="tab-categories">
+            <span class="nav-icon">📂</span>
+            <span class="nav-label">Catégories</span>
+          </button>
+          <button type="button" class="admin-nav-item" data-tab="tab-settings">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-label">Paramètres & Sécurité</span>
+          </button>
+        </nav>
+        <div class="admin-sidebar-footer">
+          <div class="admin-version-tag">Version 1.9.6 • Local</div>
+        </div>
+      </aside>
+
+      <!-- Zone de travail dynamique -->
+      <main class="admin-content">
+        <!-- ONGLET 1 : VUE D'ENSEMBLE -->
+        <section id="tab-overview" class="admin-tab-pane active">
+          <div class="tab-header">
+            <h3>Tableau de bord de l'Atelier</h3>
+            <p class="tab-subtitle">Indicateurs clés d'activité et raccourcis de production.</p>
+          </div>
+
+          <div class="admin-kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-icon icon-orders">📦</div>
+              <div class="kpi-body">
+                <span class="kpi-value" id="kpiOrdersCount">0</span>
+                <span class="kpi-label">Commandes & BAT reçus</span>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon icon-catalog">🎨</div>
+              <div class="kpi-body">
+                <span class="kpi-value" id="kpiCatalogCount">65</span>
+                <span class="kpi-label">Visuels catalogue validés</span>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon icon-products">🏷️</div>
+              <div class="kpi-body">
+                <span class="kpi-value" id="kpiActiveProductsCount">16 / 16</span>
+                <span class="kpi-label">Produits actifs en boutique</span>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon icon-system">🛡️</div>
+              <div class="kpi-body">
+                <span class="kpi-value" style="font-size:16px; color:#10b981;">Sécurisé</span>
+                <span class="kpi-label">Sauvegardes auto actives</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="overview-quick-actions">
+            <h4>Actions rapides</h4>
+            <div class="quick-btn-row">
+              <button type="button" class="admin-btn primary" id="btnQuickGoOrders">Consulter les commandes en attente</button>
+              <button type="button" class="admin-btn secondary" id="btnQuickGoProducts">Activer / Désactiver des produits</button>
+              <button type="button" class="admin-btn secondary" id="btnQuickGoCatalog">Gérer les visuels du catalogue</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ONGLET 2 : COMMANDES ET BAT -->
+        <section id="tab-orders" class="admin-tab-pane">
+          <div class="tab-header flex-between">
+            <div>
+              <h3>Gestion des Commandes & Fiches BAT</h3>
+              <p class="tab-subtitle">Visualisez, filtrez et téléchargez les packs de fabrication pour l'impression.</p>
+            </div>
+            <div class="tab-actions">
+              <button type="button" id="btnSyncOfflineOrders" class="admin-btn" style="display:none; background:#059669; color:#ffffff; font-weight:700;" title="Synchroniser les commandes prises hors-ligne sur le stand">🔄 Synchroniser Stand (0)</button>
+              <button type="button" id="btnExportOrdersCsv" class="admin-btn outline">Export CSV</button>
+              <button type="button" id="btnRefreshOrders" class="admin-btn outline">Actualiser</button>
+            </div>
+          </div>
+
+          <!-- Filtres de recherche -->
+          <div class="admin-filter-bar">
+            <input type="text" id="orderSearchInput" class="admin-input search-input" placeholder="Rechercher par client, courriel, téléphone..." />
+            <select id="orderStatusFilter" class="admin-select">
+              <option value="all">Tous les statuts</option>
+              <option value="nouveau">Nouveau à traiter</option>
+              <option value="bat_valide">BAT validé</option>
+              <option value="en_production">En cours de production</option>
+              <option value="termine">Terminé / Expédié</option>
+            </select>
+          </div>
+
+          <!-- Tableau réactif des commandes -->
+          <div class="admin-table-wrapper">
+            <table class="admin-table" id="ordersTable">
+              <thead>
+                <tr>
+                  <th>Date & Réf</th>
+                  <th>Client</th>
+                  <th>Article personnalisé</th>
+                  <th style="text-align:center;">Quantité</th>
+                  <th style="text-align:right;">Total TTC</th>
+                  <th>Qualité visuel</th>
+                  <th>Statut</th>
+                  <th style="text-align:right;">Dossier & Actions</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTableBody">
+                <!-- Rempli dynamiquement -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ONGLET : FICHIER CLIENTS -->
+        <section id="tab-clients" class="admin-tab-pane">
+          <div class="tab-header flex-between">
+            <div>
+              <h3>Fichier Clients & Historique</h3>
+              <p class="tab-subtitle">Consultez les coordonnées complètes, le nombre de commandes et les montants cumulés par client.</p>
+            </div>
+            <div class="tab-actions">
+              <button type="button" id="btnExportClientsCsv" class="admin-btn outline">Export CSV Clients</button>
+            </div>
+          </div>
+
+          <!-- Filtres de recherche client -->
+          <div class="admin-filter-bar">
+            <input type="text" id="clientSearchInput" class="admin-input search-input" placeholder="Rechercher par nom, courriel, téléphone, ville..." />
+          </div>
+
+          <!-- Tableau des clients -->
+          <div class="admin-table-wrapper">
+            <table class="admin-table" id="clientsTable">
+              <thead>
+                <tr>
+                  <th>Client</th>
+                  <th>Coordonnées</th>
+                  <th>Ville</th>
+                  <th style="text-align:center;">Commandes</th>
+                  <th style="text-align:right;">Total Dépensé</th>
+                  <th>Dernière commande</th>
+                  <th style="text-align:right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="clientsTableBody">
+                <!-- Rempli dynamiquement -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ONGLET : GAMME DE PRODUITS & TARIFS -->
+        <section id="tab-products" class="admin-tab-pane">
+          <div class="tab-header flex-between">
+            <div>
+              <h3>Gestion de la Gamme de Produits</h3>
+              <p class="tab-subtitle">Vue d'ensemble de la gamme en boutique : prix TTC publics, état des stocks et ouverture de la fiche détaillée.</p>
+            </div>
+            <div class="tab-actions">
+              <button type="button" id="btnSaveProductsConfig" class="admin-btn primary">Enregistrer la gamme</button>
+            </div>
+          </div>
+
+          <div class="admin-info-banner">
+            <span class="info-icon">ℹ️</span>
+            <span>Cliquez sur <strong>"Fiche Produit"</strong> pour consulter ou modifier la décomposition financière complète (matière, temps, consommables, main d'œuvre, marge, prix revendeur).</span>
+          </div>
+
+          <div class="admin-table-wrapper">
+            <table class="admin-table" id="productsAdminTable">
+              <thead>
+                <tr>
+                  <th style="width:50px;">Aperçu</th>
+                  <th>Produit & Réf</th>
+                  <th style="width:110px;">Catégorie</th>
+                  <th style="width:110px;">Prix Vente TTC</th>
+                  <th style="width:130px;">Stock dispo</th>
+                  <th style="width:90px; text-align:center;">Boutique</th>
+                  <th style="width:130px; text-align:right;">Fiche Produit</th>
+                </tr>
+              </thead>
+              <tbody id="productsAdminTableBody">
+                <!-- Rempli dynamiquement -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ONGLET : DÉPÔT-VENTE PARTENAIRES -->
+        <section id="tab-consignment" class="admin-tab-pane">
+          <div class="tab-header flex-between">
+            <div>
+              <h3>Gestion du Dépôt-Vente Partenaires</h3>
+              <p class="tab-subtitle">Liste des conventions de dépôt-vente, suivi des stocks confiés et gestion individuelle par établissement.</p>
+            </div>
+            <div class="tab-actions" style="display:flex; gap:8px;">
+              <button type="button" id="btnAddNewResellerModal" class="admin-btn primary">+ Nouveau revendeur partenaire</button>
+              <button type="button" id="btnPrintConsignmentSlip" class="admin-btn outline">Relevé Dépôt-Vente</button>
+            </div>
+          </div>
+
+          <!-- Tableau récapitulatif des magasins partenaires (Dépôt-Vente) -->
+          <div class="admin-table-wrapper">
+            <table class="admin-table" id="resellersTable">
+              <thead>
+                <tr>
+                  <th>Établissement / Enseigne</th>
+                  <th>Contact & Ville</th>
+                  <th style="text-align:center;">Remise</th>
+                  <th style="text-align:center;">Déposé</th>
+                  <th style="text-align:center;">Vendu</th>
+                  <th style="text-align:center;">En Rayon</th>
+                  <th style="text-align:right;">Net Graph2Print</th>
+                  <th style="text-align:center;">Statut Convention</th>
+                  <th style="text-align:center;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="resellersTableBody">
+                <!-- Rempli dynamiquement -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ONGLET 4 : CATALOGUE DE VISUELS (SÉCURISÉ & INCRÉMENTAL) -->
+        <section id="tab-catalog" class="admin-tab-pane">
+          <div class="tab-header flex-between">
+            <div>
+              <h3>Catalogue de Visuels (Mode Incrémental)</h3>
+              <p class="tab-subtitle">Sanctuarisation garantie des 65 visuels validés. Ajoutez de nouveaux motifs par lot ou à l'unité.</p>
+            </div>
+            <div class="tab-actions" style="display:flex; gap:8px; flex-wrap:wrap;">
+              <input type="file" id="adminSingleFileInput" accept="image/png,image/jpeg,image/webp,image/svg+xml,image/avif" style="display:none;" />
+              <input type="file" id="adminBatchFileInput" accept="image/png,image/jpeg,image/webp,image/svg+xml,image/avif" multiple style="display:none;" />
+              <button type="button" id="btnBatchValidatePending" class="admin-btn secondary" style="display:none; background:#ecfdf5; border-color:#10b981; color:#059669; font-weight:700;">✓ Valider tous les visuels en attente</button>
+              <button type="button" id="btnAdminAddSingleVisual" class="admin-btn secondary">+ Ajouter un visuel</button>
+              <button type="button" id="btnOpenBatchUploadModal" class="admin-btn primary">+ Ajouter par lot</button>
+            </div>
+          </div>
+
+          <!-- Zone de recherche et filtrage -->
+          <div class="admin-filter-bar" style="position:relative; z-index:10;">
+            <input type="text" id="adminCatalogSearchInput" class="admin-input search-input" placeholder="Rechercher un visuel par nom ou catégorie..." />
+            <select id="catalogCategoryFilter" class="admin-select" style="cursor:pointer; position:relative; z-index:10;">
+              <option value="all">Toutes les catégories</option>
+            </select>
+            <select id="catalogStatusFilter" class="admin-select" style="cursor:pointer; position:relative; z-index:10;">
+              <option value="all">Tous les statuts</option>
+              <option value="approved">Publiés</option>
+              <option value="pending">En attente</option>
+              <option value="private">Privés (atelier)</option>
+              <option value="trash">Corbeille</option>
+            </select>
+            <button type="button" id="btnAdminResetCatalogFilters" class="admin-btn secondary" style="font-size:12px; padding:6px 12px; white-space:nowrap; cursor:pointer;" title="Réinitialiser tous les filtres et afficher les 125 visuels">Afficher tout (125)</button>
+            <button type="button" id="btnAdminEmptyTrash" class="admin-btn" style="display:none; background:#ef4444; color:#ffffff; font-weight:700; font-size:12px; padding:6px 14px; border:none; border-radius:6px; cursor:pointer;" title="Supprimer définitivement tous les visuels dans la corbeille">🔥 Vider la corbeille</button>
+          </div>
+
+          <!-- Barre d'actions par lot sur les visuels (toujours accessible) -->
+          <div id="adminBatchActionsBar" class="admin-batch-bar" style="display:flex; align-items:center; justify-content:space-between; background:#ede9fe; border:1px solid #c4b5fd; border-radius:8px; padding:10px 16px; margin-bottom:12px; gap:10px; flex-wrap:wrap; position:relative; z-index:5;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <label style="display:inline-flex; align-items:center; gap:8px; cursor:pointer; font-weight:700; color:#5b21b6; font-size:13px;">
+                <input type="checkbox" id="chkBatchSelectAll" style="width:19px; height:19px; accent-color:#7c3aed; cursor:pointer;" />
+                <span id="batchSelectedCountLabel">Tout cocher (0 sélectionné)</span>
+              </label>
+              <button type="button" id="btnBatchDeselectAll" class="admin-btn secondary" style="font-size:11px; padding:3px 8px; background:#fff; border-color:#c4b5fd; color:#6b21a8; font-weight:600; cursor:pointer;">Désélectionner tout</button>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <button type="button" id="btnBatchPublishApproved" class="admin-btn" style="font-size:12px; padding:6px 14px; font-weight:700; background:#059669; color:#ffffff; border:none; border-radius:6px; cursor:pointer;" title="Valider la publication des visuels sélectionnés">✓ Valider la publication</button>
+              <button type="button" id="btnBatchChangeCategory" class="admin-btn secondary" style="font-size:11.5px; padding:6px 12px; font-weight:700; cursor:pointer;">📁 Reclasser par lot...</button>
+              <div style="display:flex; align-items:center; gap:6px; background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; padding:2px 4px;">
+                <select id="batchStatusSelect" class="admin-select" style="border:0; padding:4px 6px; font-size:11.5px; font-weight:600; cursor:pointer; background:transparent;">
+                  <option value="approved">Statut : Publié</option>
+                  <option value="pending">Statut : En attente</option>
+                  <option value="private">Statut : Privé (atelier)</option>
+                  <option value="trash">Statut : Corbeille</option>
+                </select>
+                <button type="button" id="btnBatchApplyStatus" class="admin-btn primary" style="font-size:11px; padding:4px 10px; font-weight:700; background:#4f46e5; border:0; cursor:pointer;">Appliquer</button>
+              </div>
+              <button type="button" id="btnBatchTrash" class="admin-btn outline" style="font-size:11.5px; padding:6px 10px; color:#ef4444; border-color:#fca5a5; font-weight:700; cursor:pointer;">✕ Corbeille</button>
+            </div>
+          </div>
+
+          <!-- Grille des visuels avec grandes vignettes -->
+          <div class="admin-visuals-grid" id="adminVisualsGrid">
+            <!-- Rempli dynamiquement -->
+          </div>
+        </section>
+
+        <!-- ONGLET : STATISTIQUES DES VISUELS LES PLUS UTILISÉS -->
+        <section id="tab-stats" class="admin-tab-pane">
+          <div class="tab-header flex-between">
+            <div>
+              <h3>Statistiques des Visuels & Motifs</h3>
+              <p class="tab-subtitle">Analyse détaillée de l'utilisation des images, popularité des motifs et chiffre d'affaires généré.</p>
+            </div>
+            <div class="tab-actions" style="display:flex; gap:8px;">
+              <select id="statsPeriodFilter" class="admin-select" style="font-size:12.5px; padding:6px 12px; cursor:pointer;">
+                <option value="all">Historique complet</option>
+                <option value="30d">30 derniers jours</option>
+                <option value="7d">7 derniers jours</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Cartes KPI Statistiques -->
+          <div class="stats-overview-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:16px; margin-bottom:24px;">
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+              <span style="font-size:12px; font-weight:700; color:#64748b; text-transform:uppercase;">Commandes personnalisées</span>
+              <div id="statTotalPersonalizedOrders" style="font-size:24px; font-weight:800; color:#0f172a; margin:6px 0 2px 0;">0</div>
+              <small style="color:#10b981; font-weight:600;">Commandes atelier & stand</small>
+            </div>
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+              <span style="font-size:12px; font-weight:700; color:#64748b; text-transform:uppercase;">Visuel n°1 Plébiscité</span>
+              <div id="statTopVisualName" style="font-size:17px; font-weight:800; color:#4f46e5; margin:6px 0 2px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">-</div>
+              <small id="statTopVisualCategory" style="color:#64748b; font-weight:600;">-</small>
+            </div>
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+              <span style="font-size:12px; font-weight:700; color:#64748b; text-transform:uppercase;">Support Favori</span>
+              <div id="statTopProductKey" style="font-size:18px; font-weight:800; color:#0f172a; margin:6px 0 2px 0;">Mug 11oz</div>
+              <small style="color:#64748b; font-weight:600;">Produit le plus choisi</small>
+            </div>
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+              <span style="font-size:12px; font-weight:700; color:#64748b; text-transform:uppercase;">CA Généré par Visuels</span>
+              <div id="statTotalVisualRevenue" style="font-size:24px; font-weight:800; color:#059669; margin:6px 0 2px 0;">0,00 €</div>
+              <small style="color:#64748b; font-weight:600;">Volume de ventes TTC</small>
+            </div>
+          </div>
+
+          <!-- Tableau détaillé du classement des visuels -->
+          <div class="admin-table-wrapper" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+            <div style="padding:14px 18px; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
+              <strong style="font-size:14px; color:#1e293b;">Classement de popularité des visuels utilisés</strong>
+              <span id="statsVisualsCountLabel" style="font-size:12px; color:#64748b; font-weight:600;">0 visuels analysés</span>
+            </div>
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th style="width:60px; text-align:center;">Rang</th>
+                  <th style="width:70px;">Aperçu</th>
+                  <th>Nom du visuel</th>
+                  <th>Catégorie</th>
+                  <th style="text-align:center;">Commandes</th>
+                  <th style="text-align:right;">Chiffre d'Affaires</th>
+                  <th>Supports personnalisés</th>
+                  <th style="width:160px;">Part des commandes</th>
+                </tr>
+              </thead>
+              <tbody id="visualStatsTableBody">
+                <!-- Rempli dynamiquement -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ONGLET 5 : CATÉGORIES -->
+        <section id="tab-categories" class="admin-tab-pane">
+          <div class="tab-header flex-between">
+            <div>
+              <h3>Arborescence des Catégories</h3>
+              <p class="tab-subtitle">Organisez les rubriques et sous-catégories pour faciliter la recherche client.</p>
+            </div>
+            <div class="tab-actions" style="display:flex; gap:8px;">
+              <button type="button" id="btnAdminSortCategoriesAlphabetically" class="admin-btn secondary">Trier A-Z</button>
+              <button type="button" id="btnAdminAddCategory" class="admin-btn primary">+ Nouvelle Catégorie</button>
+            </div>
+          </div>
+
+          <div class="admin-categories-container" id="adminCategoriesList">
+            <!-- Rempli dynamiquement -->
+          </div>
+        </section>
+
+        <!-- ONGLET 6 : PARAMÈTRES & SÉCURITÉ -->
+        <section id="tab-settings" class="admin-tab-pane">
+          <div class="tab-header">
+            <h3>Paramètres de l'Atelier & Sécurité</h3>
+            <p class="tab-subtitle">Gestion des sauvegardes automatiques et état des notifications.</p>
+          </div>
+
+          <div class="settings-grid">
+            <div class="settings-card">
+              <h4>Thèmes & Ambiance Décorative du Showroom 3D</h4>
+              <p class="settings-desc">Activez l'ambiance visuelle du showroom selon la saison ou l'événement commercial.</p>
+              <div style="display:flex; flex-direction:column; gap:10px; margin-top:14px;">
+                <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:13px; font-weight:600; color:#1e293b;">
+                  <input type="radio" name="adminThemeRadio" value="standard" style="width:18px; height:18px; accent-color:#7c3aed; cursor:pointer;" />
+                  <span>Ambiance Standard (Showroom épuré, table chêne et orchidée)</span>
+                </label>
+                <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:13px; font-weight:600; color:#1e293b;">
+                  <input type="radio" name="adminThemeRadio" value="noel" style="width:18px; height:18px; accent-color:#7c3aed; cursor:pointer;" />
+                  <span>Ambiance Noël (Grand sapin 2,6m, guirlande, chemin de table rouge & neige rapide)</span>
+                </label>
+                <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:13px; font-weight:600; color:#1e293b;">
+                  <input type="radio" name="adminThemeRadio" value="halloween" style="width:18px; height:18px; accent-color:#7c3aed; cursor:pointer;" />
+                  <span>Ambiance Halloween (Citrouilles Jack-o'-lantern lumineuses & bougies vacillantes)</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="settings-card">
+              <h4>Sauvegardes du catalogue</h4>
+              <p class="settings-desc">Une sauvegarde automatique de <code>catalog.json</code> est générée à chaque modification (rotation sur 30 versions).</p>
+              <div id="backupStatusList" class="backup-list-box">
+                <small style="color:#64748b;">Sauvegardes automatiques actives dans le dossier <code>backups/catalog/</code></small>
+              </div>
+            </div>
+
+            <div class="settings-card">
+              <h4>Service de notifications par courriel (SMTP)</h4>
+              <p class="settings-desc">Envoi des demandes de création à l'adresse de l'atelier.</p>
+              <div id="smtpStatusBox" class="smtp-status-box">
+                <span class="status-indicator"></span>
+                <span id="smtpStatusText">Vérification de la configuration...</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modale ergonomique de reclassement par lot (Sélection dans une liste déroulante) -->
+  <div id="batchCategoryModal" class="admin-modal-overlay" style="display:none; position:fixed; inset:0; z-index:100000; background:rgba(15,23,42,0.75); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#ffffff; border-radius:14px; box-shadow:0 20px 45px rgba(0,0,0,0.3); max-width:480px; width:100%; border:1px solid #e2e8f0; overflow:hidden;">
+      <div style="background:#0f172a; color:#ffffff; padding:14px 20px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <strong style="font-size:15px; display:block;">Reclasser les visuels sélectionnés</strong>
+          <small id="batchCategoryCountLabel" style="color:#94a3b8; font-size:11px;">0 visuel(s) concerné(s)</small>
+        </div>
+        <button type="button" id="closeBatchCategoryBtn" style="background:transparent; border:0; color:#cbd5e1; font-size:16px; cursor:pointer; font-weight:700;">✕</button>
+      </div>
+      <div style="padding:20px; display:flex; flex-direction:column; gap:14px;">
+        <div>
+          <label style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:6px;">Catégorie principale :</label>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+            <button type="button" class="admin-quick-reclass-btn" data-cat="Mug" style="padding:4px 10px; font-size:11.5px; border-radius:6px; border:1px solid #cbd5e1; background:#f1f5f9; cursor:pointer; font-weight:700; color:#4338ca;">Mug</button>
+            <button type="button" class="admin-quick-reclass-btn" data-cat="Animaux" style="padding:4px 10px; font-size:11.5px; border-radius:6px; border:1px solid #cbd5e1; background:#f1f5f9; cursor:pointer; font-weight:600;">Animaux</button>
+            <button type="button" class="admin-quick-reclass-btn" data-cat="Noël" style="padding:4px 10px; font-size:11.5px; border-radius:6px; border:1px solid #cbd5e1; background:#f1f5f9; cursor:pointer; font-weight:600;">Noël</button>
+            <button type="button" class="admin-quick-reclass-btn" data-cat="Callisto Arts" style="padding:4px 10px; font-size:11.5px; border-radius:6px; border:1px solid #cbd5e1; background:#f1f5f9; cursor:pointer; font-weight:600;">Callisto Arts</button>
+            <button type="button" class="admin-quick-reclass-btn" data-cat="Murs" style="padding:4px 10px; font-size:11.5px; border-radius:6px; border:1px solid #cbd5e1; background:#f1f5f9; cursor:pointer; font-weight:600;">Murs</button>
+            <button type="button" class="admin-quick-reclass-btn" data-cat="Dessins animés" style="padding:4px 10px; font-size:11.5px; border-radius:6px; border:1px solid #cbd5e1; background:#f1f5f9; cursor:pointer; font-weight:600;">Dessins animés</button>
+          </div>
+          <select id="batchCategorySelect" class="admin-select" style="width:100%; padding:9px 12px; font-size:13px; font-weight:600; cursor:pointer;">
+            <!-- Rempli dynamiquement -->
+          </select>
+          <div id="batchCategoryNewWrap" style="display:none; margin-top:8px;">
+            <input type="text" id="batchCategoryNewInput" class="admin-input" placeholder="Nom de la nouvelle catégorie..." style="width:100%; padding:8px 12px; font-size:12.5px;" />
+          </div>
+        </div>
+        <div>
+          <label style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:6px;">Sous-catégorie :</label>
+          <select id="batchSubcategorySelect" class="admin-select" style="width:100%; padding:9px 12px; font-size:13px; cursor:pointer;">
+            <!-- Rempli dynamiquement -->
+          </select>
+          <div id="batchSubcategoryNewWrap" style="display:none; margin-top:8px;">
+            <input type="text" id="batchSubcategoryNewInput" class="admin-input" placeholder="Nom de la nouvelle sous-catégorie..." style="width:100%; padding:8px 12px; font-size:12.5px;" />
+          </div>
+        </div>
+      </div>
+      <div style="background:#f8fafc; padding:12px 20px; border-top:1px solid #e2e8f0; display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" id="cancelBatchCategoryBtn" class="admin-btn secondary" style="padding:8px 14px; font-size:12px;">Annuler</button>
+        <button type="button" id="applyBatchCategoryBtn" class="admin-btn primary" style="padding:8px 18px; font-size:12px; font-weight:700; background:#7c3aed; border-color:#7c3aed; cursor:pointer;">Appliquer à la sélection</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modale d'import direct avec attribution immédiate de catégorie & publication (gestion des doublons) -->
+  <div id="batchUploadDirectModal" class="admin-modal-overlay" style="display:none; position:fixed; inset:0; z-index:100000; background:rgba(15,23,42,0.75); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#ffffff; border-radius:14px; box-shadow:0 20px 45px rgba(0,0,0,0.3); max-width:540px; width:100%; border:1px solid #e2e8f0; overflow:hidden;">
+      <div style="background:#0f172a; color:#ffffff; padding:16px 20px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <strong style="font-size:16px; display:block;">Importer des visuels</strong>
+          <small id="batchUploadDirectCountLabel" style="color:#94a3b8; font-size:12px;">0 fichier(s) sélectionné(s)</small>
+        </div>
+        <button type="button" id="closeBatchUploadDirectBtn" style="background:transparent; border:0; color:#cbd5e1; font-size:18px; cursor:pointer; font-weight:700;">✕</button>
+      </div>
+
+      <div style="padding:20px; display:flex; flex-direction:column; gap:16px; max-height:calc(85vh - 140px); overflow-y:auto;">
+        <!-- Avertissement doublons si présents -->
+        <div id="batchUploadDuplicatesAlert" style="display:none; background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:12px 14px; font-size:12px; color:#92400e;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:6px;">
+            <strong style="margin:0; font-size:12.5px;">⚠️ Doublons de nom détectés :</strong>
+            <button type="button" id="btnForceImportAllDuplicates" style="background:#b45309; color:#ffffff; border:0; border-radius:6px; padding:5px 12px; font-size:11.5px; font-weight:700; cursor:pointer;">Forcer l'import de tous les fichiers</button>
+          </div>
+          <div id="batchUploadDuplicatesList" style="max-height:55px; overflow-y:auto; font-size:11.5px; color:#78350f; word-break:break-all; margin-bottom:8px;"></div>
+          <label style="display:flex; align-items:center; gap:8px; font-weight:700; color:#92400e; cursor:pointer;">
+            <input type="checkbox" id="chkForceImportDuplicates" style="accent-color:#b45309; width:17px; height:17px; cursor:pointer;" />
+            <span>Forcer l'importation de tous les fichiers (autoriser les doublons de nom)</span>
+          </label>
+        </div>
+
+        <!-- Miniatures des fichiers prêts à importer -->
+        <div>
+          <label style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:6px;">Aperçu des visuels à importer (<span id="batchUploadValidCount">0</span>) :</label>
+          <div id="batchUploadPreviewsStrip" style="display:flex; gap:8px; overflow-x:auto; padding:8px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; min-height:68px; align-items:center;"></div>
+        </div>
+
+        <!-- Choix de la catégorie -->
+        <div>
+          <label style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:6px;">Catégorie principale :</label>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+            <button type="button" class="admin-quick-upload-cat-btn" data-cat="Mug" style="padding:4px 10px; font-size:11.5px; border-radius:6px; border:1px solid #cbd5e1; background:#f1f5f9; cursor:pointer; font-weight:700; color:#4338ca;">Mug</button>
+            <button type="button" class="admin-quick-upload-cat-btn" data-cat="Animaux" style="padding:4px 10px; font-size:11.5px; border-radius:6px; border:1px solid #cbd5e1; background:#f1f5f9; cursor:pointer; font-weight:600;">Animaux</button>
+            <button type="button" class="admin-quick-upload-cat-btn" data-cat="Noël" style="padding:4px 10px; font-size:11.5px; border-radius:6px; border:1px solid #cbd5e1; background:#f1f5f9; cursor:pointer; font-weight:600;">Noël</button>
+            <button type="button" class="admin-quick-upload-cat-btn" data-cat="Callisto Arts" style="padding:4px 10px; font-size:11.5px; border-radius:6px; border:1px solid #cbd5e1; background:#f1f5f9; cursor:pointer; font-weight:600;">Callisto Arts</button>
+            <button type="button" class="admin-quick-upload-cat-btn" data-cat="Murs" style="padding:4px 10px; font-size:11.5px; border-radius:6px; border:1px solid #cbd5e1; background:#f1f5f9; cursor:pointer; font-weight:600;">Murs</button>
+            <button type="button" class="admin-quick-upload-cat-btn" data-cat="Dessins animés" style="padding:4px 10px; font-size:11.5px; border-radius:6px; border:1px solid #cbd5e1; background:#f1f5f9; cursor:pointer; font-weight:600;">Dessins animés</button>
+          </div>
+          <select id="batchUploadCatSelect" class="admin-select" style="width:100%; padding:9px 12px; font-size:13px; font-weight:600; cursor:pointer;"></select>
+          <div id="batchUploadNewCatWrap" style="display:none; margin-top:8px;">
+            <input type="text" id="batchUploadNewCatInput" class="admin-input" placeholder="Ex: Animaux, Fêtes..." style="width:100%; padding:8px 12px; font-size:12.5px;" />
+          </div>
+        </div>
+
+        <!-- Choix de la sous-catégorie -->
+        <div>
+          <label style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:6px;">Sous-catégorie (ex: Lapin, Cerf, Tête de mort...) :</label>
+          <select id="batchUploadSubSelect" class="admin-select" style="width:100%; padding:9px 12px; font-size:13px; cursor:pointer;"></select>
+          <div id="batchUploadNewSubWrap" style="display:none; margin-top:8px;">
+            <input type="text" id="batchUploadNewSubInput" class="admin-input" placeholder="Ex: Lapin..." style="width:100%; padding:8px 12px; font-size:12.5px;" />
+          </div>
+        </div>
+
+        <!-- Option de statut direct -->
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:12px 14px; display:flex; align-items:center; gap:10px;">
+          <input type="checkbox" id="batchUploadPublishNow" checked style="width:18px; height:18px; accent-color:#059669; cursor:pointer;" />
+          <label for="batchUploadPublishNow" style="font-size:13px; font-weight:600; color:#166534; cursor:pointer;">
+            Publier immédiatement dans la boutique et le showroom client
+          </label>
+        </div>
+      </div>
+
+      <div style="background:#f8fafc; padding:14px 20px; border-top:1px solid #e2e8f0; display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" id="cancelBatchUploadDirectBtn" class="admin-btn secondary" style="padding:9px 16px; font-size:12.5px;">Annuler</button>
+        <button type="button" id="confirmBatchUploadDirectBtn" class="admin-btn primary" style="padding:9px 20px; font-size:12.5px; font-weight:700; background:#059669; border-color:#059669; cursor:pointer;">Importer et Publier</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE : DOSSIER CLIENT & CONTRÔLE BAT / VISUELS -->
+  <div id="orderDossierModal" class="admin-modal-overlay" style="display:none; position:fixed; inset:0; z-index:100020; background:rgba(15,23,42,0.75); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#ffffff; border-radius:14px; box-shadow:0 20px 45px rgba(0,0,0,0.3); max-width:860px; width:100%; border:1px solid #cbd5e1; overflow:hidden; display:flex; flex-direction:column; max-height:92vh;">
+      <div style="background:#0f172a; color:#ffffff; padding:16px 22px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#818cf8; letter-spacing:0.05em;">Dossier de Fabrication & Contrôle Client</span>
+          <h3 id="dossierRefTitle" style="margin:2px 0 0 0; font-size:17px; color:#ffffff;">CMD-20261107</h3>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span id="dossierStatusBadge" class="badge-status approved">Nouveau</span>
+          <button type="button" id="closeOrderDossierBtn" style="background:transparent; border:0; color:#cbd5e1; font-size:20px; cursor:pointer; font-weight:700;">✕</button>
+        </div>
+      </div>
+
+      <div style="padding:22px; overflow-y:auto; display:flex; flex-direction:column; gap:20px;">
+        <!-- Fiche d'identité et produit -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:16px;">
+          <div>
+            <strong style="font-size:12px; text-transform:uppercase; color:#64748b; display:block; margin-bottom:6px;">Coordonnées Client :</strong>
+            <div id="dossierClientInfo" style="font-size:13.5px; line-height:1.5; color:#1e293b;"></div>
+          </div>
+          <div>
+            <strong style="font-size:12px; text-transform:uppercase; color:#64748b; display:block; margin-bottom:6px;">Commande & Livraison :</strong>
+            <div id="dossierOrderInfo" style="font-size:13.5px; line-height:1.5; color:#1e293b;"></div>
+          </div>
+        </div>
+
+        <!-- SECTION CASES À COCHER OBLIGATOIRES SUR LE DOSSIER CLIENT -->
+        <div style="background:#ede9fe; border:1px solid #c4b5fd; border-radius:10px; padding:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <strong style="font-size:13px; font-weight:800; color:#5b21b6;">
+              Contrôle & Validation Graphique du Dossier :
+            </strong>
+            <span id="dossierSingleFaceBadge" style="display:none; background:#fef3c7; color:#b45309; font-size:11px; font-weight:800; padding:3px 8px; border-radius:6px; border:1px solid #fcd34d;">Impression 1 face unique</span>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(185px, 1fr)); gap:12px;">
+            <label style="display:flex; align-items:center; gap:8px; background:#ffffff; padding:10px 12px; border-radius:8px; border:1px solid #ddd6fe; cursor:pointer; font-size:13px; font-weight:700; color:#4338ca;">
+              <input type="checkbox" id="chkDossierBatPreview" style="width:18px; height:18px; accent-color:#7c3aed; cursor:pointer;" />
+              <span>Aperçu BAT 3D</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; background:#ffffff; padding:10px 12px; border-radius:8px; border:1px solid #ddd6fe; cursor:pointer; font-size:13px; font-weight:700; color:#4338ca;">
+              <input type="checkbox" id="chkDossierBatConforme" style="width:18px; height:18px; accent-color:#7c3aed; cursor:pointer;" />
+              <span>Aperçu BAT 3D Conforme</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; background:#ffffff; padding:10px 12px; border-radius:8px; border:1px solid #ddd6fe; cursor:pointer; font-size:13px; font-weight:700; color:#4338ca;">
+              <input type="checkbox" id="chkDossierClientVisual" style="width:18px; height:18px; accent-color:#7c3aed; cursor:pointer;" />
+              <span>Visuel Client</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; background:#ffffff; padding:10px 12px; border-radius:8px; border:1px solid #ddd6fe; cursor:pointer; font-size:13px; font-weight:700; color:#4338ca;">
+              <input type="checkbox" id="chkDossierSourceFile" style="width:18px; height:18px; accent-color:#7c3aed; cursor:pointer;" />
+              <span>Fichier Graphique Source</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- SECTION ÉTAPES DE FABRICATION ATELIER & EXPÉDITION -->
+        <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:10px; padding:16px;">
+          <strong style="font-size:13px; font-weight:800; color:#065f46; display:block; margin-bottom:10px;">
+            Suivi des Étapes de Fabrication Atelier :
+          </strong>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(185px, 1fr)); gap:12px; margin-bottom:10px;">
+            <label style="display:flex; align-items:center; gap:8px; background:#ffffff; padding:10px 12px; border-radius:8px; border:1px solid #a7f3d0; cursor:pointer; font-size:13px; font-weight:700; color:#047857;">
+              <input type="checkbox" id="chkDossierImprime" style="width:18px; height:18px; accent-color:#059669; cursor:pointer;" />
+              <span>Imprimé</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; background:#ffffff; padding:10px 12px; border-radius:8px; border:1px solid #a7f3d0; cursor:pointer; font-size:13px; font-weight:700; color:#047857;">
+              <input type="checkbox" id="chkDossierPresse" style="width:18px; height:18px; accent-color:#059669; cursor:pointer;" />
+              <span>Pressé</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; background:#ffffff; padding:10px 12px; border-radius:8px; border:1px solid #a7f3d0; cursor:pointer; font-size:13px; font-weight:700; color:#047857;">
+              <input type="checkbox" id="chkDossierExpedie" style="width:18px; height:18px; accent-color:#059669; cursor:pointer;" />
+              <span>Envoyé / Expédié</span>
+            </label>
+          </div>
+          <div>
+            <label style="font-size:11.5px; font-weight:700; color:#065f46; display:block; margin-bottom:4px;">Autre / Note atelier :</label>
+            <input type="text" id="txtDossierAtelierAutre" class="admin-input" placeholder="Notes complémentaires atelier..." style="width:100%; font-size:12.5px; padding:6px 10px;" />
+          </div>
+        </div>
+
+        <!-- AFFICHAGE DIRECT ET VISIBLE DES VISUELS (BAT & FICHIER SOURCE) -->
+        <div>
+          <strong style="font-size:13px; font-weight:800; color:#0f172a; display:block; margin-bottom:10px;">
+            Aperçus Visuels de Production :
+          </strong>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <!-- Cadre 1 : Aperçu BAT 3D -->
+            <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:12px; display:flex; flex-direction:column; align-items:center;">
+              <span style="font-size:12px; font-weight:700; color:#475569; margin-bottom:8px;">Aperçu BAT 3D Conforme</span>
+              <div style="width:100%; height:220px; background:#f1f5f9; border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden; border:1px solid #e2e8f0;">
+                <img id="dossierBatImg" src="" alt="Aperçu BAT 3D" style="max-width:100%; max-height:100%; object-fit:contain;" />
+              </div>
+              <div style="margin-top:10px; display:flex; gap:8px; width:100%;">
+                <a id="dossierBatDownloadBtn" href="" download target="_blank" class="admin-btn outline" style="flex:1; font-size:11.5px; text-align:center; padding:5px 8px;">Télécharger BAT</a>
+              </div>
+            </div>
+
+            <!-- Cadre 2 : Fichier Graphique Source -->
+            <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:12px; display:flex; flex-direction:column; align-items:center;">
+              <span style="font-size:12px; font-weight:700; color:#475569; margin-bottom:8px;">Visuel Client / Fichier Graphique Source</span>
+              <div style="width:100%; height:220px; background:#f1f5f9; border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden; border:1px solid #e2e8f0;">
+                <img id="dossierVisualImg" src="" alt="Visuel Client" style="max-width:100%; max-height:100%; object-fit:contain;" />
+              </div>
+              <div style="margin-top:10px; display:flex; gap:8px; width:100%;">
+                <a id="dossierVisualDownloadBtn" href="" download target="_blank" class="admin-btn outline" style="flex:1; font-size:11.5px; text-align:center; padding:5px 8px;">Télécharger Visuel</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes / Instructions atelier -->
+        <div id="dossierNotesWrap" style="display:none; background:#fffbeb; border:1px solid #fef3c7; border-radius:8px; padding:12px 14px; font-size:12.5px; color:#92400e;">
+          <strong style="display:block; margin-bottom:2px;">Instructions du client :</strong>
+          <span id="dossierNotesText"></span>
+        </div>
+
+        <!-- SECTION MESSAGERIE & NOTES CLIENT (ÉCHANGES DIRECTS ATELIER <-> CLIENT) -->
+        <div style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:10px; padding:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <strong style="font-size:13px; font-weight:800; color:#0f172a;">
+              Messagerie & Échanges avec le Client :
+            </strong>
+            <span style="font-size:11.5px; color:#64748b;">Visible en direct sur l'Espace Client</span>
+          </div>
+          <!-- Fil de discussion -->
+          <div id="dossierMessagesThread" style="max-height:180px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; margin-bottom:12px; padding:10px; background:#ffffff; border-radius:8px; border:1px solid #e2e8f0;">
+            <!-- Rempli dynamiquement -->
+          </div>
+          <!-- Zone d'envoi de note -->
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="adminDossierMsgInput" class="admin-input" placeholder="Écrire un message ou une note au client…" style="flex:1; font-size:12.5px; padding:8px 12px;" />
+            <button type="button" id="btnAdminSendDossierMsg" class="admin-btn primary" style="white-space:nowrap; padding:8px 14px; background:#7c3aed;">Envoyer au client</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#f8fafc; padding:14px 22px; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div style="display:flex; gap:8px;">
+          <a id="dossierFicheAtelierBtn" href="" target="_blank" class="admin-btn outline" style="font-size:12px; font-weight:700;">📄 Fiche Atelier Imprimable</a>
+          <a id="dossierZipBtn" href="" class="admin-btn" style="font-size:12px; font-weight:700; background:#4f46e5; color:#ffffff;">📦 Pack Fabrication ZIP</a>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button type="button" id="closeOrderDossierBottomBtn" class="admin-btn secondary" style="padding:8px 16px; font-size:12px;">Fermer</button>
+          <button type="button" id="saveOrderDossierChecksBtn" class="admin-btn primary" style="padding:8px 20px; font-size:12px; font-weight:700; background:#059669; border-color:#059669;">Enregistrer le dossier</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE : FICHE PRODUIT DÉTAILLÉE -->
+  <div id="productSheetModal" class="admin-modal-overlay" style="display:none; position:fixed; inset:0; z-index:100020; background:rgba(15,23,42,0.75); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#ffffff; border-radius:14px; box-shadow:0 20px 45px rgba(0,0,0,0.3); max-width:720px; width:100%; border:1px solid #cbd5e1; overflow:hidden; display:flex; flex-direction:column; max-height:92vh;">
+      <div style="background:#0f172a; color:#ffffff; padding:16px 22px; display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; align-items:center; gap:14px;">
+          <img id="psPreviewImg" src="" alt="" style="width:48px; height:48px; object-fit:contain; border-radius:8px; background:#ffffff; padding:2px; border:1px solid #475569;" />
+          <div>
+            <h3 id="psProductName" style="margin:0; font-size:17px; color:#ffffff;">Nom du Produit</h3>
+            <small id="psProductKey" style="color:#94a3b8; font-size:12px;">Réf : <code>produit</code></small>
+          </div>
+        </div>
+        <button type="button" id="closeProductSheetBtn" style="background:transparent; border:0; color:#cbd5e1; font-size:20px; cursor:pointer; font-weight:700;">✕</button>
+      </div>
+
+      <div style="padding:22px; overflow-y:auto; display:flex; flex-direction:column; gap:18px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px;">
+          <div>
+            <label style="display:block; font-size:12px; font-weight:700; color:#475569; margin-bottom:4px;">Catégorie de produit :</label>
+            <input type="text" id="psCategory" class="admin-input" style="width:100%; font-size:13px; font-weight:600;" />
+          </div>
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div>
+              <strong style="display:block; font-size:13px; color:#1e293b;">Visible en boutique :</strong>
+              <small style="color:#64748b; font-size:11.5px;">Actif dans le Showroom 3D</small>
+            </div>
+            <label class="admin-switch">
+              <input type="checkbox" id="psActiveToggle" />
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:16px;">
+          <strong style="font-size:13px; font-weight:800; color:#0f172a; display:block; margin-bottom:12px;">
+            Décomposition des Coûts Fournisseur & Fabrication (HT) :
+          </strong>
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;">
+            <div>
+              <label style="display:block; font-size:11px; font-weight:700; color:#64748b; margin-bottom:3px;">Prix Achat Matière HT :</label>
+              <input type="text" id="psCostPrice" class="admin-input" placeholder="0,00 €" style="width:100%; font-size:12.5px;" />
+            </div>
+            <div>
+              <label style="display:block; font-size:11px; font-weight:700; color:#64748b; margin-bottom:3px;">Temps actif (minutes) :</label>
+              <input type="number" step="0.5" id="psTimeMinutes" class="admin-input" placeholder="5" style="width:100%; font-size:12.5px;" />
+            </div>
+            <div>
+              <label style="display:block; font-size:11px; font-weight:700; color:#64748b; margin-bottom:3px;">Création HT / pièce :</label>
+              <input type="text" id="psCreationCost" class="admin-input" placeholder="—" style="width:100%; font-size:12.5px;" />
+            </div>
+            <div>
+              <label style="display:block; font-size:11px; font-weight:700; color:#64748b; margin-bottom:3px;">Consommables HT :</label>
+              <input type="text" id="psConsumablesCost" class="admin-input" placeholder="0,20 €" style="width:100%; font-size:12.5px;" />
+            </div>
+            <div>
+              <label style="display:block; font-size:11px; font-weight:700; color:#64748b; margin-bottom:3px;">Emballage HT :</label>
+              <input type="text" id="psPackagingCost" class="admin-input" placeholder="—" style="width:100%; font-size:12.5px;" />
+            </div>
+            <div>
+              <label style="display:block; font-size:11px; font-weight:700; color:#64748b; margin-bottom:3px;">Main-d'œuvre HT :</label>
+              <input type="text" id="psLaborCost" class="admin-input" placeholder="4,17 €" style="width:100%; font-size:12.5px;" />
+            </div>
+            <div>
+              <label style="display:block; font-size:11px; font-weight:700; color:#64748b; margin-bottom:3px;">Amortissement HT :</label>
+              <input type="text" id="psAmortizationCost" class="admin-input" placeholder="0,50 €" style="width:100%; font-size:12.5px;" />
+            </div>
+            <div style="grid-column: span 2; background:#f1f5f9; padding:8px 12px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:12px; font-weight:700; color:#334155;">Coût Total de Revient HT :</span>
+              <input type="text" id="psTotalCost" class="admin-input" style="width:110px; font-size:13px; font-weight:800; color:#0f172a;" />
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:16px;">
+          <strong style="font-size:13px; font-weight:800; color:#166534; display:block; margin-bottom:12px;">
+            Politique Tarifaire, Prix Revendeurs (-20% / -30%) & Marges :
+          </strong>
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; align-items:center;">
+            <div>
+              <label style="display:block; font-size:11.5px; font-weight:700; color:#15803d; margin-bottom:3px;">Prix Public TTC :</label>
+              <input type="text" id="psPriceTTC" class="admin-input" placeholder="0,00 €" style="width:100%; font-size:14px; font-weight:800; color:#15803d;" />
+            </div>
+            <div>
+              <label style="display:block; font-size:11.5px; font-weight:700; color:#1d4ed8; margin-bottom:3px;">Prix Revendeur -20% :</label>
+              <input type="text" id="psResellerPrice" class="admin-input" placeholder="0,00 €" style="width:100%; font-size:14px; font-weight:700; color:#1d4ed8;" />
+            </div>
+            <div>
+              <label style="display:block; font-size:11.5px; font-weight:700; color:#6366f1; margin-bottom:3px;">Prix Revendeur Volume -30% :</label>
+              <input type="text" id="psResellerPrice30" class="admin-input" placeholder="0,00 €" style="width:100%; font-size:14px; font-weight:700; color:#6366f1;" />
+            </div>
+            <div>
+              <label style="display:block; font-size:11.5px; font-weight:700; color:#0f766e; margin-bottom:3px;">Prix Conseillé TTC :</label>
+              <input type="text" id="psSuggestedPriceTTC" class="admin-input" placeholder="0,00 €" style="width:100%; font-size:13px; font-weight:700; color:#0f766e;" />
+            </div>
+            <div>
+              <label style="display:block; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:3px;">Taux de Marque :</label>
+              <input type="text" id="psMarkupRate" class="admin-input" placeholder="0,0 %" style="width:100%; font-size:13px; font-weight:700; color:#334155;" />
+            </div>
+            <div>
+              <label style="display:block; font-size:11.5px; font-weight:700; color:#334155; margin-bottom:3px;">Marge Nette Dégagée HT :</label>
+              <div id="psMarginDisplay" style="font-size:16px; font-weight:900; color:#059669; padding:6px 0;">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:16px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <strong style="font-size:13px; font-weight:800; color:#0f172a; display:block;">Gestion des Stocks & Disponibilité :</strong>
+            <small style="color:#64748b; font-size:11.5px;">Alerte rouge automatique si <= 3 pièces, indication "Sur demande" si stock 0.</small>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <input type="number" min="0" id="psStockQty" class="admin-input" style="width:85px; font-size:14px; font-weight:800; text-align:center;" />
+            <span id="psStockBadge" class="badge-status approved">En stock</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#f8fafc; padding:14px 22px; border-top:1px solid #e2e8f0; display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" id="closeProductSheetBottomBtn" class="admin-btn secondary" style="padding:8px 16px; font-size:12px;">Fermer</button>
+        <button type="button" id="saveProductSheetBtn" class="admin-btn primary" style="padding:8px 20px; font-size:12.5px; font-weight:700; background:#059669; border-color:#059669;">Enregistrer cette fiche produit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE : FICHE CLIENT DÉTAILLÉE -->
+  <div id="clientSheetModal" class="admin-modal-overlay" style="display:none; position:fixed; inset:0; z-index:100020; background:rgba(15,23,42,0.75); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#ffffff; border-radius:14px; box-shadow:0 20px 45px rgba(0,0,0,0.3); max-width:760px; width:100%; border:1px solid #cbd5e1; overflow:hidden; display:flex; flex-direction:column; max-height:92vh;">
+      <div style="background:#0f172a; color:#ffffff; padding:16px 22px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#818cf8; letter-spacing:0.05em;">Fiche Client Répertoire</span>
+          <h3 id="csClientName" style="margin:2px 0 0 0; font-size:17px; color:#ffffff;">Nom du Client</h3>
+        </div>
+        <button type="button" id="closeClientSheetBtn" style="background:transparent; border:0; color:#cbd5e1; font-size:20px; cursor:pointer; font-weight:700;">✕</button>
+      </div>
+
+      <div style="padding:22px; overflow-y:auto; display:flex; flex-direction:column; gap:18px;">
+        <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:16px;">
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:16px;">
+            <strong style="font-size:12px; text-transform:uppercase; color:#64748b; display:block; margin-bottom:8px;">Coordonnées :</strong>
+            <div id="csContactDetails" style="font-size:13.5px; line-height:1.6; color:#1e293b;"></div>
+          </div>
+
+          <div style="background:#f5f3ff; border:1px solid #ddd6fe; border-radius:10px; padding:16px; display:flex; flex-direction:column; justify-content:center; gap:8px;">
+            <div style="display:flex; justify-content:space-between;">
+              <span style="font-size:12px; color:#64748b;">Nombre de commandes :</span>
+              <strong id="csOrdersCount" style="font-size:14px; color:#4338ca;">0</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span style="font-size:12px; color:#64748b;">Total dépensé TTC :</span>
+              <strong id="csTotalSpent" style="font-size:16px; color:#059669;">0,00 €</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span style="font-size:12px; color:#64748b;">Panier moyen :</span>
+              <strong id="csAverageOrder" style="font-size:13px; color:#334155;">0,00 €</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span style="font-size:12px; color:#64748b;">Dernière commande :</span>
+              <span id="csLastOrderDate" style="font-size:12px; font-weight:600; color:#1e293b;">—</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <strong style="font-size:13px; font-weight:800; color:#0f172a; display:block; margin-bottom:10px;">
+            Historique des Commandes de ce Client :
+          </strong>
+          <div style="border:1px solid #e2e8f0; border-radius:8px; overflow:hidden;">
+            <table class="admin-table" style="font-size:12.5px;">
+              <thead>
+                <tr>
+                  <th>Réf & Date</th>
+                  <th>Produit</th>
+                  <th style="text-align:center;">Qté</th>
+                  <th style="text-align:right;">Total TTC</th>
+                  <th>Statut</th>
+                  <th style="text-align:right;">Dossier</th>
+                </tr>
+              </thead>
+              <tbody id="csOrdersTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <label style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:4px;">Notes internes sur ce client :</label>
+          <textarea id="csInternalNotes" class="admin-input" rows="3" placeholder="Informations complémentaires, préférences de livraison, contact salon..." style="width:100%; font-size:13px; resize:vertical;"></textarea>
+        </div>
+      </div>
+
+      <div style="background:#f8fafc; padding:14px 22px; border-top:1px solid #e2e8f0; display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" id="closeClientSheetBottomBtn" class="admin-btn secondary" style="padding:8px 16px; font-size:12px;">Fermer</button>
+        <button type="button" id="saveClientNotesBtn" class="admin-btn primary" style="padding:8px 20px; font-size:12.5px; font-weight:700; background:#4f46e5; border-color:#4f46e5;">Enregistrer la note</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE : AJOUTER UN DÉPÔT DE STOCK (DÉPÔT-VENTE) -->
+  <div id="addConsignmentModal" class="admin-modal-overlay" style="display:none; position:fixed; inset:0; z-index:100020; background:rgba(15,23,42,0.75); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#ffffff; border-radius:14px; box-shadow:0 20px 45px rgba(0,0,0,0.3); max-width:480px; width:100%; border:1px solid #cbd5e1; overflow:hidden;">
+      <div style="background:#0f172a; color:#ffffff; padding:16px 20px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <strong style="font-size:16px; display:block;">Nouveau Dépôt de Stock</strong>
+          <small id="depotModalStoreName" style="color:#94a3b8; font-size:12px;">Magasin sélectionné</small>
+        </div>
+        <button type="button" id="closeAddConsignmentBtn" style="background:transparent; border:0; color:#cbd5e1; font-size:18px; cursor:pointer; font-weight:700;">✕</button>
+      </div>
+
+      <div style="padding:20px; display:flex; flex-direction:column; gap:14px;">
+        <div>
+          <label style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:5px;">Article à déposer :</label>
+          <select id="depotProductSelect" class="admin-select" style="width:100%; padding:9px 12px; font-size:13px; font-weight:600; cursor:pointer;"></select>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div>
+            <label style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:5px;">Quantité déposée :</label>
+            <input type="number" min="1" value="10" id="depotQtyInput" class="admin-input" style="width:100%; font-size:13px; font-weight:700; text-align:center;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:5px;">Prix Public TTC :</label>
+            <input type="text" id="depotPriceInput" class="admin-input" placeholder="0,00 €" style="width:100%; font-size:13px; font-weight:700; text-align:center;" />
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#f8fafc; padding:12px 20px; border-top:1px solid #e2e8f0; display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" id="cancelAddConsignmentBtn" class="admin-btn secondary" style="padding:8px 14px; font-size:12px;">Annuler</button>
+        <button type="button" id="confirmAddConsignmentBtn" class="admin-btn primary" style="padding:8px 18px; font-size:12px; font-weight:700; background:#4f46e5; border-color:#4f46e5;">Valider le dépôt</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE : FICHE REVENDEUR PARTENAIRE -->
+  <div id="resellerSheetModal" class="admin-modal-overlay" style="display:none; position:fixed; inset:0; z-index:100025; background:rgba(15,23,42,0.78); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#ffffff; border-radius:14px; box-shadow:0 20px 45px rgba(0,0,0,0.3); max-width:880px; width:100%; border:1px solid #cbd5e1; overflow:hidden; display:flex; flex-direction:column; max-height:92vh;">
+      <div style="background:#1e1b4b; color:#ffffff; padding:16px 22px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div>
+            <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#a5b4fc; letter-spacing:0.05em;">Partenariat Dépôt-Vente & Revente</span>
+            <h3 id="rsStoreName" style="margin:2px 0 0 0; font-size:18px; color:#ffffff;">Nom de l'établissement</h3>
+          </div>
+          <span id="rsStatusBadge" class="badge-status approved" style="margin-left:6px; font-size:11px;">Convention Active</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button type="button" id="btnToggleContractStatus" class="admin-btn outline" style="font-size:11.5px; padding:4px 10px; color:#f87171; border-color:#ef4444; background:transparent;">Clôturer la convention</button>
+          <button type="button" id="closeResellerSheetBtn" style="background:transparent; border:0; color:#cbd5e1; font-size:22px; cursor:pointer; font-weight:700;">✕</button>
+        </div>
+      </div>
+
+      <div style="padding:22px; overflow-y:auto; display:flex; flex-direction:column; gap:18px;">
+        <!-- En-tête métriques clés du revendeur -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px;">
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px; text-align:center;">
+            <span style="font-size:11px; color:#64748b; font-weight:700; text-transform:uppercase; display:block;">Remise accordée</span>
+            <strong id="rsCommissionRate" style="font-size:22px; color:#4f46e5; display:block; margin-top:4px;">20%</strong>
+            <small style="font-size:10.5px; color:#64748b;">(Taux convention revendeur)</small>
+          </div>
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px; text-align:center;">
+            <span style="font-size:11px; color:#64748b; font-weight:700; text-transform:uppercase; display:block;">Pièces déposées</span>
+            <strong id="rsTotalDeposited" style="font-size:22px; color:#0f172a; display:block; margin-top:4px;">0 ex.</strong>
+            <small style="font-size:10.5px; color:#64748b;">Stock total confié</small>
+          </div>
+          <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:10px; padding:12px; text-align:center;">
+            <span style="font-size:11px; color:#047857; font-weight:700; text-transform:uppercase; display:block;">Pièces vendues</span>
+            <strong id="rsTotalSold" style="font-size:22px; color:#059669; display:block; margin-top:4px;">0 ex.</strong>
+            <small style="font-size:10.5px; color:#059669;">Ventes comptabilisées</small>
+          </div>
+          <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:12px; text-align:center;">
+            <span style="font-size:11px; color:#1d4ed8; font-weight:700; text-transform:uppercase; display:block;">Net Graph2Print</span>
+            <strong id="rsNetG2P" style="font-size:22px; color:#2563eb; display:block; margin-top:4px;">0,00 €</strong>
+            <small style="font-size:10.5px; color:#2563eb;">À percevoir après remise</small>
+          </div>
+        </div>
+
+        <!-- Coordonnées & Convention -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px 18px; display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+          <div>
+            <strong style="font-size:12px; color:#475569; text-transform:uppercase;">Coordonnées de l'établissement</strong>
+            <p style="margin:6px 0 0 0; font-size:13px; color:#1e293b; line-height:1.5;">
+              Responsable : <strong id="rsContact">—</strong><br>
+              Téléphone : <strong id="rsPhone">—</strong><br>
+              Courriel : <span id="rsEmail" style="color:#4f46e5;">—</span><br>
+              Adresse : <span id="rsAddress">—</span>
+            </p>
+          </div>
+          <div>
+            <strong style="font-size:12px; color:#475569; text-transform:uppercase;">Thèmes & Convention</strong>
+            <p style="margin:6px 0 0 0; font-size:13px; color:#1e293b; line-height:1.5;">
+              Type : <strong id="rsPartnershipType">Dépôt-Vente Partenaire</strong><br>
+              Date convention : <span id="rsDateConvention">—</span><br>
+              Thèmes agréés : <span id="rsThemes" style="display:inline-flex; flex-wrap:wrap; gap:4px; margin-top:4px;"></span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Notes et accords négociés -->
+        <div>
+          <label style="font-size:12px; font-weight:700; color:#334155; display:block; margin-bottom:6px;">Accords spécifiques & Détails du partenariat :</label>
+          <textarea id="rsNotes" rows="2" style="width:100%; border:1px solid #cbd5e1; border-radius:8px; padding:8px 10px; font-size:12.5px; line-height:1.4; color:#1e293b; box-sizing:border-box; background:#f8fafc;"></textarea>
+        </div>
+
+        <!-- Tableau des pièces déposées chez ce revendeur -->
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <strong style="font-size:13px; color:#0f172a;">Inventaire détaillé des articles confiés (quantités modifiables en direct)</strong>
+            <button type="button" id="btnToggleAddDepositRow" class="admin-btn outline" style="font-size:11.5px; padding:3px 8px;">+ Déposer un article</button>
+          </div>
+
+          <!-- Ligne d'ajout rapide d'un article au dépôt (masquée par défaut) -->
+          <div id="quickAddDepositBox" style="display:none; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; padding:10px; margin-bottom:10px; gap:8px; align-items:center; flex-wrap:wrap;">
+            <input type="text" id="newDepProductName" placeholder="Nom de l'article (ex : Mug Givry 11oz)" style="flex:2; min-width:180px; padding:6px 8px; font-size:12px; border-radius:6px; border:1px solid #cbd5e1;" />
+            <input type="text" id="newDepTheme" placeholder="Thème / Modèle" style="flex:1; min-width:120px; padding:6px 8px; font-size:12px; border-radius:6px; border:1px solid #cbd5e1;" />
+            <input type="number" id="newDepQty" min="1" value="10" placeholder="Qté" style="width:60px; padding:6px 8px; font-size:12px; font-weight:700; text-align:center; border-radius:6px; border:1px solid #cbd5e1;" />
+            <input type="number" id="newDepPriceTTC" min="1" step="0.5" value="13" placeholder="Prix TTC" style="width:75px; padding:6px 8px; font-size:12px; font-weight:700; text-align:center; border-radius:6px; border:1px solid #cbd5e1;" />
+            <button type="button" id="btnConfirmAddDepositItem" class="admin-btn primary" style="font-size:11.5px; padding:6px 12px; background:#4f46e5;">Ajouter au dépôt</button>
+          </div>
+
+          <div class="admin-table-wrapper" style="max-height:260px; overflow-y:auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Article déposé</th>
+                  <th>Thème</th>
+                  <th style="text-align:center;">Qté Déposée</th>
+                  <th style="text-align:center;">Qté Vendue</th>
+                  <th style="text-align:center;">En rayon</th>
+                  <th style="text-align:right;">Prix Public TTC</th>
+                  <th style="text-align:right;">Net Graph2Print</th>
+                  <th style="text-align:center;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="rsItemsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#f8fafc; padding:14px 22px; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
+        <button type="button" id="closeResellerSheetBottomBtn" class="admin-btn outline">Fermer</button>
+        <button type="button" id="saveResellerSheetBtn" class="admin-btn primary" style="background:#059669; border-color:#059669;">Enregistrer les quantités & la fiche</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE : CRÉER UN NOUVEAU REVENDEUR PARTENAIRE -->
+  <div id="addResellerModal" class="admin-modal-overlay" style="display:none; position:fixed; inset:0; z-index:100030; background:rgba(15,23,42,0.78); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#ffffff; border-radius:14px; box-shadow:0 20px 45px rgba(0,0,0,0.3); max-width:540px; width:100%; border:1px solid #cbd5e1; overflow:hidden; display:flex; flex-direction:column;">
+      <div style="background:#1e1b4b; color:#ffffff; padding:16px 20px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#a5b4fc;">Nouveau Partenariat</span>
+          <h3 style="margin:2px 0 0 0; font-size:17px; color:#ffffff;">Ajouter un revendeur / dépôt</h3>
+        </div>
+        <button type="button" id="closeAddResellerBtn" style="background:transparent; border:0; color:#cbd5e1; font-size:20px; cursor:pointer; font-weight:700;">✕</button>
+      </div>
+      <form id="addResellerForm" style="padding:20px; display:flex; flex-direction:column; gap:12px;" onsubmit="return false;">
+        <label style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-weight:700; color:#334155;">
+          Nom de l'établissement / Enseigne *
+          <input type="text" id="newRsName" required placeholder="Ex : Carrefour Express, Le Five, Librairie…" style="padding:8px 10px; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;" />
+        </label>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <label style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-weight:700; color:#334155;">
+            Responsable / Contact
+            <input type="text" id="newRsContact" placeholder="Ex : M. Martin" style="padding:8px 10px; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;" />
+          </label>
+          <label style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-weight:700; color:#334155;">
+            Téléphone
+            <input type="text" id="newRsPhone" placeholder="Ex : 03 26 60 00 00" style="padding:8px 10px; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;" />
+          </label>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 120px; gap:10px;">
+          <label style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-weight:700; color:#334155;">
+            Adresse ou Ville
+            <input type="text" id="newRsAddress" placeholder="Ex : Givry-en-Argonne" style="padding:8px 10px; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;" />
+          </label>
+          <label style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-weight:700; color:#334155;">
+            Remise (%)
+            <input type="number" id="newRsCommission" min="0" max="100" value="20" style="padding:8px 10px; border-radius:6px; border:1px solid #cbd5e1; font-size:13px; font-weight:700; text-align:center;" />
+          </label>
+        </div>
+        <label style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-weight:700; color:#334155;">
+          Thèmes agréés (séparés par des virgules)
+          <input type="text" id="newRsThemes" placeholder="Ex : Givry, Argonne, Marne, Tourisme" style="padding:8px 10px; border-radius:6px; border:1px solid #cbd5e1; font-size:13px;" />
+        </label>
+        <label style="display:flex; flex-direction:column; gap:4px; font-size:12px; font-weight:700; color:#334155;">
+          Notes & Accords
+          <textarea id="newRsNotes" rows="2" placeholder="Accords particuliers, premier dépôt prévu…" style="padding:8px 10px; border-radius:6px; border:1px solid #cbd5e1; font-size:12.5px;"></textarea>
+        </label>
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+          <button type="button" id="cancelAddResellerBtn" class="admin-btn outline">Annuler</button>
+          <button type="button" id="confirmAddResellerBtn" class="admin-btn primary" style="background:#4f46e5;">Créer le revendeur</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

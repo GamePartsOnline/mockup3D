@@ -1,0 +1,148 @@
+{
+  "stores": [
+    {
+      "id": "store-carrefour-givry",
+      "name": "Carrefour Express (Givry-en-Argonne)",
+      "contact": "Gérance Magasin",
+      "phone": "03 26 60 12 34",
+      "email": "carrefour.givry@orange.fr",
+      "address": "Route Nationale, 51330 Givry-en-Argonne",
+      "commissionRate": 20,
+      "partnershipType": "Dépôt-Vente & Partenariat Local",
+      "themes": [
+        "Givry-en-Argonne",
+        "Argonne",
+        "Marne",
+        "Champagne"
+      ],
+      "dateConvention": "2026-11-01",
+      "notes": "Demande de partenariat : 10 mugs, 10 types de stickers ronds, porte-clés thématiques Givry, Marne, Champagne, Argonne. Remise partenaire accordée : 20%.",
+      "items": [
+        {
+          "id": "dep-cg-1",
+          "productKey": "mug11oz",
+          "productName": "Mug 11oz personnalisé - Givry & Argonne",
+          "category": "Mugs",
+          "theme": "Givry / Argonne / Marne / Champagne",
+          "qtyDeposited": 10,
+          "qtySold": 1,
+          "priceTTC": 13,
+          "resellerPriceTTC": 10.4,
+          "depositDate": "2026-11-01",
+          "status": "active"
+        },
+        {
+          "id": "dep-cg-2",
+          "productKey": "coasterRound",
+          "productName": "Stickers ronds vinyle (10 modèles thématiques)",
+          "category": "Stickers",
+          "theme": "Givry / Argonne / Champagne / Marne",
+          "qtyDeposited": 10,
+          "qtySold": 0,
+          "priceTTC": 4.5,
+          "resellerPriceTTC": 3.6,
+          "depositDate": "2026-11-01",
+          "status": "active"
+        },
+        {
+          "id": "dep-cg-3",
+          "productKey": "keychainRound",
+          "productName": "Porte-clés rond aluminium - Givry / Marne",
+          "category": "Porte-clés",
+          "theme": "Givry / Marne / Champagne",
+          "qtyDeposited": 12,
+          "qtySold": 0,
+          "priceTTC": 6,
+          "resellerPriceTTC": 4.8,
+          "depositDate": "2026-11-01",
+          "status": "active"
+        },
+        {
+          "id": "dep-cg-4",
+          "productKey": "keychainRect",
+          "productName": "Porte-clés rectangle métal - Argonne Sauvage",
+          "category": "Porte-clés",
+          "theme": "Argonne",
+          "qtyDeposited": 8,
+          "qtySold": 0,
+          "priceTTC": 6,
+          "resellerPriceTTC": 4.8,
+          "depositDate": "2026-11-01",
+          "status": "active"
+        }
+      ]
+    },
+    {
+      "id": "store-five-givry",
+      "name": "Le Five (Givry-en-Argonne)",
+      "contact": "Responsable Établissement",
+      "phone": "03 26 60 56 78",
+      "email": "contact@lefive-givry.fr",
+      "address": "Centre Sport & Loisirs, 51330 Givry-en-Argonne",
+      "commissionRate": 20,
+      "partnershipType": "Dépôt-Vente & Vitrine Touristique",
+      "themes": [
+        "Tourisme",
+        "Argonne",
+        "Marne",
+        "Givry-en-Argonne"
+      ],
+      "dateConvention": "2026-11-03",
+      "notes": "Demande de partenariat : 10 mugs (Touriste, Argonne, Marne, Givry), 2 tapis de souris, porte-clés, + 1 tapis de souris supplémentaire. Remise partenaire accordée : 20%.",
+      "items": [
+        {
+          "id": "dep-fg-1",
+          "productKey": "mug11oz",
+          "productName": "Mug Touristique Argonne & Givry",
+          "category": "Mugs",
+          "theme": "Touriste / Argonne / Marne / Givry",
+          "qtyDeposited": 10,
+          "qtySold": 0,
+          "priceTTC": 13,
+          "resellerPriceTTC": 10.4,
+          "depositDate": "2026-11-03",
+          "status": "active"
+        },
+        {
+          "id": "dep-fg-2",
+          "productKey": "mousePad",
+          "productName": "Tapis de souris bords cousus (Argonne Tourisme)",
+          "category": "Tapis de souris",
+          "theme": "Tourisme / Argonne",
+          "qtyDeposited": 2,
+          "qtySold": 0,
+          "priceTTC": 21,
+          "resellerPriceTTC": 16.8,
+          "depositDate": "2026-11-03",
+          "status": "active"
+        },
+        {
+          "id": "dep-fg-3",
+          "productKey": "mousePad",
+          "productName": "Tapis de souris standard Givry-en-Argonne",
+          "category": "Tapis de souris",
+          "theme": "Givry-en-Argonne",
+          "qtyDeposited": 1,
+          "qtySold": 0,
+          "priceTTC": 10,
+          "resellerPriceTTC": 8,
+          "depositDate": "2026-11-04",
+          "status": "active"
+        },
+        {
+          "id": "dep-fg-4",
+          "productKey": "keychainRound",
+          "productName": "Porte-clés métal souvenir - Le Five / Givry",
+          "category": "Porte-clés",
+          "theme": "Givry / Le Five",
+          "qtyDeposited": 10,
+          "qtySold": 0,
+          "priceTTC": 6,
+          "resellerPriceTTC": 4.8,
+          "depositDate": "2026-11-03",
+          "status": "active"
+        }
+      ]
+    }
+  ]
+}

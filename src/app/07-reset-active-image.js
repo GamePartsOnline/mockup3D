@@ -186,6 +186,30 @@ document.querySelector('#viewFaceB')?.addEventListener('click', () => {
   app.controls.update();
   app.showToast('Vue : Face B (Arrière)');
 });
+document.querySelector('#viewAngleFront')?.addEventListener('click', () => {
+  app.camera.up.set(0, 1, 0);
+  app.homeView();
+  app.camera.position.set(0, 0.4, 3.2);
+  app.controls.target.set(0, 0, 0);
+  app.controls.update();
+  app.showToast('Vue : Face Directe');
+});
+document.querySelector('#viewAngleSide')?.addEventListener('click', () => {
+  app.camera.up.set(0, 1, 0);
+  app.homeView();
+  app.camera.position.set(2.4, 1.2, 2.4);
+  app.controls.target.set(0, 0, 0);
+  app.controls.update();
+  app.showToast('Vue : Profil 3/4');
+});
+document.querySelector('#viewAngleTop')?.addEventListener('click', () => {
+  app.camera.up.set(0, 1, 0);
+  app.homeView();
+  app.camera.position.set(0, 3.6, 0.1);
+  app.controls.target.set(0, 0, 0);
+  app.controls.update();
+  app.showToast('Vue : Dessus');
+});
 document.querySelector('#zoomIn').onclick = () => { app.camera.position.multiplyScalar(.84); app.controls.update(); };
 document.querySelector('#zoomOut').onclick = () => { app.camera.position.multiplyScalar(1.16); app.controls.update(); };
 document.querySelector('#autoRotate').onchange = () => { app.controls.autoRotate = false; app.swingAngle = 0; app.swingDirection = 1; };

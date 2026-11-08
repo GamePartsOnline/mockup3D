@@ -37,9 +37,14 @@ export async function serveStatic(req, res, dist) {
   const payload = admin && html
     ? Buffer.from(data.toString('utf8').replace('<html lang="fr">', '<html lang="fr" data-mode="admin">'))
     : data;
-  res.writeHead(200, {
+  const headers = {
     'Content-Type': mime[path.extname(target)] || 'application/octet-stream',
-    'Cache-Control': html ? 'no-store' : 'public, max-age=3600'
-  });
+    'Cache-Control': html ? 'no-cache, no-store, must-revalidate, max-age=0' : 'public, max-age=3600'
+  };
+  if (html) {
+    headers['Pragma'] = 'no-cache';
+    headers['Expires'] = '0';
+  }
+  res.writeHead(200, headers);
   res.end(req.method === 'HEAD' ? undefined : payload);
 }

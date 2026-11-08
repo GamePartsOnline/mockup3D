@@ -125,11 +125,34 @@ app.executeSubmission = async function executeSubmission(clientData) {
       };
     });
 
-    const response = await fetch('/api/submissions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ product: app.productDefinitions?.[key]?.name || key, files, client: clientData, imagesInfo })
-    });
+    const payload = {
+      product: app.productDefinitions?.[key]?.name || key,
+      productKey: key,
+      quantity: clientData.quantity || 1,
+      unitPrice: clientData.unitPrice || '',
+      totalPrice: clientData.totalPrice || '',
+      files,
+      client: clientData,
+      imagesInfo,
+      offlineTimestamp: new Date().toISOString()
+    };
+
+    let response;
+    try {
+      response = await fetch('/api/submissions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch (networkErr) {
+      // Mode Stand Salon Hors-Ligne : stockage local dans le navigateur pour synchronisation ultérieure
+      const offlineOrders = JSON.parse(localStorage.getItem('mockup3d_stand_orders') || '[]');
+      offlineOrders.push(payload);
+      localStorage.setItem('mockup3d_stand_orders', JSON.stringify(offlineOrders));
+      app.showToast('Commande enregistrée hors-ligne (Mode Stand) ! Elle sera synchronisée au retour en ligne.');
+      return true;
+    }
+
     const result = await response.json();
     if (!response.ok || !result.ok) throw new Error(result.error || "L'envoi a échoué.");
     app.showToast(result.message || 'Votre création a été transmise à l’atelier Graph2Print.');

@@ -24,8 +24,8 @@ export const SHOWCASE_LAYOUT = [
   { key: 'tshirt3D', def: tshirt3DProduct, label: 'T-shirt 3D (A4 210×297 mm)', price: '20,00 €', pos: [-0.63, 0.517, -0.45], scale: 2.35, rot: [0, 0.12, 0], withStand: true },
   { key: 'cushion', def: cushionProduct, label: 'Housse de coussin (400×400×150 mm)', price: '17,00 €', pos: [0.80, 0.111, -0.45], scale: 0.50, rot: [0, -0.04, 0] },
   { key: 'photoFrame', def: photoFrameProduct, label: 'Poster A4 (Sans cadre)', price: '12,00 €', pos: [1.57, 0.001, -0.44], scale: 0.56, rot: [0, -0.18, 0] },
-  { key: 'cap', def: capProduct, label: 'Casquette 3D (Front 120×65 mm)', price: '15,00 €', pos: [2.21, 0.024, -0.45], scale: 0.30, rot: [0, -0.22, 0] },
-  { key: 'mug11oz', def: mug11ozProduct, label: 'Mug blanc 11 oz (Ø 82×95 mm)', price: '13,00 €', pos: [2.65, 0.001, -0.42], scale: 0.165, rot: [0, 2.70, 0] },
+  { key: 'cap', def: capProduct, label: 'Casquette 3D (Front 120×65 mm)', price: '15,00 €', pos: [2.08, 0.024, -0.45], scale: 0.30, rot: [0, -0.22, 0] },
+  { key: 'mug11oz', def: mug11ozProduct, label: 'Mug blanc 11 oz (Ø 82×95 mm)', price: '13,00 €', pos: [2.72, 0.001, -0.42], scale: 0.165, rot: [0, 2.70, 0] },
   // Rangée centrale : Puzzle, Tapis de souris, Trousse, Sous-verres
   { key: 'puzzle', def: puzzleProduct, label: 'Puzzle 120 pièces (280×195×2 mm)', price: '15,00 €', pos: [-0.63, 0.005, 0.32], scale: 0.25, rot: [0, 0.02, 0] },
   { key: 'mousePad', def: mousePadProduct, label: 'Tapis de souris (240×200×3 mm)', price: '10,00 €', pos: [0.27, 0.022, 0.32], scale: 0.2463, rot: [0, -0.02, 0] },
@@ -57,6 +57,7 @@ export const showcaseTableProduct = {
     for (const item of SHOWCASE_LAYOUT) {
       const sub = item.def.create();
       const wrapper = new THREE.Group();
+      wrapper.name = 'showcase_prod_' + item.key;
       wrapper.scale.setScalar(item.scale);
       wrapper.rotation.set(item.rot[0], item.rot[1], item.rot[2]);
       if (item.withStand) wrapper.add(createTshirtStand());
@@ -65,7 +66,20 @@ export const showcaseTableProduct = {
       const box = new THREE.Box3().setFromObject(wrapper);
       const exactY = item.wallMounted ? item.pos[1] : (!box.isEmpty() ? (item.floorY ?? 0.001) - box.min.y : item.pos[1]);
       wrapper.position.set(item.pos[0], exactY, item.pos[2]);
-      wrapper.userData = { showcaseProductKey: item.key, showcaseLabel: item.label, showcasePrice: item.price, baseScale: item.scale, baseY: exactY };
+      const currentPrice = app?.getProductPrice ? (app.getProductPrice(item.key) || item.price) : item.price;
+      const isActive = app?.isProductActive ? app.isProductActive(item.key) : true;
+      wrapper.visible = isActive;
+      wrapper.userData = {
+        showcaseProductKey: item.key,
+        showcaseLabel: item.label,
+        showcasePrice: currentPrice,
+        baseScale: item.scale,
+        baseX: item.pos[0],
+        baseY: exactY,
+        baseZ: item.pos[2],
+        wallMounted: !!item.wallMounted,
+        isFloor: !!item.floorY
+      };
       group.add(wrapper);
       subProducts.push({ key: item.key, sub, wrapper });
       interactiveWrappers.push(wrapper);

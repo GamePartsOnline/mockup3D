@@ -31,6 +31,10 @@ import * as feature28 from './app/30-mobile-studio.js';
 import * as feature29 from './app/31-image-studio-tools.js';
 import * as feature30 from './app/32-material-and-contact-sheet.js';
 import * as feature31 from './app/33-simple-panel-toggle.js';
+import * as feature32 from './app/34-products-config.js';
+import * as feature33 from './app/35-i18n.js';
+import * as feature34 from './app/36-admin-dashboard.js';
+import * as feature35 from './app/37-client-account.js';
 
 const app = { ...dependencies };
 if (typeof window !== 'undefined') window.app = app;
@@ -66,7 +70,11 @@ const features = [
   feature28,
   feature29,
   feature30,
-  feature31
+  feature31,
+  feature32,
+  feature33,
+  feature34,
+  feature35
 ];
 
 for (const feature of features) feature.register(app);

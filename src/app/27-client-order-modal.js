@@ -3,6 +3,12 @@ const STORAGE_KEY = 'mockup3d_client_coords';
 
 export function register(app) {
   app.openClientOrderModal = function openClientOrderModal() {
+    const curKey = app.currentProductKey;
+    const isAct = app.isProductActive ? app.isProductActive(curKey) : true;
+    if (!isAct) {
+      app.showToast('Cet article est actuellement désactivé et indisponible à la commande.');
+      return;
+    }
     const modal = document.querySelector('#clientOrderModal');
     if (!modal) return;
     const errBox = document.querySelector('#orderErrorMessage');
@@ -18,8 +24,35 @@ export function register(app) {
       if (saved.telephone) document.querySelector('#orderTelephone').value = saved.telephone;
     } catch {}
     app.updateOrderResolutionNotice?.();
+    const prevImg = document.querySelector('#orderBatPreviewImg');
+    const prevName = document.querySelector('#orderBatProductName');
+    const prevPrice = document.querySelector('#orderBatProductPrice');
+    if (prevImg && app.renderer?.domElement) {
+      prevImg.src = app.renderer.domElement.toDataURL('image/png');
+    }
+    if (prevName) {
+      prevName.textContent = app.product?.name || document.querySelector('#simpleProductName')?.textContent || 'Objet personnalisé';
+    }
+    if (prevPrice) {
+      prevPrice.textContent = (app.getProductPrice && app.getProductPrice(app.currentProductKey)) || document.querySelector('#simpleProductPrice')?.textContent || '';
+    }
+    const qtyInput = document.querySelector('#orderQuantity');
+    if (qtyInput) qtyInput.value = '1';
+    app.updateOrderTotalCalc?.();
     modal.hidden = false;
     setTimeout(() => document.querySelector('#orderNom')?.focus(), 50);
+  };
+
+  app.updateOrderTotalCalc = function() {
+    const qtyInput = document.querySelector('#orderQuantity');
+    const totalEl = document.querySelector('#orderTotalCalculatedPrice');
+    const prevPriceEl = document.querySelector('#orderBatProductPrice');
+    if (!qtyInput || !totalEl) return;
+    const qty = Math.max(1, parseInt(qtyInput.value || '1', 10));
+    const priceText = prevPriceEl?.textContent || '17,00 €';
+    const num = parseFloat(priceText.replace(',', '.').replace(/[^0-9.]/g, '')) || 17.0;
+    const total = (num * qty).toFixed(2).replace('.', ',');
+    totalEl.textContent = `${total} €`;
   };
 
   app.closeClientOrderModal = function closeClientOrderModal() {
@@ -37,6 +70,10 @@ function getFormData() {
   const email = (document.querySelector('#orderEmail')?.value || '').trim().toLowerCase();
   const telephone = (document.querySelector('#orderTelephone')?.value || '').trim();
   const note = (document.querySelector('#orderNote')?.value || '').trim();
+  const quantity = Math.max(1, parseInt(document.querySelector('#orderQuantity')?.value || '1', 10));
+  const unitPrice = document.querySelector('#orderBatProductPrice')?.textContent || '';
+  const totalPrice = document.querySelector('#orderTotalCalculatedPrice')?.textContent || '';
+  const productName = document.querySelector('#orderBatProductName')?.textContent || '';
 
   if (!nom) return { error: 'Veuillez saisir votre nom.' };
   if (!prenom) return { error: 'Veuillez saisir votre prénom.' };
@@ -53,8 +90,13 @@ function getFormData() {
   if (acceptCgv && !acceptCgv.checked) {
     return { error: 'Veuillez accepter les Conditions Générales de Vente pour valider votre commande.' };
   }
+  const curKey = app.currentProductKey;
+  const isAct = app.isProductActive ? app.isProductActive(curKey) : true;
+  if (!isAct) {
+    return { error: 'Cet article est actuellement désactivé et ne peut pas être commandé.' };
+  }
   return {
-    data: { nom, prenom, adresse, codePostal, ville, email, telephone, note }
+    data: { nom, prenom, adresse, codePostal, ville, email, telephone, note, quantity, unitPrice, totalPrice, productName }
   };
 }
 
@@ -70,6 +112,29 @@ export function initialize(app) {
   cancelBtn?.addEventListener('click', close);
   modal?.addEventListener('click', (e) => {
     if (e.target === modal) close();
+  });
+
+  const qtyInput = document.querySelector('#orderQuantity');
+  const btnDec = document.querySelector('#btnOrderQtyDec');
+  const btnInc = document.querySelector('#btnOrderQtyInc');
+
+  btnDec?.addEventListener('click', () => {
+    if (!qtyInput) return;
+    const cur = Math.max(1, parseInt(qtyInput.value || '1', 10) - 1);
+    qtyInput.value = String(cur);
+    app.updateOrderTotalCalc?.();
+  });
+
+  btnInc?.addEventListener('click', () => {
+    if (!qtyInput) return;
+    const cur = parseInt(qtyInput.value || '1', 10) + 1;
+    qtyInput.value = String(cur);
+    app.updateOrderTotalCalc?.();
+  });
+
+  qtyInput?.addEventListener('input', () => {
+    if (parseInt(qtyInput.value, 10) < 1) qtyInput.value = '1';
+    app.updateOrderTotalCalc?.();
   });
 
   const cgvModal = document.querySelector('#cgvModal');

@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Animaux",
+    "subs": [
+      "Cerf",
+      "Chats",
+      "Chiens",
+      "Girafe",
+      "Licorne"
+    ]
+  },
+  {
+    "name": "Arcades",
+    "subs": []
+  },
+  {
+    "name": "Callisto Arts",
+    "subs": []
+  },
+  {
+    "name": "Dessins animés",
+    "subs": []
+  },
+  {
+    "name": "Fantaisie",
+    "subs": [
+      "Fées"
+    ]
+  },
+  {
+    "name": "Films",
+    "subs": []
+  },
+  {
+    "name": "Fleurs",
+    "subs": []
+  },
+  {
+    "name": "Humour",
+    "subs": []
+  },
+  {
+    "name": "Illustrations",
+    "subs": []
+  },
+  {
+    "name": "Logos",
+    "subs": []
+  },
+  {
+    "name": "Motifs",
+    "subs": []
+  },
+  {
+    "name": "Noël",
+    "subs": []
+  },
+  {
+    "name": "Nouveau",
+    "subs": []
+  }
+]

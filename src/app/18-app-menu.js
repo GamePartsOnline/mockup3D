@@ -55,6 +55,9 @@ export function initialize(app) {
         if (c.name === 'christmasDecorGroup') {
           c.visible = !!enabled;
         }
+        if (c.name === 'monsteraPlantGroup') {
+          c.visible = !enabled; // Le sapin remplace la plante
+        }
       });
     }
     const adminBox = document.querySelector('#adminNoelDecorToggle');
@@ -115,7 +118,10 @@ export function initialize(app) {
 
   const resetHoveredWrapper = () => {
     if (hoveredWrapper) {
-      hoveredWrapper.scale.setScalar(hoveredWrapper.userData.baseScale);
+      hoveredWrapper.scale.setScalar(hoveredWrapper.userData.baseScale || 1);
+      if (hoveredWrapper.userData?.isBusinessCard) {
+        hoveredWrapper.position.y = 0.003;
+      }
       hoveredWrapper = null;
     }
     if (tooltip) tooltip.hidden = true;
@@ -128,10 +134,12 @@ export function initialize(app) {
     app.mouseVec.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     app.mouseVec.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
     app.raycaster.setFromCamera(app.mouseVec, app.camera);
-    const hits = app.raycaster.intersectObjects(app.product.interactiveWrappers, true);
+    const visibleWrappers = app.product.interactiveWrappers.filter(w => w.visible !== false && (!w.userData?.showcaseProductKey || (app.isProductActive ? app.isProductActive(w.userData.showcaseProductKey) : true)));
+    const hits = app.raycaster.intersectObjects(visibleWrappers, true);
     if (!hits.length) return null;
     let obj = hits[0].object;
     while (obj && !obj.userData?.showcaseProductKey) obj = obj.parent;
+    if (obj && obj.visible === false) return null;
     return obj || null;
   };
 
@@ -145,7 +153,11 @@ export function initialize(app) {
       resetHoveredWrapper();
       if (wrapper) {
         hoveredWrapper = wrapper;
-        wrapper.scale.setScalar(wrapper.userData.baseScale * 1.04);
+        const hoverScale = wrapper.userData?.isBusinessCard ? 1.45 : 1.04;
+        wrapper.scale.setScalar((wrapper.userData.baseScale || 1) * hoverScale);
+        if (wrapper.userData?.isBusinessCard) {
+          wrapper.position.y = 0.025;
+        }
       }
     }
     if (wrapper && tooltip) {

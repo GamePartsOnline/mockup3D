@@ -1,0 +1,3240 @@
+[
+  {
+    "id": "visuel-1794096910284-omk2",
+    "name": "10 30 V01",
+    "url": "/visuels/10-30-V01-mw72z7qn.jpg",
+    "category": "Humour",
+    "categories": [
+      "Humour"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "pending",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794094541386-18xja",
+    "name": "2026 10 30 capture V01",
+    "url": "/visuels/2026-10-30-capture-V01-mw71kfxe.png",
+    "category": "Amour",
+    "categories": [
+      "Amour"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:35:41.386Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794094541391-p7odv",
+    "name": "2026 10 30 mug11oz V01",
+    "url": "/visuels/2026-10-30-mug11oz-V01-mw71kfxa.png",
+    "category": "Amour",
+    "categories": [
+      "Amour"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:35:41.391Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794094541395-o7z6a",
+    "name": "2026 10 30 pngtreeheart V01",
+    "url": "/visuels/2026-10-30-pngtreeheart-V01-mw71kfx5.png",
+    "category": "Amour",
+    "categories": [
+      "Amour"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:35:41.395Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1793179083449-4nhf",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwj00j.jpg",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793114254019-oawk",
+    "name": "Cerf Polygonal (Art)",
+    "url": "/visuels/JPG-mvqtxhcx.jpg",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Cerf",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793179275589-f4ua",
+    "name": "Trois Chats Curieux",
+    "url": "/visuels/Visuel-mvrwn49q.jpg",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Chats",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cap",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1794084106828-zcstx",
+    "name": "Elephant Mug  (1)",
+    "url": "/visuels/Elephant-Mug-1-mw6vcsp5.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794084106839-um97g",
+    "name": "Elephant Mug  (2)",
+    "url": "/visuels/Elephant-Mug-2-mw6vcsp1.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794084106850-p66v6",
+    "name": "Elephant Mug  (3)",
+    "url": "/visuels/Elephant-Mug-3-mw6vcsox.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794084106865-5ngj2",
+    "name": "Elephant Mug  (4)",
+    "url": "/visuels/Elephant-Mug-4-mw6vcsor.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794084106877-dnky7",
+    "name": "Elephant Mug  (5)",
+    "url": "/visuels/Elephant-Mug-5-mw6vcsol.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794085027760-k6m2o",
+    "name": "Elephant Mug  (6)",
+    "url": "/visuels/Elephant-Mug-6-mw6vwjbg.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794085027769-2phxe",
+    "name": "Elephant Mug  (7)",
+    "url": "/visuels/Elephant-Mug-7-mw6vwjb9.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794085027783-rrd0y",
+    "name": "Elephant Mug  (8)",
+    "url": "/visuels/Elephant-Mug-8-mw6vwjb4.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794085027793-6aqre",
+    "name": "Elephant Mug  (9)",
+    "url": "/visuels/Elephant-Mug-9-mw6vwjax.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794085027802-g7v05",
+    "name": "Elephant Mug  (10)",
+    "url": "/visuels/Elephant-Mug-10-mw6vwjam.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794085210716-h7qav",
+    "name": "Elephant Mug  (11)",
+    "url": "/visuels/Elephant-Mug-11-mw6w0gkp.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794085210723-yl74a",
+    "name": "Elephant Mug  (12)",
+    "url": "/visuels/Elephant-Mug-12-mw6w0gkh.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794085210728-fv0h4",
+    "name": "Elephant Mug  (13)",
+    "url": "/visuels/Elephant-Mug-13-mw6w0gke.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794085210736-jnzsh",
+    "name": "Elephant Mug  (14)",
+    "url": "/visuels/Elephant-Mug-14-mw6w0gk8.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794085210743-gatvu",
+    "name": "Elephant Mug  (15)",
+    "url": "/visuels/Elephant-Mug-15-mw6w0gk4.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794085210753-zy35x",
+    "name": "Elephant Mug  (16)",
+    "url": "/visuels/Elephant-Mug-16-mw6w0gk1.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794085210760-7j6sh",
+    "name": "Elephant Mug  (17)",
+    "url": "/visuels/Elephant-Mug-17-mw6w0gjv.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794085210767-2smjl",
+    "name": "Elephant Mug  (18)",
+    "url": "/visuels/Elephant-Mug-18-mw6w0gjq.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794085210772-f26td",
+    "name": "Elephant Mug  (19)",
+    "url": "/visuels/Elephant-Mug-19-mw6w0gjn.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Elephant",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794090040348-2ubdt",
+    "name": "A12 240122 01",
+    "url": "/visuels/A12-240122-01-mw6yvz6x.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Lapin",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T22:20:40.348Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794090040369-ec928",
+    "name": "A12 240122 02",
+    "url": "/visuels/A12-240122-02-mw6yvz6p.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Lapin",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T22:20:40.369Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794090040384-2o9au",
+    "name": "A12 240122 03",
+    "url": "/visuels/A12-240122-03-mw6yvz6i.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Lapin",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T22:20:40.384Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794090040403-ktid4",
+    "name": "A12 240122 04",
+    "url": "/visuels/A12-240122-04-mw6yvz68.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Lapin",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T22:20:40.403Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794090040418-8f9e6",
+    "name": "A12 240122 05",
+    "url": "/visuels/A12-240122-05-mw6yvz60.png",
+    "category": "Animaux",
+    "categories": [
+      "Animaux"
+    ],
+    "subcategory": "Lapin",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T22:20:40.418Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1793179083450-m3z4",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwj00i.jpg",
+    "category": "Arcades",
+    "categories": [
+      "Arcades"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "arcadeCabinet"
+    ]
+  },
+  {
+    "id": "pending-1793176512829-0o1h",
+    "name": "57d2.342051_4000",
+    "url": "/visuels/57d2-342051_4000-mvruzwhl.jpg",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "pending-1793173527840-6wjp",
+    "name": "Baleine Abyssale & Plongeur",
+    "url": "/visuels/2fb0-356160_ori_2000-mvrt7x95.jpg",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "pending-1793173729314-lg57",
+    "name": "Between Dream and Reality",
+    "url": "/visuels/d55f-332511-mvrtc8pt.jpg",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "pending-1793173729288-n4ys",
+    "name": "Callisto & Bus Error Prod",
+    "url": "/visuels/Callisto-and-bus-error-prod-mvrtc8p2.jpg",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "pending-1793173729251-odbi",
+    "name": "Cité Futuriste & Silhouette",
+    "url": "/visuels/7398-316044-mvrtc8o0.png",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "pending-1793173728180-lq0x",
+    "name": "Cyber City Baie Spatiale",
+    "url": "/visuels/10f4-335214_4000-mvrtc7u9.jpg",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "pending-1793173729197-ik9h",
+    "name": "Épave & Sirène Callisto",
+    "url": "/visuels/2492-264277-mvrtc8mk.jpg",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "pending-1793173729182-a43f",
+    "name": "Grand Requin Blanc",
+    "url": "/visuels/806e-301826-mvrtc8m4.jpg",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "pending-1793173729392-j82o",
+    "name": "Inercia - Remorquage Planeur",
+    "url": "/visuels/ff62-371716-mvrtc8rz.jpg",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "pending-1793173528169-bs1o",
+    "name": "Lémurien en Plein Vol",
+    "url": "/visuels/6ca3-359230-1-mvrt7xie.jpg",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "pending-1793173729269-8b7s",
+    "name": "Mygale Rouge Sang",
+    "url": "/visuels/b2c6-287706_2000-mvrtc8oj.jpg",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "pending-1793173728305-im5l",
+    "name": "Nuit Japonaise & Papillons",
+    "url": "/visuels/91ca-325483-mvrtc7xq.jpg",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "pending-1793173728353-soba",
+    "name": "Œil de Félin & Tour Eiffel",
+    "url": "/visuels/139d-pl187446_2000-mvrtc7z1.jpg",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "pending-1793173729359-tm7i",
+    "name": "Panda dans la Forêt d'Émeraudes",
+    "url": "/visuels/f750-292269-mvrtc8r2.jpg",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "pending-1793173729335-fplq",
+    "name": "Poissons Tropicaux Coraux",
+    "url": "/visuels/e0c2-132516-mvrtc8qd.jpg",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "pending-1793173729413-t8fa",
+    "name": "Resolution Demoscene",
+    "url": "/visuels/Re_soul_tion-1920x1080-mvrtc8sj.jpg",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "pending-1793173728141-nen6",
+    "name": "Shadow Party Space Mission",
+    "url": "/visuels/010d-307657-mvrtc7t7.jpg",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "pending-1793173728264-gutk",
+    "name": "Souris au Clair de Lune",
+    "url": "/visuels/57d2-342051_4000-mvrtc7wh.jpg",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "pending-1793173728200-mqpo",
+    "name": "Fée & Licornes Ailées",
+    "url": "/visuels/25aa-264370-mvrtc7uu.jpg",
+    "category": "Callisto Arts",
+    "categories": [
+      "Callisto Arts"
+    ],
+    "subcategory": "Licorne",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793179083451-gixg",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwj00g.jpg",
+    "category": "Dessin animés",
+    "categories": [
+      "Dessin animés"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793179275583-4ts0",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwn49x.jpg",
+    "category": "Dessin animés",
+    "categories": [
+      "Dessin animés"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793179275588-6m1d",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwn49r.jpg",
+    "category": "Dessin animés",
+    "categories": [
+      "Dessin animés"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793179275586-gazw",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwn49t.jpg",
+    "category": "Dessin animés",
+    "categories": [
+      "Dessin animés"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793179275585-eocn",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwn49u.jpg",
+    "category": "Dessin animés",
+    "categories": [
+      "Dessin animés"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793179275584-9av7",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwn49v.jpg",
+    "category": "Dessin animés",
+    "categories": [
+      "Dessin animés"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793179083447-fiwe",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwj00l.jpg",
+    "category": "Dessin animés",
+    "categories": [
+      "Dessin animés"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793181632086-dr97",
+    "name": "Taz",
+    "url": "/visuels/Visuel-mvry1mkt.jpg",
+    "category": "Dessins animés",
+    "categories": [
+      "Dessins animés"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1794095886276-er6ai",
+    "name": "1351428",
+    "url": "/visuels/1351428-mw72da8t.png",
+    "category": "Espace",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.276Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886311-nibh4",
+    "name": "1402399",
+    "url": "/visuels/1402399-mw72da7t.png",
+    "category": "Espace",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.311Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1793181632099-pemc",
+    "name": "Fée",
+    "url": "/visuels/Visuel-mvry1mke.jpg",
+    "category": "Fantaisie",
+    "categories": [
+      "Fantaisie"
+    ],
+    "subcategory": "Fées",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793114488723-r26f",
+    "name": "Licorne Magique (3)",
+    "url": "/visuels/UNICORN-MUG-3-mvqu2iln.png",
+    "category": "Fantaisie",
+    "categories": [
+      "Fantaisie"
+    ],
+    "subcategory": "Licorne",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793114488734-34sl",
+    "name": "Licorne Magique (4)",
+    "url": "/visuels/UNICORN-MUG-4-mvqu2ilj.png",
+    "category": "Fantaisie",
+    "categories": [
+      "Fantaisie"
+    ],
+    "subcategory": "Licorne",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793114488742-o5n6",
+    "name": "Licorne Magique (5)",
+    "url": "/visuels/UNICORN-MUG-5-mvqu2ild.png",
+    "category": "Fantaisie",
+    "categories": [
+      "Fantaisie"
+    ],
+    "subcategory": "Licorne",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793114488752-003k",
+    "name": "Licorne Magique (6)",
+    "url": "/visuels/UNICORN-MUG-6-mvqu2il7.png",
+    "category": "Fantaisie",
+    "categories": [
+      "Fantaisie"
+    ],
+    "subcategory": "Licorne",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793114488760-ahfn",
+    "name": "Licorne Magique (8)",
+    "url": "/visuels/UNICORN-MUG-8-mvqu2il3.png",
+    "category": "Fantaisie",
+    "categories": [
+      "Fantaisie"
+    ],
+    "subcategory": "Licorne",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793114488768-y6eb",
+    "name": "Licorne Magique (9)",
+    "url": "/visuels/UNICORN-MUG-9-mvqu2iks.png",
+    "category": "Fantaisie",
+    "categories": [
+      "Fantaisie"
+    ],
+    "subcategory": "Licorne",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793181632087-ilvx",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvry1mks.jpg",
+    "category": "Films",
+    "categories": [
+      "Films"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "coaster",
+      "coasterRound",
+      "mousePad",
+      "keychainRect",
+      "keychainRound",
+      "keychainHeart",
+      "eventWristband"
+    ]
+  },
+  {
+    "id": "visuel-1793117214065-gc4g",
+    "name": "Floral Pastel",
+    "url": "/visuels/Flower-mug-1-mvqvoxgy.png",
+    "category": "Fleurs",
+    "categories": [
+      "Fleurs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793117214096-gmkb",
+    "name": "Floral Pastel (4)",
+    "url": "/visuels/Flower-mug-4-mvqvoxgn.png",
+    "category": "Fleurs",
+    "categories": [
+      "Fleurs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793117214107-n0xh",
+    "name": "Floral Pastel (5)",
+    "url": "/visuels/Flower-mug-5-mvqvoxgh.png",
+    "category": "Fleurs",
+    "categories": [
+      "Fleurs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793117214114-6lvo",
+    "name": "Floral Pastel (6)",
+    "url": "/visuels/Flower-mug-6-mvqvoxgc.png",
+    "category": "Fleurs",
+    "categories": [
+      "Fleurs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793179083451-g89u",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvrwj00e.jpg",
+    "category": "humour",
+    "categories": [
+      "humour"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1794096910293-tb9l",
+    "name": "10 30 V01",
+    "url": "/visuels/10-30-V01-mw72z7qd.jpg",
+    "category": "Humour",
+    "categories": [
+      "Humour"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794096910293-fek2",
+    "name": "10 30 V01",
+    "url": "/visuels/10-30-V01-mw72z7qe.jpg",
+    "category": "Humour",
+    "categories": [
+      "Humour"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794096910292-jrzz",
+    "name": "10 30 V01",
+    "url": "/visuels/10-30-V01-mw72z7qg.jpg",
+    "category": "Humour",
+    "categories": [
+      "Humour"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794096910291-okjg",
+    "name": "10 30 V01",
+    "url": "/visuels/10-30-V01-mw72z7qi.jpg",
+    "category": "Humour",
+    "categories": [
+      "Humour"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794096910290-s7oh",
+    "name": "10 30 V01",
+    "url": "/visuels/10-30-V01-mw72z7qk.jpg",
+    "category": "Humour",
+    "categories": [
+      "Humour"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794096910286-yf0m",
+    "name": "10 30 V01",
+    "url": "/visuels/10-30-V01-mw72z7ql.jpg",
+    "category": "Humour",
+    "categories": [
+      "Humour"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794096910285-o0c2",
+    "name": "10 30 V01",
+    "url": "/visuels/10-30-V01-mw72z7qm.jpg",
+    "category": "Humour",
+    "categories": [
+      "Humour"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1793181632096-86mq",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvry1mkk.jpg",
+    "category": "Humour",
+    "categories": [
+      "Humour"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793173123569-6lci",
+    "name": "Logo Graph2Print",
+    "url": "/visuels/logo-Graph-2-print-mvrsz9bs.png",
+    "category": "Logos",
+    "categories": [
+      "Logos"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093149455-7z26z",
+    "name": "2",
+    "url": "/visuels/2-mw70qlvr.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:12:29.455Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093999858-peefe",
+    "name": "6",
+    "url": "/visuels/6-mw718ueq.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:39.858Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093999869-khssl",
+    "name": "10",
+    "url": "/visuels/10-mw718uel.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:39.869Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093999881-w4rx2",
+    "name": "11",
+    "url": "/visuels/11-mw718uei.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:39.881Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093999892-wro9t",
+    "name": "12",
+    "url": "/visuels/12-mw718uef.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:39.892Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093999903-t8p7c",
+    "name": "13",
+    "url": "/visuels/13-mw718ueb.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:39.903Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093999915-91cmu",
+    "name": "14",
+    "url": "/visuels/14-mw718ue8.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:39.915Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093999926-h8b1o",
+    "name": "15",
+    "url": "/visuels/15-mw718ue2.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:39.926Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093981832-u9lo1",
+    "name": "16",
+    "url": "/visuels/16-mw718gc1.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:21.832Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093981841-sai9p",
+    "name": "17",
+    "url": "/visuels/17-mw718gbv.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:21.841Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093981851-szph9",
+    "name": "18",
+    "url": "/visuels/18-mw718gbn.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:21.851Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093981862-ew6n0",
+    "name": "19",
+    "url": "/visuels/19-mw718gbc.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:21.862Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093964341-aq325",
+    "name": "21",
+    "url": "/visuels/21-mw718338.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:04.341Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093964352-jarn6",
+    "name": "22",
+    "url": "/visuels/22-mw718330.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:04.352Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093964363-7iuq4",
+    "name": "23",
+    "url": "/visuels/23-mw71832u.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:04.363Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093964373-q03wc",
+    "name": "24",
+    "url": "/visuels/24-mw71832m.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:04.373Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093964384-w4f8e",
+    "name": "25",
+    "url": "/visuels/25-mw71832e.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:04.384Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093964396-8t25s",
+    "name": "26",
+    "url": "/visuels/26-mw718327.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:04.396Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093964408-q14r5",
+    "name": "27",
+    "url": "/visuels/27-mw718320.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:04.408Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093964420-6rcpd",
+    "name": "28",
+    "url": "/visuels/28-mw71831x.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:04.420Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093964431-6p96p",
+    "name": "29",
+    "url": "/visuels/29-mw71831u.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:04.431Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093964443-nxfw9",
+    "name": "30",
+    "url": "/visuels/30-mw71831q.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:26:04.443Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093945087-kt0sh",
+    "name": "31",
+    "url": "/visuels/31-mw717nzy.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:25:45.087Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093945098-fhigq",
+    "name": "32",
+    "url": "/visuels/32-mw717nzp.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:25:45.098Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093945108-qvfgd",
+    "name": "33",
+    "url": "/visuels/33-mw717nzj.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:25:45.108Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093945117-866xo",
+    "name": "34",
+    "url": "/visuels/34-mw717nzc.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:25:45.117Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093945127-2q6rx",
+    "name": "35",
+    "url": "/visuels/35-mw717nz3.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:25:45.127Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093913503-4yoro",
+    "name": "36",
+    "url": "/visuels/36-mw716zmo.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:25:13.503Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093913512-bmq8i",
+    "name": "37",
+    "url": "/visuels/37-mw716zmh.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:25:13.512Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093913523-mpulb",
+    "name": "38",
+    "url": "/visuels/38-mw716zmb.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:25:13.523Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093913532-3bvbj",
+    "name": "39",
+    "url": "/visuels/39-mw716zm4.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:25:13.533Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093913542-91drg",
+    "name": "40",
+    "url": "/visuels/40-mw716zlw.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:25:13.542Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093898643-n4y04",
+    "name": "41",
+    "url": "/visuels/41-mw716o6h.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:24:58.644Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093898655-xh3d8",
+    "name": "42",
+    "url": "/visuels/42-mw716o6b.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:24:58.655Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093898665-b8hju",
+    "name": "43",
+    "url": "/visuels/43-mw716o63.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:24:58.665Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093898674-1fwhl",
+    "name": "44",
+    "url": "/visuels/44-mw716o5w.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:24:58.674Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093898685-srxft",
+    "name": "45",
+    "url": "/visuels/45-mw716o5o.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:24:58.685Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093774427-otbhd",
+    "name": "46",
+    "url": "/visuels/46-mw7140c2.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:22:54.427Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093774436-qpf0x",
+    "name": "47",
+    "url": "/visuels/47-mw7140bu.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:22:54.436Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093774446-45gy0",
+    "name": "48",
+    "url": "/visuels/48-mw7140bn.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:22:54.446Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093774458-dov1b",
+    "name": "49",
+    "url": "/visuels/49-mw7140bh.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:22:54.458Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794093774467-e96p0",
+    "name": "50",
+    "url": "/visuels/50-mw7140b2.png",
+    "category": "Murs",
+    "categories": [
+      "Murs"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:22:54.467Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1793181574469-38du",
+    "name": "Noel 02",
+    "url": "/visuels/Pngtree-Ribbon-Christmas-Ball-Christmas-Decorative-mvry0e3o.png",
+    "category": "Noel",
+    "categories": [
+      "Noel"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793181632097-s352",
+    "name": "Noel 03",
+    "url": "/visuels/Visuel-mvry1mkj.jpg",
+    "category": "Noel",
+    "categories": [
+      "Noel"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793181632099-issz",
+    "name": "Noel 04",
+    "url": "/visuels/Visuel-mvry1mki.jpg",
+    "category": "Noel",
+    "categories": [
+      "Noel"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1794095057566-8usm9",
+    "name": "Lutins 01",
+    "url": "/visuels/Lutins-01-mw71vi9v.png",
+    "category": "Noël",
+    "categories": [
+      "Noël"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:44:17.566Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095057571-ihe1f",
+    "name": "Lutins 02",
+    "url": "/visuels/Lutins-02-mw71vi9s.png",
+    "category": "Noël",
+    "categories": [
+      "Noël"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:44:17.571Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095057576-uxn5q",
+    "name": "Lutins 03",
+    "url": "/visuels/Lutins-03-mw71vi9n.png",
+    "category": "Noël",
+    "categories": [
+      "Noël"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:44:17.576Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095057581-jld2w",
+    "name": "Lutins 04",
+    "url": "/visuels/Lutins-04-mw71vi9k.png",
+    "category": "Noël",
+    "categories": [
+      "Noël"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:44:17.581Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095057586-7bxpt",
+    "name": "Lutins 05",
+    "url": "/visuels/Lutins-05-mw71vi9f.png",
+    "category": "Noël",
+    "categories": [
+      "Noël"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:44:17.586Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095057590-w9otr",
+    "name": "Lutins 06",
+    "url": "/visuels/Lutins-06-mw71vi9b.png",
+    "category": "Noël",
+    "categories": [
+      "Noël"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:44:17.590Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1793967353750-fq7p",
+    "name": "MUG NOEL 01",
+    "url": "/visuels/MUG-NOEL-01-mw4xudkg.png",
+    "category": "Noël",
+    "categories": [
+      "Noël"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793967353762-v4n8",
+    "name": "MUG NOEL 02",
+    "url": "/visuels/MUG-NOEL-02-mw4xudke.png",
+    "category": "Noël",
+    "categories": [
+      "Noël"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793967353789-sloh",
+    "name": "MUG NOEL 05",
+    "url": "/visuels/MUG-NOEL-05-mw4xudk0.png",
+    "category": "Noël",
+    "categories": [
+      "Noël"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793967353801-hd64",
+    "name": "MUG NOEL 06",
+    "url": "/visuels/MUG-NOEL-06-mw4xudjx.png",
+    "category": "Noël",
+    "categories": [
+      "Noël"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793967353813-da5w",
+    "name": "MUG NOEL 07",
+    "url": "/visuels/MUG-NOEL-07-mw4xudjr.png",
+    "category": "Noël",
+    "categories": [
+      "Noël"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793967353828-yibc",
+    "name": "MUG NOEL 08",
+    "url": "/visuels/MUG-NOEL-08-mw4xudjn.png",
+    "category": "Noël",
+    "categories": [
+      "Noël"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793967353840-dn1x",
+    "name": "MUG NOEL 09",
+    "url": "/visuels/MUG-NOEL-09-mw4xudji.png",
+    "category": "Noël",
+    "categories": [
+      "Noël"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793114254031-b0yj",
+    "name": "Valentine Pig",
+    "url": "/visuels/Valentine-pig-2-mvqtxhcp.png",
+    "category": "Noël",
+    "categories": [
+      "Noël"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1793181632095-5y2t",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvry1mkn.jpg",
+    "category": "Noël",
+    "categories": [
+      "Noël"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz",
+      "tshirt3D",
+      "cushion",
+      "poster",
+      "photoFrame",
+      "puzzle",
+      "coaster",
+      "coasterRound",
+      "mousePad"
+    ]
+  },
+  {
+    "id": "visuel-1793181632094-8kp0",
+    "name": "Visuel",
+    "url": "/visuels/Visuel-mvry1mkq.jpg",
+    "category": "Noël",
+    "categories": [
+      "Noël"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": false,
+    "dateAdded": null,
+    "compatibleProducts": [
+      "mug11oz"
+    ]
+  },
+  {
+    "id": "visuel-1794095886315-kasvp",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156266541 1",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da7s.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.315Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886323-ltgro",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156266789 2",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da7q.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.323Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886326-myawc",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156266867 3",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da7o.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.326Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886329-r15yh",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156266902 4",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da7m.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.329Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886331-gr8tw",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156267014 5",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da7k.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.331Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886333-x5pd1",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156267096 6",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da7j.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.333Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886334-1kh2p",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156267208 7",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da7i.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.334Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886335-83uf8",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156267303 8",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da7g.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.335Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886336-yiklm",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156267367 9",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da7f.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.336Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886338-mzzfr",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156267450 10",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da7e.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.338Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886340-thu5x",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156577937 12",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da7d.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.340Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886342-m5ynw",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156578133 13",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da7c.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.342Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886350-z7yyl",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156578264 14",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da7b.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.350Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886352-rwt4l",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156578343 15",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da7a.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.352Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886354-ddena",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156578420 16",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da78.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.354Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886355-ey2e0",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156578488 17",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da76.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.355Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886356-061u1",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156578545 18",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da74.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.356Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886357-1oxoq",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156578621 19",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da72.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.357Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886357-2a1d3",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156578718 20",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da71.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.357Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886358-trcil",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156727362 21",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da6z.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.358Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886359-mpwpv",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156727501 22",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da6x.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.359Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886359-0tbpe",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156727613 23",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da6w.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.359Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886360-u0y66",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156727693 24",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da6v.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.360Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886361-iezto",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156728231 25",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da6u.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.361Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886362-02kl0",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156728875 26",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da6t.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.362Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886365-mxazq",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156729100 27",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da6s.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.365Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886367-wj3zh",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156729252 28",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da6q.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.367Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886368-54ni9",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156729496 29",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da6n.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.368Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886369-l3pu8",
+    "name": "Expression Cartoon Sarcastique Funny Cartoon Face SVG Sarcastic 156729720 30",
+    "url": "/visuels/Expression-Cartoon-Sarcastique-Funny-Cartoon-Face-SVG-Sarcas-mw72da6l.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.369Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  },
+  {
+    "id": "visuel-1794095886370-phhya",
+    "name": "Funny Face SVG Cartoon Expression 156577833 11",
+    "url": "/visuels/Funny-Face-SVG-Cartoon-Expression-156577833-11-mw72da6i.png",
+    "category": "Smileys",
+    "categories": [
+      "Nouveau"
+    ],
+    "subcategory": "",
+    "repeatPattern": false,
+    "status": "approved",
+    "isNew": true,
+    "dateAdded": "2026-11-07T23:58:06.370Z",
+    "compatibleProducts": [
+      "all"
+    ]
+  }
+]

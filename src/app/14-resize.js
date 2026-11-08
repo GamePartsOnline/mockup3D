@@ -27,11 +27,28 @@ app.animate = function animate(now = performance.now()) {
     app.camera.position.copy(app.controls.target).add(offset);
     app.camera.lookAt(app.controls.target);
   }
-  app.controls.update();
   if (app.currentProductKey === 'showcase') {
-    if (app.camera.position.y > 3.60) app.camera.position.y = 3.60;
-    if (app.camera.position.y < -0.40) app.camera.position.y = -0.40;
+    if (app.controls) {
+      app.controls.minAzimuthAngle = -Math.PI * 0.36;
+      app.controls.maxAzimuthAngle = Math.PI * 0.36;
+      app.controls.minPolarAngle = Math.PI * 0.12;
+      app.controls.maxPolarAngle = Math.PI * 0.47;
+      app.controls.minDistance = 1.8;
+      app.controls.maxDistance = 7.5;
+    }
+    if (app.camera.position.z < 0.25) app.camera.position.z = 0.25;
+    if (app.camera.position.y > 3.40) app.camera.position.y = 3.40;
+    if (app.camera.position.y < -0.20) app.camera.position.y = -0.20;
+    app.updateSnowParticles?.(dt);
+  } else if (app.controls && app.controls.minAzimuthAngle !== -Infinity) {
+    app.controls.minAzimuthAngle = -Infinity;
+    app.controls.maxAzimuthAngle = Infinity;
+    app.controls.minPolarAngle = 0;
+    app.controls.maxPolarAngle = Math.PI;
+    app.controls.minDistance = 0.2;
+    app.controls.maxDistance = 20;
   }
+  app.controls.update();
   app.renderer.render(app.scene, app.camera);
   app.updateOverlay();
 };

@@ -99,11 +99,18 @@ export function initialize(app) {
   app.renderShop2D = function(cat = currentCat) {
     currentCat = cat;
     grid.innerHTML = '';
-    const filtered = cat === 'all' ? SHOP_ITEMS : SHOP_ITEMS.filter(it => it.cat === cat);
+    const available = SHOP_ITEMS.filter(it => app?.isProductActive ? app.isProductActive(it.key) : true);
+    const filtered = cat === 'all' ? available : available.filter(it => it.cat === cat);
     filtered.forEach(item => {
       const card = document.createElement('article');
       card.className = 'shop-card';
       const thumb = app.shopThumbnails[item.key] || getProductThumbnail(item.key);
+      const displayPrice = (app?.getProductPrice && app.getProductPrice(item.key)) || item.price;
+      const prodMeta = (app?.productsConfig || []).find(p => p.key === item.key || p.id === item.key);
+      const stock = prodMeta?.stockQuantity !== undefined ? Number.parseInt(prodMeta.stockQuantity) : 10;
+      const stockTag = (stock === 0)
+        ? `<span class="shop-card-stock" style="display:inline-block; font-size:10.5px; font-weight:700; color:#d97706; background:#fef3c7; border:1px solid #fde047; padding:2px 8px; border-radius:4px; margin-top:4px;">Sur demande - En réappro</span>`
+        : `<span class="shop-card-stock" style="display:inline-block; font-size:10.5px; font-weight:600; color:#059669; margin-top:4px;">✓ En stock (${stock})</span>`;
 
       card.innerHTML = `
         <div class="shop-card-badge-wrap">${item.badge ? `<span class="shop-badge">${item.badge}</span>` : '<span></span>'}</div>
@@ -114,7 +121,8 @@ export function initialize(app) {
         <div class="shop-card-body">
           <h3 class="shop-card-title">${item.name}</h3>
           <p class="shop-card-desc">${item.desc}</p>
-          <div class="shop-card-meta"><span class="shop-card-dim">${item.dim}</span><span class="shop-card-price">${item.price}</span></div>
+          <div class="shop-card-meta"><span class="shop-card-dim">${item.dim}</span><span class="shop-card-price">${displayPrice}</span></div>
+          <div style="margin-top:2px;">${stockTag}</div>
         </div>
         <button type="button" class="shop-card-btn primary" data-product="${item.key}">Personnaliser cet objet</button>
       `;

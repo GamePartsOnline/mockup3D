@@ -115,6 +115,8 @@ if (clientLink) {
   if (app.clientMode && !isLocal) clientLink.style.display = 'none';
 }
 document.querySelector('#modeLabel').textContent = app.clientMode ? 'Espace Client' : 'Atelier de création';
+const btnDash = document.querySelector('#btnAdminDashboard');
+if (btnDash) btnDash.style.display = app.clientMode ? 'none' : 'inline-flex';
 if (app.clientMode) {
   ['topColor','baseColor'].forEach(id => { const el = document.getElementById(id); if (el) { el.disabled = true; el.title = 'Objets blancs uniquement'; } });
 }

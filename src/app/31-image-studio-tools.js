@@ -145,8 +145,9 @@ export function register(app) {
   };
 
   // Détection et suppression automatique du fond blanc à l'intégration
+  // DÉSACTIVÉ PAR DÉFAUT pour préserver les nuances de gris clairs, ombres et dégradés
   app.autoKnockoutWhiteIfOpaque = function autoKnockoutWhiteIfOpaque(item) {
-    if (!item || !item.img || item.removeWhite) return;
+    if (!item || !item.img || item.removeWhite || !item.forceAutoKnockout) return;
     if (detectWhiteBorderBackground(item.img)) {
       app.removeWhiteBackground(item, 32, true);
     }

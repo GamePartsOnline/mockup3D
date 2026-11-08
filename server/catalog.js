@@ -11,6 +11,27 @@ const catalogPath = path.join(visuelsDir, 'catalog.json');
 const distCatalogPath = path.join(distVisuelsDir, 'catalog.json');
 const IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.svg', '.avif', '.webp']);
 
+async function backupCatalogFile() {
+  try {
+    const backupDir = path.join(root, 'backups', 'catalog');
+    await fs.mkdir(backupDir, { recursive: true });
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const dest = path.join(backupDir, `catalog_${timestamp}.json`);
+    try {
+      await fs.copyFile(catalogPath, dest);
+    } catch {}
+    // Rotation: conserver au maximum les 30 dernières sauvegardes
+    const files = await fs.readdir(backupDir);
+    const catalogBackups = files.filter(f => f.startsWith('catalog_') && f.endsWith('.json')).sort();
+    while (catalogBackups.length > 30) {
+      const oldest = catalogBackups.shift();
+      try { await fs.unlink(path.join(backupDir, oldest)); } catch {}
+    }
+  } catch (err) {
+    console.error('Erreur backup catalog:', err.message);
+  }
+}
+
 function sanitizeFileName(name, ext) {
   const base = String(name || 'visuel').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-zA-Z0-9_-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'visuel';
@@ -75,7 +96,9 @@ async function syncCatalogWithDisk() {
       targets = ['coaster', 'coasterRound'];
     }
     const st = item.status === 'trash' ? 'trash' : (item.status === 'pending' ? 'pending' : 'approved');
-    return { ...item, name: item.name === 'JPG' ? 'Cerf Polygonal (Art)' : item.name, category: cat, subcategory: sub, status: st, compatibleProducts: targets };
+    const cat2 = String(item.category2 || '').trim();
+    const cats = Array.isArray(item.categories) && item.categories.length ? item.categories : (cat2 ? [cat, cat2] : [cat]);
+    return { ...item, name: item.name === 'JPG' ? 'Cerf Polygonal (Art)' : item.name, category: cat, category2: cat2 || undefined, categories: cats, subcategory: sub, status: st, compatibleProducts: targets };
   });
   const knownUrls = new Set(validList.map(item => item.url));
 
@@ -162,27 +185,65 @@ export async function saveCatalog(req, res) {
     if (targets.length === 1 && targets[0] === 'all' && /sous-verre|coaster/i.test(item.name || '')) {
       targets = ['coaster', 'coasterRound'];
     }
-        const st = item.status === 'trash' ? 'trash' : (item.status === 'pending' ? 'pending' : 'approved');
+        const st = item.status === 'trash' ? 'trash' : (item.status === 'pending' ? 'pending' : (item.status === 'private' ? 'private' : 'approved'));
+        const cat = String(item.category || inferCategory(clean));
+        const cat2 = String(item.category2 || '').trim();
+        const cats = Array.isArray(item.categories) && item.categories.length ? item.categories : (cat2 ? [cat, cat2] : [cat]);
+
         finalItems.push({
           id: String(item.id || `visuel-${fileName}`), name: clean, url: `/visuels/${fileName}`,
-          category: String(item.category || inferCategory(clean)), subcategory: String(item.subcategory || '').trim(),
+          category: cat,
+          category2: cat2 || undefined,
+          categories: cats,
+          subcategory: String(item.subcategory || '').trim(),
           repeatPattern: Boolean(item.repeatPattern), status: st,
+          isNew: Boolean(item.isNew), dateAdded: item.dateAdded || null,
           compatibleProducts: targets
         });
       }
     }
 
-    const entries = await fs.readdir(visuelsDir, { withFileTypes: true });
-    for (const entry of entries) {
-      if (entry.isFile() && IMAGE_EXTS.has(path.extname(entry.name).toLowerCase()) && !keptFiles.has(entry.name)) {
-        try { await fs.unlink(path.join(visuelsDir, entry.name)); } catch {}
-        try { await fs.unlink(path.join(distVisuelsDir, entry.name)); } catch {}
-      }
-    }
+    // Sauvegarde preventive automatique hordatee
+    await backupCatalogFile();
+    // Neutralisation de la suppression automatique : les fichiers physiques sont strictement preserves
 
     sortCatalogItems(finalItems);
     await fs.writeFile(catalogPath, JSON.stringify(finalItems, null, 2), 'utf8');
     try { await fs.writeFile(distCatalogPath, JSON.stringify(finalItems, null, 2), 'utf8'); } catch {}
     return json(res, 200, { success: true, items: finalItems });
   } catch { return json(res, 400, { error: 'Erreur lors de la sauvegarde du catalogue.' }); }
+}
+
+export async function emptyCatalogTrash(req, res) {
+  if (!authorizeAdmin(req, res)) return;
+  try {
+    let list = [];
+    try {
+      const raw = await fs.readFile(catalogPath, 'utf8');
+      list = JSON.parse(raw);
+    } catch {}
+
+    const remaining = [];
+    let purgedCount = 0;
+    for (const item of list) {
+      if (item.status === 'trash') {
+        const fileName = path.basename(item.url || '');
+        if (fileName) {
+          try { await fs.unlink(path.join(visuelsDir, fileName)); } catch {}
+          try { await fs.unlink(path.join(distVisuelsDir, fileName)); } catch {}
+          purgedCount++;
+        }
+      } else {
+        remaining.push(item);
+      }
+    }
+
+    await backupCatalogFile();
+    await fs.writeFile(catalogPath, JSON.stringify(remaining, null, 2), 'utf8');
+    try { await fs.writeFile(distCatalogPath, JSON.stringify(remaining, null, 2), 'utf8'); } catch {}
+    return json(res, 200, { success: true, purgedCount, items: remaining });
+  } catch (err) {
+    console.error('Empty trash failed:', err);
+    return json(res, 500, { error: 'Erreur lors du vidage de la corbeille.' });
+  }
 }

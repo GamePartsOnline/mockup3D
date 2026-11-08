@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import nodemailer from 'nodemailer';
 import { acceptSubmission, json, readJson } from './security.js';
+import { generateWorkshopHtml, generateWorkshopTxt } from './admin-submissions.js';
 
 let active = 0;
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -124,6 +125,21 @@ export async function submit(req, res) {
     if (typeof body?.product !== 'string' || body.product.length > 120) {
       return json(res, 400, { error: 'Produit invalide.' });
     }
+
+    const productKey = String(body.productKey || '').trim();
+    if (productKey) {
+      try {
+        const prodConfPath = path.join(root, 'server', 'data', 'products-config.json');
+        if (fs.existsSync(prodConfPath)) {
+          const prods = JSON.parse(fs.readFileSync(prodConfPath, 'utf8'));
+          const found = prods.find(p => p.key === productKey || p.id === productKey);
+          if (found && found.active === false) {
+            return json(res, 400, { error: `L'article "${found.name || productKey}" est actuellement désactivé et ne peut pas être commandé.` });
+          }
+        }
+      } catch (e) {}
+    }
+
     let attachments;
     try { attachments = validateAttachments(body.files); }
     catch (error) { return json(res, error.status || 400, { error: error.message }); }
@@ -147,18 +163,34 @@ export async function submit(req, res) {
 
     const mailResult = await sendMailNotification(client, body.product, attachments, body.imagesInfo);
 
+    const quantity = Math.max(1, parseInt(body.quantity || 1, 10));
+    const unitPrice = String(body.unitPrice || '').trim();
+    const totalPrice = String(body.totalPrice || '').trim();
+
     const submissionData = {
       id: folderName,
       folder: folderName,
       date: new Date().toISOString(),
       status: 'nouveau',
       product: body.product,
+      productKey,
+      quantity,
+      unitPrice,
+      totalPrice,
       client,
       files: savedFiles,
       imagesInfo: Array.isArray(body.imagesInfo) ? body.imagesInfo : [],
       emailStatus: mailResult.sent ? 'sent' : (mailResult.reason || 'not_sent')
     };
     fs.writeFileSync(path.join(targetDir, 'submission.json'), JSON.stringify(submissionData, null, 2), 'utf8');
+
+    try {
+      const allFileNames = savedFiles.map(f => f.name);
+      fs.writeFileSync(path.join(targetDir, 'FICHE_ATELIER.html'), generateWorkshopHtml(submissionData, allFileNames), 'utf8');
+      fs.writeFileSync(path.join(targetDir, 'RECAPITULATIF_COMMANDE.txt'), generateWorkshopTxt(submissionData, allFileNames), 'utf8');
+    } catch (e) {
+      console.warn('Erreur écriture fiches atelier:', e);
+    }
 
     return json(res, 200, {
       ok: true,

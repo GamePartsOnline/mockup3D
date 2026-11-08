@@ -45,7 +45,7 @@ document.querySelector('#imageInput').addEventListener('change', async e => {
           side: defSide
         };
         app.imagesList.push(item);
-        app.autoKnockoutWhiteIfOpaque?.(item);
+        // Détourage automatique désactivé par défaut : préserve les nuances de gris et teintes d'origine
         const res = app.getImageResolutionInfo?.(item);
         if (res && res.status === 'danger') lowRes.push(`${file.name} (${res.width}×${res.height} px)`);
         resolve();
@@ -68,6 +68,7 @@ document.querySelector('#productSelect').onchange = e => {
   if (app.clientMode && !e.detail?.initial) app.clientSelectedProduct = e.target.value !== 'showcase';
   app.currentProductKey = e.target.value; app.scene.remove(app.product.group); app.product.group.traverse(child => child.geometry?.dispose());
   const definition = app.productDefinitions[app.currentProductKey]; app.product = definition.create(app); app.scene.add(app.product.group);
+  if (app.currentProductKey === 'showcase') app.refreshShowcaseVisibility?.();
   document.querySelector('#productDimensions').textContent = Array.isArray(definition.dimensions) ? `${definition.dimensions.join(' × ')} mm` : definition.dimensions;
   document.querySelector('#tshirtOrientationWrap').hidden = app.currentProductKey !== 'tshirt3D';
   document.querySelector('#loadTshirtExample').hidden = app.currentProductKey !== 'tshirt3D';

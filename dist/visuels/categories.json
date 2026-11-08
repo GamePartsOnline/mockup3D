@@ -1,34 +1,20 @@
 [
   {
+    "name": "Amour",
+    "subs": []
+  },
+  {
     "name": "Animaux",
     "subs": [
-      "Cerf",
       "Chats",
       "Chiens",
       "Girafe",
+      "Lapin",
       "Licorne"
     ]
   },
   {
-    "name": "Arcades",
-    "subs": []
-  },
-  {
-    "name": "Callisto Arts",
-    "subs": []
-  },
-  {
-    "name": "Dessins animés",
-    "subs": []
-  },
-  {
-    "name": "Fantaisie",
-    "subs": [
-      "Fées"
-    ]
-  },
-  {
-    "name": "Films",
+    "name": "Espace",
     "subs": []
   },
   {
@@ -52,11 +38,23 @@
     "subs": []
   },
   {
+    "name": "Murs",
+    "subs": []
+  },
+  {
     "name": "Noël",
     "subs": []
   },
   {
     "name": "Nouveau",
+    "subs": []
+  },
+  {
+    "name": "Smileys",
+    "subs": []
+  },
+  {
+    "name": "Textures",
     "subs": []
   }
 ]

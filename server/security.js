@@ -40,10 +40,19 @@ export function json(res, status, body) {
   res.end(JSON.stringify(body));
 }
 
+function isLocalOrPrivateAddress(ip) {
+  if (!ip) return false;
+  if (['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(ip)) return true;
+  const clean = ip.replace(/^::ffff:/, '');
+  if (clean.startsWith('192.168.') || clean.startsWith('10.') || clean.startsWith('127.')) return true;
+  if (/^172\.(1[6-9]|2\d|3[01])\./.test(clean)) return true;
+  return false;
+}
+
 export function authorizeAdmin(req, res) {
   const ip = clientAddress(req);
   if (!process.env.ADMIN_USER || !process.env.ADMIN_PASSWORD) {
-    if (['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(ip)) return true;
+    if (isLocalOrPrivateAddress(ip)) return true;
     json(res, 503, { error: "L'atelier doit être configuré sur le serveur." });
     return false;
   }

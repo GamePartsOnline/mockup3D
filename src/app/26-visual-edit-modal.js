@@ -4,33 +4,50 @@ import { getProductThumbnail } from './19-shop-product-thumbs.js';
 
 export function register(app) {
   let currentItem = null;
+  let selectedStatus = 'approved';
 
   app.openVisualEditModal = function(item) {
+    if (!item) return;
+    if (typeof item === 'string') {
+      item = (app.catalogImages || []).find(v => String(v.id) === String(item)) || { id: item, name: item, url: '' };
+    }
     currentItem = item;
     const modal = document.querySelector('#visualEditModal');
-    if (!modal) return;
+    if (!modal) {
+      console.warn('visualEditModal DOM introuvable');
+      return;
+    }
+    if (modal.parentElement !== document.body) {
+      document.body.appendChild(modal);
+    }
     const thumb = document.querySelector('#visualEditThumb'), nameInput = document.querySelector('#visualEditNameInput');
     const catSel = document.querySelector('#visualEditCategorySelect'), subSel = document.querySelector('#visualEditSubcategorySelect');
+    const catSel2 = document.querySelector('#visualEditCategorySelect2');
     const repeatCheck = document.querySelector('#visualEditRepeatCheck');
     const trashBtn = document.querySelector('#visualEditTrashBtn');
-    const statusBoxes = modal.querySelectorAll('.visual-status-checkbox');
+    const headerTitle = document.querySelector('#visualEditHeaderTitle');
+    if (headerTitle) headerTitle.textContent = `Fiche du visuel : ${item.name || 'Visuel'}`;
 
     if (thumb) thumb.src = item.url;
     if (nameInput) nameInput.value = item.name || '';
     if (repeatCheck) repeatCheck.checked = !!item.repeatPattern;
 
-    const setStatusUI = (selectedStatus) => {
-      statusBoxes.forEach(box => {
-        const match = (box.value === selectedStatus);
-        box.checked = match;
-        box.closest('.visual-status-card')?.classList.toggle('is-checked', match);
+    selectedStatus = item.status || 'approved';
+    const setStatusUI = (st) => {
+      selectedStatus = st;
+      modal.querySelectorAll('.visual-status-pill').forEach(pill => {
+        const match = (pill.dataset.status === st);
+        pill.classList.toggle('is-checked', match);
+        const rad = pill.querySelector('input[type="radio"]');
+        if (rad) rad.checked = match;
       });
     };
-    setStatusUI(item.status || 'approved');
+    setStatusUI(selectedStatus);
 
-    statusBoxes.forEach(box => {
-      box.onchange = () => {
-        setStatusUI(box.value);
+    modal.querySelectorAll('.visual-status-pill').forEach(pill => {
+      pill.onclick = (e) => {
+        e.preventDefault();
+        setStatusUI(pill.dataset.status);
       };
     });
 
@@ -40,6 +57,12 @@ export function register(app) {
         catSel.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
         const target = selectName || item.category;
         if (cats.includes(target)) catSel.value = target;
+      }
+      if (catSel2) {
+        catSel2.innerHTML = '<option value="">(Aucune deuxième catégorie)</option>' +
+          cats.map(c => `<option value="${c}">${c}</option>`).join('');
+        const target2 = item.category2 || (Array.isArray(item.categories) && item.categories[1]) || '';
+        catSel2.value = target2;
       }
       updateSubs();
     };
@@ -111,6 +134,8 @@ export function register(app) {
       trashBtn.onclick = async () => {
         item.status = inTrash ? 'approved' : 'trash';
         await app.persistCatalog?.();
+    app.loadAdminCatalog?.();
+    app.updateAdminKpis?.();
         app.closeVisualEditModal();
         app.showToast(inTrash ? `"${item.name}" restauré` : `"${item.name}" mis à la corbeille`);
       };
@@ -127,14 +152,13 @@ export function register(app) {
 
     if (productsGrid) {
       productsGrid.innerHTML = PRODUCTS_LIST.map(p => {
-        const checked = (!isAll && currentTargets.includes(p.key));
+        const checked = isAll || currentTargets.includes(p.key);
         const thumbSvg = getProductThumbnail(p.key);
         return `
           <label class="visual-compat-card${checked ? ' is-checked' : ''}" title="${p.label}">
             <input type="checkbox" class="visual-compat-prod-check" value="${p.key}" ${checked ? 'checked' : ''} />
             <div class="visual-compat-preview-box">
               <img src="${thumbSvg}" alt="${p.label}" class="compat-prod-base-icon" />
-              <img src="${item.url}" alt="" class="compat-prod-visual-overlay" />
             </div>
             <div class="visual-compat-label-wrap">
               <span class="compat-prod-name">${p.label}</span>
@@ -154,69 +178,95 @@ export function register(app) {
         }
       };
 
+      const checkAllStatusSync = () => {
+        const checks = Array.from(productsGrid.querySelectorAll('.visual-compat-prod-check'));
+        const allChecked = checks.length > 0 && checks.every(c => c.checked);
+        if (compatAll) compatAll.checked = allChecked;
+      };
+
       productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(chk => {
-        chk.addEventListener('change', () => updateCardTag(chk));
+        chk.addEventListener('change', () => {
+          updateCardTag(chk);
+          checkAllStatusSync();
+        });
       });
 
-      const updateGridState = () => {
-        const checked = compatAll ? compatAll.checked : false;
-        productsGrid.style.opacity = checked ? '0.45' : '1';
-        productsGrid.style.pointerEvents = checked ? 'none' : 'auto';
-        if (checked) {
-          productsGrid.querySelectorAll('.compat-prod-status-tag').forEach(t => {
-            t.textContent = '✓ Tous objets';
-            t.className = 'compat-prod-status-tag tag-ok';
+      if (compatAll) {
+        compatAll.onchange = () => {
+          const state = compatAll.checked;
+          productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(c => {
+            c.checked = state;
+            updateCardTag(c);
           });
-        }
-      };
-      updateGridState();
-      if (compatAll) compatAll.onchange = updateGridState;
+        };
+      }
 
-      document.querySelector('#compatSelectAllBtn').onclick = () => {
-        if (compatAll) { compatAll.checked = false; updateGridState(); }
-        productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(c => {
-          c.checked = true;
-          updateCardTag(c);
-        });
-      };
-      document.querySelector('#compatDeselectAllBtn').onclick = () => {
-        if (compatAll) { compatAll.checked = false; updateGridState(); }
-        productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(c => {
-          c.checked = false;
-          updateCardTag(c);
-        });
-      };
-      document.querySelector('#compatCoasterOnlyBtn').onclick = () => {
-        if (compatAll) { compatAll.checked = false; updateGridState(); }
-        productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(c => {
-          c.checked = (c.value === 'coaster' || c.value === 'coasterRound');
-          updateCardTag(c);
-        });
-      };
-      document.querySelector('#compatMugOnlyBtn').onclick = () => {
-        if (compatAll) { compatAll.checked = false; updateGridState(); }
-        productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(c => {
-          c.checked = (c.value === 'mug11oz');
-          updateCardTag(c);
-        });
-      };
-      document.querySelector('#compatArcadeOnlyBtn').onclick = () => {
-        if (compatAll) { compatAll.checked = false; updateGridState(); }
-        productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(c => {
-          c.checked = (c.value === 'arcadeCabinet');
-          updateCardTag(c);
-        });
-      };
+      const btnSelAll = document.querySelector('#compatSelectAllBtn');
+      if (btnSelAll) {
+        btnSelAll.onclick = () => {
+          if (compatAll) compatAll.checked = true;
+          productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(c => {
+            c.checked = true;
+            updateCardTag(c);
+          });
+        };
+      }
+      const btnDeselAll = document.querySelector('#compatDeselectAllBtn');
+      if (btnDeselAll) {
+        btnDeselAll.onclick = () => {
+          if (compatAll) compatAll.checked = false;
+          productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(c => {
+            c.checked = false;
+            updateCardTag(c);
+          });
+        };
+      }
+      const btnCoaster = document.querySelector('#compatCoasterOnlyBtn');
+      if (btnCoaster) {
+        btnCoaster.onclick = () => {
+          if (compatAll) compatAll.checked = false;
+          productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(c => {
+            c.checked = (c.value === 'coaster' || c.value === 'coasterRound');
+            updateCardTag(c);
+          });
+          checkAllStatusSync();
+        };
+      }
+      const btnMug = document.querySelector('#compatMugOnlyBtn');
+      if (btnMug) {
+        btnMug.onclick = () => {
+          if (compatAll) compatAll.checked = false;
+          productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(c => {
+            c.checked = (c.value === 'mug11oz');
+            updateCardTag(c);
+          });
+          checkAllStatusSync();
+        };
+      }
+      const btnArcade = document.querySelector('#compatArcadeOnlyBtn');
+      if (btnArcade) {
+        btnArcade.onclick = () => {
+          if (compatAll) compatAll.checked = false;
+          productsGrid.querySelectorAll('.visual-compat-prod-check').forEach(c => {
+            c.checked = (c.value === 'arcadeCabinet');
+            updateCardTag(c);
+          });
+          checkAllStatusSync();
+        };
+      }
     }
 
-    modal.hidden = false; modal.removeAttribute('hidden');
+    modal.hidden = false;
+    modal.removeAttribute('hidden');
+    modal.style.display = 'flex';
+    modal.style.zIndex = '100050';
     nameInput?.focus();
     nameInput?.select();
   };
 
   app.closeVisualEditModal = function() {
     const modal = document.querySelector('#visualEditModal');
-    if (modal) { modal.hidden = true; modal.setAttribute('hidden', ''); }
+    if (modal) { modal.hidden = true; modal.setAttribute('hidden', ''); modal.style.display = 'none'; }
     currentItem = null;
   };
 
@@ -229,12 +279,16 @@ export function register(app) {
     const repeatCheck = document.querySelector('#visualEditRepeatCheck');
     const activeStatusBox = document.querySelector('.visual-status-checkbox:checked');
 
+    const catSel2 = document.querySelector('#visualEditCategorySelect2');
     if (nameInput && nameInput.value.trim()) it.name = nameInput.value.trim();
     if (catSel) it.category = catSel.value;
+    const cat2 = catSel2 ? catSel2.value : '';
+    it.category2 = cat2;
+    it.categories = [catSel ? catSel.value : it.category, cat2].filter(Boolean);
     if (subSel) it.subcategory = subSel.value || '';
     if (repeatCheck) it.repeatPattern = repeatCheck.checked;
     if (customStatus) it.status = customStatus;
-    else if (activeStatusBox) it.status = activeStatusBox.value;
+    else if (selectedStatus) it.status = selectedStatus;
     else it.status = 'approved';
 
     const compatAll = document.querySelector('#visualEditCompatAll');
@@ -247,6 +301,9 @@ export function register(app) {
     }
 
     await app.persistCatalog?.();
+    app.loadAdminCatalog?.();
+    app.renderCatalog?.();
+    app.updateAdminKpis?.();
 
     if (andNext) {
       const list = (app.catalogImages || []).filter(x => x.status !== 'trash');

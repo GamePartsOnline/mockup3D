@@ -4,9 +4,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { json, secureHeaders } from './server/security.js';
 import { mailConfigured, submit } from './server/submissions.js';
-import { getCatalog, saveCatalog, proposeCatalogItem } from './server/catalog.js';
+import { getCatalog, saveCatalog, proposeCatalogItem, emptyCatalogTrash } from './server/catalog.js';
 import { getCategories, saveCategories } from './server/categories.js';
-import { getSubmissions, serveSubmissionFile, updateSubmissionStatus, deleteSubmission } from './server/admin-submissions.js';
+import { getSubmissions, serveSubmissionFile, updateSubmissionStatus, updateSubmissionChecks, deleteSubmission, downloadSubmissionZip, exportSubmissionsCsv, getClientOrders, addSubmissionMessage } from './server/admin-submissions.js';
+import { getProducts, updateProducts, toggleProductStatus } from './server/products-manager.js';
+import { getConsignment, saveConsignment } from './server/consignment-manager.js';
 import { serveStatic } from './server/static.js';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
@@ -21,6 +23,9 @@ const server = http.createServer(async (req, res) => {
     }
     if (route === '/api/catalog-images' && req.method === 'POST') {
       return await saveCatalog(req, res);
+    }
+    if (route === '/api/catalog-images/empty-trash' && req.method === 'POST') {
+      return await emptyCatalogTrash(req, res);
     }
     if (route === '/api/catalog-images/propose' && req.method === 'POST') {
       return await proposeCatalogItem(req, res);
@@ -47,8 +52,38 @@ const server = http.createServer(async (req, res) => {
     if (route === '/api/admin/submissions/status' && req.method === 'POST') {
       return await updateSubmissionStatus(req, res);
     }
+    if (route === '/api/admin/submissions/checks' && req.method === 'POST') {
+      return await updateSubmissionChecks(req, res);
+    }
+    if (route === '/api/admin/consignment' && req.method === 'GET') {
+      return await getConsignment(req, res);
+    }
+    if (route === '/api/admin/consignment' && req.method === 'POST') {
+      return await saveConsignment(req, res);
+    }
     if (route === '/api/admin/submissions/delete' && req.method === 'POST') {
       return await deleteSubmission(req, res);
+    }
+    if (route === '/api/admin/submissions/download-zip' && req.method === 'GET') {
+      return await downloadSubmissionZip(req, res);
+    }
+    if (route === '/api/admin/submissions/export-csv' && req.method === 'GET') {
+      return await exportSubmissionsCsv(req, res);
+    }
+    if (route === '/api/client/orders' && req.method === 'GET') {
+      return await getClientOrders(req, res);
+    }
+    if (route === '/api/submissions/message' && req.method === 'POST') {
+      return await addSubmissionMessage(req, res);
+    }
+    if (route === '/api/products' && req.method === 'GET') {
+      return await getProducts(req, res);
+    }
+    if (route === '/api/admin/products' && req.method === 'POST') {
+      return await updateProducts(req, res);
+    }
+    if (route === '/api/admin/products/toggle' && req.method === 'POST') {
+      return await toggleProductStatus(req, res);
     }
     await serveStatic(req, res, dist);
   } catch (error) {
