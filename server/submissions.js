@@ -11,12 +11,14 @@ const submissionsDir = path.join(root, 'submissions');
 export const mailConfigured = () => !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
 
 function validateAttachments(files) {
-  if (!Array.isArray(files) || files.length < 2 || files.length > 8) throw new Error('Dossier incomplet.');
+  if (!Array.isArray(files) || files.length < 2 || files.length > 25) throw new Error('Dossier incomplet ou trop de fichiers joints.');
   const attachments = [];
   let total = 0;
   for (const file of files) {
     const isPng = file?.type === 'image/png';
-    const extension = isPng ? 'png' : file?.type === 'video/mp4' ? 'mp4' : null;
+    const isJpeg = file?.type === 'image/jpeg' || file?.type === 'image/jpg';
+    const isMp4 = file?.type === 'video/mp4';
+    const extension = isPng ? 'png' : isJpeg ? 'jpg' : isMp4 ? 'mp4' : null;
     if (!extension || typeof file.name !== 'string' || file.name.length > 120 ||
         !/^[a-zA-Z0-9._-]+$/.test(file.name) || !file.name.endsWith('.' + extension)) {
       throw new Error('Format de fichier invalide.');
@@ -28,10 +30,12 @@ function validateAttachments(files) {
     const content = Buffer.from(encoded, 'base64');
     const valid = isPng
       ? content.subarray(0, 8).equals(Buffer.from([137,80,78,71,13,10,26,10]))
-      : content.subarray(4, 8).toString('ascii') === 'ftyp';
-    if (!valid) throw new Error('Le contenu ne correspond pas au fichier.');
+      : isJpeg
+        ? (content[0] === 0xff && content[1] === 0xd8)
+        : content.subarray(4, 8).toString('ascii') === 'ftyp';
+    if (!valid) throw new Error('Le contenu ne correspond pas au format déclaré.');
     total += content.length;
-    if (total > 25 * 1024 * 1024) {
+    if (total > 35 * 1024 * 1024) {
       throw Object.assign(new Error('Dossier trop volumineux pour transmission.'), { status: 413 });
     }
     attachments.push({ filename: file.name, content, contentType: file.type });
@@ -156,9 +160,21 @@ export async function submit(req, res) {
     fs.mkdirSync(targetDir, { recursive: true });
 
     const savedFiles = [];
+    let hasVisuelClient = false;
     for (const file of attachments) {
       fs.writeFileSync(path.join(targetDir, file.filename), file.content);
       savedFiles.push({ name: file.filename, size: file.content.length, type: file.contentType });
+      if (file.filename === 'visuel_client.png') hasVisuelClient = true;
+    }
+
+    // S'assurer qu'un fichier 'visuel_client.png' est présent pour l'atelier et la fiche
+    if (!hasVisuelClient) {
+      const sourceFile = attachments.find(a => a.filename.startsWith('visuel-source-')) ||
+                         attachments.find(a => a.filename.startsWith('wrap-'));
+      if (sourceFile) {
+        fs.writeFileSync(path.join(targetDir, 'visuel_client.png'), sourceFile.content);
+        savedFiles.push({ name: 'visuel_client.png', size: sourceFile.content.length, type: sourceFile.contentType });
+      }
     }
 
     const mailResult = await sendMailNotification(client, body.product, attachments, body.imagesInfo);
@@ -177,6 +193,11 @@ export async function submit(req, res) {
       quantity,
       unitPrice,
       totalPrice,
+      cart: Array.isArray(body.cart) ? body.cart : [],
+      discount: body.discount || null,
+      customText: body.customText || '',
+      visualName: body.visualName || '',
+      messages: Array.isArray(body.messages) ? body.messages : [],
       client,
       files: savedFiles,
       imagesInfo: Array.isArray(body.imagesInfo) ? body.imagesInfo : [],

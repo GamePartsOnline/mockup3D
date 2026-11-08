@@ -110,7 +110,7 @@ export function initialize(app) {
       const stock = prodMeta?.stockQuantity !== undefined ? Number.parseInt(prodMeta.stockQuantity) : 10;
       const stockTag = (stock === 0)
         ? `<span class="shop-card-stock" style="display:inline-block; font-size:10.5px; font-weight:700; color:#d97706; background:#fef3c7; border:1px solid #fde047; padding:2px 8px; border-radius:4px; margin-top:4px;">Sur demande - En réappro</span>`
-        : `<span class="shop-card-stock" style="display:inline-block; font-size:10.5px; font-weight:600; color:#059669; margin-top:4px;">✓ En stock (${stock})</span>`;
+        : `<span class="shop-card-stock" style="display:inline-block; font-size:10.5px; font-weight:600; color:#059669; margin-top:4px;">✓ En stock</span>`;
 
       card.innerHTML = `
         <div class="shop-card-badge-wrap">${item.badge ? `<span class="shop-badge">${item.badge}</span>` : '<span></span>'}</div>

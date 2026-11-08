@@ -1,3 +1,15 @@
+<div class="event-ticker-banner" id="eventTickerBanner" title="Survoler pour mettre en pause">
+  <div class="event-ticker-track">
+    <span class="event-ticker-item">PROCHAIN SALON : <strong>GIVRY EN ARGONNE</strong> • LE VAL D'ANTE • <strong>19.12.2026</strong> • MARCHÉ DE NOËL</span>
+    <span class="event-ticker-sep">✦</span>
+    <span class="event-ticker-item">PROCHAIN SALON : <strong>GIVRY EN ARGONNE</strong> • LE VAL D'ANTE • <strong>19.12.2026</strong> • MARCHÉ DE NOËL</span>
+    <span class="event-ticker-sep">✦</span>
+    <span class="event-ticker-item">PROCHAIN SALON : <strong>GIVRY EN ARGONNE</strong> • LE VAL D'ANTE • <strong>19.12.2026</strong> • MARCHÉ DE NOËL</span>
+    <span class="event-ticker-sep">✦</span>
+    <span class="event-ticker-item">PROCHAIN SALON : <strong>GIVRY EN ARGONNE</strong> • LE VAL D'ANTE • <strong>19.12.2026</strong> • MARCHÉ DE NOËL</span>
+    <span class="event-ticker-sep">✦</span>
+  </div>
+</div>
 <header class="topbar">
   <div class="brand">
     <span class="logo-card"><img src="/logo-graph2print.png" alt="Graph2Print"></span>
@@ -62,21 +74,49 @@
     </nav>
   </div>
   <div class="topbar-actions">
-    <button type="button" class="btn-open-cgv client-only-legal" title="Conditions Générales de Vente" style="background:transparent; border:none; color:#64748b; font-size:11px; text-decoration:underline; cursor:pointer; padding:4px 6px;">CGV</button>
-    <button type="button" class="btn-open-mentions client-only-legal" title="Mentions Légales" style="background:transparent; border:none; color:#64748b; font-size:11px; text-decoration:underline; cursor:pointer; padding:4px 6px;">Mentions Légales</button>
-    <button type="button" id="clientThemeToggle" class="client-theme-toggle-btn" title="Basculer entre Mode Jour et Mode Nuit" style="display:none;">Mode Nuit</button>
-    <label id="adminNoelDecorWrap" style="display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; color:#b91c1c; background:#fef2f2; border:1px solid #fecaca; border-radius:6px; padding:3px 8px; cursor:pointer;" title="Activer les décorations festives de Noël dans le Showroom 3D">
-      <input type="checkbox" id="adminNoelDecorToggle" style="accent-color:#dc2626; cursor:pointer; width:14px; height:14px;" />
-      <span>Mode Noël</span>
-    </label>
-    <button type="button" id="btnShowcaseTable" class="topbar-showcase-btn" title="Le Showroom 3D (Tous les objets sur la table)">Showroom 3D</button>
-    <button type="button" id="btnShop2D" class="topbar-shop-btn" title="Ouvrir la Boutique 2D">Boutique 2D</button>
-    <button type="button" id="btnClientAccount" class="topbar-btn outline" title="Consulter mes commandes et échanger avec l'atelier" style="font-weight:700; font-size:11.5px; padding:4px 10px; border-radius:6px; cursor:pointer;">Mon Espace</button>
-    <span id="exportStatus" class="topbar-status" style="font-size:12px; color:#94a3b8; margin-right:8px;">Prêt</span>
-    <select id="langSelect" class="lang-switch-select" title="Changer de langue / Switch language" style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; font-weight:700; font-size:12px; padding:3px 6px; cursor:pointer;"><option value="fr">FR</option><option value="en">EN</option></select>
-    <button type="button" id="btnAdminDashboard" class="topbar-btn primary" style="display:none; font-weight:700; background:#7c3aed;" title="Ouvrir le Tableau de bord de l'Atelier">Dashboard Atelier</button>
-    <button type="button" id="btnAdminSubmissions" class="topbar-btn secondary" style="display:none; font-weight:700;" title="Consulter les créations et commandes reçues">Créations reçues (<span id="adminSubmissionsBadge">0</span>)</button>
-    <a id="clientModeLink" class="client-mode-btn" href="/">Interface Client</a>
-    <button id="submitCreation" class="topbar-btn primary client-submit" type="button" hidden>Envoyer ma création</button>
+    <!-- Navigation centrale claire -->
+    <div style="display:inline-flex; align-items:center; background:rgba(0,0,0,0.04); border-radius:8px; padding:2px; gap:2px; margin-right:6px;">
+      <button type="button" id="btnShowcaseTable" class="topbar-showcase-btn" title="Le Showroom 3D (Tous les objets sur la table)">Showroom 3D</button>
+      <button type="button" id="btnShop2D" class="topbar-shop-btn" title="Ouvrir la Boutique 2D">Boutique 2D</button>
+    </div>
+
+    <!-- Actions principales -->
+    <button type="button" id="btnClientAccount" class="topbar-btn outline" title="Consulter mes commandes, mon profil et échanger avec l'atelier" style="font-weight:700; font-size:12px; padding:5px 12px; border-radius:7px; cursor:pointer;">Mon Espace</button>
+    <button id="submitCreation" class="topbar-btn primary client-submit" type="button" hidden style="font-weight:700; background:#7c3aed; color:#ffffff; padding:5px 14px; border-radius:7px;">Envoyer ma création</button>
+
+    <!-- Menu déroulant Préférences & Options (Regroupement épuré) -->
+    <div class="menu-dropdown" style="margin-left:4px;">
+      <button type="button" class="menu-dropdown-btn" style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:7px; padding:5px 10px; font-size:12px; font-weight:700; cursor:pointer;" title="Options d'affichage, thème, langue et informations légales">Options ▾</button>
+      <div class="menu-dropdown-content" style="right:0; left:auto; min-width:210px; padding:8px 0; border-radius:10px; box-shadow:0 10px 25px rgba(0,0,0,0.15); background:#ffffff; border:1px solid #cbd5e1;">
+        
+        <div style="padding:6px 14px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:12px; font-weight:600; color:#334155;">Thème</span>
+          <button type="button" id="clientThemeToggle" class="client-theme-toggle-btn" style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; font-size:11.5px; font-weight:700; padding:3px 8px; cursor:pointer;">Mode Nuit</button>
+        </div>
+
+        <div style="padding:6px 14px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:12px; font-weight:600; color:#334155;">Ambiance Noël</span>
+          <label id="adminNoelDecorWrap" style="display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; color:#b91c1c; cursor:pointer;">
+            <input type="checkbox" id="adminNoelDecorToggle" style="accent-color:#dc2626; cursor:pointer; width:14px; height:14px;" />
+            <span>Actif</span>
+          </label>
+        </div>
+
+        <div style="padding:6px 14px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:12px; font-weight:600; color:#334155;">Langue</span>
+          <select id="langSelect" class="lang-switch-select" style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; font-weight:700; font-size:11.5px; padding:2px 6px; cursor:pointer;"><option value="fr">FR</option><option value="en">EN</option></select>
+        </div>
+
+        <hr style="margin:6px 0; border:none; border-top:1px solid #e2e8f0;">
+
+        <button type="button" class="btn-open-cgv client-only-legal" style="width:100%; text-align:left; background:transparent; border:none; color:#475569; font-size:12px; padding:6px 14px; cursor:pointer;">Conditions de Vente (CGV)</button>
+        <button type="button" class="btn-open-mentions client-only-legal" style="width:100%; text-align:left; background:transparent; border:none; color:#475569; font-size:12px; padding:6px 14px; cursor:pointer;">Mentions Légales & RGPD</button>
+
+        <span id="exportStatus" class="topbar-status" style="display:none;">Prêt</span>
+        <button type="button" id="btnAdminDashboard" class="topbar-btn primary" style="display:none; width:calc(100% - 20px); margin:6px 10px; font-size:12px; font-weight:700; background:#7c3aed;">Dashboard Atelier</button>
+        <button type="button" id="btnAdminSubmissions" class="topbar-btn secondary" style="display:none; width:calc(100% - 20px); margin:4px 10px; font-size:12px; font-weight:700;">Créations reçues (<span id="adminSubmissionsBadge">0</span>)</button>
+        <a id="clientModeLink" class="client-mode-btn" href="/" style="display:none;">Interface Client</a>
+      </div>
+    </div>
   </div>
 </header>

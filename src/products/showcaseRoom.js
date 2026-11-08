@@ -138,8 +138,8 @@ export function createCookiesPlate() {
   cookieTop.rotation.set(0.14, 0.6, -0.12);
   plateGroup.add(cookieTop);
 
-  // Positionnée sur la table en avant-droite, bien en retrait du bord et stable
-  plateGroup.position.set(2.10, 0.001, 0.48);
+  // Positionnée sur la table en coin avant-droit, complètement dégagée de tout produit (sous-verres, mug, bracelet)
+  plateGroup.position.set(2.68, 0.001, 0.72);
   plateGroup.rotation.y = 0.15;
 
   return plateGroup;
@@ -223,6 +223,599 @@ export function createBusinessCard() {
   return card;
 }
 
+// Grande cheminée imposante en pierre avec linteau chêne, hotte monumentale, pieds du Père Noël en mode Noël
+export function createWarmFireplace(leftX, floorY) {
+  const fpGroup = new THREE.Group();
+  fpGroup.name = 'warmFireplaceGroup';
+
+  const stoneMat = new THREE.MeshStandardMaterial({ color: 0xded8cc, roughness: 0.85, metalness: 0.05 });
+  const hearthMat = new THREE.MeshStandardMaterial({ color: 0x12100e, roughness: 0.95 });
+  const mantelWoodMat = new THREE.MeshStandardMaterial({ color: 0x3e2412, roughness: 0.65, metalness: 0.05 });
+  const ironMat = new THREE.MeshStandardMaterial({ color: 0x1a1e22, roughness: 0.5, metalness: 0.65 });
+  const woodLogMat = new THREE.MeshStandardMaterial({ color: 0x331c0e, roughness: 0.92 });
+  const ashMat = new THREE.MeshStandardMaterial({ color: 0xbf360c, emissive: 0xd84315, emissiveIntensity: 1.8, roughness: 0.9 });
+
+  // 1. Socle bas au sol (plus large : 2.50m)
+  const base = new THREE.Mesh(new THREE.BoxGeometry(0.70, 0.12, 2.50), stoneMat);
+  base.position.set(0.35, 0.06, 0);
+  base.castShadow = true; base.receiveShadow = true;
+  fpGroup.add(base);
+
+  // 2. Foyer intérieur sombre (fond contre le mur gauche)
+  const backWallFp = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.40, 1.90), hearthMat);
+  backWallFp.position.set(0.04, 0.78, 0);
+  backWallFp.receiveShadow = true;
+  fpGroup.add(backWallFp);
+
+  // 3. Jambages latéraux en pierre (piliers gauche et droit massifs)
+  const pillarGeo = new THREE.BoxGeometry(0.62, 1.40, 0.32);
+  const leftPillar = new THREE.Mesh(pillarGeo, stoneMat);
+  leftPillar.position.set(0.31, 0.78, -0.95);
+  leftPillar.castShadow = true; leftPillar.receiveShadow = true;
+  fpGroup.add(leftPillar);
+
+  const rightPillar = new THREE.Mesh(pillarGeo, stoneMat);
+  rightPillar.position.set(0.31, 0.78, 0.95);
+  rightPillar.castShadow = true; rightPillar.receiveShadow = true;
+  fpGroup.add(rightPillar);
+
+  // 4. Linteau imposant au-dessus du foyer
+  const lintel = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.28, 2.22), stoneMat);
+  lintel.position.set(0.325, 1.35, 0);
+  lintel.castShadow = true; lintel.receiveShadow = true;
+  fpGroup.add(lintel);
+
+  // 5. Manteau / Tablette supérieure en chêne massif foncé
+  const mantel = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.12, 2.65), mantelWoodMat);
+  mantel.position.set(0.37, 1.54, 0);
+  mantel.castShadow = true; mantel.receiveShadow = true;
+  fpGroup.add(mantel);
+
+  // 6. Grande hotte pyramidale qui monte vers le plafond
+  const hoodCanvas = document.createElement('canvas'); hoodCanvas.width = 256; hoodCanvas.height = 256;
+  const hCtx = hoodCanvas.getContext('2d');
+  hCtx.fillStyle = '#ded8cc'; hCtx.fillRect(0, 0, 256, 256);
+  for (let i = 0; i < 40; i++) {
+    hCtx.fillStyle = 'rgba(190, 180, 165, 0.25)';
+    hCtx.fillRect(0, i * 6.5, 256, 3);
+  }
+  const hoodTex = new THREE.CanvasTexture(hoodCanvas);
+  const hoodMat = new THREE.MeshStandardMaterial({ map: hoodTex, roughness: 0.85, metalness: 0.05 });
+  const hoodGeo = new THREE.BoxGeometry(0.50, 3.20, 2.00);
+  const hoodMesh = new THREE.Mesh(hoodGeo, hoodMat);
+  hoodMesh.position.set(0.25, 3.10, 0);
+  fpGroup.add(hoodMesh);
+
+  // 7. Grille de foyer en fer forgé
+  const grate = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.05, 0.95), ironMat);
+  grate.position.set(0.32, 0.14, 0);
+  fpGroup.add(grate);
+
+  // 8. Bûches de bois en relief
+  const logGeo = new THREE.CylinderGeometry(0.060, 0.065, 0.75, 12);
+  for (let b = 0; b < 3; b++) {
+    const log = new THREE.Mesh(logGeo, woodLogMat);
+    log.rotation.x = Math.PI / 2;
+    log.rotation.z = (b - 1) * 0.18;
+    log.position.set(0.28 + (b === 2 ? 0.04 : (b * 0.08)), 0.20 + (b === 2 ? 0.10 : 0), (b - 1) * 0.10);
+    log.castShadow = true;
+    fpGroup.add(log);
+  }
+
+  // 9. Lit de braises incandescentes
+  const embers = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.04, 0.70), ashMat);
+  embers.position.set(0.30, 0.15, 0);
+  fpGroup.add(embers);
+
+  // 10. Flammes stylisées chaleureuses (actives uniquement hors mode Noël)
+  const flameGroup = new THREE.Group();
+  flameGroup.name = 'fireplaceFlameGroup';
+  const flameMat1 = new THREE.MeshBasicMaterial({ color: 0xff3d00, transparent: true, opacity: 0.90 });
+  const flameMat2 = new THREE.MeshBasicMaterial({ color: 0xff9100, transparent: true, opacity: 0.95 });
+  const flameMat3 = new THREE.MeshBasicMaterial({ color: 0xffea00, transparent: true, opacity: 0.95 });
+  const flamesList = [];
+
+  for (let f = 0; f < 7; f++) {
+    const fH = 0.28 + (f % 2) * 0.16;
+    const fGeo = new THREE.ConeGeometry(0.065 - f * 0.005, fH, 8);
+    const fMat = f % 3 === 0 ? flameMat1 : (f % 3 === 1 ? flameMat2 : flameMat3);
+    const flame = new THREE.Mesh(fGeo, fMat);
+    flame.position.set(0.26 + (f % 2) * 0.06, 0.20 + fH / 2, -0.28 + f * 0.09);
+    flame.userData = { baseY: 0.20 + fH / 2, baseScaleY: 1.0, phase: f * 1.3 };
+    flameGroup.add(flame);
+    flamesList.push(flame);
+  }
+  fpGroup.add(flameGroup);
+  fpGroup.userData.flameGroup = flameGroup;
+  fpGroup.userData.flames = flamesList;
+
+  // 11. Lumière chaleureuse vacillante du feu
+  const fireLight = new THREE.PointLight(0xff6b1a, 2.5, 6.5, 1.8);
+  fireLight.position.set(0.40, 0.40, 0);
+  fpGroup.add(fireLight);
+  fpGroup.userData.fireLight = fireLight;
+
+  // 12. DÉCORATION NOËL EXCLUSIVE : PIEDS DU PÈRE NOËL, SUIE AU SOL, CHAUSSETTES ET GUIRLANDE
+  const christmasFireplaceGroup = new THREE.Group();
+  christmasFireplaceGroup.name = 'christmasFireplaceExclusiveGroup';
+
+  // A. Saleté et suie étalée au sol devant l'âtre
+  const sootCanvas = document.createElement('canvas'); sootCanvas.width = 512; sootCanvas.height = 512;
+  const sCtx = sootCanvas.getContext('2d');
+  sCtx.fillStyle = '#000000';
+  for (let i = 0; i < 300; i++) {
+    const cx = 256 + (Math.random() - 0.5) * 360;
+    const cy = 256 + (Math.random() - 0.5) * 280;
+    const r = 8 + Math.random() * 45;
+    const g = sCtx.createRadialGradient(cx, cy, 2, cx, cy, r);
+    g.addColorStop(0, 'rgba(18, 14, 12, ' + (0.15 + Math.random() * 0.35) + ')');
+    g.addColorStop(1, 'rgba(18, 14, 12, 0)');
+    sCtx.fillStyle = g; sCtx.beginPath(); sCtx.arc(cx, cy, r, 0, Math.PI * 2); sCtx.fill();
+  }
+  const sootTex = new THREE.CanvasTexture(sootCanvas);
+  const sootMat = new THREE.MeshStandardMaterial({
+    map: sootTex,
+    color: 0x1a1410,
+    transparent: true,
+    opacity: 0.82,
+    roughness: 0.98
+  });
+  const sootPlane = new THREE.Mesh(new THREE.PlaneGeometry(1.20, 2.20), sootMat);
+  sootPlane.rotation.x = -Math.PI / 2;
+  sootPlane.position.set(0.95, 0.005, 0);
+  christmasFireplaceGroup.add(sootPlane);
+
+  // B. Jambes et bottes du Père Noël qui sortent / dépassent de la cheminée
+  const redPantsMat = new THREE.MeshStandardMaterial({ color: 0xcc1111, roughness: 0.70 });
+  const whiteFurMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.90 });
+  const blackBootMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.35, metalness: 0.2 });
+  const goldBuckleMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.85, roughness: 0.25 });
+
+  const legsGroup = new THREE.Group();
+  legsGroup.position.set(0.38, 0.95, 0); // Suspendues dans l'âtre
+
+  [-0.18, 0.18].forEach((legZ, idx) => {
+    const legSub = new THREE.Group();
+    legSub.position.set(0, 0, legZ);
+    legSub.rotation.z = -0.15 + (idx * 0.08); // Légère inclinaison
+    legSub.rotation.y = (idx === 0 ? 0.15 : -0.15);
+
+    // Pantalon rouge (jambe descendant du conduit)
+    const pantMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.095, 0.50, 16), redPantsMat);
+    pantMesh.position.y = -0.18;
+    pantMesh.castShadow = true;
+    legSub.add(pantMesh);
+
+    // Revers de fourrure blanche épaisse
+    const furMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.115, 0.08, 16), whiteFurMat);
+    furMesh.position.y = -0.42;
+    furMesh.castShadow = true;
+    legSub.add(furMesh);
+
+    // Botte noire (tige)
+    const bootShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.090, 0.090, 0.18, 16), blackBootMat);
+    bootShaft.position.y = -0.52;
+    bootShaft.castShadow = true;
+    legSub.add(bootShaft);
+
+    // Pied de la botte orienté vers l'avant (vers la pièce)
+    const bootFoot = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.10, 0.13), blackBootMat);
+    bootFoot.position.set(0.06, -0.61, 0);
+    bootFoot.castShadow = true;
+    legSub.add(bootFoot);
+
+    // Boucle dorée sur la botte
+    const buckle = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.06, 0.08), goldBuckleMat);
+    buckle.position.set(0.12, -0.56, 0);
+    legSub.add(buckle);
+
+    legsGroup.add(legSub);
+  });
+  christmasFireplaceGroup.add(legsGroup);
+
+  // C. Guirlande de Noël le long du manteau de cheminée
+  const garlandMat = new THREE.MeshStandardMaterial({ color: 0x1b4324, roughness: 0.85 });
+  const berryMat = new THREE.MeshStandardMaterial({ color: 0xd92626, roughness: 0.3, metalness: 0.1 });
+  const ribbonMat = new THREE.MeshStandardMaterial({ color: 0xb91c1c, roughness: 0.6 });
+
+  const garland = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 2.50, 12), garlandMat);
+  garland.rotation.x = Math.PI / 2;
+  garland.position.set(0.72, 1.48, 0);
+  christmasFireplaceGroup.add(garland);
+
+  // Petites baies rouges festives sur la guirlande
+  for (let b = 0; b < 12; b++) {
+    const berry = new THREE.Mesh(new THREE.SphereGeometry(0.022, 8, 8), berryMat);
+    berry.position.set(0.74, 1.48 + ((b % 2) * 0.03 - 0.015), -1.05 + b * 0.19);
+    christmasFireplaceGroup.add(berry);
+  }
+
+  // D. 3 Chaussettes de Noël suspendues sous le manteau
+  const sockColors = [0x991b1b, 0x166534, 0x991b1b];
+  [-0.60, 0, 0.60].forEach((sZ, sIdx) => {
+    const sockGroup = new THREE.Group();
+    sockGroup.position.set(0.70, 1.42, sZ);
+
+    const sockBodyMat = new THREE.MeshStandardMaterial({ color: sockColors[sIdx], roughness: 0.8 });
+    const sockCuffMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 });
+
+    const cuff = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.06, 0.14), sockCuffMat);
+    sockGroup.add(cuff);
+
+    const bodyMesh = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.20, 0.12), sockBodyMat);
+    bodyMesh.position.y = -0.11;
+    sockGroup.add(bodyMesh);
+
+    const footMesh = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.09, 0.17), sockBodyMat);
+    footMesh.position.set(0, -0.20, 0.04);
+    sockGroup.add(footMesh);
+
+    christmasFireplaceGroup.add(sockGroup);
+  });
+
+  fpGroup.add(christmasFireplaceGroup);
+  fpGroup.userData.christmasDecor = christmasFireplaceGroup;
+
+  // Décorations standard sur le manteau (bougeoirs dorés)
+  const brassMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.8, roughness: 0.25 });
+  const candleWaxMat = new THREE.MeshStandardMaterial({ color: 0xfffbeb, roughness: 0.4 });
+  const candleFlameMat = new THREE.MeshBasicMaterial({ color: 0xffa000 });
+
+  [-0.95, 0.95].forEach(sideZ => {
+    const holder = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.07, 0.09, 16), brassMat);
+    holder.position.set(0.38, 1.63, sideZ);
+    fpGroup.add(holder);
+
+    const candle = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.20, 12), candleWaxMat);
+    candle.position.set(0.38, 1.76, sideZ);
+    fpGroup.add(candle);
+
+    const cFlame = new THREE.Mesh(new THREE.ConeGeometry(0.014, 0.04, 8), candleFlameMat);
+    cFlame.position.set(0.38, 1.88, sideZ);
+    fpGroup.add(cFlame);
+  });
+
+  // Game Boy rétro DMG-01 posée sur le manteau de la cheminée
+  const gb = createGameBoyDMG();
+  gb.position.set(0.42, 1.61, -0.38);
+  gb.rotation.set(-Math.PI / 2 + 0.25, 0, 0.35);
+  fpGroup.add(gb);
+
+  // Rubik's Cube 3D multicolore posé sur le manteau de la cheminée
+  const rubik = createRubiksCube();
+  rubik.position.set(0.42, 1.63, 0.36);
+  rubik.rotation.set(0.15, 0.45, -0.10);
+  fpGroup.add(rubik);
+
+  // Positionner contre le mur gauche
+  fpGroup.position.set(leftX + 0.04, floorY, 1.25);
+  return fpGroup;
+}
+
+// Game Boy classique originale DMG-01 avec écran rétro LCD, croix directionnelle et boutons bordeaux
+export function createGameBoyDMG() {
+  const gb = new THREE.Group();
+  gb.name = 'gameBoyDMG';
+
+  const gbBodyMat = new THREE.MeshStandardMaterial({ color: 0xd2cdc2, roughness: 0.65 });
+  const gbBezelMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.5 });
+  const gbScreenMat = new THREE.MeshStandardMaterial({ color: 0x829158, roughness: 0.25, emissive: 0x1f2e14, emissiveIntensity: 0.3 });
+  const dpadMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.4 });
+  const buttonMat = new THREE.MeshStandardMaterial({ color: 0x9f1239, roughness: 0.3 });
+  const selectMat = new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.5 });
+
+  const body = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.148, 0.032), gbBodyMat);
+  body.castShadow = true; body.receiveShadow = true;
+  gb.add(body);
+
+  const bezel = new THREE.Mesh(new THREE.BoxGeometry(0.076, 0.065, 0.003), gbBezelMat);
+  bezel.position.set(0, 0.032, 0.016);
+  gb.add(bezel);
+
+  const screen = new THREE.Mesh(new THREE.BoxGeometry(0.052, 0.046, 0.002), gbScreenMat);
+  screen.position.set(0, 0.032, 0.018);
+  gb.add(screen);
+
+  const dpadV = new THREE.Mesh(new THREE.BoxGeometry(0.007, 0.022, 0.004), dpadMat);
+  dpadV.position.set(-0.023, -0.022, 0.017);
+  gb.add(dpadV);
+  const dpadH = new THREE.Mesh(new THREE.BoxGeometry(0.022, 0.007, 0.004), dpadMat);
+  dpadH.position.set(-0.023, -0.022, 0.017);
+  gb.add(dpadH);
+
+  const btnB = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.004, 16), buttonMat);
+  btnB.rotation.x = Math.PI / 2;
+  btnB.position.set(0.017, -0.025, 0.017);
+  gb.add(btnB);
+
+  const btnA = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.004, 16), buttonMat);
+  btnA.rotation.x = Math.PI / 2;
+  btnA.position.set(0.028, -0.018, 0.017);
+  gb.add(btnA);
+
+  [-0.010, 0.005].forEach(sx => {
+    const sel = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.0035, 0.002), selectMat);
+    sel.rotation.z = -0.45;
+    sel.position.set(sx, -0.052, 0.017);
+    gb.add(sel);
+  });
+
+  return gb;
+}
+
+// Rubik's Cube 3D avec ses 6 faces colorées et ses rainures noires
+export function createRubiksCube() {
+  const cubeGroup = new THREE.Group();
+  cubeGroup.name = 'rubiksCube3D';
+
+  const blackMat = new THREE.MeshStandardMaterial({ color: 0x111315, roughness: 0.55 });
+  const faceColors = [0xdc2626, 0xf97316, 0xffffff, 0xfacc15, 0x2563eb, 0x16a34a];
+  const size = 0.070;
+  const pieceSize = (size - 0.006) / 3;
+
+  const core = new THREE.Mesh(new THREE.BoxGeometry(size, size, size), blackMat);
+  core.castShadow = true;
+  cubeGroup.add(core);
+
+  const stickerMatList = faceColors.map(c => new THREE.MeshStandardMaterial({
+    color: c, roughness: 0.25, metalness: 0.05
+  }));
+
+  const half = size / 2;
+  const stickerSize = pieceSize * 0.88;
+  const th = 0.001;
+
+  for (let i = -1; i <= 1; i++) {
+    for (let j = -1; j <= 1; j++) {
+      const u = i * (pieceSize + 0.002);
+      const v = j * (pieceSize + 0.002);
+
+      const stR = new THREE.Mesh(new THREE.BoxGeometry(th, stickerSize, stickerSize), stickerMatList[0]);
+      stR.position.set(half + 0.0005, u, v); cubeGroup.add(stR);
+
+      const stL = new THREE.Mesh(new THREE.BoxGeometry(th, stickerSize, stickerSize), stickerMatList[1]);
+      stL.position.set(-half - 0.0005, u, v); cubeGroup.add(stL);
+
+      const stT = new THREE.Mesh(new THREE.BoxGeometry(stickerSize, th, stickerSize), stickerMatList[2]);
+      stT.position.set(u, half + 0.0005, v); cubeGroup.add(stT);
+
+      const stB = new THREE.Mesh(new THREE.BoxGeometry(stickerSize, th, stickerSize), stickerMatList[3]);
+      stB.position.set(u, -half - 0.0005, v); cubeGroup.add(stB);
+
+      const stF = new THREE.Mesh(new THREE.BoxGeometry(stickerSize, stickerSize, th), stickerMatList[4]);
+      stF.position.set(u, v, half + 0.0005); cubeGroup.add(stF);
+
+      const stK = new THREE.Mesh(new THREE.BoxGeometry(stickerSize, stickerSize, th), stickerMatList[5]);
+      stK.position.set(u, v, -half - 0.0005); cubeGroup.add(stK);
+    }
+  }
+
+  return cubeGroup;
+}
+
+// Grande étagère rétro-gaming & design sur le mur du fond entre le tableau et le sapin (Atari 520 ST, Amiga, Vectrex, Appareil photo, Trophées, Portfolio Callisto Arts)
+export function createRetroTechShelf(rightX, floorY, roomCenterZ) {
+  const shelfGroup = new THREE.Group();
+  shelfGroup.name = 'retroTechShelfGroup';
+
+  const woodShelfMat = new THREE.MeshStandardMaterial({ color: 0x805533, roughness: 0.65, metalness: 0.05 });
+  const darkMetalMat = new THREE.MeshStandardMaterial({ color: 0x1e242b, roughness: 0.40, metalness: 0.70 });
+  const atariGrayMat = new THREE.MeshStandardMaterial({ color: 0xbbb5a8, roughness: 0.55 });
+  const amigaBeigeMat = new THREE.MeshStandardMaterial({ color: 0xd0c8b6, roughness: 0.55 });
+  const vectrexBlackMat = new THREE.MeshStandardMaterial({ color: 0x141619, roughness: 0.35, metalness: 0.2 });
+  const vectrexScreenMat = new THREE.MeshStandardMaterial({ color: 0x0a1c18, emissive: 0x032b1f, emissiveIntensity: 0.6, roughness: 0.1 });
+  const goldTrophyMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.90, roughness: 0.18 });
+  const marbleBaseMat = new THREE.MeshStandardMaterial({ color: 0x1f2429, roughness: 0.4 });
+  const cameraSilverMat = new THREE.MeshStandardMaterial({ color: 0xd1d5db, metalness: 0.85, roughness: 0.2 });
+  const cameraLeatherMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.9 });
+  const lensGlassMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.1, metalness: 0.5 });
+
+  // 1. Structure de l'étagère murale (3 niveaux en chêne avec montants verticaux en métal noir)
+  const shelfW = 1.65, shelfD = 0.36, shelfH = 0.035;
+  const levelsY = [0.45, 1.15, 1.85];
+
+  levelsY.forEach(ly => {
+    const plank = new THREE.Mesh(new THREE.BoxGeometry(shelfD, shelfH, shelfW), woodShelfMat);
+    plank.position.set(-shelfD / 2, ly, 0);
+    plank.castShadow = true; plank.receiveShadow = true;
+    shelfGroup.add(plank);
+  });
+
+  // Montants verticaux en acier noir
+  [-shelfW / 2 + 0.08, shelfW / 2 - 0.08].forEach(mz => {
+    const bar = new THREE.Mesh(new THREE.BoxGeometry(shelfD + 0.04, 1.80, 0.03), darkMetalMat);
+    bar.position.set(-shelfD / 2, 1.15, mz);
+    bar.castShadow = true;
+    shelfGroup.add(bar);
+  });
+
+  // 2. NIVEAU 1 (ly = 0.45) : ATARI 520 ST & COMMODORE AMIGA 500
+  // A. Atari 520 ST (forme biseautée grise emblématique, fente disquette latérale)
+  const atari = new THREE.Group();
+  atari.name = 'atari520ST';
+  atari.position.set(-shelfD / 2, 0.47, -0.42);
+
+  const atariBase = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.045, 0.42), atariGrayMat);
+  atari.add(atariBase);
+
+  // Clavier incliné
+  const atariKeyboardMat = new THREE.MeshStandardMaterial({ color: 0x3d3935, roughness: 0.7 });
+  const atariKeys = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.015, 0.34), atariKeyboardMat);
+  atariKeys.position.set(0.04, 0.028, 0);
+  atari.add(atariKeys);
+
+  // Fente lecteur disquette 3.5" latérale
+  const driveSlot = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.012, 0.005), darkMetalMat);
+  driveSlot.position.set(-0.06, 0.015, 0.211);
+  atari.add(driveSlot);
+
+  // Logo Atari stylisé (rouge)
+  const atariBadge = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.004, 0.03), new THREE.MeshBasicMaterial({ color: 0xd92626 }));
+  atariBadge.position.set(-0.10, 0.025, -0.14);
+  atari.add(atariBadge);
+
+  shelfGroup.add(atari);
+
+  // B. Commodore Amiga 500 (boîtier beige emblématique, fentes de ventilation)
+  const amiga = new THREE.Group();
+  amiga.name = 'amiga500';
+  amiga.position.set(-shelfD / 2, 0.47, 0.42);
+
+  const amigaBase = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.052, 0.43), amigaBeigeMat);
+  amiga.add(amigaBase);
+
+  const amigaKeysMat = new THREE.MeshStandardMaterial({ color: 0xd8d2c2, roughness: 0.6 });
+  const amigaKeys = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.018, 0.36), amigaKeysMat);
+  amigaKeys.position.set(0.035, 0.032, 0);
+  amiga.add(amigaKeys);
+
+  // LED Power et Floppy
+  const ledPower = new THREE.Mesh(new THREE.SphereGeometry(0.005, 8, 8), new THREE.MeshBasicMaterial({ color: 0xef4444 }));
+  ledPower.position.set(-0.10, 0.030, -0.16);
+  amiga.add(ledPower);
+
+  const ledDrive = new THREE.Mesh(new THREE.SphereGeometry(0.005, 8, 8), new THREE.MeshBasicMaterial({ color: 0x22c55e }));
+  ledDrive.position.set(-0.10, 0.030, -0.14);
+  amiga.add(ledDrive);
+
+  shelfGroup.add(amiga);
+
+  // 3. NIVEAU 2 (ly = 1.15) : VECTREX ET APPAREIL PHOTO VINTAGE
+  // A. Console Vectrex (borne vectorielle noire verticale compacte)
+  const vectrex = new THREE.Group();
+  vectrex.name = 'vectrexConsole';
+  vectrex.position.set(-shelfD / 2, 1.17, -0.42);
+
+  // Meuble vertical
+  const vxCabinet = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.38, 0.24), vectrexBlackMat);
+  vxCabinet.position.y = 0.19;
+  vxCabinet.castShadow = true;
+  vectrex.add(vxCabinet);
+
+  // Écran vertical 9 pouces sombre
+  const vxScreen = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.20, 0.15), vectrexScreenMat);
+  vxScreen.position.set(0.10, 0.23, 0);
+  vectrex.add(vxScreen);
+
+  // Manette Vectrex posée devant avec joystick
+  const vxCtrl = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.025, 0.20), vectrexBlackMat);
+  vxCtrl.position.set(0.13, 0.013, 0);
+  vectrex.add(vxCtrl);
+
+  const vxStick = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.04, 8), cameraSilverMat);
+  vxStick.position.set(0.13, 0.040, -0.05);
+  vectrex.add(vxStick);
+
+  shelfGroup.add(vectrex);
+
+  // B. Appareil photo vintage argenté et cuir noir
+  const camera = new THREE.Group();
+  camera.name = 'vintageCamera';
+  camera.position.set(-shelfD / 2, 1.17, 0.40);
+
+  const camBody = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.10, 0.18), cameraLeatherMat);
+  camBody.position.y = 0.05;
+  camBody.castShadow = true;
+  camera.add(camBody);
+
+  const camTop = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.035, 0.18), cameraSilverMat);
+  camTop.position.set(0, 0.11, 0);
+  camera.add(camTop);
+
+  // Objectif en verre
+  const lensBarrel = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.048, 0.09, 20), cameraSilverMat);
+  lensBarrel.rotation.z = Math.PI / 2;
+  lensBarrel.position.set(0.09, 0.05, 0);
+  camera.add(lensBarrel);
+
+  const lensGlass = new THREE.Mesh(new THREE.CylinderGeometry(0.038, 0.038, 0.01, 16), lensGlassMat);
+  lensGlass.rotation.z = Math.PI / 2;
+  lensGlass.position.set(0.136, 0.05, 0);
+  camera.add(lensGlass);
+
+  shelfGroup.add(camera);
+
+  // 4. NIVEAU 3 (ly = 1.85) : TROPHÉES DORÉS ET PORTFOLIO CALLISTO ARTS
+  // A. Trophée doré étincelant avec anses
+  const trophy = new THREE.Group();
+  trophy.name = 'goldTrophy';
+  trophy.position.set(-shelfD / 2, 1.87, -0.40);
+
+  const trophyBase = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.06, 0.10), marbleBaseMat);
+  trophyBase.position.y = 0.03;
+  trophy.add(trophyBase);
+
+  const trophyStem = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.025, 0.08, 12), goldTrophyMat);
+  trophyStem.position.y = 0.10;
+  trophy.add(trophyStem);
+
+  const trophyCup = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.025, 0.14, 20), goldTrophyMat);
+  trophyCup.position.y = 0.19;
+  trophy.add(trophyCup);
+
+  shelfGroup.add(trophy);
+
+  // B. Grand livre relié Portfolio Callisto Arts (interactif vers www.callistoarts.com)
+  const book = new THREE.Group();
+  book.name = 'portfolioBookCallisto';
+  book.position.set(-shelfD / 2, 1.87, 0.28);
+
+  // Texture de couverture personnalisée avec typographie CALLISTO ARTS
+  const bookCanvas = document.createElement('canvas'); bookCanvas.width = 512; bookCanvas.height = 512;
+  const bCtx = bookCanvas.getContext('2d');
+  bCtx.fillStyle = '#161a24'; bCtx.fillRect(0, 0, 512, 512);
+
+  // Cadre doré luxueux
+  bCtx.strokeStyle = '#d4af37'; bCtx.lineWidth = 10;
+  bCtx.strokeRect(24, 24, 464, 464);
+  bCtx.lineWidth = 3;
+  bCtx.strokeRect(38, 38, 436, 436);
+
+  // Titres dorés
+  bCtx.fillStyle = '#f59e0b';
+  bCtx.font = 'bold 36px "Segoe UI", Arial, sans-serif';
+  bCtx.textAlign = 'center';
+  bCtx.fillText('CALLISTO ARTS', 256, 180);
+
+  bCtx.font = 'bold 22px "Segoe UI", Arial, sans-serif';
+  bCtx.fillStyle = '#cbd5e1';
+  bCtx.fillText('PORTFOLIO CRÉATIF', 256, 230);
+
+  bCtx.font = '18px "Segoe UI", Arial, sans-serif';
+  bCtx.fillStyle = '#94a3b8';
+  bCtx.fillText('www.callistoarts.com', 256, 360);
+
+  const bookTex = new THREE.CanvasTexture(bookCanvas);
+  bookTex.colorSpace = THREE.SRGBColorSpace;
+  const bookCoverMat = new THREE.MeshStandardMaterial({ map: bookTex, roughness: 0.45, metalness: 0.15 });
+  const bookPagesMat = new THREE.MeshStandardMaterial({ color: 0xfbf8f3, roughness: 0.85 });
+
+  const bookMesh = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.05, 0.22), [
+    bookCoverMat, bookCoverMat, bookCoverMat, bookCoverMat, bookPagesMat, bookCoverMat
+  ]);
+  bookMesh.position.y = 0.025;
+  bookMesh.rotation.y = -0.25;
+  bookMesh.castShadow = true;
+  book.add(bookMesh);
+
+  // Métadonnées d'interaction au clic
+  book.userData = {
+    interactive: true,
+    cursor: 'pointer',
+    tooltip: 'Découvrir le Portfolio Callisto Arts (www.callistoarts.com)',
+    onClick: () => {
+      window.open('https://www.callistoarts.com', '_blank');
+    }
+  };
+
+  shelfGroup.add(book);
+
+  // Positionnement sur le mur du fond entre le tableau (X: 1.25) et le grand sapin (X: 4.90)
+  shelfGroup.position.set(3.75, floorY, -0.78);
+  shelfGroup.rotation.y = -Math.PI / 2;
+  return shelfGroup;
+}
+
 export function createStudioRoom() {
   const roomGroup = new THREE.Group();
   const tableX = 0.75;
@@ -284,8 +877,18 @@ export function createStudioRoom() {
   const leftWall = new THREE.Mesh(new THREE.BoxGeometry(0.08, wallHeight, roomDepth), sideWallMat);
   leftWall.position.set(leftX, wallY, roomCenterZ); leftWall.receiveShadow = true; roomGroup.add(leftWall);
 
+  // Cheminée chaleureuse en pierre avec linteau chêne et feu crépitant sur le mur de gauche
+  const fireplace = createWarmFireplace(leftX, floorY);
+  roomGroup.add(fireplace);
+  roomGroup.userData.fireplace = fireplace;
+
   const rightWall = new THREE.Mesh(new THREE.BoxGeometry(0.08, wallHeight, roomDepth), sideWallMat);
   rightWall.position.set(rightX, wallY, roomCenterZ); rightWall.receiveShadow = true; roomGroup.add(rightWall);
+
+  // Grande étagère rétro-gaming & design sur le mur de droite (Atari 520 ST, Amiga, Vectrex, Appareil photo, Trophées, Portfolio Callisto Arts)
+  const retroShelf = createRetroTechShelf(rightX, floorY, roomCenterZ);
+  roomGroup.add(retroShelf);
+  roomGroup.userData.retroShelf = retroShelf;
 
   // 3. Plafond avec spots architecturaux encastres
   const ceilingMat = new THREE.MeshStandardMaterial({ color: 0xeee9e2, roughness: 0.90, metalness: 0.02 });
@@ -391,6 +994,20 @@ export function createStudioRoom() {
     noelDecor.visible = (th === 'noel');
     halloweenDecor.visible = (th === 'halloween');
     monstera.visible = (th === 'standard');
+
+    // Cheminée : en mode Noël -> pieds du Père Noël, saleté au sol, guirlande, pas de flammes vives
+    const fp = roomGroup.userData?.fireplace;
+    if (fp) {
+      if (th === 'noel') {
+        if (fp.userData?.christmasDecor) fp.userData.christmasDecor.visible = true;
+        if (fp.userData?.flameGroup) fp.userData.flameGroup.visible = false;
+        if (fp.userData?.fireLight) fp.userData.fireLight.visible = false;
+      } else {
+        if (fp.userData?.christmasDecor) fp.userData.christmasDecor.visible = false;
+        if (fp.userData?.flameGroup) fp.userData.flameGroup.visible = true;
+        if (fp.userData?.fireLight) fp.userData.fireLight.visible = true;
+      }
+    }
   };
   applyThemeVisibility(currentTheme);
 
@@ -403,6 +1020,21 @@ export function createStudioRoom() {
     };
 
     app.updateSnowParticles = function(dt) {
+      // Animation crépitante chaleureuse du feu de la cheminée sur le mur gauche (hors mode Noël où le feu est éteint)
+      const fp = roomGroup.userData?.fireplace;
+      if (fp && fp.userData?.flameGroup && fp.userData.flameGroup.visible) {
+        const time = performance.now() * 0.001;
+        if (fp.userData?.fireLight) {
+          const flicker = 1.9 + 0.45 * Math.sin(time * 8.5) + 0.25 * Math.cos(time * 15.2) + 0.15 * Math.sin(time * 23.0);
+          fp.userData.fireLight.intensity = Math.max(1.1, flicker);
+        }
+        if (Array.isArray(fp.userData?.flames)) {
+          fp.userData.flames.forEach(fl => {
+            fl.scale.y = 0.85 + 0.35 * Math.sin(time * 11.5 + fl.userData.phase);
+          });
+        }
+      }
+
       if (noelDecor.userData?.snowSystem && noelDecor.visible) {
         noelDecor.userData.snowSystem.update(dt);
       }
@@ -780,10 +1412,154 @@ export function createChristmasDecorGroup() {
   decor.add(treeGroup);
   decor.add(lightsGroup);
 
-  // Système de particules de neige rapide avec gros flocons et entassement dynamique
-  const snow = createSnowSystem(850);
+  // Collection de boîtes de cadeaux au sol avec flots rouges et verts
+  decor.add(createChristmasGiftsGroup());
+
+  // Système de particules de neige continue ininterrompue
+  const snow = createSnowSystem(1100);
   decor.add(snow.group);
   decor.userData.snowSystem = snow;
 
   return decor;
+}
+
+// Boîtes de cadeaux de Noël au sol avec ruban croisé et flot en relief rouge ou vert
+export function createChristmasGiftsGroup() {
+  const giftsGroup = new THREE.Group();
+  giftsGroup.name = 'christmasGiftsGroup';
+
+  function createSingleGift({ w, h, d, boxColor, ribbonColor, pos, rotY }) {
+    const g = new THREE.Group();
+
+    // 1. Boîte cadeau principale
+    const boxMat = new THREE.MeshStandardMaterial({
+      color: boxColor,
+      roughness: 0.35,
+      metalness: 0.12
+    });
+    const box = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), boxMat);
+    box.position.y = h / 2;
+    box.castShadow = true;
+    box.receiveShadow = true;
+    g.add(box);
+
+    // 2. Rubans croisés
+    const ribbonMat = new THREE.MeshStandardMaterial({
+      color: ribbonColor,
+      roughness: 0.28,
+      metalness: 0.20
+    });
+    const rw = Math.max(0.024, Math.min(w, d) * 0.16);
+
+    const ribX = new THREE.Mesh(new THREE.BoxGeometry(w + 0.002, h + 0.002, rw), ribbonMat);
+    ribX.position.y = h / 2;
+    ribX.castShadow = true;
+    g.add(ribX);
+
+    const ribZ = new THREE.Mesh(new THREE.BoxGeometry(rw, h + 0.002, d + 0.002), ribbonMat);
+    ribZ.position.y = h / 2;
+    ribZ.castShadow = true;
+    g.add(ribZ);
+
+    // 3. Le Flot / Nœud papillon 3D sur le dessus de la boîte
+    const bow = new THREE.Group();
+    bow.position.set(0, h + 0.001, 0);
+
+    // Nœud central
+    const knot = new THREE.Mesh(new THREE.SphereGeometry(rw * 0.58, 12, 12), ribbonMat);
+    knot.castShadow = true;
+    bow.add(knot);
+
+    // Boucles gauche et droite du flot
+    const loopGeo = new THREE.TorusGeometry(rw * 1.15, rw * 0.22, 10, 20);
+    const loopL = new THREE.Mesh(loopGeo, ribbonMat);
+    loopL.rotation.set(Math.PI / 3, -Math.PI / 4, 0);
+    loopL.position.set(-rw * 0.85, rw * 0.55, 0);
+    loopL.castShadow = true;
+    bow.add(loopL);
+
+    const loopR = new THREE.Mesh(loopGeo, ribbonMat);
+    loopR.rotation.set(Math.PI / 3, Math.PI / 4, 0);
+    loopR.position.set(rw * 0.85, rw * 0.55, 0);
+    loopR.castShadow = true;
+    bow.add(loopR);
+
+    // Deux rubans pendants qui retombent sur les bords
+    const tailGeo = new THREE.BoxGeometry(rw * 0.55, 0.002, rw * 1.4);
+    const tail1 = new THREE.Mesh(tailGeo, ribbonMat);
+    tail1.rotation.set(0.18, 0.6, 0);
+    tail1.position.set(rw * 0.55, 0.002, rw * 0.65);
+    bow.add(tail1);
+
+    const tail2 = new THREE.Mesh(tailGeo, ribbonMat);
+    tail2.rotation.set(0.18, -0.6, 0);
+    tail2.position.set(-rw * 0.55, 0.002, rw * 0.65);
+    bow.add(tail2);
+
+    g.add(bow);
+
+    g.position.set(pos[0], pos[1], pos[2]);
+    if (rotY) g.rotation.y = rotY;
+
+    return g;
+  }
+
+  const floorY = -0.835;
+
+  // Collection de boîtes cadeaux au sol au pied du sapin et vers le flanc de la table
+  // 1. Grande boîte rouge carmin avec ruban et flot vert émeraude
+  giftsGroup.add(createSingleGift({
+    w: 0.36, h: 0.30, d: 0.36,
+    boxColor: 0xb91c1c, // Rouge carmin
+    ribbonColor: 0x15803d, // Flot vert émeraude
+    pos: [4.15, floorY, 0.38],
+    rotY: 0.22
+  }));
+
+  // 2. Belle boîte vert sapin avec ruban et flot rouge vermillon
+  giftsGroup.add(createSingleGift({
+    w: 0.32, h: 0.25, d: 0.30,
+    boxColor: 0x166534, // Vert forêt profond
+    ribbonColor: 0xdc2626, // Flot rouge vermillon
+    pos: [4.42, floorY, -0.42],
+    rotY: -0.35
+  }));
+
+  // 3. Boîte dorée étincelante avec ruban et flot rouge carmin
+  giftsGroup.add(createSingleGift({
+    w: 0.28, h: 0.22, d: 0.28,
+    boxColor: 0xca8a04, // Or satiné
+    ribbonColor: 0xb91c1c, // Flot rouge
+    pos: [3.85, floorY, 0.12],
+    rotY: 0.42
+  }));
+
+  // 4. Boîte rouge rubis empilée avec ruban et flot vert sapin
+  giftsGroup.add(createSingleGift({
+    w: 0.24, h: 0.20, d: 0.24,
+    boxColor: 0xdc2626, // Rouge vif
+    ribbonColor: 0x16a34a, // Flot vert
+    pos: [4.62, floorY, 0.22],
+    rotY: -0.15
+  }));
+
+  // 5. Boîte ivoire féerique avec ruban et flot rouge
+  giftsGroup.add(createSingleGift({
+    w: 0.30, h: 0.18, d: 0.25,
+    boxColor: 0xf8fafc, // Blanc ivoire
+    ribbonColor: 0xdc2626, // Flot rouge
+    pos: [3.80, floorY, -0.32],
+    rotY: 0.15
+  }));
+
+  // 6. Boîte cadeau moyenne vert émeraude avec flot rouge vif près du pied de table
+  giftsGroup.add(createSingleGift({
+    w: 0.26, h: 0.22, d: 0.26,
+    boxColor: 0x047857, // Émeraude
+    ribbonColor: 0xef4444, // Flot rouge
+    pos: [3.20, floorY, 0.48],
+    rotY: 0.30
+  }));
+
+  return giftsGroup;
 }

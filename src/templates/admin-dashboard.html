@@ -10,8 +10,10 @@
           <small>MockUp3D C3 • Gestion centralisée</small>
         </div>
       </div>
-      <div class="admin-header-actions">
+      <div class="admin-header-actions" style="display:flex; align-items:center; gap:8px;">
         <span class="admin-status-pill"><span class="pill-dot"></span> Connecté (Atelier)</span>
+        <span style="background:#ea580c; color:#ffffff; font-size:11px; font-weight:800; padding:4px 9px; border-radius:6px; display:inline-flex; align-items:center; gap:5px;" title="Mascotte officielle : Le Panda Roux">🦊 Panda Roux</span>
+        <button type="button" id="btnAdminThemeToggle" class="admin-btn-header" style="background:#334155; color:#f8fafc; cursor:pointer;" title="Basculer entre Mode Nuit et Mode Jour">🌙 Mode Nuit</button>
         <button type="button" id="btnAdminExportCsvQuick" class="admin-btn-header" title="Exporter toutes les commandes en CSV">Export CSV</button>
         <button type="button" id="btnAdminCloseDashboard" class="admin-btn-close" title="Retourner au configurateur 3D">✕ Fermer</button>
       </div>
@@ -35,6 +37,10 @@
             <span class="nav-icon">👥</span>
             <span class="nav-label">Fichier Clients</span>
             <span id="adminClientsBadge" class="nav-badge-info">0</span>
+          </button>
+          <button type="button" class="admin-nav-item" data-tab="tab-discounts">
+            <span class="nav-icon">🎁</span>
+            <span class="nav-label">Codes Cadeaux & Remises</span>
           </button>
           <button type="button" class="admin-nav-item" data-tab="tab-products">
             <span class="nav-icon">🏷️</span>
@@ -125,7 +131,8 @@
               <h3>Gestion des Commandes & Fiches BAT</h3>
               <p class="tab-subtitle">Visualisez, filtrez et téléchargez les packs de fabrication pour l'impression.</p>
             </div>
-            <div class="tab-actions">
+            <div class="tab-actions" style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button type="button" id="btnAdminNewProposition" class="admin-btn primary" style="background:#059669; border-color:#059669; font-weight:700;">+ Créer un BAT / Proposition Client</button>
               <button type="button" id="btnSyncOfflineOrders" class="admin-btn" style="display:none; background:#059669; color:#ffffff; font-weight:700;" title="Synchroniser les commandes prises hors-ligne sur le stand">🔄 Synchroniser Stand (0)</button>
               <button type="button" id="btnExportOrdersCsv" class="admin-btn outline">Export CSV</button>
               <button type="button" id="btnRefreshOrders" class="admin-btn outline">Actualiser</button>
@@ -173,7 +180,11 @@
               <h3>Fichier Clients & Historique</h3>
               <p class="tab-subtitle">Consultez les coordonnées complètes, le nombre de commandes et les montants cumulés par client.</p>
             </div>
-            <div class="tab-actions">
+            <div class="tab-actions" style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button type="button" id="btnAddNewClient" class="admin-btn primary" style="background:#4f46e5; border-color:#4f46e5; font-weight:700;">+ Nouveau Client</button>
+              <button type="button" id="btnRestoreLastClient" class="admin-btn outline" style="background:#fef3c7; border-color:#fcd34d; color:#92400e; font-weight:700;" title="Restaurer uniquement le dernier client supprimé">↺ Restaurer le dernier client</button>
+              <button type="button" id="btnOpenClientsTrash" class="admin-btn outline" style="background:#f8fafc; border-color:#cbd5e1; color:#475569; font-weight:700;" title="Consulter la corbeille des clients pour restaurer au choix">🗑️ Corbeille (<span id="clientsTrashCount">0</span>)</button>
+              <button type="button" id="btnRestoreClients" class="admin-btn outline" style="background:#f0fdf4; border-color:#86efac; color:#166534; font-weight:700;" title="Restaurer l'ensemble des fiches clients depuis la corbeille et l'historique des commandes">🔄 Tout restaurer</button>
               <button type="button" id="btnExportClientsCsv" class="admin-btn outline">Export CSV Clients</button>
             </div>
           </div>
@@ -274,6 +285,104 @@
                 <!-- Rempli dynamiquement -->
               </tbody>
             </table>
+          </div>
+        </section>
+
+        <!-- ONGLET : CODES CADEAUX & REMISES GLOBALES -->
+        <section id="tab-discounts" class="admin-tab-pane">
+          <div class="tab-header flex-between">
+            <div>
+              <h3>Codes Cadeaux & Remise Globale</h3>
+              <p class="tab-subtitle">Configurez une remise générale immédiate sur la boutique et créez des codes promo ou cadeaux personnalisés pour vos clients.</p>
+            </div>
+            <div class="tab-actions">
+              <button type="button" id="btnRefreshDiscounts" class="admin-btn outline">🔄 Actualiser</button>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1.6fr; gap:20px; align-items:start;">
+            <!-- Panneau 1 : Remise Globale Boutique -->
+            <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:12px; padding:20px; box-shadow:0 4px 14px rgba(0,0,0,0.03);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <strong style="font-size:15px; color:#0f172a; font-weight:800;">Remise Globale Boutique</strong>
+                <span id="globalDiscountBadge" style="background:#fee2e2; color:#dc2626; font-size:11px; font-weight:800; padding:3px 8px; border-radius:6px; text-transform:uppercase;">Désactivée</span>
+              </div>
+              <p style="font-size:12.5px; color:#64748b; line-height:1.45; margin:0 0 16px 0;">
+                Lorsqu'elle est activée, cette remise s'applique automatiquement à tous les visiteurs et clients lors du calcul du panier dans le Studio 3D et la Boutique.
+              </p>
+              <form id="globalDiscountForm" onsubmit="return false;" style="display:flex; flex-direction:column; gap:14px;">
+                <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-weight:700; font-size:13px; color:#1e293b; background:#f8fafc; padding:10px 14px; border-radius:8px; border:1px solid #e2e8f0;">
+                  <input type="checkbox" id="chkGlobalDiscountEnabled" style="width:20px; height:20px; accent-color:#7c3aed; cursor:pointer;" />
+                  Activer la remise globale sur toute la boutique
+                </label>
+                <div>
+                  <label for="globalDiscountPercent" style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:5px;">Pourcentage de réduction (%) :</label>
+                  <input type="number" id="globalDiscountPercent" min="1" max="100" value="10" class="admin-input" style="width:100%; font-size:14px; font-weight:800; text-align:center;" />
+                </div>
+                <div>
+                  <label for="globalDiscountLabel" style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:5px;">Libellé commercial affiché :</label>
+                  <input type="text" id="globalDiscountLabel" value="Offre de Noël : -10% immédiats !" class="admin-input" style="width:100%; font-size:13px;" />
+                </div>
+                <button type="button" id="btnSaveGlobalDiscount" class="admin-btn primary" style="background:#7c3aed; border-color:#7c3aed; padding:10px 16px; font-weight:700; margin-top:6px;">
+                  Enregistrer la remise globale
+                </button>
+              </form>
+            </div>
+
+            <!-- Panneau 2 : Codes Cadeaux / Bons de réduction -->
+            <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:12px; padding:20px; box-shadow:0 4px 14px rgba(0,0,0,0.03); display:flex; flex-direction:column; gap:18px;">
+              <div>
+                <strong style="font-size:15px; color:#0f172a; font-weight:800; display:block;">Codes Cadeaux (Coupons)</strong>
+                <small style="color:#64748b; font-size:12px;">Vos clients peuvent saisir ces codes directement dans leur panier de commande.</small>
+              </div>
+
+              <!-- Formulaire d'ajout rapide de code -->
+              <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px;">
+                <strong style="font-size:12.5px; color:#475569; text-transform:uppercase; display:block; margin-bottom:10px;">+ Créer un nouveau code cadeau :</strong>
+                <div style="display:grid; grid-template-columns:1.2fr 100px 90px 1fr auto; gap:8px; align-items:end; flex-wrap:wrap;">
+                  <div>
+                    <label style="display:block; font-size:11px; font-weight:700; color:#475569; margin-bottom:3px;">Code (ex: NOEL20) :</label>
+                    <input type="text" id="newCouponCode" placeholder="CODE" class="admin-input" style="text-transform:uppercase; font-weight:800; font-size:12.5px;" />
+                  </div>
+                  <div>
+                    <label style="display:block; font-size:11px; font-weight:700; color:#475569; margin-bottom:3px;">Type :</label>
+                    <select id="newCouponType" class="admin-select" style="font-size:12px; padding:6px 8px;">
+                      <option value="percent">Pourcent (%)</option>
+                      <option value="fixed">Montant (€)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style="display:block; font-size:11px; font-weight:700; color:#475569; margin-bottom:3px;">Valeur :</label>
+                    <input type="number" id="newCouponValue" min="1" step="0.5" value="20" class="admin-input" style="font-weight:700; text-align:center; font-size:12.5px;" />
+                  </div>
+                  <div>
+                    <label style="display:block; font-size:11px; font-weight:700; color:#475569; margin-bottom:3px;">Libellé client :</label>
+                    <input type="text" id="newCouponLabel" placeholder="Remise fidélité" class="admin-input" style="font-size:12.5px;" />
+                  </div>
+                  <div>
+                    <button type="button" id="btnAddCouponBtn" class="admin-btn primary" style="background:#059669; border-color:#059669; padding:8px 14px; font-size:12px; font-weight:700;">Ajouter</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Liste des codes cadeaux enregistrés -->
+              <div class="admin-table-wrapper" style="border:1px solid #e2e8f0; border-radius:8px;">
+                <table class="admin-table" style="font-size:12.5px;">
+                  <thead>
+                    <tr>
+                      <th>Code Cadeau</th>
+                      <th>Type & Valeur</th>
+                      <th>Libellé commercial</th>
+                      <th style="text-align:center;">Statut</th>
+                      <th style="text-align:right;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="couponsTableBody">
+                    <!-- Rempli dynamiquement -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -619,6 +728,34 @@
           </div>
         </div>
 
+        <!-- BANDEAU EN ATTENTE DE VALIDATION / RÉPONSE CLIENT -->
+        <div id="dossierPendingValidationBanner" style="display:none; background:#fffbeb; border:2px solid #f59e0b; border-radius:10px; padding:14px 18px; color:#92400e; font-size:13.5px; box-shadow:0 4px 12px rgba(245,158,11,0.12);">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+            <span style="background:#f59e0b; color:#ffffff; font-size:11px; font-weight:800; padding:2px 8px; border-radius:6px; text-transform:uppercase;">⏳ Action client attendue</span>
+            <strong style="color:#b45309; font-size:14px;">En attente de réponse / validation du BAT électronique par le client</strong>
+          </div>
+          <div style="line-height:1.5;">La proposition de visuel a été déposée. Le client doit vérifier le rendu 3D dans son espace personnel et cliquer sur « Valider mon BAT » pour débloquer la fabrication.</div>
+        </div>
+
+        <!-- BANDEAU DE STATUT NON CONFORME / REFUS -->
+        <div id="dossierRejectBanner" style="display:none; background:#fef2f2; border:2px solid #ef4444; border-radius:10px; padding:14px 18px; color:#991b1b; font-size:13.5px;">
+          <div style="font-weight:800; font-size:14px; margin-bottom:4px;">✕ Commande signalée non conforme par l'atelier</div>
+          <div id="dossierRejectReasonText" style="line-height:1.5;"></div>
+        </div>
+
+        <!-- DÉTAIL DU PANIER MULTI-PRODUITS -->
+        <div id="dossierCartContainer" style="display:none; background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:16px;">
+          <strong style="font-size:13px; font-weight:800; color:#1e1b4b; display:block; margin-bottom:10px;">
+            Articles du Panier Multi-Produits :
+          </strong>
+          <div id="dossierCartTableWrap" style="overflow-x:auto;"></div>
+        </div>
+
+        <!-- DÉTAIL REMISE CODE PROMO -->
+        <div id="dossierDiscountContainer" style="display:none; background:#ecfdf5; border:1px solid #a7f3d0; border-radius:8px; padding:12px 16px; font-size:13px; color:#065f46;">
+          <span id="dossierDiscountText"></span>
+        </div>
+
         <!-- SECTION CASES À COCHER OBLIGATOIRES SUR LE DOSSIER CLIENT -->
         <div style="background:#ede9fe; border:1px solid #c4b5fd; border-radius:10px; padding:16px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
@@ -702,6 +839,17 @@
           </div>
         </div>
 
+        <!-- VISUELS SOURCES BRUTS PRÊTS À IMPRIMER -->
+        <div id="dossierAllVisualsWrap" style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <strong style="font-size:13px; font-weight:800; color:#1e1b4b;">
+              🖼️ Visuels sources prêts pour l'impression (cliquez pour ouvrir / télécharger) :
+            </strong>
+            <small style="color:#64748b; font-size:11.5px;">Présents dans le dossier & le ZIP d'atelier</small>
+          </div>
+          <div id="dossierAllVisualsStrip" style="display:flex; gap:12px; flex-wrap:wrap;"></div>
+        </div>
+
         <!-- Notes / Instructions atelier -->
         <div id="dossierNotesWrap" style="display:none; background:#fffbeb; border:1px solid #fef3c7; border-radius:8px; padding:12px 14px; font-size:12.5px; color:#92400e;">
           <strong style="display:block; margin-bottom:2px;">Instructions du client :</strong>
@@ -733,10 +881,124 @@
           <a id="dossierFicheAtelierBtn" href="" target="_blank" class="admin-btn outline" style="font-size:12px; font-weight:700;">📄 Fiche Atelier Imprimable</a>
           <a id="dossierZipBtn" href="" class="admin-btn" style="font-size:12px; font-weight:700; background:#4f46e5; color:#ffffff;">📦 Pack Fabrication ZIP</a>
         </div>
-        <div style="display:flex; gap:10px;">
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <button type="button" id="btnOpenEditOrderDetails" class="admin-btn outline" style="padding:8px 14px; font-size:12px; font-weight:700; color:#4338ca; border-color:#818cf8;" title="Modifier les coordonnées, produit, quantité ou prix de la commande">✏️ Modifier la commande</button>
+          <button type="button" id="btnDossierRejectOrder" class="admin-btn" style="padding:8px 16px; font-size:12px; font-weight:700; background:#dc2626; color:#ffffff; border-color:#dc2626;" title="Signaler la commande comme non conforme ou refuser le visuel">✕ Refuser / Non conforme</button>
           <button type="button" id="closeOrderDossierBottomBtn" class="admin-btn secondary" style="padding:8px 16px; font-size:12px;">Fermer</button>
           <button type="button" id="saveOrderDossierChecksBtn" class="admin-btn primary" style="padding:8px 20px; font-size:12px; font-weight:700; background:#059669; border-color:#059669;">Enregistrer le dossier</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE : MOTIF DE REFUS / NON-CONFORMITÉ DE COMMANDE -->
+  <div id="orderRejectModal" class="admin-modal-overlay" style="display:none; position:fixed; inset:0; z-index:100030; background:rgba(15,23,42,0.8); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#ffffff; border-radius:14px; box-shadow:0 20px 45px rgba(0,0,0,0.35); max-width:540px; width:100%; border:1px solid #fecaca; overflow:hidden; display:flex; flex-direction:column;">
+      <div style="background:#991b1b; color:#ffffff; padding:16px 20px; display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="margin:0; font-size:16px; font-weight:800; color:#ffffff;">✕ Refuser la commande / Non conformité</h3>
+        <button type="button" id="closeOrderRejectBtn" style="background:transparent; border:0; color:#fecaca; font-size:20px; cursor:pointer; font-weight:700;">✕</button>
+      </div>
+      <div style="padding:20px; display:flex; flex-direction:column; gap:16px;">
+        <p style="margin:0; font-size:13.5px; color:#475569; line-height:1.5;">
+          Veuillez indiquer la raison pour laquelle le visuel ou la commande ne peut pas être produite en atelier. Un message explicatif sera automatiquement transmis au client dans son espace.
+        </p>
+
+        <div>
+          <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:6px;">Motif principal du refus :</label>
+          <select id="rejectReasonPreset" class="admin-input" style="width:100%; font-size:13px; padding:9px 12px; background:#f8fafc;">
+            <option value="Résolution d'image insuffisante (< 300 DPI), risque élevé de pixélisation ou de flou à l'impression.">Résolution insuffisante / pixélisation (< 300 DPI)</option>
+            <option value="Visuel tronqué ou texte essentiel situé en dehors de la zone d'impression utile.">Visuel tronqué / texte coupé en bordure</option>
+            <option value="Image floue, compression trop forte ou artefact graphique visible.">Image floue ou artefacts graphiques</option>
+            <option value="Format de fichier inadapté pour la sublimation (fond opaque blanc non souhaité).">Fond opaque blanc non détouré</option>
+            <option value="custom">Autre motif personnalisé...</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:6px;">Précisions ou instructions pour le client :</label>
+          <textarea id="rejectCustomReasonText" class="admin-input" rows="3" style="width:100%; font-size:13px; padding:9px 12px; line-height:1.4;" placeholder="Explications détaillées pour aider le client à fournir un nouveau fichier conforme…"></textarea>
+        </div>
+      </div>
+      <div style="background:#f8fafc; padding:14px 20px; border-top:1px solid #e2e8f0; display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" id="cancelOrderRejectBtn" class="admin-btn secondary" style="padding:8px 16px; font-size:12px;">Annuler</button>
+        <button type="button" id="confirmOrderRejectBtn" class="admin-btn" style="padding:8px 20px; font-size:12.5px; font-weight:700; background:#dc2626; color:#ffffff; border-color:#dc2626;">Confirmer le refus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE : MODIFICATION DE LA DEMANDE / COMMANDE DANS L'ADMIN -->
+  <div id="orderEditDetailsModal" class="admin-modal-overlay" style="display:none; position:fixed; inset:0; z-index:100030; background:rgba(15,23,42,0.8); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#ffffff; border-radius:14px; box-shadow:0 20px 45px rgba(0,0,0,0.35); max-width:680px; width:100%; border:1px solid #cbd5e1; overflow:hidden; display:flex; flex-direction:column; max-height:92vh;">
+      <div style="background:#1e1b4b; color:#ffffff; padding:16px 20px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#818cf8; letter-spacing:0.05em;">Édition Atelier</span>
+          <h3 style="margin:2px 0 0 0; font-size:16px; font-weight:800; color:#ffffff;">✏️ Modifier la commande initiale</h3>
+        </div>
+        <button type="button" id="closeOrderEditDetailsBtn" style="background:transparent; border:0; color:#cbd5e1; font-size:20px; cursor:pointer; font-weight:700;">✕</button>
+      </div>
+
+      <div style="padding:20px; overflow-y:auto; display:flex; flex-direction:column; gap:16px;">
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px; display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div style="grid-column:span 2;">
+            <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:4px;">Libellé de l'article / Produit :</label>
+            <input type="text" id="edOrderProduct" class="admin-input" style="width:100%; font-size:13px;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:4px;">Quantité :</label>
+            <input type="number" id="edOrderQuantity" min="1" class="admin-input" style="width:100%; font-size:13px;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:4px;">Total TTC (€) :</label>
+            <input type="text" id="edOrderTotalPrice" class="admin-input" style="width:100%; font-size:13px;" />
+          </div>
+          <div style="grid-column:span 2;">
+            <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:4px;">Texte personnalisé gravé / imprimé :</label>
+            <input type="text" id="edOrderCustomText" class="admin-input" style="width:100%; font-size:13px;" />
+          </div>
+        </div>
+
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px; display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div>
+            <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:4px;">Nom du client :</label>
+            <input type="text" id="edClientNom" class="admin-input" style="width:100%; font-size:13px;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:4px;">Prénom :</label>
+            <input type="text" id="edClientPrenom" class="admin-input" style="width:100%; font-size:13px;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:4px;">Courriel :</label>
+            <input type="email" id="edClientEmail" class="admin-input" style="width:100%; font-size:13px;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:4px;">Téléphone :</label>
+            <input type="text" id="edClientTelephone" class="admin-input" style="width:100%; font-size:13px;" />
+          </div>
+          <div style="grid-column:span 2;">
+            <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:4px;">Adresse de livraison :</label>
+            <input type="text" id="edClientAdresse" class="admin-input" style="width:100%; font-size:13px;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:4px;">Code postal :</label>
+            <input type="text" id="edClientCp" class="admin-input" style="width:100%; font-size:13px;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:4px;">Ville :</label>
+            <input type="text" id="edClientVille" class="admin-input" style="width:100%; font-size:13px;" />
+          </div>
+          <div style="grid-column:span 2;">
+            <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:4px;">Consigne / Note client :</label>
+            <textarea id="edClientNote" class="admin-input" rows="2" style="width:100%; font-size:13px;"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#f8fafc; padding:14px 20px; border-top:1px solid #e2e8f0; display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" id="cancelOrderEditDetailsBtn" class="admin-btn secondary" style="padding:8px 16px; font-size:12px;">Annuler</button>
+        <button type="button" id="saveOrderEditDetailsBtn" class="admin-btn primary" style="padding:8px 20px; font-size:12.5px; font-weight:700; background:#4f46e5; border-color:#4f46e5;">✓ Enregistrer les modifications</button>
+      </div>
+    </div>
+  </div>
       </div>
     </div>
   </div>
@@ -1131,6 +1393,216 @@
           <button type="button" id="confirmAddResellerBtn" class="admin-btn primary" style="background:#4f46e5;">Créer le revendeur</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- MODALE : CRÉATION D'UNE PROPOSITION DE BAT ATELIER DIRECTEMENT DEPUIS L'ADMIN -->
+  <div id="adminPropositionModal" class="admin-modal-overlay" style="display:none; position:fixed; inset:0; z-index:100030; background:rgba(15,23,42,0.85); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#ffffff; border-radius:14px; box-shadow:0 20px 45px rgba(0,0,0,0.35); max-width:760px; width:100%; border:1px solid #cbd5e1; overflow:hidden; display:flex; flex-direction:column; max-height:92vh;">
+      <div style="background:#065f46; color:#ffffff; padding:16px 22px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#a7f3d0; letter-spacing:0.05em;">Assistance & Service Graphique Client</span>
+          <h3 style="margin:2px 0 0 0; font-size:17px; font-weight:800; color:#ffffff;">+ Créer un BAT / Proposition Client</h3>
+        </div>
+        <button type="button" id="closeAdminPropositionBtn" style="background:transparent; border:0; color:#a7f3d0; font-size:22px; cursor:pointer; font-weight:700;">✕</button>
+      </div>
+
+      <div style="padding:22px; overflow-y:auto; display:flex; flex-direction:column; gap:16px;">
+        <p style="margin:0; font-size:13.5px; color:#475569; line-height:1.5;">
+          Préparez directement la maquette pour votre client. Il recevra une notification dans son espace personnel et pourra valider son BAT électronique pour lancer la fabrication.
+        </p>
+
+        <!-- Choix du client -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px; display:flex; flex-direction:column; gap:8px;">
+          <label for="propoClientSelect" style="font-size:12.5px; font-weight:700; color:#1e293b;">1. Sélectionner le client destinataire :</label>
+          <select id="propoClientSelect" style="padding:9px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13.5px; background:#ffffff;">
+            <option value="">Sélectionner un client enregistré…</option>
+          </select>
+        </div>
+
+        <!-- Choix direct du produit et du visuel -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px; display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div>
+            <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:4px;">2. Support produit :</label>
+            <select id="propoProductSelect" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px; background:#ffffff;">
+              <option value="mug11oz">Mug blanc 11 oz céramique</option>
+              <option value="mousePad">Tapis de souris personnalisé</option>
+              <option value="porteCleCarre">Porte-clés métal carré</option>
+              <option value="porteCleRond">Porte-clés métal rond</option>
+              <option value="porteCleCoeur">Porte-clés coeur</option>
+              <option value="coasterRound">Sous-verre rond liège</option>
+              <option value="coaster">Sous-verre carré liège</option>
+              <option value="cushion">Coussin carré blanc</option>
+              <option value="tshirt">T-Shirt blanc premium</option>
+              <option value="tshirtNoir">T-Shirt noir</option>
+              <option value="poster">Poster affiche murale</option>
+              <option value="puzzle">Puzzle cartonné</option>
+              <option value="arcadeCabinet">Borne arcade Bartop</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:4px;">Quantité :</label>
+            <input type="number" id="propoQuantity" value="1" min="1" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px;" />
+          </div>
+          <div style="grid-column:span 2;">
+            <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:4px;">3. Visuel à appliquer :</label>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <select id="propoVisualSelect" style="flex:1; padding:9px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px; background:#ffffff;">
+                <option value="">Sélectionner un visuel du catalogue…</option>
+              </select>
+              <input type="file" id="propoDirectFileInput" accept="image/png,image/jpeg" style="display:none;" />
+              <button type="button" id="btnPropoUploadCustomFile" class="admin-btn outline" style="white-space:nowrap; padding:8px 12px; font-size:12px; font-weight:700;">📂 Charger une image…</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aperçu et ajustement 3D -->
+        <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+          <div style="display:flex; align-items:center; gap:14px;">
+            <div style="width:68px; height:68px; background:#f1f5f9; border-radius:8px; border:1px solid #cbd5e1; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+              <img id="propoPreviewImg" src="/logo-graph2print.png" alt="Aperçu" style="max-width:100%; max-height:100%; object-fit:contain;" />
+            </div>
+            <div>
+              <strong id="propoPreviewTitle" style="font-size:13.5px; color:#1e1b4b; display:block;">Mug blanc 11 oz céramique</strong>
+              <small id="propoPreviewSub" style="color:#64748b; font-size:12px;">Visuel automatique appliqué</small>
+            </div>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button type="button" id="btnPropoAdjust3D" class="admin-btn outline" style="font-size:12px; font-weight:700; color:#7c3aed; border-color:#c4b5fd;">🎨 Calibrer dans le Studio 3D</button>
+            <button type="button" id="btnPropoCaptureCurrent3D" class="admin-btn outline" style="font-size:12px; font-weight:700;">📷 Capturer vue 3D actuelle</button>
+          </div>
+        </div>
+
+        <!-- Message au client -->
+        <div>
+          <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:6px;">4. Message d'accompagnement de l'Atelier :</label>
+          <textarea id="propoMessageText" class="admin-input" rows="3" style="width:100%; font-size:13px; line-height:1.45; padding:10px 12px;">Bonjour, voici votre maquette préparée par l'Atelier avec votre visuel recentré et calibré. Merci de valider votre BAT électronique directement dans cet espace pour lancer la fabrication.</textarea>
+        </div>
+      </div>
+
+      <div style="background:#f8fafc; padding:14px 22px; border-top:1px solid #e2e8f0; display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" id="cancelAdminPropositionBtn" class="admin-btn secondary" style="padding:8px 16px; font-size:12px;">Annuler</button>
+        <button type="button" id="confirmAdminPropositionBtn" class="admin-btn primary" style="padding:8px 22px; font-size:13px; font-weight:800; background:#059669; border-color:#059669;">✓ Transmettre la proposition au client</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE : CRÉER / MODIFIER UN CLIENT DU RÉPERTOIRE -->
+  <div id="editClientModal" class="admin-modal-overlay" style="display:none; position:fixed; inset:0; z-index:100030; background:rgba(15,23,42,0.8); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#ffffff; border-radius:14px; box-shadow:0 20px 45px rgba(0,0,0,0.35); max-width:580px; width:100%; border:1px solid #cbd5e1; overflow:hidden; display:flex; flex-direction:column; max-height:92vh;">
+      <div style="background:#1e1b4b; color:#ffffff; padding:16px 22px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#a5b4fc;">Répertoire Client Atelier</span>
+          <h3 id="editClientModalTitle" style="margin:2px 0 0 0; font-size:17px; color:#ffffff;">+ Nouveau Client</h3>
+        </div>
+        <button type="button" id="closeEditClientBtn" style="background:transparent; border:0; color:#cbd5e1; font-size:20px; cursor:pointer; font-weight:700;">✕</button>
+      </div>
+
+      <div style="padding:22px; overflow-y:auto; display:flex; flex-direction:column; gap:14px;">
+        <input type="hidden" id="editClientId" value="" />
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div>
+            <label for="editClientNom" style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:4px;">Nom de famille * :</label>
+            <input type="text" id="editClientNom" class="admin-input" placeholder="Ex : Laurent" required style="width:100%;" />
+          </div>
+          <div>
+            <label for="editClientPrenom" style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:4px;">Prénom :</label>
+            <input type="text" id="editClientPrenom" class="admin-input" placeholder="Ex : Sophie" style="width:100%;" />
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:12px;">
+          <div>
+            <label for="editClientEmail" style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:4px;">Courriel (Email) * :</label>
+            <input type="email" id="editClientEmail" class="admin-input" placeholder="sophie@exemple.fr" required style="width:100%;" />
+          </div>
+          <div>
+            <label for="editClientTel" style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:4px;">Téléphone :</label>
+            <input type="text" id="editClientTel" class="admin-input" placeholder="06 00 00 00 00" style="width:100%;" />
+          </div>
+        </div>
+
+        <div>
+          <label for="editClientPassword" style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:4px;">Mot de passe Espace Client :</label>
+          <input type="text" id="editClientPassword" class="admin-input" placeholder="Laisser vide pour ne pas changer (défaut : Client123!)" style="width:100%;" />
+        </div>
+
+        <div>
+          <label for="editClientAdresse" style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:4px;">Adresse de livraison :</label>
+          <input type="text" id="editClientAdresse" class="admin-input" placeholder="Numéro et rue..." style="width:100%;" />
+        </div>
+
+        <div style="display:grid; grid-template-columns:120px 1fr; gap:12px;">
+          <div>
+            <label for="editClientCp" style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:4px;">Code Postal :</label>
+            <input type="text" id="editClientCp" class="admin-input" placeholder="51800" style="width:100%;" />
+          </div>
+          <div>
+            <label for="editClientVille" style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:4px;">Ville :</label>
+            <input type="text" id="editClientVille" class="admin-input" placeholder="Sainte-Menehould" style="width:100%;" />
+          </div>
+        </div>
+
+        <div>
+          <label for="editClientNotes" style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:4px;">Notes internes :</label>
+          <textarea id="editClientNotes" class="admin-input" rows="2" placeholder="Association, préférence salon..." style="width:100%;"></textarea>
+        </div>
+
+        <div style="background:#fffbeb; border:1px solid #fef3c7; border-radius:8px; padding:10px 14px;">
+          <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:13px; font-weight:700; color:#b45309;">
+            <input type="checkbox" id="chkEditClientIsTest" style="width:18px; height:18px; accent-color:#d97706; cursor:pointer;" />
+            <span>Fiche Client Test (badge TEST bien visible pour ne pas confondre avec un client réel)</span>
+          </label>
+        </div>
+      </div>
+
+      <div style="background:#f8fafc; padding:14px 22px; border-top:1px solid #e2e8f0; display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" id="closeEditClientBottomBtn" class="admin-btn secondary" style="padding:8px 16px;">Annuler</button>
+        <button type="button" id="saveEditClientBtn" class="admin-btn primary" style="padding:8px 22px; font-weight:800; background:#4f46e5;">Enregistrer la fiche client</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE : CORBEILLE DES CLIENTS SUPPRIMÉS (RESTAURATION SÉLECTIVE OU UNITAIRE) -->
+  <div id="clientsTrashModal" class="admin-modal-overlay" style="display:none; position:fixed; inset:0; z-index:100030; background:rgba(15,23,42,0.8); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#ffffff; border-radius:14px; box-shadow:0 20px 45px rgba(0,0,0,0.35); max-width:680px; width:100%; border:1px solid #cbd5e1; overflow:hidden; display:flex; flex-direction:column; max-height:90vh;">
+      <div style="background:#0f172a; color:#ffffff; padding:16px 22px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#f87171;">Sécurité & Récupération</span>
+          <h3 style="margin:2px 0 0 0; font-size:17px; color:#ffffff;">Corbeille des fiches clients</h3>
+        </div>
+        <button type="button" id="closeClientsTrashBtn" style="background:transparent; border:0; color:#cbd5e1; font-size:20px; cursor:pointer; font-weight:700;">✕</button>
+      </div>
+
+      <div style="padding:20px; overflow-y:auto; display:flex; flex-direction:column; gap:14px;">
+        <p style="margin:0; font-size:13px; color:#64748b;">
+          Retrouvez ci-dessous la liste des fiches clients supprimées. Vous pouvez restaurer uniquement le client de votre choix en cliquant sur "Restaurer".
+        </p>
+
+        <div class="admin-table-wrapper" style="border:1px solid #e2e8f0; border-radius:8px; max-height:360px; overflow-y:auto;">
+          <table class="admin-table" style="font-size:12.5px;">
+            <thead>
+              <tr>
+                <th>Client supprimé</th>
+                <th>Courriel</th>
+                <th>Date de suppression</th>
+                <th style="text-align:right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="clientsTrashTableBody">
+              <!-- Rempli dynamiquement -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="background:#f8fafc; padding:14px 22px; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
+        <button type="button" id="btnTrashRestoreLastQuick" class="admin-btn outline" style="background:#fef3c7; color:#92400e; border-color:#fcd34d; font-weight:700;">
+          ↺ Restaurer le tout dernier client
+        </button>
+        <button type="button" id="closeClientsTrashBottomBtn" class="admin-btn secondary">Fermer</button>
+      </div>
     </div>
   </div>
 </div>

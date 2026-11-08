@@ -83,6 +83,32 @@ app.executeSubmission = async function executeSubmission(clientData) {
         addPng('wrap-tshirt-face-' + side + '-' + printable.join('x') + 'mm.png', page.toDataURL('image/png'));
       }
     }
+
+    // Ajouter les visuels sources bruts choisis ou envoyés pour l'impression directe à l'atelier
+    if (Array.isArray(app.imagesList) && app.imagesList.length > 0) {
+      app.imagesList.forEach((item, idx) => {
+        try {
+          if (item.img) {
+            const canvas = document.createElement('canvas');
+            canvas.width = item.img.naturalWidth || item.img.width || 800;
+            canvas.height = item.img.naturalHeight || item.img.height || 800;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(item.img, 0, 0);
+            const dataUrl = canvas.toDataURL('image/png');
+            const cleanName = (item.name || `visuel-${idx + 1}`).toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 30);
+            addPng(`visuel-source-${idx + 1}-${cleanName}.png`, dataUrl);
+            if (idx === 0) {
+              addPng('visuel_client.png', dataUrl);
+            }
+          } else if (item.url && item.url.startsWith('data:image/')) {
+            addPng(`visuel-source-${idx + 1}.png`, item.url);
+            if (idx === 0) addPng('visuel_client.png', item.url);
+          }
+        } catch (err) {
+          console.warn('Erreur export visuel source:', err);
+        }
+      });
+    }
     const savedPosition = app.camera.position.clone();
     const savedTarget = app.controls.target.clone();
     const angleEl = document.querySelector('#viewAngle');
@@ -126,13 +152,17 @@ app.executeSubmission = async function executeSubmission(clientData) {
     });
 
     const payload = {
-      product: app.productDefinitions?.[key]?.name || key,
+      product: clientData.cart && clientData.cart.length > 0
+        ? `${app.productDefinitions?.[key]?.name || key} + ${clientData.cart.length} autre(s) article(s)`
+        : (app.productDefinitions?.[key]?.name || key),
       productKey: key,
       quantity: clientData.quantity || 1,
       unitPrice: clientData.unitPrice || '',
       totalPrice: clientData.totalPrice || '',
       files,
       client: clientData,
+      cart: clientData.cart || null,
+      discount: clientData.discount || null,
       imagesInfo,
       offlineTimestamp: new Date().toISOString()
     };

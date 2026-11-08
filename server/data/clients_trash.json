@@ -1,0 +1,18 @@
+[
+  {
+    "id": "CLI-MW8E6906-947",
+    "email": "camille.bernard51@gmail.com",
+    "passwordHash": "d21c460ac2da905ba02a802c4120749c:faf0d7de54ef1844c3e4dd4229bfc669786fc5724cd943b6a2b2178b8d769f595432dbf4848e26e2087e1e947a085fc4f2f6c7a9c82b6ed52b4f61bf03f4925d",
+    "nom": "Bernard",
+    "prenom": "Camille",
+    "telephone": "06 12 34 56 78",
+    "adresse": "12 rue des Jardins",
+    "codePostal": "51330",
+    "ville": "Givry-en-Argonne",
+    "pays": "France",
+    "dateInscription": "2026-11-08T22:16:20.539Z",
+    "notes": "Inscription directe Espace Client.",
+    "role": "client",
+    "deletedAt": "2026-11-08T22:47:29.088Z"
+  }
+]

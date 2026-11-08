@@ -35,11 +35,10 @@ export function register(app) {
         app.renderAdminConsignment?.();
       }
     } else if (tabName === 'tab-clients') {
-      if (!app.adminSubmissionsList || app.adminSubmissionsList.length === 0) {
-        app.loadAdminSubmissions?.().then(() => app.renderAdminClientsTable?.());
-      } else {
-        app.renderAdminClientsTable?.();
-      }
+      app.loadAdminClients?.();
+      app.updateClientsTrashCount?.();
+    } else if (tabName === 'tab-discounts') {
+      app.loadAdminDiscounts?.();
     } else if (tabName === 'tab-products') {
       app.renderAdminProductsTable?.();
     } else if (tabName === 'tab-catalog') {
@@ -59,7 +58,8 @@ export function register(app) {
       app.loadAdminProducts(),
       app.loadAdminCatalog(),
       app.loadAdminCategories(),
-      app.loadAdminConsignment()
+      app.loadAdminConsignment(),
+      app.updateClientsTrashCount?.()
     ]);
     app.renderAdminVisualStats?.();
     app.updateAdminKpis();
@@ -172,11 +172,13 @@ export function register(app) {
         <td style="text-align:right;"><strong style="color:#7c3aed;">${totalStr}</strong></td>
         <td>${qualityBadge}</td>
         <td>
-          <select class="admin-select order-status-select" data-folder="${item.folder}" style="font-size:12px; padding:4px 8px;">
+          <select class="admin-select order-status-select" data-folder="${item.folder}" style="font-size:12px; padding:4px 8px; font-weight:700; ${item.status === 'bat_a_valider' ? 'border-color:#f59e0b; background:#fffbeb; color:#b45309;' : (item.status === 'non_conforme' ? 'border-color:#ef4444; background:#fef2f2; color:#991b1b;' : '')}">
             <option value="nouveau" ${item.status === 'nouveau' ? 'selected' : ''}>Nouveau</option>
-            <option value="bat_valide" ${item.status === 'bat_valide' ? 'selected' : ''}>BAT validé</option>
+            <option value="bat_a_valider" ${item.status === 'bat_a_valider' ? 'selected' : ''}>⏳ Attente validation client</option>
+            <option value="bat_valide_client" ${item.status === 'bat_valide_client' ? 'selected' : ''}>✓ BAT validé client</option>
             <option value="en_production" ${item.status === 'en_production' ? 'selected' : ''}>En production</option>
             <option value="termine" ${item.status === 'termine' ? 'selected' : ''}>Terminé</option>
+            <option value="non_conforme" ${item.status === 'non_conforme' ? 'selected' : ''}>✕ Non conforme</option>
           </select>
         </td>
         <td style="text-align:right; white-space:nowrap;">
@@ -538,12 +540,82 @@ export function register(app) {
     const orderBox = document.querySelector('#dossierOrderInfo');
     if (orderBox) {
       const dateStr = item.date ? new Date(item.date).toLocaleString('fr-FR') : '—';
+      const isMulti = Array.isArray(item.cart) && item.cart.length > 0;
       orderBox.innerHTML = `
-        Article : <strong style="color:#1e1b4b;">${item.product || item.productKey || 'Produit standard'}</strong><br>
+        Article : <strong style="color:#1e1b4b;">${isMulti ? `Lot Panier Multi-Produits (${item.cart.length} articles)` : (item.product || item.productKey || 'Produit standard')}</strong><br>
         Quantité : <strong style="color:#4f46e5; font-size:14px;">${item.quantity || 1} ex.</strong><br>
         Total TTC : <strong style="color:#059669; font-size:14px;">${item.totalPrice || item.price || '—'}</strong><br>
         Date : <small style="color:#64748b;">${dateStr}</small>
       `;
+    }
+
+    // Bandeau En attente de validation / réponse client
+    const pendingBanner = document.querySelector('#dossierPendingValidationBanner');
+    if (pendingBanner) {
+      const isWaitingClient = (item.status === 'bat_a_valider' || item.status === 'en_attente_validation_client' || (item.isWorkshopProposition && !item.checks?.batConforme));
+      pendingBanner.style.display = isWaitingClient ? 'block' : 'none';
+    }
+
+    // Bandeau commande non conforme / refusée
+    const rejectBanner = document.querySelector('#dossierRejectBanner');
+    const rejectReasonText = document.querySelector('#dossierRejectReasonText');
+    if (rejectBanner) {
+      if (item.status === 'non_conforme' || item.status === 'refuse' || item.rejectionReason) {
+        rejectBanner.style.display = 'block';
+        if (rejectReasonText) {
+          rejectReasonText.innerHTML = `<strong>Motif atelier :</strong> ${item.rejectionReason || 'Visuel non conforme aux contraintes d’impression.'}`;
+        }
+      } else {
+        rejectBanner.style.display = 'none';
+      }
+    }
+
+    // Affichage des articles du panier multi-produits
+    const cartContainer = document.querySelector('#dossierCartContainer');
+    const cartWrap = document.querySelector('#dossierCartTableWrap');
+    if (cartContainer && cartWrap) {
+      if (Array.isArray(item.cart) && item.cart.length > 0) {
+        cartContainer.style.display = 'block';
+        const rows = item.cart.map((ci, idx) => `
+          <tr style="border-bottom:1px solid #e2e8f0;">
+            <td style="padding:8px 10px; font-weight:700; color:#1e1b4b;">${ci.productName || ci.productKey || 'Produit'}</td>
+            <td style="padding:8px 10px; color:#475569;">${ci.visualName || 'Visuel client'}</td>
+            <td style="padding:8px 10px; text-align:center; font-weight:800; color:#4f46e5;">${ci.quantity || 1} ex.</td>
+            <td style="padding:8px 10px; text-align:right;">${ci.unitPrice || '—'}</td>
+            <td style="padding:8px 10px; text-align:right; font-weight:700; color:#059669;">${ci.totalItemPrice || '—'}</td>
+          </tr>
+        `).join('');
+        cartWrap.innerHTML = `
+          <table style="width:100%; border-collapse:collapse; font-size:13px;">
+            <thead>
+              <tr style="background:#f8fafc; border-bottom:2px solid #cbd5e1; text-align:left;">
+                <th style="padding:8px 10px;">Article</th>
+                <th style="padding:8px 10px;">Visuel</th>
+                <th style="padding:8px 10px; text-align:center;">Quantité</th>
+                <th style="padding:8px 10px; text-align:right;">P.U.</th>
+                <th style="padding:8px 10px; text-align:right;">Sous-total</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+      } else {
+        cartContainer.style.display = 'none';
+      }
+    }
+
+    // Affichage de la remise code cadeau
+    const discountContainer = document.querySelector('#dossierDiscountContainer');
+    const discountText = document.querySelector('#dossierDiscountText');
+    if (discountContainer) {
+      if (item.discount) {
+        discountContainer.style.display = 'block';
+        if (discountText) {
+          discountText.innerHTML = `Remise code cadeau appliquée : <strong>${item.discount.code}</strong> (${item.discount.label || ''}) : déduction immédiate de <strong>-${item.discount.amount || 0} €</strong>.`;
+        }
+      } else {
+        discountContainer.style.display = 'none';
+      }
     }
 
     const checks = item.checks || {};
@@ -597,6 +669,35 @@ export function register(app) {
       };
     }
     if (visDl) visDl.href = visUrl;
+
+    const allVisStrip = document.querySelector('#dossierAllVisualsStrip');
+    if (allVisStrip) {
+      allVisStrip.innerHTML = '';
+      const filesList = Array.isArray(item.files) ? item.files : [];
+      const visualFiles = filesList.filter(f => {
+        const name = (typeof f === 'string' ? f : f.name || '').toLowerCase();
+        return name.endsWith('.png') || name.endsWith('.jpg') || name.endsWith('.jpeg') || name.endsWith('.webp');
+      });
+
+      if (visualFiles.length === 0) {
+        allVisStrip.innerHTML = '<span style="font-size:12px; color:#64748b;">Le fichier d\'impression sera automatiquement préparé depuis le BAT.</span>';
+      } else {
+        visualFiles.forEach(f => {
+          const fileName = typeof f === 'string' ? f : f.name;
+          const fileUrl = `/api/admin/submissions/file?folder=${encodeURIComponent(folder)}&file=${encodeURIComponent(fileName)}`;
+          const card = document.createElement('div');
+          card.style.cssText = 'background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; padding:6px; display:flex; flex-direction:column; align-items:center; gap:4px; width:130px; box-shadow:0 2px 6px rgba(0,0,0,0.03);';
+          card.innerHTML = `
+            <div style="width:100%; height:80px; background:#f1f5f9; border-radius:6px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+              <img src="${fileUrl}" alt="${fileName}" style="max-width:100%; max-height:100%; object-fit:contain;" />
+            </div>
+            <span style="font-size:11px; font-weight:700; color:#1e293b; max-width:115px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${fileName}">${fileName}</span>
+            <a href="${fileUrl}" download="${fileName}" target="_blank" class="admin-btn outline" style="width:100%; font-size:10.5px; padding:2px 4px; text-align:center; background:#f0fdf4; color:#166534; border-color:#bbf7d0; font-weight:700;">Télécharger</a>
+          `;
+          allVisStrip.appendChild(card);
+        });
+      }
+    }
 
     const ficheBtn = document.querySelector('#dossierFicheAtelierBtn');
     const zipBtn = document.querySelector('#dossierZipBtn');
@@ -715,96 +816,207 @@ export function register(app) {
     }
   };
 
-  // Logique du Fichier Clients
+  // Refus de commande / Déclaration de non-conformité
+  app.openOrderRejectModal = function() {
+    if (!currentDossierItem) return;
+    const modal = document.querySelector('#orderRejectModal');
+    if (modal) {
+      const customTxt = document.querySelector('#rejectCustomReasonText');
+      if (customTxt) customTxt.value = '';
+      modal.style.display = 'flex';
+    }
+  };
+
+  app.closeOrderRejectModal = function() {
+    const modal = document.querySelector('#orderRejectModal');
+    if (modal) modal.style.display = 'none';
+  };
+
+  app.confirmOrderReject = async function() {
+    if (!currentDossierItem) return;
+    const select = document.querySelector('#rejectReasonPreset');
+    const customTxt = document.querySelector('#rejectCustomReasonText')?.value.trim() || '';
+    let reason = select ? select.value : '';
+    if (reason === 'custom' || customTxt) {
+      reason = customTxt || (select ? select.value : 'Visuel non conforme aux contraintes d’impression.');
+    }
+    const folder = currentDossierItem.folder;
+    try {
+      const res = await fetch('/api/admin/submissions/reject', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ folder, reason })
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        currentDossierItem.status = 'non_conforme';
+        currentDossierItem.rejectionReason = reason;
+        if (!currentDossierItem.checks) currentDossierItem.checks = {};
+        currentDossierItem.checks.batConforme = false;
+        app.showToast?.('Commande refusée / déclarée non conforme. Message transmis au client.');
+        app.closeOrderRejectModal();
+        app.openOrderDossierModal(currentDossierItem);
+        await app.loadAdminSubmissions();
+      } else {
+        app.showToast?.(data.error || 'Erreur lors du refus de la commande.');
+      }
+    } catch (e) {
+      app.showToast?.('Erreur réseau lors du refus.');
+    }
+  };
+
+  // Édition de la commande initiale dans l'Admin
+  app.openOrderEditDetailsModal = function() {
+    if (!currentDossierItem) return;
+    const modal = document.querySelector('#orderEditDetailsModal');
+    if (!modal) return;
+
+    const item = currentDossierItem;
+    const c = item.client || {};
+
+    const prodInp = document.querySelector('#edOrderProduct');
+    const qtyInp = document.querySelector('#edOrderQuantity');
+    const totalInp = document.querySelector('#edOrderTotalPrice');
+    const customTxtInp = document.querySelector('#edOrderCustomText');
+
+    const nomInp = document.querySelector('#edClientNom');
+    const prenomInp = document.querySelector('#edClientPrenom');
+    const emailInp = document.querySelector('#edClientEmail');
+    const telInp = document.querySelector('#edClientTelephone');
+    const adrInp = document.querySelector('#edClientAdresse');
+    const cpInp = document.querySelector('#edClientCp');
+    const villeInp = document.querySelector('#edClientVille');
+    const noteInp = document.querySelector('#edClientNote');
+
+    if (prodInp) prodInp.value = item.product || item.productKey || '';
+    if (qtyInp) qtyInp.value = item.quantity || 1;
+    if (totalInp) totalInp.value = item.totalPrice || item.price || '';
+    if (customTxtInp) customTxtInp.value = item.customText || '';
+
+    if (nomInp) nomInp.value = c.nom || '';
+    if (prenomInp) prenomInp.value = c.prenom || '';
+    if (emailInp) emailInp.value = c.email || '';
+    if (telInp) telInp.value = c.telephone || '';
+    if (adrInp) adrInp.value = c.adresse || '';
+    if (cpInp) cpInp.value = c.codePostal || '';
+    if (villeInp) villeInp.value = c.ville || '';
+    if (noteInp) noteInp.value = item.commentaires || c.note || '';
+
+    modal.style.display = 'flex';
+  };
+
+  app.closeOrderEditDetailsModal = function() {
+    const modal = document.querySelector('#orderEditDetailsModal');
+    if (modal) modal.style.display = 'none';
+  };
+
+  app.saveOrderEditDetails = async function() {
+    if (!currentDossierItem) return;
+    const folder = currentDossierItem.folder;
+
+    const payload = {
+      folder,
+      product: document.querySelector('#edOrderProduct')?.value.trim() || '',
+      quantity: parseInt(document.querySelector('#edOrderQuantity')?.value, 10) || 1,
+      totalPrice: document.querySelector('#edOrderTotalPrice')?.value.trim() || '',
+      customText: document.querySelector('#edOrderCustomText')?.value.trim() || '',
+      client: {
+        nom: document.querySelector('#edClientNom')?.value.trim() || '',
+        prenom: document.querySelector('#edClientPrenom')?.value.trim() || '',
+        email: document.querySelector('#edClientEmail')?.value.trim() || '',
+        telephone: document.querySelector('#edClientTelephone')?.value.trim() || '',
+        adresse: document.querySelector('#edClientAdresse')?.value.trim() || '',
+        codePostal: document.querySelector('#edClientCp')?.value.trim() || '',
+        ville: document.querySelector('#edClientVille')?.value.trim() || '',
+        note: document.querySelector('#edClientNote')?.value.trim() || ''
+      }
+    };
+
+    try {
+      const res = await fetch('/api/admin/submissions/update-details', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        currentDossierItem = data.submission || currentDossierItem;
+        app.showToast?.('Commande modifiée et mise à jour avec succès.');
+        app.closeOrderEditDetailsModal();
+        app.openOrderDossierModal(currentDossierItem);
+        await app.loadAdminSubmissions();
+      } else {
+        app.showToast?.(data.error || 'Erreur lors de la modification.');
+      }
+    } catch (e) {
+      app.showToast?.('Erreur de transmission réseau.');
+    }
+  };
+
+  // Gestion du Thème Nuit / Jour de l'Administration
+  app.toggleAdminTheme = function() {
+    const overlay = document.querySelector('#adminDashboardOverlay');
+    const btn = document.querySelector('#btnAdminThemeToggle');
+    if (!overlay) return;
+    const isDark = overlay.classList.toggle('dark-mode');
+    localStorage.setItem('mockup3d_admin_theme', isDark ? 'dark' : 'light');
+    if (btn) btn.innerHTML = isDark ? '☀️ Mode Jour' : '🌙 Mode Nuit';
+    app.showToast?.(`Thème administration : ${isDark ? 'Mode Nuit activé' : 'Mode Jour activé'}`);
+  };
+
+  app.initAdminTheme = function() {
+    const saved = localStorage.getItem('mockup3d_admin_theme') || 'light';
+    const overlay = document.querySelector('#adminDashboardOverlay');
+    const btn = document.querySelector('#btnAdminThemeToggle');
+    if (overlay && saved === 'dark') {
+      overlay.classList.add('dark-mode');
+      if (btn) btn.innerHTML = '☀️ Mode Jour';
+    }
+  };
+
+  // Restauration des fiches clients depuis l'historique des commandes et la corbeille
+  app.restoreClientsFromOrders = async function() {
+    if (!confirm('Voulez-vous synchroniser et restaurer toutes les fiches clients manquantes depuis la corbeille et l’historique des commandes ?')) return;
+    try {
+      const res = await fetch('/api/admin/clients/restore', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        app.showToast?.(data.message || 'Restauration effectuée.');
+        await app.loadAdminClients();
+      } else {
+        app.showToast?.(data.error || 'Erreur lors de la restauration.');
+      }
+    } catch (e) {
+      app.showToast?.('Erreur de communication avec le serveur.');
+    }
+  };
+
+  // Logique du Fichier Clients Persistant
+  app.adminClientsList = [];
+
+  app.loadAdminClients = async function() {
+    try {
+      const res = await fetch('/api/admin/clients');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.ok && Array.isArray(data.clients)) {
+          app.adminClientsList = data.clients;
+        }
+      }
+    } catch (err) {
+      console.warn('Erreur chargement clients:', err);
+    }
+    app.renderAdminClientsTable();
+  };
+
   app.renderAdminClientsTable = function() {
     const tbody = document.querySelector('#clientsTableBody');
     if (!tbody) return;
 
-    const clientsMap = new Map();
-    const offlineList = JSON.parse(localStorage.getItem('mockup3d_stand_orders') || '[]');
-    const allSubs = [...(app.adminSubmissionsList || []), ...offlineList];
-
-    allSubs.forEach(sub => {
-      const c = sub.client || {};
-      const key = (c.email || `${c.nom}_${c.prenom}` || 'anonyme').toLowerCase().trim();
-      if (!clientsMap.has(key)) {
-        clientsMap.set(key, {
-          key,
-          nom: c.nom || 'Client',
-          prenom: c.prenom || '',
-          email: c.email || '',
-          telephone: c.telephone || '',
-          adresse: c.adresse || '',
-          codePostal: c.codePostal || '',
-          ville: c.ville || '',
-          orders: [],
-          totalSpent: 0,
-          firstDate: sub.date,
-          lastDate: sub.date,
-          notes: ''
-        });
-      }
-      const client = clientsMap.get(key);
-      client.orders.push(sub);
-      const val = Number.parseFloat(String(sub.totalPrice || sub.price || '0').replace(/[^0-9.,]/g, '').replace(',', '.')) || 0;
-      client.totalSpent += val;
-      if (new Date(sub.date) > new Date(client.lastDate)) client.lastDate = sub.date;
-      if (new Date(sub.date) < new Date(client.firstDate)) client.firstDate = sub.date;
-    });
-
-    // Fichier clients initial atelier (si aucune commande en base)
-    if (clientsMap.size === 0) {
-      const initialClients = [
-        {
-          key: 'bernard_camille',
-          nom: 'Bernard',
-          prenom: 'Camille',
-          email: 'camille.bernard@graph2print.fr',
-          telephone: '06 12 34 56 78',
-          adresse: '12 rue des Artisans',
-          codePostal: '37000',
-          ville: 'Tours',
-          orders: [{ id: 'CMD-20261107-1600-BERNARD', product: 'Puzzle personnalisé 120 pièces', totalPrice: '15,00 €', date: '2026-11-07T16:00:00Z', status: 'termine' }],
-          totalSpent: 15.00,
-          firstDate: '2026-11-07T16:00:00Z',
-          lastDate: '2026-11-07T16:00:00Z',
-          notes: 'Graphiste indépendant. Impression pleine page haute définition.'
-        },
-        {
-          key: 'moreau_marie',
-          nom: 'Moreau',
-          prenom: 'Marie',
-          email: 'marie.moreau@deco-tours.fr',
-          telephone: '06 98 76 54 32',
-          adresse: '5 avenue de Grammont',
-          codePostal: '37000',
-          ville: 'Tours',
-          orders: [{ id: 'CMD-20261106-1130-MOREAU', product: 'Mug couleur 11oz', totalPrice: '13,00 €', date: '2026-11-06T11:30:00Z', status: 'termine' }],
-          totalSpent: 13.00,
-          firstDate: '2026-11-06T11:30:00Z',
-          lastDate: '2026-11-06T11:30:00Z',
-          notes: 'Collection décoration céramique.'
-        },
-        {
-          key: 'dupont_alexandre',
-          nom: 'Dupont',
-          prenom: 'Alexandre',
-          email: 'alex.dupont@artisanat.fr',
-          telephone: '02 47 00 11 22',
-          adresse: '18 rue Nationale',
-          codePostal: '37540',
-          ville: 'Saint-Cyr-sur-Loire',
-          orders: [{ id: 'CMD-20261105-0945-DUPONT', product: 'Tapis de souris bords cousus', totalPrice: '21,00 €', date: '2026-11-05T09:45:00Z', status: 'termine' }],
-          totalSpent: 21.00,
-          firstDate: '2026-11-05T09:45:00Z',
-          lastDate: '2026-11-05T09:45:00Z',
-          notes: 'Client régulier dépôt-vente.'
-        }
-      ];
-      initialClients.forEach(ic => clientsMap.set(ic.key, ic));
-    }
-
-    const clientsList = Array.from(clientsMap.values());
+    const clientsList = app.adminClientsList || [];
     const badge = document.querySelector('#adminClientsBadge');
     if (badge) badge.textContent = clientsList.length;
 
@@ -813,21 +1025,26 @@ export function register(app) {
 
     const filtered = clientsList.filter(c => {
       if (!filter) return true;
-      const str = `${c.nom} ${c.prenom} ${c.email} ${c.telephone} ${c.ville}`.toLowerCase();
+      const str = `${c.nom || ''} ${c.prenom || ''} ${c.email || ''} ${c.telephone || ''} ${c.ville || ''}`.toLowerCase();
       return str.includes(filter);
     });
 
     if (filtered.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:32px; color:#94a3b8;">Aucun client correspondant.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:32px; color:#94a3b8;">Aucun client correspondant. Cliquez sur "+ Nouveau Client" pour en créer un.</td></tr>`;
       return;
     }
 
     filtered.forEach(c => {
       const tr = document.createElement('tr');
       const lastStr = c.lastDate ? new Date(c.lastDate).toLocaleDateString('fr-FR') : '—';
+      const cOrders = Array.isArray(c.orders) ? c.orders : [];
+      const spent = typeof c.totalSpent === 'number' ? c.totalSpent : 0;
+
       tr.innerHTML = `
         <td>
-          <strong style="font-size:13px; color:#0f172a;">${c.nom} ${c.prenom}</strong>
+          <strong style="font-size:13px; color:#0f172a;">${c.nom || 'Client'} ${c.prenom || ''}</strong>
+          ${c.isTest ? `<span style="background:#fee2e2; color:#dc2626; border:1px solid #fca5a5; font-size:10px; font-weight:800; padding:2px 6px; border-radius:4px; margin-left:6px; letter-spacing:0.04em;">TEST</span>` : ''}
+          ${c.id ? `<br><small style="color:#94a3b8; font-size:11px;">Réf: ${c.id}</small>` : ''}
         </td>
         <td>
           <div style="font-size:12.5px; color:#334155;">${c.email || '—'}</div>
@@ -835,14 +1052,17 @@ export function register(app) {
         </td>
         <td><span style="font-size:12px; color:#475569;">${c.ville || '—'}</span></td>
         <td style="text-align:center;">
-          <span style="font-size:12px; font-weight:800; background:#e0e7ff; color:#4338ca; padding:3px 8px; border-radius:6px;">${c.orders.length} cde(s)</span>
+          <span style="font-size:12px; font-weight:800; background:#e0e7ff; color:#4338ca; padding:3px 8px; border-radius:6px;">${cOrders.length} cde(s)</span>
         </td>
         <td style="text-align:right;">
-          <strong style="font-size:13px; color:#059669;">${c.totalSpent.toFixed(2).replace('.', ',')} €</strong>
+          <strong style="font-size:13px; color:#059669;">${spent.toFixed(2).replace('.', ',')} €</strong>
         </td>
         <td><small style="color:#64748b;">${lastStr}</small></td>
         <td style="text-align:right;">
-          <button type="button" class="btn-open-client-sheet admin-btn outline" data-key="${c.key}" style="font-size:11.5px; padding:5px 12px; font-weight:700;">👤 Fiche Client</button>
+          <div style="display:flex; justify-content:flex-end; gap:6px;">
+            <button type="button" class="btn-open-client-sheet admin-btn outline" data-id="${c.id}" data-email="${c.email}" style="font-size:11.5px; padding:5px 10px; font-weight:700;">Fiche</button>
+            <button type="button" class="btn-delete-client admin-btn danger" data-id="${c.id}" data-email="${c.email}" data-name="${c.nom || ''} ${c.prenom || ''}" style="font-size:11.5px; padding:5px 10px; background:#fee2e2; color:#dc2626; border-color:#fca5a5; font-weight:700;" title="Supprimer définitivement cette fiche client">Supprimer</button>
+          </div>
         </td>
       `;
       tbody.appendChild(tr);
@@ -850,11 +1070,217 @@ export function register(app) {
 
     tbody.querySelectorAll('.btn-open-client-sheet').forEach(b => {
       b.addEventListener('click', () => {
-        const key = b.dataset.key;
-        const cl = clientsList.find(x => x.key === key);
+        const id = b.dataset.id;
+        const email = b.dataset.email;
+        const cl = clientsList.find(x => (id && x.id === id) || (email && x.email === email));
         if (cl) app.openClientSheetModal(cl);
       });
     });
+
+    tbody.querySelectorAll('.btn-delete-client').forEach(b => {
+      b.addEventListener('click', () => {
+        const id = b.dataset.id;
+        const email = b.dataset.email;
+        const name = b.dataset.name || email;
+        app.deleteAdminClient(id, email, name);
+      });
+    });
+  };
+
+  app.deleteAdminClient = async function(clientId, clientEmail, clientName) {
+    const confirmMsg = `Confirmez-vous la suppression définitive du client "${clientName}" (${clientEmail}) ?\n\nCette action retirera sa fiche du répertoire de l'atelier.`;
+    if (!window.confirm(confirmMsg)) return;
+
+    const deleteOrders = window.confirm(`Souhaitez-vous également supprimer définitivement tous les dossiers de commandes et fichiers associés à ce client sur le disque ?\n\n- Cliquez sur OK pour TOUT supprimer (client + dossiers).\n- Cliquez sur Annuler pour supprimer la fiche client tout en conservant les dossiers.`);
+
+    try {
+      const res = await fetch('/api/admin/clients/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: clientId, email: clientEmail, deleteOrders })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Erreur lors de la suppression');
+
+      app.showToast?.(`Client "${clientName}" supprimé avec succès.`);
+      app.closeClientSheetModal();
+      await app.loadAdminClients();
+      await app.updateClientsTrashCount();
+      if (deleteOrders && app.loadAdminSubmissions) await app.loadAdminSubmissions();
+    } catch (err) {
+      alert(`Erreur : ${err.message}`);
+    }
+  };
+
+  app.restoreLastClient = async function() {
+    if (!window.confirm("Restaurer uniquement le dernier client mis en corbeille ?")) return;
+    try {
+      const res = await fetch('/api/admin/clients/restore-last', { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Erreur lors de la restauration');
+      app.showToast?.(data.message || 'Dernier client restauré.');
+      await app.loadAdminClients();
+      await app.updateClientsTrashCount();
+    } catch (err) {
+      alert(`Erreur : ${err.message}`);
+    }
+  };
+
+  app.openClientsTrashModal = async function() {
+    const modal = document.querySelector('#clientsTrashModal');
+    const tbody = document.querySelector('#clientsTrashTableBody');
+    if (!modal || !tbody) return;
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:18px;">Chargement de la corbeille…</td></tr>';
+    modal.style.display = 'flex';
+    try {
+      const res = await fetch('/api/admin/clients/trash');
+      const data = await res.json();
+      const trash = Array.isArray(data.trash) ? data.trash : [];
+      if (trash.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:24px; color:#94a3b8;">La corbeille des clients est vide.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = trash.map(c => `
+        <tr>
+          <td><strong>${c.nom || 'Client'} ${c.prenom || ''}</strong></td>
+          <td><span style="color:#4f46e5;">${c.email}</span></td>
+          <td><small style="color:#64748b;">${c.deletedAt ? new Date(c.deletedAt).toLocaleString('fr-FR') : '—'}</small></td>
+          <td style="text-align:right;">
+            <button type="button" class="btn-restore-single-client admin-btn primary" data-id="${c.id}" data-email="${c.email}" style="padding:4px 10px; font-size:11.5px; background:#059669; border-color:#059669;">
+              ↺ Restaurer
+            </button>
+          </td>
+        </tr>
+      `).join('');
+      tbody.querySelectorAll('.btn-restore-single-client').forEach(b => {
+        b.addEventListener('click', async () => {
+          const id = b.dataset.id;
+          const email = b.dataset.email;
+          b.disabled = true;
+          b.textContent = 'En cours…';
+          try {
+            const r = await fetch('/api/admin/clients/restore-one', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id, email })
+            });
+            const d = await r.json();
+            if (!r.ok || !d.ok) throw new Error(d.error || 'Erreur restauration.');
+            app.showToast?.(d.message || 'Client restauré !');
+            await app.loadAdminClients();
+            await app.openClientsTrashModal();
+            await app.updateClientsTrashCount();
+          } catch (e) {
+            alert(e.message);
+            b.disabled = false;
+            b.textContent = '↺ Restaurer';
+          }
+        });
+      });
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ef4444;">Erreur : ${e.message}</td></tr>`;
+    }
+  };
+
+  app.updateClientsTrashCount = async function() {
+    try {
+      const res = await fetch('/api/admin/clients/trash');
+      if (res.ok) {
+        const data = await res.json();
+        const badge = document.querySelector('#clientsTrashCount');
+        if (badge) badge.textContent = String(Array.isArray(data.trash) ? data.trash.length : 0);
+      }
+    } catch {}
+  };
+
+  app.openEditClientModal = function(client = null) {
+    const modal = document.querySelector('#editClientModal');
+    if (!modal) return;
+    const title = document.querySelector('#editClientModalTitle');
+    const idInp = document.querySelector('#editClientId');
+    const nomInp = document.querySelector('#editClientNom');
+    const prenomInp = document.querySelector('#editClientPrenom');
+    const emailInp = document.querySelector('#editClientEmail');
+    const telInp = document.querySelector('#editClientTel');
+    const pwdInp = document.querySelector('#editClientPassword');
+    const adrInp = document.querySelector('#editClientAdresse');
+    const cpInp = document.querySelector('#editClientCp');
+    const villeInp = document.querySelector('#editClientVille');
+    const notesInp = document.querySelector('#editClientNotes');
+    const chkTest = document.querySelector('#chkEditClientIsTest');
+
+    if (client) {
+      if (title) title.textContent = `Modifier Client : ${client.nom} ${client.prenom}`;
+      if (idInp) idInp.value = client.id || '';
+      if (nomInp) nomInp.value = client.nom || '';
+      if (prenomInp) prenomInp.value = client.prenom || '';
+      if (emailInp) { emailInp.value = client.email || ''; emailInp.readOnly = true; }
+      if (telInp) telInp.value = client.telephone || '';
+      if (pwdInp) { pwdInp.value = ''; pwdInp.placeholder = 'Laisser vide pour ne pas modifier'; }
+      if (adrInp) adrInp.value = client.adresse || '';
+      if (cpInp) cpInp.value = client.codePostal || '';
+      if (villeInp) villeInp.value = client.ville || '';
+      if (notesInp) notesInp.value = client.notes || '';
+      if (chkTest) chkTest.checked = !!client.isTest;
+    } else {
+      if (title) title.textContent = 'Nouveau Client Répertoire';
+      if (idInp) idInp.value = '';
+      if (nomInp) nomInp.value = '';
+      if (prenomInp) prenomInp.value = '';
+      if (emailInp) { emailInp.value = ''; emailInp.readOnly = false; }
+      if (telInp) telInp.value = '';
+      if (pwdInp) { pwdInp.value = 'Client123!'; pwdInp.placeholder = 'Mot de passe initial'; }
+      if (adrInp) adrInp.value = '';
+      if (cpInp) cpInp.value = '';
+      if (villeInp) villeInp.value = '';
+      if (notesInp) notesInp.value = '';
+      if (chkTest) chkTest.checked = false;
+    }
+    modal.style.display = 'flex';
+  };
+
+  app.closeEditClientModal = function() {
+    const modal = document.querySelector('#editClientModal');
+    if (modal) modal.style.display = 'none';
+  };
+
+  app.saveEditClient = async function() {
+    const id = document.querySelector('#editClientId')?.value || '';
+    const nom = document.querySelector('#editClientNom')?.value?.trim();
+    const prenom = document.querySelector('#editClientPrenom')?.value?.trim();
+    const email = document.querySelector('#editClientEmail')?.value?.trim();
+    const telephone = document.querySelector('#editClientTel')?.value?.trim();
+    const password = document.querySelector('#editClientPassword')?.value?.trim();
+    const adresse = document.querySelector('#editClientAdresse')?.value?.trim();
+    const codePostal = document.querySelector('#editClientCp')?.value?.trim();
+    const ville = document.querySelector('#editClientVille')?.value?.trim();
+    const notes = document.querySelector('#editClientNotes')?.value?.trim();
+    const isTest = !!document.querySelector('#chkEditClientIsTest')?.checked;
+
+    if (!nom || !email) {
+      return alert('Le nom et l\'adresse courriel sont obligatoires.');
+    }
+
+    try {
+      const payload = { id, nom, prenom, email, telephone, adresse, codePostal, ville, notes, isTest };
+      if (password) {
+        if (id) payload.newPassword = password;
+        else payload.password = password;
+      }
+      const res = await fetch('/api/admin/clients/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Erreur lors de l\'enregistrement');
+
+      app.showToast?.('Fiche client enregistrée avec succès.');
+      app.closeEditClientModal();
+      await app.loadAdminClients();
+    } catch (err) {
+      alert(`Erreur : ${err.message}`);
+    }
   };
 
   let currentClientSheetItem = null;
@@ -866,7 +1292,9 @@ export function register(app) {
     if (!modal) return;
 
     const name = document.querySelector('#csClientName');
-    if (name) name.textContent = `${client.nom} ${client.prenom}`;
+    if (name) {
+      name.innerHTML = `${client.nom} ${client.prenom} ${client.isTest ? '<span style="background:#dc2626; color:#ffffff; font-size:11px; font-weight:800; padding:2px 8px; border-radius:4px; margin-left:8px; vertical-align:middle;">FICHE TEST</span>' : ''}`;
+    }
 
     const contact = document.querySelector('#csContactDetails');
     if (contact) {
@@ -942,6 +1370,143 @@ export function register(app) {
     localStorage.setItem(`client_notes_${currentClientSheetItem.key}`, val);
     currentClientSheetItem.notes = val;
     app.showToast?.('Note interne client enregistrée.');
+  };
+
+  // Gestion des Codes Cadeaux & de la Remise Globale
+  app.loadAdminDiscounts = async function() {
+    try {
+      const res = await fetch('/api/admin/discounts');
+      if (!res.ok) return;
+      const json = await res.json();
+      const d = json.data || {};
+      const glob = d.globalDiscount || { enabled: false, percent: 10, label: '' };
+      const chkGlob = document.querySelector('#chkGlobalDiscountEnabled');
+      const inpPerc = document.querySelector('#globalDiscountPercent');
+      const inpLbl = document.querySelector('#globalDiscountLabel');
+      const badgeGlob = document.querySelector('#globalDiscountBadge');
+
+      if (chkGlob) chkGlob.checked = !!glob.enabled;
+      if (inpPerc) inpPerc.value = glob.percent || 10;
+      if (inpLbl) inpLbl.value = glob.label || '';
+      if (badgeGlob) {
+        if (glob.enabled) {
+          badgeGlob.textContent = `Active (-${glob.percent}%)`;
+          badgeGlob.style.background = '#dcfce7';
+          badgeGlob.style.color = '#15803d';
+        } else {
+          badgeGlob.textContent = 'Désactivée';
+          badgeGlob.style.background = '#fee2e2';
+          badgeGlob.style.color = '#dc2626';
+        }
+      }
+
+      const tbody = document.querySelector('#couponsTableBody');
+      if (!tbody) return;
+      const coupons = Array.isArray(d.coupons) ? d.coupons : [];
+      if (coupons.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:18px; color:#94a3b8;">Aucun code cadeau configuré. Utilisez le formulaire ci-dessus pour en créer un.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = coupons.map(c => `
+        <tr>
+          <td><strong style="font-size:13px; color:#7c3aed; font-family:monospace; letter-spacing:0.04em;">${c.code}</strong></td>
+          <td><span style="font-weight:700; color:#0f172a;">${c.type === 'percent' ? `-${c.value}%` : `-${c.value.toFixed(2)} €`}</span></td>
+          <td><span style="color:#475569;">${c.label || '—'}</span></td>
+          <td style="text-align:center;">
+            <button type="button" class="btn-toggle-coupon admin-btn" data-code="${c.code}" data-active="${c.active ? '1' : '0'}" style="font-size:11px; padding:3px 8px; border-radius:6px; border:none; cursor:pointer; font-weight:700; background:${c.active ? '#dcfce7; color:#15803d;' : '#f1f5f9; color:#64748b;'}">
+              ${c.active ? '✓ Actif' : 'Inactif'}
+            </button>
+          </td>
+          <td style="text-align:right;">
+            <button type="button" class="btn-delete-coupon admin-btn outline" data-code="${c.code}" style="font-size:11px; padding:3px 8px; color:#dc2626; border-color:#fca5a5; font-weight:700;">
+              Supprimer
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      tbody.querySelectorAll('.btn-toggle-coupon').forEach(b => {
+        b.addEventListener('click', async () => {
+          const code = b.dataset.code;
+          const currentActive = b.dataset.active === '1';
+          const targetC = coupons.find(x => x.code === code);
+          if (!targetC) return;
+          try {
+            await fetch('/api/admin/discounts/coupon', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ ...targetC, active: !currentActive })
+            });
+            app.showToast?.(`Code "${code}" ${!currentActive ? 'activé' : 'désactivé'}.`);
+            await app.loadAdminDiscounts();
+          } catch (e) { alert(e.message); }
+        });
+      });
+
+      tbody.querySelectorAll('.btn-delete-coupon').forEach(b => {
+        b.addEventListener('click', async () => {
+          const code = b.dataset.code;
+          if (!confirm(`Supprimer le code cadeau "${code}" ?`)) return;
+          try {
+            await fetch('/api/admin/discounts/coupon/delete', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ code })
+            });
+            app.showToast?.(`Code "${code}" supprimé.`);
+            await app.loadAdminDiscounts();
+          } catch (e) { alert(e.message); }
+        });
+      });
+    } catch (err) {
+      console.warn('Erreur chargement discounts:', err);
+    }
+  };
+
+  app.saveGlobalDiscount = async function() {
+    const chkGlob = document.querySelector('#chkGlobalDiscountEnabled');
+    const inpPerc = document.querySelector('#globalDiscountPercent');
+    const inpLbl = document.querySelector('#globalDiscountLabel');
+    try {
+      const res = await fetch('/api/admin/discounts/global', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          enabled: !!chkGlob?.checked,
+          percent: parseFloat(inpPerc?.value || 0),
+          label: inpLbl?.value?.trim() || ''
+        })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Erreur sauvegarde.');
+      app.showToast?.('Remise globale enregistrée avec succès !');
+      await app.loadAdminDiscounts();
+    } catch (e) { alert(e.message); }
+  };
+
+  app.saveNewCoupon = async function() {
+    const code = document.querySelector('#newCouponCode')?.value?.trim();
+    const type = document.querySelector('#newCouponType')?.value || 'percent';
+    const value = parseFloat(document.querySelector('#newCouponValue')?.value || 0);
+    const label = document.querySelector('#newCouponLabel')?.value?.trim() || '';
+
+    if (!code || value <= 0) {
+      return alert('Veuillez renseigner un code et une valeur supérieure à 0.');
+    }
+
+    try {
+      const res = await fetch('/api/admin/discounts/coupon', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, type, value, label, active: true })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Erreur enregistrement code.');
+      app.showToast?.(`Code "${code}" créé avec succès !`);
+      const cInp = document.querySelector('#newCouponCode'); if (cInp) cInp.value = '';
+      const lInp = document.querySelector('#newCouponLabel'); if (lInp) lInp.value = '';
+      await app.loadAdminDiscounts();
+    } catch (e) { alert(e.message); }
   };
 
   // Logique du Dépôt-Vente Partenaires
@@ -2734,21 +3299,65 @@ export function initialize(app) {
     btnTopDashboard.addEventListener('click', () => app.openAdminDashboard());
   }
 
+  // Bouton Thème Nuit / Jour de l'Administration
+  document.querySelector('#btnAdminThemeToggle')?.addEventListener('click', () => app.toggleAdminTheme());
+  app.initAdminTheme();
+
   // Modale Dossier Commande
   document.querySelector('#closeOrderDossierBtn')?.addEventListener('click', () => app.closeOrderDossierModal());
   document.querySelector('#closeOrderDossierBottomBtn')?.addEventListener('click', () => app.closeOrderDossierModal());
   document.querySelector('#saveOrderDossierChecksBtn')?.addEventListener('click', () => app.saveOrderDossierChecks());
+  document.querySelector('#btnDossierRejectOrder')?.addEventListener('click', () => app.openOrderRejectModal());
+  document.querySelector('#btnOpenEditOrderDetails')?.addEventListener('click', () => app.openOrderEditDetailsModal());
+
+  // Modale Motif de Refus / Non-conformité
+  document.querySelector('#closeOrderRejectBtn')?.addEventListener('click', () => app.closeOrderRejectModal());
+  document.querySelector('#cancelOrderRejectBtn')?.addEventListener('click', () => app.closeOrderRejectModal());
+  document.querySelector('#confirmOrderRejectBtn')?.addEventListener('click', () => app.confirmOrderReject());
+
+  // Modale Modification de Commande
+  document.querySelector('#closeOrderEditDetailsBtn')?.addEventListener('click', () => app.closeOrderEditDetailsModal());
+  document.querySelector('#cancelOrderEditDetailsBtn')?.addEventListener('click', () => app.closeOrderEditDetailsModal());
+  document.querySelector('#saveOrderEditDetailsBtn')?.addEventListener('click', () => app.saveOrderEditDetails());
+
+  // Restauration des clients
+  document.querySelector('#btnRestoreClients')?.addEventListener('click', () => app.restoreClientsFromOrders());
+  document.querySelector('#btnRestoreLastClient')?.addEventListener('click', () => app.restoreLastClient());
+  document.querySelector('#btnOpenClientsTrash')?.addEventListener('click', () => app.openClientsTrashModal());
+  document.querySelector('#closeClientsTrashBtn')?.addEventListener('click', () => {
+    const m = document.querySelector('#clientsTrashModal'); if (m) m.style.display = 'none';
+  });
+  document.querySelector('#closeClientsTrashBottomBtn')?.addEventListener('click', () => {
+    const m = document.querySelector('#clientsTrashModal'); if (m) m.style.display = 'none';
+  });
+  document.querySelector('#btnTrashRestoreLastQuick')?.addEventListener('click', async () => {
+    await app.restoreLastClient();
+    await app.openClientsTrashModal();
+  });
+
+  // Codes Cadeaux et Remise Globale
+  document.querySelector('#btnSaveGlobalDiscount')?.addEventListener('click', () => app.saveGlobalDiscount());
+  document.querySelector('#btnAddCouponBtn')?.addEventListener('click', () => app.saveNewCoupon());
+  document.querySelector('#btnRefreshDiscounts')?.addEventListener('click', () => app.loadAdminDiscounts());
 
   // Modale Fiche Produit
   document.querySelector('#closeProductSheetBtn')?.addEventListener('click', () => app.closeProductSheetModal());
   document.querySelector('#closeProductSheetBottomBtn')?.addEventListener('click', () => app.closeProductSheetModal());
   document.querySelector('#saveProductSheetBtn')?.addEventListener('click', () => app.saveProductSheet());
 
-  // Modale Fiche Client & Recherche
+  // Modale Fiche Client & Recherche & Suppression
   document.querySelector('#closeClientSheetBtn')?.addEventListener('click', () => app.closeClientSheetModal());
   document.querySelector('#closeClientSheetBottomBtn')?.addEventListener('click', () => app.closeClientSheetModal());
   document.querySelector('#saveClientNotesBtn')?.addEventListener('click', () => app.saveClientNotes());
   document.querySelector('#clientSearchInput')?.addEventListener('input', () => app.renderAdminClientsTable());
+  document.querySelector('#btnAddNewClient')?.addEventListener('click', () => app.openEditClientModal());
+  document.querySelector('#closeEditClientBtn')?.addEventListener('click', () => app.closeEditClientModal());
+  document.querySelector('#closeEditClientBottomBtn')?.addEventListener('click', () => app.closeEditClientModal());
+  document.querySelector('#saveEditClientBtn')?.addEventListener('click', () => app.saveEditClient());
+  document.querySelector('#btnDeleteClientFromSheet')?.addEventListener('click', () => {
+    if (!currentClientSheetItem) return;
+    app.deleteAdminClient(currentClientSheetItem.id, currentClientSheetItem.email, `${currentClientSheetItem.nom || ''} ${currentClientSheetItem.prenom || ''}`);
+  });
 
   // Dépôt-Vente Partenaires & Fiche Revendeur
   document.querySelector('#btnAddNewResellerModal')?.addEventListener('click', () => app.openAddResellerModal());
@@ -2833,6 +3442,218 @@ export function initialize(app) {
   // Filtre de période des statistiques
   document.querySelector('#statsPeriodFilter')?.addEventListener('change', () => {
     app.renderAdminVisualStats?.();
+  });
+
+  // GESTION DU MODULE DE PROPOSITION DE BAT / COMMANDE ATELIER
+  const propoModal = document.querySelector('#adminPropositionModal');
+  const openPropoBtn = document.querySelector('#btnAdminNewProposition');
+  const closePropoBtn = document.querySelector('#closeAdminPropositionBtn');
+  const cancelPropoBtn = document.querySelector('#cancelAdminPropositionBtn');
+  const confirmPropoBtn = document.querySelector('#confirmAdminPropositionBtn');
+  const capture3DBtn = document.querySelector('#btnPropoCaptureCurrent3D');
+  const propoClientSelect = document.querySelector('#propoClientSelect');
+  const propoProductSelect = document.querySelector('#propoProductSelect');
+  const propoBatPreview = document.querySelector('#propoBatPreview');
+
+  const propoVisualSelect = document.querySelector('#propoVisualSelect');
+  const propoDirectFileInput = document.querySelector('#propoDirectFileInput');
+  const btnPropoUploadCustomFile = document.querySelector('#btnPropoUploadCustomFile');
+  const btnPropoAdjust3D = document.querySelector('#btnPropoAdjust3D');
+  const propoPreviewImg = document.querySelector('#propoPreviewImg');
+  const propoPreviewTitle = document.querySelector('#propoPreviewTitle');
+  const propoPreviewSub = document.querySelector('#propoPreviewSub');
+
+  let currentCapturedBatData = '';
+  let currentCustomVisualData = '';
+
+  const closePropo = () => {
+    if (propoModal) propoModal.style.display = 'none';
+  };
+
+  openPropoBtn?.addEventListener('click', async () => {
+    if (!propoModal) return;
+    propoModal.style.display = 'flex';
+
+    // Remplir clients
+    if (!app.adminClientsList || app.adminClientsList.length === 0) {
+      await app.loadAdminClients?.();
+    }
+    const clients = app.adminClientsList || [];
+    if (propoClientSelect) {
+      propoClientSelect.innerHTML = '<option value="">-- Choisir un client enregistré --</option>' +
+        clients.map(c => `<option value="${c.email}">${c.nom} ${c.prenom || ''} (${c.email})</option>`).join('');
+    }
+
+    // Remplir la liste des visuels catalogue
+    if (propoVisualSelect) {
+      const visuals = (app.catalogImages || []).filter(v => v.status === 'approved' || !v.status);
+      propoVisualSelect.innerHTML = '<option value="">-- Choisir un visuel de la bibliothèque --</option>' +
+        visuals.map(v => `<option value="${v.url || v.thumbnail || v.file}" data-name="${v.title || v.name}">${v.title || v.name}</option>`).join('');
+    }
+
+    // Capturer la vue 3D actuelle si disponible
+    if (app.renderer?.domElement) {
+      try {
+        currentCapturedBatData = app.renderer.domElement.toDataURL('image/png');
+        if (propoPreviewImg && currentCapturedBatData) {
+          propoPreviewImg.src = currentCapturedBatData;
+        }
+      } catch (e) {}
+    }
+  });
+
+  closePropoBtn?.addEventListener('click', closePropo);
+  cancelPropoBtn?.addEventListener('click', closePropo);
+
+  // Upload direct d'une image pour le BAT
+  btnPropoUploadCustomFile?.addEventListener('click', () => propoDirectFileInput?.click());
+  propoDirectFileInput?.addEventListener('change', (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        currentCustomVisualData = evt.target.result;
+        currentCapturedBatData = currentCustomVisualData;
+        if (propoPreviewImg) propoPreviewImg.src = currentCustomVisualData;
+        if (propoPreviewSub) propoPreviewSub.textContent = `Image importée : ${file.name}`;
+        app.showToast?.(`Image ${file.name} chargée pour le BAT.`);
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Changement de visuel catalogue
+  propoVisualSelect?.addEventListener('change', () => {
+    const opt = propoVisualSelect.selectedOptions[0];
+    const url = opt ? opt.value : '';
+    const name = opt ? opt.dataset.name : '';
+    if (url) {
+      currentCustomVisualData = url;
+      currentCapturedBatData = url;
+      if (propoPreviewImg) propoPreviewImg.src = url;
+      if (propoPreviewSub) propoPreviewSub.textContent = `Visuel : ${name}`;
+    }
+  });
+
+  // Calibrage direct dans le Studio 3D sans friction
+  btnPropoAdjust3D?.addEventListener('click', () => {
+    const prodKey = propoProductSelect?.value || 'mug11oz';
+    const visUrl = currentCustomVisualData || propoVisualSelect?.value;
+    const clientEmail = propoClientSelect?.value || '';
+
+    // Fermer l'admin et ouvrir le configurateur
+    app.closeAdminDashboard?.();
+
+    if (prodKey && typeof app.switchProduct === 'function') {
+      app.switchProduct(prodKey);
+    }
+    if (visUrl && typeof app.applyTextureFromUrl === 'function') {
+      app.applyTextureFromUrl(visUrl);
+    }
+
+    // Afficher une bannière flottante de finalisation directe sur le Studio
+    let banner = document.querySelector('#floatingStudioBatBanner');
+    if (!banner) {
+      banner = document.createElement('div');
+      banner.id = 'floatingStudioBatBanner';
+      banner.style.cssText = 'position:fixed; top:70px; left:50%; transform:translateX(-50%); z-index:10000; background:rgba(15,23,42,0.92); backdrop-filter:blur(8px); border:1px solid #7c3aed; padding:10px 20px; border-radius:12px; display:flex; align-items:center; gap:16px; box-shadow:0 10px 25px rgba(0,0,0,0.35); color:#fff;';
+      document.body.appendChild(banner);
+    }
+    banner.innerHTML = `
+      <div style="font-size:13px;">
+        <strong style="color:#a7f3d0; display:block;">🎨 Mode Préparation de BAT Atelier</strong>
+        <span style="color:#cbd5e1; font-size:12px;">Positionnez le visuel en 3D puis validez l'envoi au client.</span>
+      </div>
+      <button type="button" id="btnConfirmStudioFloatingBat" style="background:#059669; color:#fff; border:none; padding:8px 16px; border-radius:8px; font-weight:700; font-size:12.5px; cursor:pointer;">
+        📷 Capturer & Envoyer au Client
+      </button>
+      <button type="button" id="btnCancelStudioFloatingBat" style="background:transparent; color:#94a3b8; border:1px solid #475569; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer;">
+        Annuler
+      </button>
+    `;
+
+    document.querySelector('#btnCancelStudioFloatingBat')?.addEventListener('click', () => {
+      banner.remove();
+      app.openAdminDashboard?.();
+    });
+
+    document.querySelector('#btnConfirmStudioFloatingBat')?.addEventListener('click', async () => {
+      let capture = '';
+      if (app.renderer?.domElement) {
+        capture = app.renderer.domElement.toDataURL('image/png');
+      }
+      banner.remove();
+      app.openAdminDashboard?.();
+      // Rouvrir la modale avec la capture mise à jour
+      if (propoModal) propoModal.style.display = 'flex';
+      currentCapturedBatData = capture;
+      if (propoPreviewImg) propoPreviewImg.src = capture;
+      if (propoPreviewSub) propoPreviewSub.textContent = 'Rendu 3D personnalisé calibré avec succès';
+      app.showToast?.('Rendu 3D calibré ! Cliquez sur "Transmettre" pour finaliser.');
+    });
+  });
+
+  capture3DBtn?.addEventListener('click', () => {
+    if (app.renderer?.domElement) {
+      currentCapturedBatData = app.renderer.domElement.toDataURL('image/png');
+      if (propoPreviewImg) propoPreviewImg.src = currentCapturedBatData;
+      app.showToast?.('Aperçu 3D capturé avec succès.');
+    }
+  });
+
+  confirmPropoBtn?.addEventListener('click', async () => {
+    const selectedClientEmail = propoClientSelect?.value || '';
+    const cl = (app.adminClientsList || []).find(c => c.email.toLowerCase() === selectedClientEmail.toLowerCase());
+    const email = cl ? cl.email : selectedClientEmail;
+    const nom = cl ? cl.nom : 'Client';
+    const prenom = cl ? cl.prenom : '';
+    const telephone = cl ? cl.telephone : '';
+    const productKey = propoProductSelect?.value || 'mug11oz';
+    const productName = propoProductSelect?.selectedOptions[0]?.text || 'Objet personnalisé';
+    const quantity = parseInt(document.querySelector('#propoQuantity')?.value || '1', 10);
+    const message = document.querySelector('#propoMessageText')?.value?.trim();
+
+    if (!email || !email.includes('@')) {
+      alert('Veuillez sélectionner un client enregistré dans la liste.');
+      return;
+    }
+
+    confirmPropoBtn.disabled = true;
+    confirmPropoBtn.textContent = 'Transmission en cours…';
+
+    try {
+      const batImage = currentCapturedBatData || (app.renderer?.domElement ? app.renderer.domElement.toDataURL('image/png') : '');
+      const visualImage = currentCustomVisualData || batImage;
+
+      const res = await fetch('/api/admin/submissions/proposition', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clientEmail: email,
+          clientNom: nom,
+          clientPrenom: prenom,
+          clientTelephone: telephone,
+          productKey,
+          productName,
+          quantity,
+          batImage,
+          visualImage,
+          message
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Erreur lors de la création de la proposition.');
+
+      app.showToast?.(`Proposition de BAT transmise à ${nom} (${email}) ! Statut : En attente validation client.`);
+      closePropo();
+      await app.loadAdminSubmissions?.();
+    } catch (err) {
+      alert(err.message || 'Erreur de transmission.');
+    } finally {
+      confirmPropoBtn.disabled = false;
+      confirmPropoBtn.textContent = '✓ Transmettre la proposition au client';
+    }
   });
 
   // Préchargement proactif immédiat de toutes les données du dashboard

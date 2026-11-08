@@ -1,0 +1,16 @@
+{
+  "globalDiscount": {
+    "enabled": false,
+    "percent": 10,
+    "label": "Remise spéciale atelier -10% immédiate"
+  },
+  "coupons": [
+    {
+      "code": "GIVRY2026.0911",
+      "type": "percent",
+      "value": 5,
+      "label": "bienvevnue",
+      "active": true
+    }
+  ]
+}

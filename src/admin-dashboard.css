@@ -4,12 +4,11 @@
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background: rgba(15, 23, 42, 0.82);
-  backdrop-filter: blur(8px);
+  background: rgba(15, 23, 42, 0.95);
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  align-items: stretch;
+  justify-content: stretch;
+  padding: 0;
 }
 
 .admin-dashboard-overlay[hidden] {
@@ -17,12 +16,13 @@
 }
 
 .admin-dashboard-window {
-  width: 96vw;
-  max-width: 1440px;
-  height: 92vh;
+  width: 100vw;
+  max-width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
   background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  border-radius: 0;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -798,4 +798,87 @@ body.dark-mode .admin-select {
   display: flex !important;
   flex-direction: column !important;
   overflow: hidden !important;
+}
+
+/* ==========================================================================
+   MODE NUIT / DARK THEME DU TABLEAU DE BORD ADMIN
+   ========================================================================== */
+.admin-dashboard-overlay.dark-mode .admin-dashboard-window {
+  background: #0f172a !important;
+  color: #f1f5f9 !important;
+}
+
+.admin-dashboard-overlay.dark-mode .admin-sidebar {
+  background: #0b1120 !important;
+  border-right-color: #1e293b !important;
+}
+
+.admin-dashboard-overlay.dark-mode .admin-nav-item {
+  color: #94a3b8 !important;
+}
+
+.admin-dashboard-overlay.dark-mode .admin-nav-item:hover {
+  background: #1e293b !important;
+  color: #ffffff !important;
+}
+
+.admin-dashboard-overlay.dark-mode .admin-nav-item.active {
+  background: #1e1b4b !important;
+  color: #a5b4fc !important;
+  border-left-color: #6366f1 !important;
+}
+
+.admin-dashboard-overlay.dark-mode .admin-content {
+  background: #0f172a !important;
+}
+
+.admin-dashboard-overlay.dark-mode .admin-card,
+.admin-dashboard-overlay.dark-mode .kpi-card,
+.admin-dashboard-overlay.dark-mode .admin-table-wrapper {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+.admin-dashboard-overlay.dark-mode .admin-table th {
+  background: #0f172a !important;
+  color: #94a3b8 !important;
+  border-bottom-color: #334155 !important;
+}
+
+.admin-dashboard-overlay.dark-mode .admin-table td {
+  border-bottom-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+.admin-dashboard-overlay.dark-mode .admin-table tr:hover td {
+  background: #283548 !important;
+}
+
+.admin-dashboard-overlay.dark-mode .admin-input,
+.admin-dashboard-overlay.dark-mode .admin-filter-bar input,
+.admin-dashboard-overlay.dark-mode select {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+.admin-dashboard-overlay.dark-mode .admin-tab-pane h3 {
+  color: #f8fafc !important;
+}
+
+.admin-dashboard-overlay.dark-mode .tab-subtitle {
+  color: #94a3b8 !important;
+}
+
+.admin-dashboard-overlay.dark-mode .admin-btn.outline {
+  background: #1e293b !important;
+  border-color: #475569 !important;
+  color: #e2e8f0 !important;
+}
+
+.admin-dashboard-overlay.dark-mode .admin-btn.secondary {
+  background: #334155 !important;
+  border-color: #475569 !important;
+  color: #f8fafc !important;
 }

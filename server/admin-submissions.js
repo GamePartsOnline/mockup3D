@@ -201,6 +201,47 @@ export function generateWorkshopHtml(d, filenames, folder = '') {
   const folderName = folder || d.folder || '';
   const batUrl = folderName && batFile ? `/api/admin/submissions/file?folder=${encodeURIComponent(folderName)}&file=${encodeURIComponent(batFile)}` : (batFile ? `./${batFile}` : '');
   const visuelUrl = folderName && visuelFile ? `/api/admin/submissions/file?folder=${encodeURIComponent(folderName)}&file=${encodeURIComponent(visuelFile)}` : (visuelFile ? `./${visuelFile}` : '');
+  const hasCart = Array.isArray(d.cart) && d.cart.length > 0;
+  const isRejected = d.status === 'non_conforme' || d.status === 'refuse';
+
+  const cartHtml = hasCart ? `
+    <div class="section-title">Détail du panier multi-produits (${d.cart.length} articles)</div>
+    <table style="width:100%; border-collapse:collapse; margin-bottom:16px; font-size:13px;">
+      <thead>
+        <tr style="background:#f1f5f9; text-align:left; border-bottom:2px solid #cbd5e1;">
+          <th style="padding:8px 10px;">Article</th>
+          <th style="padding:8px 10px;">Visuel associé</th>
+          <th style="padding:8px 10px; text-align:center;">Qté</th>
+          <th style="padding:8px 10px; text-align:right;">P.U.</th>
+          <th style="padding:8px 10px; text-align:right;">Sous-total</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${d.cart.map((item, idx) => `
+          <tr style="border-bottom:1px solid #e2e8f0;">
+            <td style="padding:8px 10px; font-weight:700; color:#1e1b4b;">${item.productName || item.productKey || 'Produit'}</td>
+            <td style="padding:8px 10px; color:#475569;">${item.visualName || 'Visuel personnalisé'}</td>
+            <td style="padding:8px 10px; text-align:center; font-weight:800; color:#4f46e5;">${item.quantity || 1}</td>
+            <td style="padding:8px 10px; text-align:right;">${item.unitPrice || '—'}</td>
+            <td style="padding:8px 10px; text-align:right; font-weight:700;">${item.totalItemPrice || '—'}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  ` : '';
+
+  const discountHtml = d.discount ? `
+    <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:6px; padding:10px 14px; margin-bottom:16px; font-size:13px; color:#065f46;">
+      Remise code cadeau appliquée : <strong>${d.discount.code || 'CODE'}</strong> (${d.discount.label || ''}) : <strong>-${d.discount.amount || 0} €</strong>
+    </div>
+  ` : '';
+
+  const rejectBannerHtml = isRejected ? `
+    <div style="background:#fef2f2; border:2px solid #ef4444; border-radius:8px; padding:12px 16px; margin-bottom:18px; color:#991b1b; font-size:13.5px;">
+      <strong>✕ COMMANDE NON CONFORME / REFUSÉE PAR L’ATELIER</strong><br>
+      Motif : ${d.rejectionReason || 'Visuel non conforme aux critères d’impression.'}
+    </div>
+  ` : '';
 
   return `<!doctype html>
 <html lang="fr">
@@ -239,18 +280,23 @@ export function generateWorkshopHtml(d, filenames, folder = '') {
       </div>
     </div>
 
-    <div class="section-title">Article à fabriquer</div>
+    ${rejectBannerHtml}
+
+    <div class="section-title">Synthèse de la commande</div>
     <div class="product-box">
       <div>
         <div style="font-size:16px; font-weight:800; color:#1e1b4b;">${d.product || d.productKey || 'Produit personnalisé'}</div>
         <div style="font-size:12.5px; color:#475569;">Prix unitaire : <strong>${unitP}</strong></div>
       </div>
       <div style="text-align:right;">
-        <div style="font-size:12px; color:#64748b;">Quantité commandée</div>
+        <div style="font-size:12px; color:#64748b;">Quantité totale</div>
         <div style="font-size:22px; font-weight:900; color:#4f46e5;">${qty} ex.</div>
-        <div style="font-size:12.5px; font-weight:700; color:#0f172a;">Total : ${totalP}</div>
+        <div style="font-size:12.5px; font-weight:700; color:#0f172a;">Total TTC : ${totalP}</div>
       </div>
     </div>
+
+    ${discountHtml}
+    ${cartHtml}
 
     <div class="section-title">Coordonnées Client & Livraison</div>
     <div class="grid">
@@ -301,27 +347,43 @@ export function generateWorkshopTxt(d, filenames) {
   const totalP = d.totalPrice || '—';
   const dateStr = d.date ? new Date(d.date).toLocaleString('fr-FR') : '—';
   const ref = d.id || d.folder || 'CMD';
+  const hasCart = Array.isArray(d.cart) && d.cart.length > 0;
+
+  let cartTxt = '';
+  if (hasCart) {
+    cartTxt = '\r\nARTICLES DU PANIER MULTI-PRODUITS :\r\n' +
+      d.cart.map((item, idx) => `  ${idx + 1}. ${item.productName || item.productKey || 'Produit'} x${item.quantity || 1} - P.U: ${item.unitPrice || '—'} - Total: ${item.totalItemPrice || '—'} (Visuel: ${item.visualName || 'défaut'})`).join('\r\n') + '\r\n';
+  }
+
+  let promoTxt = '';
+  if (d.discount) {
+    promoTxt = `\r\nREMISE CODE CADEAU :\r\n- Code : ${d.discount.code} (-${d.discount.amount || 0} €) - ${d.discount.label || ''}\r\n`;
+  }
+
+  let rejectTxt = '';
+  if (d.status === 'non_conforme' || d.status === 'refuse') {
+    rejectTxt = `\r\nATTENTION : COMMANDE REFUSÉE / NON CONFORME\r\nMotif : ${d.rejectionReason || 'Visuel non conforme'}\r\n`;
+  }
 
   return `=====================================================
 GPO SARL • GRAPH2PRINT - FICHE DE COMMANDE ATELIER
 =====================================================
 Référence : ${ref}
 Date      : ${dateStr}
-Statut    : ${d.status || 'nouveau'}
+Statut    : ${d.status || 'nouveau'}${rejectTxt}
 
 ARTICLE COMMANDÉ :
 - Produit  : ${d.product || d.productKey || 'Produit personnalisé'}
 - Quantité : ${qty} exemplaire(s)
 - Prix unitaire : ${unitP}
-- Total TTC     : ${totalP}
-
+- Total TTC     : ${totalP}${promoTxt}${cartTxt}
 CLIENT :
 - Nom       : ${clientName}
 - Courriel  : ${d.client?.email || '—'}
 - Téléphone : ${d.client?.telephone || '—'}
 - Adresse   : ${d.client?.adresse || '—'}
 - Ville     : ${d.client?.codePostal || ''} ${d.client?.ville || ''}
-${d.client?.note ? `- Note client : ${d.client.note}\n` : ''}
+${d.client?.note ? `- Note client : ${d.client.note}\r\n` : ''}
 FICHIERS INCLUS DANS CETTE ARCHIVE :
 ${filenames.map(f => '- ' + f).join('\r\n')}
 
@@ -450,5 +512,242 @@ export async function addSubmissionMessage(req, res) {
   } catch (err) {
     console.error('addSubmissionMessage error:', err);
     return json(res, 500, { error: 'Impossible d\'envoyer le message.' });
+  }
+}
+
+// Creation d'une proposition de commande / BAT prepare par l'atelier pour un client
+export async function adminCreateProposition(req, res) {
+  if (!authorizeAdmin(req, res)) return;
+  try {
+    const body = await readJson(req);
+    const email = String(body.clientEmail || '').trim().toLowerCase();
+    const nom = String(body.clientNom || 'Client').trim();
+    const prenom = String(body.clientPrenom || '').trim();
+    const productKey = String(body.productKey || 'mug11oz').trim();
+    const productName = String(body.productName || 'Objet personnalisé').trim();
+    const quantity = Math.max(1, parseInt(body.quantity || '1', 10));
+    const unitPrice = String(body.price || '15,00 €').trim();
+    const totalPrice = String(body.totalPrice || unitPrice).trim();
+    const customMessage = String(body.message || 'Voici la maquette préparée sur mesure par l’atelier Graph2Print. Merci de valider votre BAT électronique pour lancer la fabrication.').trim();
+
+    if (!email || !email.includes('@')) {
+      return json(res, 400, { error: 'Adresse courriel valide du client requise.' });
+    }
+
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    const timePrefix = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`;
+    const cleanNom = nom.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase().slice(0, 12);
+    const folderName = `${timePrefix}-BAT-PROPO-${cleanNom}`;
+    const targetDir = path.join(submissionsDir, folderName);
+
+    await fs.mkdir(targetDir, { recursive: true });
+
+    // Enregistrer bat_mockup.png si fourni
+    if (body.batImage && body.batImage.includes('base64,')) {
+      const base64Data = body.batImage.split('base64,')[1];
+      await fs.writeFile(path.join(targetDir, 'bat_mockup.png'), Buffer.from(base64Data, 'base64'));
+    } else {
+      const transparentPng = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64');
+      await fs.writeFile(path.join(targetDir, 'bat_mockup.png'), transparentPng);
+    }
+
+    // Enregistrer visuel_client.png si fourni
+    if (body.visualImage && body.visualImage.includes('base64,')) {
+      const base64Data = body.visualImage.split('base64,')[1];
+      await fs.writeFile(path.join(targetDir, 'visuel_client.png'), Buffer.from(base64Data, 'base64'));
+    } else {
+      const transparentPng = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64');
+      await fs.writeFile(path.join(targetDir, 'visuel_client.png'), transparentPng);
+    }
+
+    const submissionData = {
+      id: `BAT-${now.getFullYear()}-${Math.floor(Math.random() * 9000 + 1000)}`,
+      folder: folderName,
+      date: now.toISOString(),
+      product: productName,
+      productKey,
+      quantity,
+      unitPrice,
+      totalPrice,
+      status: 'bat_a_valider',
+      isWorkshopProposition: true,
+      checks: {
+        batConforme: false,
+        imprime: false,
+        presse: false,
+        expedie: false
+      },
+      client: {
+        nom,
+        prenom,
+        email,
+        telephone: String(body.clientTelephone || '').trim(),
+        adresse: String(body.clientAdresse || '').trim(),
+        codePostal: String(body.clientCp || '').trim(),
+        ville: String(body.clientVille || '').trim(),
+        note: 'Proposition de BAT préparée par l’atelier Graph2Print.'
+      },
+      messages: [
+        {
+          id: `msg-${Date.now()}-init`,
+          sender: 'atelier',
+          author: 'Atelier Graph2Print',
+          date: now.toISOString(),
+          text: customMessage
+        }
+      ]
+    };
+
+    await fs.writeFile(path.join(targetDir, 'submission.json'), JSON.stringify(submissionData, null, 2), 'utf8');
+
+    return json(res, 201, {
+      ok: true,
+      message: 'Proposition de BAT créée et transmise au client !',
+      folder: folderName,
+      submission: submissionData
+    });
+  } catch (err) {
+    console.error('adminCreateProposition error:', err);
+    return json(res, 500, { error: 'Erreur lors de la création de la proposition.' });
+  }
+}
+
+// Validation directe du BAT par le client depuis son espace
+export async function clientApproveBat(req, res) {
+  try {
+    const body = await readJson(req);
+    const folder = path.basename(body.folder || '');
+    if (!folder) return json(res, 400, { error: 'Dossier de commande requis.' });
+
+    const metaPath = path.join(submissionsDir, folder, 'submission.json');
+    if (!fsSync.existsSync(metaPath)) return json(res, 404, { error: 'Commande introuvable.' });
+
+    const data = JSON.parse(await fs.readFile(metaPath, 'utf8'));
+    data.status = 'bat_valide_client';
+    if (!data.checks) data.checks = {};
+    data.checks.batConforme = true;
+
+    if (!Array.isArray(data.messages)) data.messages = [];
+    data.messages.push({
+      id: `msg-${Date.now()}-approved`,
+      sender: 'client',
+      author: data.client?.prenom ? `${data.client.prenom} ${data.client.nom}` : 'Client',
+      date: new Date().toISOString(),
+      text: '✓ Bon à Tirer (BAT) électronique validé sans réserve. Commande confirmée pour impression !'
+    });
+
+    await fs.writeFile(metaPath, JSON.stringify(data, null, 2), 'utf8');
+
+    return json(res, 200, {
+      ok: true,
+      message: 'BAT validé avec succès ! Votre commande passe immédiatement en cours de fabrication à l’atelier.',
+      submission: data
+    });
+  } catch (err) {
+    console.error('clientApproveBat error:', err);
+    return json(res, 500, { error: 'Erreur lors de la validation du BAT.' });
+  }
+}
+
+export async function rejectSubmission(req, res) {
+  if (!authorizeAdmin(req, res)) return;
+  try {
+    const body = await readJson(req);
+    const folder = path.basename(body.folder || '');
+    const reason = String(body.reason || 'Visuel non conforme aux contraintes d’impression.').trim();
+    if (!folder) return json(res, 400, { error: 'Dossier de commande requis.' });
+
+    const metaPath = path.join(submissionsDir, folder, 'submission.json');
+    if (!fsSync.existsSync(metaPath)) return json(res, 404, { error: 'Commande introuvable.' });
+
+    const data = JSON.parse(await fs.readFile(metaPath, 'utf8'));
+    data.status = 'non_conforme';
+    if (!data.checks) data.checks = {};
+    data.checks.batConforme = false;
+    data.rejectionReason = reason;
+    data.rejectedAt = new Date().toISOString();
+
+    if (!Array.isArray(data.messages)) data.messages = [];
+    data.messages.push({
+      id: `msg-${Date.now()}-rejected`,
+      sender: 'atelier',
+      author: 'Atelier Graph2Print',
+      date: new Date().toISOString(),
+      text: `✕ Votre création a été vérifiée par l'équipe technique de l'Atelier mais ne peut pas être mise en production en l'état. Motif : "${reason}". Merci de charger un nouveau fichier ou de nous contacter dans cette messagerie.`
+    });
+
+    await fs.writeFile(metaPath, JSON.stringify(data, null, 2), 'utf8');
+
+    // Régénérer les fiches atelier à jour
+    try {
+      const allFiles = await fs.readdir(path.join(submissionsDir, folder));
+      await fs.writeFile(path.join(submissionsDir, folder, 'FICHE_ATELIER.html'), generateWorkshopHtml(data, allFiles, folder), 'utf8');
+      await fs.writeFile(path.join(submissionsDir, folder, 'RECAPITULATIF_COMMANDE.txt'), generateWorkshopTxt(data, allFiles), 'utf8');
+    } catch (e) {}
+
+    return json(res, 200, {
+      ok: true,
+      message: 'La commande a été marquée comme non conforme. Le client a été notifié par message.',
+      status: 'non_conforme',
+      reason
+    });
+  } catch (err) {
+    console.error('rejectSubmission error:', err);
+    return json(res, 500, { error: 'Erreur lors du refus de la commande.' });
+  }
+}
+
+export async function updateSubmissionDetails(req, res) {
+  if (!authorizeAdmin(req, res)) return;
+  try {
+    const body = await readJson(req);
+    const folder = path.basename(body.folder || '');
+    if (!folder) return json(res, 400, { error: 'Dossier de commande requis.' });
+
+    const metaPath = path.join(submissionsDir, folder, 'submission.json');
+    if (!fsSync.existsSync(metaPath)) return json(res, 404, { error: 'Commande introuvable.' });
+
+    const data = JSON.parse(await fs.readFile(metaPath, 'utf8'));
+
+    // Mise à jour des informations modifiables
+    if (typeof body.product === 'string' && body.product.trim()) data.product = body.product.trim();
+    if (typeof body.productKey === 'string' && body.productKey.trim()) data.productKey = body.productKey.trim();
+    if (body.quantity !== undefined) data.quantity = Math.max(1, parseInt(body.quantity, 10) || 1);
+    if (typeof body.unitPrice === 'string') data.unitPrice = body.unitPrice.trim();
+    if (typeof body.totalPrice === 'string') data.totalPrice = body.totalPrice.trim();
+    if (typeof body.customText === 'string') data.customText = body.customText.trim();
+
+    if (body.client && typeof body.client === 'object') {
+      if (!data.client) data.client = {};
+      if (body.client.nom !== undefined) data.client.nom = String(body.client.nom).trim();
+      if (body.client.prenom !== undefined) data.client.prenom = String(body.client.prenom).trim();
+      if (body.client.email !== undefined) data.client.email = String(body.client.email).trim().toLowerCase();
+      if (body.client.telephone !== undefined) data.client.telephone = String(body.client.telephone).trim();
+      if (body.client.adresse !== undefined) data.client.adresse = String(body.client.adresse).trim();
+      if (body.client.codePostal !== undefined) data.client.codePostal = String(body.client.codePostal).trim();
+      if (body.client.ville !== undefined) data.client.ville = String(body.client.ville).trim();
+      if (body.client.note !== undefined) data.client.note = String(body.client.note).trim();
+    }
+
+    data.lastModifiedAt = new Date().toISOString();
+
+    await fs.writeFile(metaPath, JSON.stringify(data, null, 2), 'utf8');
+
+    // Régénérer les fiches atelier
+    try {
+      const allFiles = await fs.readdir(path.join(submissionsDir, folder));
+      await fs.writeFile(path.join(submissionsDir, folder, 'FICHE_ATELIER.html'), generateWorkshopHtml(data, allFiles, folder), 'utf8');
+      await fs.writeFile(path.join(submissionsDir, folder, 'RECAPITULATIF_COMMANDE.txt'), generateWorkshopTxt(data, allFiles), 'utf8');
+    } catch (e) {}
+
+    return json(res, 200, {
+      ok: true,
+      message: 'Commande modifiée et mise à jour avec succès.',
+      submission: data
+    });
+  } catch (err) {
+    console.error('updateSubmissionDetails error:', err);
+    return json(res, 500, { error: 'Erreur lors de la mise à jour de la commande.' });
   }
 }

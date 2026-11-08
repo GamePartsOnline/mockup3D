@@ -107,7 +107,7 @@
     "priceNumber": 8,
     "stockQuantity": 15,
     "dim": "95 × 95 × 4 mm",
-    "active": true,
+    "active": false,
     "badge": "",
     "desc": "Liège naturel épais avec impression thermique brillante."
   },
@@ -135,7 +135,7 @@
     "priceNumber": 6,
     "stockQuantity": 0,
     "dim": "Ø 63.5 × 2.3 mm",
-    "active": false,
+    "active": true,
     "badge": "",
     "desc": "Unisub FRP rond, impression éclatante sur deux faces."
   },
@@ -163,7 +163,7 @@
     "priceNumber": 7,
     "stockQuantity": 8,
     "dim": "30 × 40 mm",
-    "active": true,
+    "active": false,
     "badge": "",
     "desc": "Paire de boucles d'oreilles légères sublimées avec crochets hypoallergéniques."
   },
@@ -219,7 +219,7 @@
     "priceNumber": 21,
     "stockQuantity": 4,
     "dim": "Cœur + Dos A4 (210 × 297 mm)",
-    "active": true,
+    "active": false,
     "badge": "Complet",
     "desc": "Double impression cœur poitrine et grand visuel dos."
   },

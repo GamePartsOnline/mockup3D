@@ -6,13 +6,16 @@ import { json, secureHeaders } from './server/security.js';
 import { mailConfigured, submit } from './server/submissions.js';
 import { getCatalog, saveCatalog, proposeCatalogItem, emptyCatalogTrash } from './server/catalog.js';
 import { getCategories, saveCategories } from './server/categories.js';
-import { getSubmissions, serveSubmissionFile, updateSubmissionStatus, updateSubmissionChecks, deleteSubmission, downloadSubmissionZip, exportSubmissionsCsv, getClientOrders, addSubmissionMessage } from './server/admin-submissions.js';
+import { getSubmissions, serveSubmissionFile, updateSubmissionStatus, updateSubmissionChecks, deleteSubmission, downloadSubmissionZip, exportSubmissionsCsv, getClientOrders, addSubmissionMessage, adminCreateProposition, clientApproveBat, rejectSubmission, updateSubmissionDetails } from './server/admin-submissions.js';
 import { getProducts, updateProducts, toggleProductStatus } from './server/products-manager.js';
 import { getConsignment, saveConsignment } from './server/consignment-manager.js';
+import { adminGetClients, adminDeleteClient, adminSaveClient, adminRestoreClients, adminGetClientsTrash, adminRestoreLastClient, adminRestoreSpecificClient, clientRegister, clientLogin, clientGetProfile, clientUpdateProfile, clientSendMessage, initClientsData } from './server/clients-manager.js';
+import { getDiscounts, adminGetDiscounts, adminUpdateGlobalDiscount, adminSaveCoupon, adminDeleteCoupon, applyDiscountCheck } from './server/discounts.js';
 import { serveStatic } from './server/static.js';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 if (fs.existsSync(path.join(root, '.env'))) process.loadEnvFile(path.join(root, '.env'));
+initClientsData().catch(() => {});
 const dist = path.join(root, 'dist');
 const server = http.createServer(async (req, res) => {
   secureHeaders(req, res);
@@ -64,6 +67,12 @@ const server = http.createServer(async (req, res) => {
     if (route === '/api/admin/submissions/delete' && req.method === 'POST') {
       return await deleteSubmission(req, res);
     }
+    if (route === '/api/admin/submissions/reject' && req.method === 'POST') {
+      return await rejectSubmission(req, res);
+    }
+    if (route === '/api/admin/submissions/update-details' && req.method === 'POST') {
+      return await updateSubmissionDetails(req, res);
+    }
     if (route === '/api/admin/submissions/download-zip' && req.method === 'GET') {
       return await downloadSubmissionZip(req, res);
     }
@@ -72,6 +81,66 @@ const server = http.createServer(async (req, res) => {
     }
     if (route === '/api/client/orders' && req.method === 'GET') {
       return await getClientOrders(req, res);
+    }
+    if (route === '/api/admin/clients' && req.method === 'GET') {
+      return await adminGetClients(req, res);
+    }
+    if (route === '/api/admin/clients/delete' && req.method === 'POST') {
+      return await adminDeleteClient(req, res);
+    }
+    if (route === '/api/admin/clients/restore' && req.method === 'POST') {
+      return await adminRestoreClients(req, res);
+    }
+    if (route === '/api/admin/clients/trash' && req.method === 'GET') {
+      return await adminGetClientsTrash(req, res);
+    }
+    if (route === '/api/admin/clients/restore-last' && req.method === 'POST') {
+      return await adminRestoreLastClient(req, res);
+    }
+    if (route === '/api/admin/clients/restore-one' && req.method === 'POST') {
+      return await adminRestoreSpecificClient(req, res);
+    }
+    if (route === '/api/admin/clients/save' && req.method === 'POST') {
+      return await adminSaveClient(req, res);
+    }
+    if (route === '/api/discounts' && req.method === 'GET') {
+      return await getDiscounts(req, res);
+    }
+    if (route === '/api/discounts/apply' && req.method === 'POST') {
+      return await applyDiscountCheck(req, res);
+    }
+    if (route === '/api/admin/discounts' && req.method === 'GET') {
+      return await adminGetDiscounts(req, res);
+    }
+    if (route === '/api/admin/discounts/global' && req.method === 'POST') {
+      return await adminUpdateGlobalDiscount(req, res);
+    }
+    if (route === '/api/admin/discounts/coupon' && req.method === 'POST') {
+      return await adminSaveCoupon(req, res);
+    }
+    if (route === '/api/admin/discounts/coupon/delete' && req.method === 'POST') {
+      return await adminDeleteCoupon(req, res);
+    }
+    if (route === '/api/client/register' && req.method === 'POST') {
+      return await clientRegister(req, res);
+    }
+    if (route === '/api/client/login' && req.method === 'POST') {
+      return await clientLogin(req, res);
+    }
+    if (route === '/api/client/profile' && req.method === 'GET') {
+      return await clientGetProfile(req, res);
+    }
+    if (route === '/api/client/profile/update' && req.method === 'POST') {
+      return await clientUpdateProfile(req, res);
+    }
+    if (route === '/api/client/message' && req.method === 'POST') {
+      return await clientSendMessage(req, res);
+    }
+    if (route === '/api/client/bat/approve' && req.method === 'POST') {
+      return await clientApproveBat(req, res);
+    }
+    if (route === '/api/admin/submissions/proposition' && req.method === 'POST') {
+      return await adminCreateProposition(req, res);
     }
     if (route === '/api/submissions/message' && req.method === 'POST') {
       return await addSubmissionMessage(req, res);

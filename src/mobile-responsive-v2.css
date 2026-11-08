@@ -1,0 +1,297 @@
+/* ==========================================================================
+   REFONTE MOBILE RESPONSIVE TACTILE V2 - MOCKUP3D C3
+   Normes d'accessibilité mobile : Touch Target 44-48px, Police anti-zoom 16px,
+   Formulaires tactiles aérés, onglets segmented controls, modales plein écran.
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  /* 1. RESET ET BASE MOBILE */
+  html, body {
+    -webkit-text-size-adjust: 100%;
+    touch-action: manipulation;
+  }
+
+  /* 2. FORMULAIRES & SAISIE TACTILE ERGONOMIQUE (ANTI-ZOOM INTEMPESTIF IOS) */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="search"],
+  select,
+  textarea,
+  .admin-input,
+  .admin-select {
+    font-size: 16px !important; /* Strictement 16px minimum pour désactiver le zoom forcé Safari iOS */
+    min-height: 48px !important;
+    padding: 10px 14px !important;
+    border-radius: 10px !important;
+    line-height: 1.4 !important;
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+  }
+
+  textarea,
+  .admin-input[rows] {
+    min-height: 80px !important;
+    font-size: 16px !important;
+  }
+
+  label {
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    margin-bottom: 6px !important;
+    display: inline-block !important;
+  }
+
+  /* 3. CASES À COCHER & BOUTONS RADIOS TACTILES */
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+    min-height: 26px !important;
+    accent-color: #7c3aed !important;
+    cursor: pointer !important;
+    margin: 0 8px 0 0 !important;
+    vertical-align: middle !important;
+  }
+
+  /* Cibles tactiles étendues pour les lignes de formulaire avec case à cocher */
+  .checkbox-label,
+  label:has(input[type="checkbox"]) {
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 4px 0 !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+  }
+
+  /* 4. BOUTONS & TOUCHES D'ACTION TACTILES (MIN-HEIGHT 48PX) */
+  button,
+  .btn,
+  .admin-btn,
+  .shop-card-btn,
+  .primary,
+  .secondary {
+    min-height: 46px !important;
+    padding: 10px 16px !important;
+    font-size: 14.5px !important;
+    font-weight: 700 !important;
+    border-radius: 10px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    touch-action: manipulation !important;
+    user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  button:active,
+  .admin-btn:active {
+    transform: scale(0.97) !important;
+  }
+
+  /* Boutons de fermeture ✕ facilement touchables au doigt */
+  .close-explorer-btn,
+  .sheet-close-btn,
+  button[id^="close"] {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    font-size: 22px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+  }
+
+  /* 5. ONGLETS TACTILES DÉFILABLES AU POUCE (SEGMENTED CONTROLS) */
+  .admin-nav,
+  .shop-tabs,
+  .segmented,
+  .tab-actions {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    gap: 8px !important;
+    padding: 6px 4px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .admin-nav::-webkit-scrollbar,
+  .shop-tabs::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .admin-nav-item,
+  .shop-tab-btn,
+  .segmented button {
+    flex: none !important;
+    min-height: 44px !important;
+    padding: 8px 16px !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    border-radius: 10px !important;
+    white-space: nowrap !important;
+  }
+
+  /* 6. MODALES TACTILES PLEIN ÉCRAN SUR MOBILE (FULLSCREEN DIALOGS) */
+  .visual-edit-modal,
+  .admin-modal-overlay,
+  #orderModal,
+  #clientSheetModal,
+  #clientAccountModal,
+  #editClientModal,
+  #shopCatalogModal,
+  #businessCardModal {
+    padding: 0 !important;
+    background: rgba(15, 23, 42, 0.9) !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+  }
+
+  .visual-edit-dialog,
+  .order-dialog,
+  .shop-modal-dialog,
+  #clientSheetModal > div,
+  #clientAccountModal .visual-edit-dialog,
+  #editClientModal > div,
+  #addConsignmentModal > div,
+  .admin-modal-overlay > div {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-shadow: none !important;
+  }
+
+  .visual-edit-header,
+  .order-header,
+  .shop-modal-header {
+    min-height: 56px !important;
+    padding: 12px 16px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .visual-edit-body,
+  .order-body,
+  .shop-modal-body {
+    flex: 1 1 auto !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 16px !important;
+    gap: 16px !important;
+  }
+
+  .visual-edit-footer,
+  .order-footer,
+  .admin-modal-footer,
+  div[style*="border-top:1px solid"] {
+    flex-shrink: 0 !important;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+    background: #ffffff !important;
+  }
+
+  /* 7. TABLEAUX ADMINISTRATIFS TACTILES SUR SMARTPHONE */
+  .admin-table-wrapper {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    border-radius: 10px !important;
+    margin-bottom: 16px !important;
+    border: 1px solid #e2e8f0 !important;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 10px 12px !important;
+    font-size: 13px !important;
+  }
+
+  /* 8. BOUTIQUE 2D & CATALOGUE MOBILE */
+  .shop-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    padding: 10px 4px !important;
+  }
+
+  .shop-card {
+    padding: 16px !important;
+    border-radius: 14px !important;
+  }
+
+  .shop-card-title {
+    font-size: 16px !important;
+  }
+
+  .shop-card-desc {
+    font-size: 13px !important;
+  }
+
+  .shop-card-btn {
+    min-height: 48px !important;
+    font-size: 15px !important;
+    width: 100% !important;
+    margin-top: 10px !important;
+  }
+
+  /* 9. TABLEAU DE BORD ADMIN SUR SMARTPHONE */
+  .admin-dashboard-container {
+    width: 100vw !important;
+    height: 100dvh !important;
+    border-radius: 0 !important;
+  }
+
+  .admin-body-layout {
+    flex-direction: column !important;
+  }
+
+  .admin-sidebar {
+    width: 100% !important;
+    min-width: 100% !important;
+    border-right: none !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    padding: 8px 12px !important;
+  }
+
+  .admin-main-content {
+    padding: 14px !important;
+  }
+
+  .tab-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .tab-header .tab-actions {
+    width: 100% !important;
+  }
+
+  .tab-header .tab-actions button {
+    flex: 1 !important;
+  }
+
+  /* 10. TOAST TACTILE HAUT DE PAGE */
+  #toast {
+    font-size: 14px !important;
+    padding: 12px 20px !important;
+    border-radius: 12px !important;
+    max-width: 90vw !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    text-align: center !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35) !important;
+  }
+}

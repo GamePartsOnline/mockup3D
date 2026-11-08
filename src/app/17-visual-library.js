@@ -33,7 +33,11 @@ export function register(app) {
         resolve(true);
       };
       img.onerror = () => { if (!opt.silent) app.showToast('Erreur chargement'); resolve(false); };
-      img.src = url; }); }; }
+      img.src = url; }); };
+  app.loadCatalogImageDirect = function(url, name, opt = {}) {
+    return app.addImageFromUrl(url, name, opt);
+  };
+}
 
 export function initialize(app) {
   const explorer = document.querySelector('#catalogExplorer'), openBtn = document.querySelector('#openCatalogBtn'), closeBtn = document.querySelector('#closeExplorerBtn');
