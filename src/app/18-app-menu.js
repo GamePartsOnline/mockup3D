@@ -58,7 +58,20 @@ export function initialize(app) {
         if (c.name === 'monsteraPlantGroup') {
           c.visible = !enabled; // Le sapin remplace la plante
         }
+        if (c.name === 'christmasFireplaceExclusiveGroup') {
+          c.visible = !!enabled; // Jambes du père noël, suie au sol et chaussettes
+        }
+        if (c.name === 'fireplaceFlameGroup') {
+          c.visible = !enabled; // Pas de flammes en mode noël
+        }
       });
+      const fp = app.scene.getObjectByName('warmFireplaceGroup');
+      if (fp && fp.userData?.fireLight) {
+        fp.userData.fireLight.visible = !enabled;
+      }
+    }
+    if (app.setAmbienceTheme) {
+      app.setAmbienceTheme(enabled ? 'noel' : 'standard');
     }
     const adminBox = document.querySelector('#adminNoelDecorToggle');
     if (adminBox) adminBox.checked = !!enabled;

@@ -228,82 +228,82 @@ export function createGpoBoard() {
   const boardGroup = new THREE.Group();
   boardGroup.name = 'gpoBoardGroup';
 
-  const w = 0.95, h = 0.72, d = 0.035;
+  // Format plus compact et proportionné (A2/A3 design)
+  const w = 0.62, h = 0.48, d = 0.03;
 
   // Cadre élégant en aluminium noir brossé
   const frameMat = new THREE.MeshStandardMaterial({ color: 0x15181e, roughness: 0.35, metalness: 0.75 });
-  const frame = new THREE.Mesh(new THREE.BoxGeometry(w + 0.05, h + 0.05, d), frameMat);
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(w + 0.04, h + 0.04, d), frameMat);
   frame.castShadow = true;
   boardGroup.add(frame);
 
   // Toile / affiche imprimée
   const canvas = document.createElement('canvas');
-  canvas.width = 1200; canvas.height = 900;
+  canvas.width = 1024; canvas.height = 800;
   const ctx = canvas.getContext('2d');
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
 
   const drawBoard = (logoImg) => {
     // Fond blanc satiné moderne avec subtil dégradé
-    const bgGrad = ctx.createLinearGradient(0, 0, 0, 900);
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 800);
     bgGrad.addColorStop(0, '#ffffff');
     bgGrad.addColorStop(1, '#f1f5f9');
     ctx.fillStyle = bgGrad;
-    ctx.fillRect(0, 0, 1200, 900);
+    ctx.fillRect(0, 0, 1024, 800);
 
     // Bordure bleu corporate GPO
     ctx.strokeStyle = '#0284c7';
-    ctx.lineWidth = 10;
-    ctx.strokeRect(20, 20, 1160, 860);
+    ctx.lineWidth = 8;
+    ctx.strokeRect(18, 18, 988, 764);
     ctx.strokeStyle = '#94a3b8';
     ctx.lineWidth = 2;
-    ctx.strokeRect(36, 36, 1128, 828);
+    ctx.strokeRect(32, 32, 960, 736);
 
     // Dessin du logo GPO Bleu
     if (logoImg) {
       const ratio = logoImg.width / logoImg.height;
-      const targetH = 340;
-      const targetW = Math.min(850, targetH * ratio);
-      ctx.drawImage(logoImg, (1200 - targetW) / 2, 70, targetW, targetH);
+      const targetH = 280;
+      const targetW = Math.min(720, targetH * ratio);
+      ctx.drawImage(logoImg, (1024 - targetW) / 2, 60, targetW, targetH);
     } else {
-      // Fallback visuel corporate en attendant le chargement de l'image
       ctx.fillStyle = '#0284c7';
-      ctx.font = 'bold 96px "Segoe UI", Arial, sans-serif';
+      ctx.font = 'bold 84px "Segoe UI", Arial, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('GPO', 600, 230);
-      ctx.font = 'bold 44px "Segoe UI", Arial, sans-serif';
+      ctx.fillText('GPO', 512, 210);
+      ctx.font = 'bold 36px "Segoe UI", Arial, sans-serif';
       ctx.fillStyle = '#0f172a';
-      ctx.fillText('GAME PARTS ONLINE', 600, 310);
+      ctx.fillText('GAME PARTS ONLINE', 512, 280);
     }
 
     // Titres corporate
     ctx.fillStyle = '#0f172a';
-    ctx.font = 'bold 46px "Segoe UI", Arial, sans-serif';
+    ctx.font = 'bold 42px "Segoe UI", Arial, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('GPO SARL', 600, 480);
+    ctx.fillText('GPO SARL', 512, 410);
 
     ctx.fillStyle = '#475569';
-    ctx.font = 'bold 26px "Segoe UI", Arial, sans-serif';
-    ctx.fillText('IMPRESSION NUMÉRIQUE • MARQUAGE PUBLICITAIRE', 600, 535);
+    ctx.font = 'bold 22px "Segoe UI", Arial, sans-serif';
+    ctx.fillText('IMPRESSION NUMÉRIQUE • MARQUAGE PUBLICITAIRE', 512, 460);
 
     // Cartouche bouton URL web cliquable
     ctx.fillStyle = '#0284c7';
     if (ctx.roundRect) {
       ctx.beginPath();
-      ctx.roundRect(180, 610, 840, 110, 24);
+      ctx.roundRect(140, 525, 744, 100, 20);
       ctx.fill();
     } else {
-      ctx.fillRect(180, 610, 840, 110);
+      ctx.fillRect(140, 525, 744, 100);
     }
 
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 50px "Segoe UI", Arial, sans-serif';
-    ctx.fillText('www.gposarl.com', 600, 685);
+    ctx.font = 'bold 44px "Segoe UI", Arial, sans-serif';
+    ctx.fillText('www.gposarl.com', 512, 592);
 
     // Mention d'interaction
     ctx.fillStyle = '#0369a1';
-    ctx.font = 'italic 26px "Segoe UI", Arial, sans-serif';
-    ctx.fillText('Cliquez pour visiter le site officiel', 600, 785);
+    ctx.font = 'italic 24px "Segoe UI", Arial, sans-serif';
+    ctx.fillText('Cliquez pour visiter le site officiel', 512, 695);
 
     tex.needsUpdate = true;
   };
@@ -318,8 +318,8 @@ export function createGpoBoard() {
   printFace.position.set(0, 0, d / 2 + 0.002);
   boardGroup.add(printFace);
 
-  // Positionnement sur le mur du fond immédiatement à gauche de la borne d'arcade (arcade à X: -2.55)
-  boardGroup.position.set(-3.68, 1.42, -1.13);
+  // Positionnement sur le mur du fond, plus aéré et écarté de la borne d'arcade (arcade à X: -2.55)
+  boardGroup.position.set(-3.95, 1.38, -1.13);
   boardGroup.rotation.set(0, 0, 0);
 
   const boardMeta = {
@@ -567,38 +567,44 @@ export function createWarmFireplace(leftX, floorY) {
     christmasFireplaceGroup.add(sockGroup);
   });
 
+  // Décoration Noël exclusive sur la cheminée
+  const isNoelActive = (localStorage.getItem('mockup3d_decor_noel') === '1');
+  christmasFireplaceGroup.visible = isNoelActive;
+  flameGroup.visible = !isNoelActive;
+  fireLight.visible = !isNoelActive;
   fpGroup.add(christmasFireplaceGroup);
   fpGroup.userData.christmasDecor = christmasFireplaceGroup;
 
-  // Décorations standard sur le manteau (bougeoirs dorés)
+  // Décorations standard sur le manteau (bougeoirs dorés sur le rebord avant)
   const brassMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.8, roughness: 0.25 });
   const candleWaxMat = new THREE.MeshStandardMaterial({ color: 0xfffbeb, roughness: 0.4 });
   const candleFlameMat = new THREE.MeshBasicMaterial({ color: 0xffa000 });
 
   [-0.95, 0.95].forEach(sideZ => {
     const holder = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.07, 0.09, 16), brassMat);
-    holder.position.set(0.38, 1.63, sideZ);
+    holder.position.set(0.60, 1.645, sideZ);
     fpGroup.add(holder);
 
     const candle = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.20, 12), candleWaxMat);
-    candle.position.set(0.38, 1.76, sideZ);
+    candle.position.set(0.60, 1.77, sideZ);
     fpGroup.add(candle);
 
     const cFlame = new THREE.Mesh(new THREE.ConeGeometry(0.014, 0.04, 8), candleFlameMat);
-    cFlame.position.set(0.38, 1.88, sideZ);
+    cFlame.position.set(0.60, 1.89, sideZ);
     fpGroup.add(cFlame);
   });
 
-  // Game Boy rétro DMG-01 posée sur le manteau de la cheminée
+  // Game Boy rétro DMG-01 posée bien en vue sur le rebord avant du manteau de la cheminée
   const gb = createGameBoyDMG();
-  gb.position.set(0.42, 1.61, -0.38);
-  gb.rotation.set(-Math.PI / 2 + 0.25, 0, 0.35);
+  gb.scale.setScalar(1.5);
+  gb.position.set(0.60, 1.72, -0.42);
+  gb.rotation.set(0, Math.PI / 2 + 0.20, -0.15); // Debout et inclinée vers la pièce
   fpGroup.add(gb);
 
-  // Rubik's Cube 3D multicolore posé sur le manteau de la cheminée
+  // Rubik's Cube 3D multicolore posé bien en vue sur le rebord avant du manteau de la cheminée
   const rubik = createRubiksCube();
-  rubik.position.set(0.42, 1.63, 0.36);
-  rubik.rotation.set(0.15, 0.45, -0.10);
+  rubik.position.set(0.60, 1.66, 0.42);
+  rubik.rotation.set(0.20, 0.55, 0.10);
   fpGroup.add(rubik);
 
   // Positionner contre le mur gauche
@@ -664,8 +670,8 @@ export function createRubiksCube() {
 
   const blackMat = new THREE.MeshStandardMaterial({ color: 0x111315, roughness: 0.55 });
   const faceColors = [0xdc2626, 0xf97316, 0xffffff, 0xfacc15, 0x2563eb, 0x16a34a];
-  const size = 0.070;
-  const pieceSize = (size - 0.006) / 3;
+  const size = 0.12; // Agrandie pour être bien nette et visible sur le manteau
+  const pieceSize = (size - 0.008) / 3;
 
   const core = new THREE.Mesh(new THREE.BoxGeometry(size, size, size), blackMat);
   core.castShadow = true;
