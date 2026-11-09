@@ -223,6 +223,120 @@ export function createBusinessCard() {
   return card;
 }
 
+// Tableau d'entreprise GPO SARL accroché sur le mur du fond à gauche de la borne d'arcade
+export function createGpoBoard() {
+  const boardGroup = new THREE.Group();
+  boardGroup.name = 'gpoBoardGroup';
+
+  const w = 0.95, h = 0.72, d = 0.035;
+
+  // Cadre élégant en aluminium noir brossé
+  const frameMat = new THREE.MeshStandardMaterial({ color: 0x15181e, roughness: 0.35, metalness: 0.75 });
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(w + 0.05, h + 0.05, d), frameMat);
+  frame.castShadow = true;
+  boardGroup.add(frame);
+
+  // Toile / affiche imprimée
+  const canvas = document.createElement('canvas');
+  canvas.width = 1200; canvas.height = 900;
+  const ctx = canvas.getContext('2d');
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+
+  const drawBoard = (logoImg) => {
+    // Fond blanc satiné moderne avec subtil dégradé
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 900);
+    bgGrad.addColorStop(0, '#ffffff');
+    bgGrad.addColorStop(1, '#f1f5f9');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 1200, 900);
+
+    // Bordure bleu corporate GPO
+    ctx.strokeStyle = '#0284c7';
+    ctx.lineWidth = 10;
+    ctx.strokeRect(20, 20, 1160, 860);
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(36, 36, 1128, 828);
+
+    // Dessin du logo GPO Bleu
+    if (logoImg) {
+      const ratio = logoImg.width / logoImg.height;
+      const targetH = 340;
+      const targetW = Math.min(850, targetH * ratio);
+      ctx.drawImage(logoImg, (1200 - targetW) / 2, 70, targetW, targetH);
+    } else {
+      // Fallback visuel corporate en attendant le chargement de l'image
+      ctx.fillStyle = '#0284c7';
+      ctx.font = 'bold 96px "Segoe UI", Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('GPO', 600, 230);
+      ctx.font = 'bold 44px "Segoe UI", Arial, sans-serif';
+      ctx.fillStyle = '#0f172a';
+      ctx.fillText('GAME PARTS ONLINE', 600, 310);
+    }
+
+    // Titres corporate
+    ctx.fillStyle = '#0f172a';
+    ctx.font = 'bold 46px "Segoe UI", Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('GPO SARL', 600, 480);
+
+    ctx.fillStyle = '#475569';
+    ctx.font = 'bold 26px "Segoe UI", Arial, sans-serif';
+    ctx.fillText('IMPRESSION NUMÉRIQUE • MARQUAGE PUBLICITAIRE', 600, 535);
+
+    // Cartouche bouton URL web cliquable
+    ctx.fillStyle = '#0284c7';
+    if (ctx.roundRect) {
+      ctx.beginPath();
+      ctx.roundRect(180, 610, 840, 110, 24);
+      ctx.fill();
+    } else {
+      ctx.fillRect(180, 610, 840, 110);
+    }
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 50px "Segoe UI", Arial, sans-serif';
+    ctx.fillText('www.gposarl.com', 600, 685);
+
+    // Mention d'interaction
+    ctx.fillStyle = '#0369a1';
+    ctx.font = 'italic 26px "Segoe UI", Arial, sans-serif';
+    ctx.fillText('Cliquez pour visiter le site officiel', 600, 785);
+
+    tex.needsUpdate = true;
+  };
+
+  drawBoard(null);
+  const logo = new Image();
+  logo.onload = () => drawBoard(logo);
+  logo.src = '/logo-gposarl-bleu.png';
+
+  const boardMat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.35, metalness: 0.05 });
+  const printFace = new THREE.Mesh(new THREE.PlaneGeometry(w, h), boardMat);
+  printFace.position.set(0, 0, d / 2 + 0.002);
+  boardGroup.add(printFace);
+
+  // Positionnement sur le mur du fond à gauche de la borne d'arcade (arcade à X: -2.55)
+  boardGroup.position.set(-3.85, 1.45, -1.13);
+  boardGroup.rotation.set(0, 0, 0);
+
+  const boardMeta = {
+    showcaseProductKey: 'gpoBoard',
+    isGpoBoard: true,
+    showcaseLabel: 'GPO SARL • Site Officiel',
+    showcasePrice: 'www.gposarl.com',
+    showcaseSub: 'Cliquez pour ouvrir le site www.gposarl.com',
+    baseScale: 1
+  };
+  boardGroup.userData = boardMeta;
+  frame.userData = boardMeta;
+  printFace.userData = boardMeta;
+
+  return boardGroup;
+}
+
 // Grande cheminée imposante en pierre avec linteau chêne, hotte monumentale, pieds du Père Noël en mode Noël
 export function createWarmFireplace(leftX, floorY) {
   const fpGroup = new THREE.Group();
@@ -951,6 +1065,11 @@ export function createStudioRoom() {
   const retroShelf = createRetroTechShelf(rightX, floorY, roomCenterZ);
   roomGroup.add(retroShelf);
   roomGroup.userData.retroShelf = retroShelf;
+
+  // Grand tableau GPO SARL (www.gposarl.com) sur le mur du fond à gauche de la borne d'arcade
+  const gpoBoard = createGpoBoard();
+  roomGroup.add(gpoBoard);
+  roomGroup.userData.gpoBoard = gpoBoard;
 
   // 3. Plafond avec spots architecturaux encastres
   const ceilingMat = new THREE.MeshStandardMaterial({ color: 0xeee9e2, roughness: 0.90, metalness: 0.02 });
