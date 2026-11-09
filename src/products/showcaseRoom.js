@@ -318,8 +318,8 @@ export function createGpoBoard() {
   printFace.position.set(0, 0, d / 2 + 0.002);
   boardGroup.add(printFace);
 
-  // Positionnement sur le mur du fond à gauche de la borne d'arcade (arcade à X: -2.55)
-  boardGroup.position.set(-3.85, 1.45, -1.13);
+  // Positionnement sur le mur du fond immédiatement à gauche de la borne d'arcade (arcade à X: -2.55)
+  boardGroup.position.set(-3.68, 1.42, -1.13);
   boardGroup.rotation.set(0, 0, 0);
 
   const boardMeta = {
