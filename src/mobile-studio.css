@@ -233,6 +233,17 @@
     padding: 0 !important;
   }
 
+  .viewer-tools #viewFaceA,
+  .viewer-tools #viewFaceB,
+  .viewer-tools #viewAngleFront,
+  .viewer-tools #viewAngleSide,
+  .viewer-tools #viewAngleTop {
+    width: auto !important;
+    min-width: 60px !important;
+    padding: 0 8px !important;
+    white-space: nowrap !important;
+  }
+
   .viewer-tools button:active {
     background: #e2e8f0 !important;
     transform: scale(0.93) !important;

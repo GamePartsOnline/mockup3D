@@ -135,11 +135,25 @@ html[data-theme="dark"] .viewer-wrap {
 html[data-theme="dark"] .viewer-tools button,
 html[data-theme="dark"] .viewer-tools #viewFaceA,
 html[data-theme="dark"] .viewer-tools #viewFaceB,
+html[data-theme="dark"] .viewer-tools #viewAngleFront,
+html[data-theme="dark"] .viewer-tools #viewAngleSide,
+html[data-theme="dark"] .viewer-tools #viewAngleTop,
 html[data-theme="dark"] .panel-menu,
 html[data-theme="dark"] .topbar-showcase-btn {
   background: #1e293b !important;
   color: #f8fafc !important;
   border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .viewer-tools button:hover,
+html[data-theme="dark"] .viewer-tools #viewFaceA:hover,
+html[data-theme="dark"] .viewer-tools #viewFaceB:hover,
+html[data-theme="dark"] .viewer-tools #viewAngleFront:hover,
+html[data-theme="dark"] .viewer-tools #viewAngleSide:hover,
+html[data-theme="dark"] .viewer-tools #viewAngleTop:hover {
+  background: #334155 !important;
+  color: #38bdf8 !important;
+  border-color: #475569 !important;
 }
 
 html[data-theme="dark"] .panel select,

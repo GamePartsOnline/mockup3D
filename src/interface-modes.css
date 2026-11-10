@@ -85,5 +85,24 @@ body.client-mode .workspace.left-collapsed .panel-menu-left { box-shadow:0 0 0 4
 
 .viewer-tools { align-items:flex-end; box-shadow:none; background:transparent; }
 .viewer-tools button { box-shadow:0 4px 16px #52616d22; }
-.viewer-tools #viewFaceA,.viewer-tools #viewFaceB { width:78px; height:38px; padding:0 8px; color:#17212a; font-size:11px; font-weight:700; border-radius:8px; margin-bottom:4px; border:1px solid #d5dce0; }
+.viewer-tools #viewFaceA,
+.viewer-tools #viewFaceB,
+.viewer-tools #viewAngleFront,
+.viewer-tools #viewAngleSide,
+.viewer-tools #viewAngleTop {
+  width: 78px;
+  height: 38px;
+  padding: 0 8px;
+  color: #17212a;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  border: 1px solid #d5dce0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
 #loadTshirtExample { margin-top:10px; }
