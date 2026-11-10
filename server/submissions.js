@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import nodemailer from 'nodemailer';
 import { acceptSubmission, json, readJson } from './security.js';
 import { generateWorkshopHtml, generateWorkshopTxt } from './admin-submissions.js';
+import { recordClientFromOrder } from './clients-manager.js';
 
 let active = 0;
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -204,6 +205,12 @@ export async function submit(req, res) {
       emailStatus: mailResult.sent ? 'sent' : (mailResult.reason || 'not_sent')
     };
     fs.writeFileSync(path.join(targetDir, 'submission.json'), JSON.stringify(submissionData, null, 2), 'utf8');
+
+    try {
+      await recordClientFromOrder(client, submissionData.date);
+    } catch (eRec) {
+      console.warn('Erreur création automatique fiche client:', eRec);
+    }
 
     try {
       const allFileNames = savedFiles.map(f => f.name);

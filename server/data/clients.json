@@ -46,5 +46,21 @@
     "notes": "Domaine viticole à Épernay.",
     "isTest": true,
     "role": "client"
+  },
+  {
+    "id": "CLI-MERKLEN-93",
+    "email": "mathispaysage@gmail.com",
+    "passwordHash": "39f45b8153da4a385481234fe998effe:2f4a8a9ba5207f9ff8ecdb4a60c8cddb0bd4ac2bd108769f6ace3a48ac0d877e78f869f4d504b81c5e099583de99589a82429ee2cfedc6956132dfecc0390367",
+    "nom": "Merklen",
+    "prenom": "Mathis",
+    "telephone": "0650423587",
+    "adresse": "1 Rue de la remise à grouan",
+    "codePostal": "93420",
+    "ville": "Villepinte",
+    "pays": "France",
+    "dateInscription": "2026-11-10T14:34:21.338Z",
+    "notes": "Client réel. Commande Mug blanc 11 oz.",
+    "isTest": false,
+    "role": "client"
   }
 ]

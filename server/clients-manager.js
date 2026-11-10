@@ -120,6 +120,45 @@ export async function initClientsData() {
   await saveClients(initialClients);
 }
 
+export async function recordClientFromOrder(clientInfo, orderDate = new Date().toISOString()) {
+  if (!clientInfo || !clientInfo.email) return null;
+  const email = clientInfo.email.trim().toLowerCase();
+  const list = await loadClients();
+  let existing = list.find(c => (c.email || '').toLowerCase() === email);
+
+  if (existing) {
+    if (clientInfo.nom && (!existing.nom || existing.nom === 'Client')) existing.nom = clientInfo.nom;
+    if (clientInfo.prenom && !existing.prenom) existing.prenom = clientInfo.prenom;
+    if (clientInfo.telephone) existing.telephone = clientInfo.telephone;
+    if (clientInfo.adresse) existing.adresse = clientInfo.adresse;
+    if (clientInfo.codePostal) existing.codePostal = clientInfo.codePostal;
+    if (clientInfo.ville) existing.ville = clientInfo.ville;
+    existing.lastOrderDate = orderDate;
+    await saveClients(list);
+    return existing;
+  }
+
+  const newClient = {
+    id: `CLI-${Date.now().toString(36).toUpperCase()}-${Math.floor(Math.random() * 900 + 100)}`,
+    email,
+    passwordHash: hashPassword('Client123!'),
+    nom: clientInfo.nom || 'Client',
+    prenom: clientInfo.prenom || '',
+    telephone: clientInfo.telephone || '',
+    adresse: clientInfo.adresse || '',
+    codePostal: clientInfo.codePostal || '',
+    ville: clientInfo.ville || '',
+    pays: clientInfo.pays || 'France',
+    dateInscription: orderDate,
+    notes: clientInfo.note || 'Client issu des commandes atelier.',
+    role: 'client'
+  };
+
+  list.push(newClient);
+  await saveClients(list);
+  return newClient;
+}
+
 // Extraction des statistiques de commandes pour un email
 async function getClientOrdersStats(email) {
   let ordersCount = 0;
@@ -178,7 +217,49 @@ async function getClientOrdersStats(email) {
 export async function adminGetClients(req, res) {
   if (!authorizeAdmin(req, res)) return;
   try {
-    const clients = await loadClients();
+    let clients = await loadClients();
+    let modified = false;
+
+    // Réconciliation proactive automatique depuis submissionsDir
+    if (fsSync.existsSync(submissionsDir)) {
+      try {
+        const entries = await fs.readdir(submissionsDir, { withFileTypes: true });
+        for (const ent of entries) {
+          if (!ent.isDirectory()) continue;
+          const subPath = path.join(submissionsDir, ent.name, 'submission.json');
+          if (!fsSync.existsSync(subPath)) continue;
+          try {
+            const raw = await fs.readFile(subPath, 'utf8');
+            const d = JSON.parse(raw);
+            const c = d.client || {};
+            const email = (c.email || '').trim().toLowerCase();
+            if (email && !clients.some(x => (x.email || '').toLowerCase() === email)) {
+              clients.push({
+                id: `CLI-${Date.now().toString(36).toUpperCase()}-${Math.floor(Math.random() * 900 + 100)}`,
+                email,
+                passwordHash: hashPassword('Client123!'),
+                nom: c.nom || 'Client',
+                prenom: c.prenom || '',
+                telephone: c.telephone || '',
+                adresse: c.adresse || '',
+                codePostal: c.codePostal || '',
+                ville: c.ville || '',
+                pays: c.pays || 'France',
+                dateInscription: d.date || new Date().toISOString(),
+                notes: c.note || 'Client issu des commandes atelier.',
+                role: 'client'
+              });
+              modified = true;
+            }
+          } catch (e) {}
+        }
+      } catch (err) {}
+    }
+
+    if (modified) {
+      await saveClients(clients);
+    }
+
     const enriched = await Promise.all(clients.map(async c => {
       const stats = await getClientOrdersStats(c.email);
       return {
