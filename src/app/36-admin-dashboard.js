@@ -171,8 +171,8 @@ export function register(app) {
         <td style="text-align:center;"><span style="font-size:12.5px; font-weight:800; background:#e0e7ff; color:#4338ca; padding:3px 8px; border-radius:6px;">${qty} ex.</span></td>
         <td style="text-align:right;"><strong style="color:#7c3aed;">${totalStr}</strong></td>
         <td>${qualityBadge}</td>
-        <td>
-          <select class="admin-select order-status-select" data-folder="${item.folder}" style="font-size:12px; padding:4px 8px; font-weight:700; ${item.status === 'bat_a_valider' ? 'border-color:#f59e0b; background:#fffbeb; color:#b45309;' : (item.status === 'non_conforme' ? 'border-color:#ef4444; background:#fef2f2; color:#991b1b;' : '')}">
+        <td style="min-width:190px; position:relative;">
+          <select class="admin-select order-status-select" data-folder="${item.folder}" style="font-size:12px; padding:4px 8px; font-weight:700; width:100%; ${item.status === 'bat_a_valider' ? 'border-color:#f59e0b; background:#fffbeb; color:#b45309;' : (item.status === 'non_conforme' ? 'border-color:#ef4444; background:#fef2f2; color:#991b1b;' : '')}">
             <option value="nouveau" ${item.status === 'nouveau' ? 'selected' : ''}>Nouveau</option>
             <option value="bat_a_valider" ${item.status === 'bat_a_valider' ? 'selected' : ''}>⏳ Attente validation client</option>
             <option value="bat_valide_client" ${item.status === 'bat_valide_client' ? 'selected' : ''}>✓ BAT validé client</option>
@@ -181,11 +181,11 @@ export function register(app) {
             <option value="non_conforme" ${item.status === 'non_conforme' ? 'selected' : ''}>✕ Non conforme</option>
           </select>
         </td>
-        <td style="text-align:right; white-space:nowrap;">
-          <button type="button" class="btn-open-order-dossier" data-folder="${item.folder}" style="font-size:11.5px; padding:5px 10px; font-weight:700; background:#4f46e5; color:#ffffff; border:none; border-radius:6px; cursor:pointer; margin-right:6px;" title="Ouvrir le dossier complet avec validation des visuels">📁 Dossier</button>
-          <a href="/api/admin/submissions/file?folder=${encodeURIComponent(item.folder)}&file=FICHE_ATELIER.html" target="_blank" class="admin-btn outline" style="font-size:11.5px; padding:5px 9px; font-weight:700; margin-right:6px;" title="Ouvrir la fiche atelier imprimable">📄 Fiche</a>
-          <a href="/api/admin/submissions/download-zip?folder=${encodeURIComponent(item.folder)}" class="admin-btn outline" style="font-size:11.5px; padding:5px 9px; font-weight:700; text-decoration:none; margin-right:12px;" title="Télécharger l'archive ZIP complète de fabrication">📦 ZIP</a>
-          <button type="button" class="btn-delete-order" data-folder="${item.folder}" data-id="${item.id}" data-client="${clientName}" style="font-size:11px; padding:4px 8px; color:#dc2626; border:1px solid #fecaca; background:#fef2f2; border-radius:6px; cursor:pointer; font-weight:600;" title="Supprimer définitivement la commande">Suppr.</button>
+        <td style="text-align:right; white-space:nowrap; min-width:260px;">
+          <button type="button" class="btn-open-order-dossier" data-folder="${item.folder}" style="font-size:11.5px; padding:5px 12px; font-weight:700; background:#4f46e5; color:#ffffff; border:none; border-radius:6px; cursor:pointer; margin-right:6px; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; gap:4px; flex-shrink:0;" title="Ouvrir le dossier complet avec validation des visuels">📁 Dossier</button>
+          <a href="/api/admin/submissions/file?folder=${encodeURIComponent(item.folder)}&file=FICHE_ATELIER.html" target="_blank" class="admin-btn outline" style="font-size:11.5px; padding:5px 9px; font-weight:700; margin-right:6px; white-space:nowrap; flex-shrink:0;" title="Ouvrir la fiche atelier imprimable">📄 Fiche</a>
+          <a href="/api/admin/submissions/download-zip?folder=${encodeURIComponent(item.folder)}" class="admin-btn outline" style="font-size:11.5px; padding:5px 9px; font-weight:700; text-decoration:none; margin-right:12px; white-space:nowrap; flex-shrink:0;" title="Télécharger l'archive ZIP complète de fabrication">📦 ZIP</a>
+          <button type="button" class="btn-delete-order" data-folder="${item.folder}" data-id="${item.id}" data-client="${clientName}" style="font-size:11px; padding:4px 8px; color:#dc2626; border:1px solid #fecaca; background:#fef2f2; border-radius:6px; cursor:pointer; font-weight:600; white-space:nowrap; flex-shrink:0;" title="Supprimer définitivement la commande">Suppr.</button>
         </td>
       `;
       tbody.appendChild(tr);

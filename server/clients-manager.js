@@ -40,7 +40,48 @@ async function loadClients() {
     }
     const raw = await fs.readFile(clientsFile, 'utf8');
     const list = JSON.parse(raw);
-    return Array.isArray(list) ? list : [];
+    const validList = Array.isArray(list) ? list : [];
+
+    // Réconciliation proactive automatique avec les commandes physiques dans submissions/
+    let modified = false;
+    if (fsSync.existsSync(submissionsDir)) {
+      try {
+        const entries = await fs.readdir(submissionsDir, { withFileTypes: true });
+        for (const ent of entries) {
+          if (!ent.isDirectory()) continue;
+          const metaPath = path.join(submissionsDir, ent.name, 'submission.json');
+          if (!fsSync.existsSync(metaPath)) continue;
+          try {
+            const subData = JSON.parse(await fs.readFile(metaPath, 'utf8'));
+            const c = subData.client || {};
+            const email = (c.email || '').trim().toLowerCase();
+            if (email && !validList.some(x => (x.email || '').toLowerCase() === email)) {
+              validList.push({
+                id: `CLI-${Date.now().toString(36).toUpperCase()}-${Math.floor(Math.random() * 900 + 100)}`,
+                email,
+                passwordHash: hashPassword('Client123!'),
+                nom: c.nom || 'Client',
+                prenom: c.prenom || '',
+                telephone: c.telephone || '',
+                adresse: c.adresse || '',
+                codePostal: c.codePostal || '',
+                ville: c.ville || '',
+                pays: c.pays || 'France',
+                dateInscription: subData.date || new Date().toISOString(),
+                notes: c.notes || 'Client synchronise automatiquement depuis les commandes atelier.',
+                role: 'client'
+              });
+              modified = true;
+            }
+          } catch (e) {}
+        }
+      } catch (eDir) {}
+    }
+
+    if (modified) {
+      await saveClients(validList);
+    }
+    return validList;
   } catch (err) {
     console.error('Erreur lecture clients.json:', err);
     return [];

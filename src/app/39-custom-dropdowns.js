@@ -148,6 +148,10 @@ export function register(app) {
           w.classList.remove('open', 'drop-up');
           const tr = w.querySelector('.custom-dropdown-trigger');
           if (tr) tr.setAttribute('aria-expanded', 'false');
+          const pRow = w.closest('tr');
+          const pCell = w.closest('td');
+          if (pRow) pRow.classList.remove('dropdown-open-row');
+          if (pCell) pCell.classList.remove('dropdown-open-cell');
         }
       });
 
@@ -165,6 +169,11 @@ export function register(app) {
 
       wrapper.classList.add('open');
       trigger.setAttribute('aria-expanded', 'true');
+      const tr = wrapper.closest('tr');
+      const td = wrapper.closest('td');
+      if (tr) tr.classList.add('dropdown-open-row');
+      if (td) td.classList.add('dropdown-open-cell');
+
       if (searchInput) {
         setTimeout(() => {
           searchInput.value = '';
@@ -177,6 +186,10 @@ export function register(app) {
     function closeDropdown() {
       wrapper.classList.remove('open', 'drop-up');
       trigger.setAttribute('aria-expanded', 'false');
+      const tr = wrapper.closest('tr');
+      const td = wrapper.closest('td');
+      if (tr) tr.classList.remove('dropdown-open-row');
+      if (td) td.classList.remove('dropdown-open-cell');
     }
 
     function toggleDropdown() {

@@ -426,14 +426,25 @@
 .admin-table-wrapper {
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-  overflow: hidden;
+  overflow: visible !important;
+  min-height: 280px;
+  background: #ffffff;
 }
 
 .admin-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 13px;
   text-align: left;
+}
+
+.admin-table thead tr th:first-child {
+  border-top-left-radius: 11px;
+}
+
+.admin-table thead tr th:last-child {
+  border-top-right-radius: 11px;
 }
 
 .admin-table th {
@@ -453,6 +464,40 @@
 
 .admin-table tr:hover td {
   background: #f8fafc;
+}
+
+.admin-table tr.dropdown-open-row,
+.admin-table tr:has(.custom-dropdown-wrapper.open) {
+  position: relative;
+  z-index: 1000 !important;
+}
+
+.admin-table td.dropdown-open-cell,
+.admin-table td:has(.custom-dropdown-wrapper.open) {
+  position: relative;
+  z-index: 1001 !important;
+}
+
+.btn-open-order-dossier {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  font-size: 11.5px;
+  padding: 6px 12px;
+  font-weight: 700;
+  background: #4f46e5;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-open-order-dossier:hover {
+  background: #4338ca;
 }
 
 /* Switch toggle */
