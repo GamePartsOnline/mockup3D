@@ -34,9 +34,18 @@ export async function serveStatic(req, res, dist) {
   if (!real.startsWith(dist + path.sep)) return json(res, 403, { error: 'Accès refusé.' });
   const data = await fs.readFile(real);
   const html = path.extname(target) === '.html';
-  const payload = admin && html
-    ? Buffer.from(data.toString('utf8').replace('<html lang="fr">', '<html lang="fr" data-mode="admin">'))
-    : data;
+  let payload = data;
+  if (html) {
+    let str = data.toString('utf8');
+    if (admin) {
+      str = str.replace('<html lang="fr">', '<html lang="fr" data-mode="admin">');
+    } else {
+      // Séparation des requêtes utilisateur vs administration :
+      // Les requêtes publiques ne reçoivent pas le code HTML de l'administration atelier.
+      str = str.replace(/<!-- HUB CENTRALISÉ D'ADMINISTRATION MOCKUP3D -->[\s\S]*?(?=<div id="toast"|<\/div>\s*<script)/, '');
+    }
+    payload = Buffer.from(str, 'utf8');
+  }
   const headers = {
     'Content-Type': mime[path.extname(target)] || 'application/octet-stream',
     'Cache-Control': html ? 'no-cache, no-store, must-revalidate, max-age=0' : 'public, max-age=3600'

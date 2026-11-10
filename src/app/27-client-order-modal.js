@@ -16,9 +16,19 @@ export function register(app) {
 
   app.openClientOrderModal = function openClientOrderModal() {
     const curKey = app.currentProductKey;
+    if (!curKey || curKey === 'showcase') {
+      app.showToast('Veuillez d’abord choisir un objet à personnaliser.');
+      app.openShop2D?.();
+      return;
+    }
     const isAct = app.isProductActive ? app.isProductActive(curKey) : true;
     if (!isAct) {
       app.showToast('Cet article est actuellement désactivé et indisponible à la commande.');
+      return;
+    }
+    const hasVisual = (app.imagesList && app.imagesList.length > 0) || (app.textParams?.text && app.textParams.text.trim());
+    if (!hasVisual) {
+      app.showToast('Veuillez ajouter une image ou un texte avant de valider votre commande.');
       return;
     }
     const modal = document.querySelector('#clientOrderModal');
@@ -278,6 +288,7 @@ function getFormData() {
 }
 
 export function initialize(app) {
+  app.closeClientOrderModal?.();
   const modal = document.querySelector('#clientOrderModal');
   const closeBtn = document.querySelector('#closeOrderModalBtn');
   const cancelBtn = document.querySelector('#cancelOrderBtn');

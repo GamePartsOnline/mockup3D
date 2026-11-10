@@ -85,6 +85,12 @@ export function initialize(app) {
         }
         app.closeMobileSheet();
       } else if (tab === 'order') {
+        if (app.currentProductKey === 'showcase') {
+          app.showToast('Veuillez d’abord choisir un objet à personnaliser.');
+          document.querySelector('#btnChangeProductShop')?.click();
+          app.closeMobileSheet();
+          return;
+        }
         if (typeof app.openClientOrderModal === 'function') {
           app.openClientOrderModal();
         } else {

@@ -3,12 +3,80 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Présentez vos visuels sur un objet 3D, localement." />
+  
+  <title>MockUp3D : Personnalisation et Aperçu 3D d'Objets en Ligne</title>
+  <meta name="description" content="Personnalisez vos t-shirts, mugs, tapis de souris et objets en 3D temps réel avec Graph2Print. Visualisation fidèle, vérification et validation de BAT en ligne." />
+  <link rel="canonical" href="https://mockup3d.gposarl.com/" />
+
+  <!-- Open Graph / Facebook / Discord -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Graph2Print MockUp3D" />
+  <meta property="og:url" content="https://mockup3d.gposarl.com/" />
+  <meta property="og:title" content="MockUp3D : Personnalisation et Aperçu 3D d'Objets en Ligne" />
+  <meta property="og:description" content="Visualisez et personnalisez vos objets en 3D temps réel avec Graph2Print. Vérifiez le rendu et validez votre bon à tirer (BAT) en ligne." />
+  <meta property="og:image" content="https://mockup3d.gposarl.com/logo-graph2print.png" />
+  <meta property="og:image:width" content="800" />
+  <meta property="og:image:height" content="600" />
+  <meta property="og:image:alt" content="Logo Graph2Print MockUp3D" />
+
+  <!-- Twitter / X Cards -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@Graph2Print" />
+  <meta name="twitter:title" content="MockUp3D : Personnalisation et Aperçu 3D d'Objets en Ligne" />
+  <meta name="twitter:description" content="Visualisez et personnalisez vos objets en 3D temps réel avec Graph2Print. Vérifiez le rendu et validez votre bon à tirer (BAT) en ligne." />
+  <meta name="twitter:image" content="https://mockup3d.gposarl.com/logo-graph2print.png" />
+
+  <!-- Données structurées JSON-LD (Schema.org / GEO) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://mockup3d.gposarl.com/#app",
+        "name": "MockUp3D",
+        "url": "https://mockup3d.gposarl.com/",
+        "applicationCategory": "DesignApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires WebGL support",
+        "description": "Simulateur 3D temps réel pour visualiser et personnaliser t-shirts, mugs, tapis de souris et objets publicitaires avant fabrication.",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Graph2Print - GPO SARL",
+          "url": "https://www.gposarl.com",
+          "logo": "https://mockup3d.gposarl.com/logo-graph2print.png"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://mockup3d.gposarl.com/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Comment fonctionne la prévisualisation 3D sur MockUp3D ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "MockUp3D génère un rendu 3D interactif fidèle de vos visuels sur l'objet choisi (t-shirt, mug, puzzle, etc.) et permet de vérifier le bon à tirer avant impression."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Quels formats de fichiers visuels sont acceptés ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Le studio accepte les formats PNG, JPG et SVG avec détourage automatique du fond blanc."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='11' width='52' height='42' rx='10' fill='%2310151d'/%3E%3Cpath d='M13 18h38v25H13z' rx='5' fill='%2369e0c1'/%3E%3Cpath d='M19 37l8-10 7 7 6-8 7 11z' fill='white'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&family=Cinzel:wght@700&family=Dancing+Script:wght@700&family=Great+Vibes&family=Lobster&family=Montserrat:ital,wght@0,400;0,700;1,400&family=Oswald:wght@600&family=Pacifico&family=Playfair+Display:ital,wght@0,700;1,700&family=Righteous&family=Roboto:wght@400;700&family=Satisfy&display=swap" rel="stylesheet">
-  <title>MockUp3D C3</title>
 </head>
 <body>
   <div id="app">

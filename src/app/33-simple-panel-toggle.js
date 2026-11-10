@@ -68,6 +68,18 @@ export function register(app) {
 
     const arcCard = document.querySelector('#simpleArcadeCard');
     if (arcCard) arcCard.style.display = app.currentProductKey === 'arcadeCabinet' ? 'block' : 'none';
+
+    // Adaptation du bouton d'action selon le contexte (Showroom d'accueil vs Objet personnalisé)
+    const orderBtn = document.querySelector('#simpleBtnOrder');
+    if (orderBtn) {
+      if (app.currentProductKey === 'showcase') {
+        orderBtn.textContent = 'Choisir un objet à personnaliser';
+        orderBtn.style.background = '#0ea5e9';
+      } else {
+        orderBtn.textContent = 'Valider ma création';
+        orderBtn.style.background = '';
+      }
+    }
   };
 }
 
@@ -195,7 +207,14 @@ export function initialize(app) {
   wireArcadeMirror('#simpleArcadeMirrorSideB', '#arcadeMirrorSideB');
   wireArcadeMirror('#arcadeMirrorSideB', '#simpleArcadeMirrorSideB');
 
-  document.querySelector('#simpleBtnOrder')?.addEventListener('click', () => app.openClientOrderModal?.());
+  document.querySelector('#simpleBtnOrder')?.addEventListener('click', () => {
+    if (app.currentProductKey === 'showcase') {
+      app.showToast('Cliquez sur un objet de la table ou choisissez-le dans la Boutique.');
+      app.openShop2D?.();
+      return;
+    }
+    app.openClientOrderModal?.();
+  });
   document.querySelector('#simpleBtnChangeProduct')?.addEventListener('click', () => document.querySelector('#btnChangeProductShop')?.click());
   const origSync = app.syncActiveControls;
   app.syncActiveControls = function () {
