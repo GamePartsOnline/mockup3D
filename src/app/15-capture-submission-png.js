@@ -185,7 +185,7 @@ app.executeSubmission = async function executeSubmission(clientData) {
 
     const result = await response.json();
     if (!response.ok || !result.ok) throw new Error(result.error || "L'envoi a échoué.");
-    app.showToast(result.message || 'Votre création a été transmise à l’atelier Graph2Print.');
+    app.showToast(result.message || 'Votre création a été transmise au studio Graph2Print.');
     return true;
   } catch (error) {
     console.error(error);

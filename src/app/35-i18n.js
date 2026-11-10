@@ -20,7 +20,7 @@ const TRANSLATIONS = {
     'btn.ready': 'Prêt',
     'btn.validateCreation': 'Valider ma création',
     'btn.clientInterface': 'Interface Client',
-    'btn.adminDashboard': 'Dashboard Atelier',
+    'btn.adminDashboard': 'Dashboard Studio',
 
     // Fiche Produit & Panneau latéral
     'product.selected': 'Produit sélectionné',
@@ -58,7 +58,7 @@ const TRANSLATIONS = {
 
     // Modal Commande Client & BAT
     'order.title': 'Validation de votre Création & BAT',
-    'order.subtitle': 'Vérifiez votre création avant transmission sécurisée à notre atelier d\'impression.',
+    'order.subtitle': 'Vérifiez votre création avant transmission sécurisée à notre studio d\'impression.',
     'order.preview': 'Aperçu 3D validé',
     'order.contact': 'Vos Coordonnées',
     'order.nom': 'Nom',
@@ -272,7 +272,7 @@ export function register(app) {
     if (btnShop) btnShop.textContent = isEn ? '2D Shop' : 'Boutique 2D';
 
     const btnDashboard = document.querySelector('#btnAdminDashboard');
-    if (btnDashboard) btnDashboard.textContent = isEn ? 'Workshop Dashboard' : 'Dashboard Atelier';
+    if (btnDashboard) btnDashboard.textContent = isEn ? 'Studio Dashboard' : 'Dashboard Studio';
 
     const btnFace = document.querySelector('#viewAngleFront');
     if (btnFace) btnFace.textContent = isEn ? 'Front' : 'Face';
@@ -293,7 +293,7 @@ export function register(app) {
     if (orderTitle) orderTitle.textContent = isEn ? 'Order Review & Proof Validation' : 'Finaliser ma création et mes coordonnées';
 
     const orderSub = document.querySelector('#clientOrderModal p');
-    if (orderSub) orderSub.textContent = isEn ? 'Enter your details for transmission to the print workshop.' : 'Renseignez vos coordonnées pour la transmission de votre commande à l\'atelier.';
+    if (orderSub) orderSub.textContent = isEn ? 'Enter your details for transmission to the print studio.' : 'Renseignez vos coordonnées pour la transmission de votre commande au studio.';
 
     const btnSubmitOrder = document.querySelector('#submitOrderBtn');
     if (btnSubmitOrder) btnSubmitOrder.textContent = isEn ? 'Confirm and Send Order' : 'Confirmer et envoyer ma commande';

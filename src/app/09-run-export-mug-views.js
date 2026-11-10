@@ -1,7 +1,7 @@
 // Shared application state is supplied by the entry point.
 export function register(app) {
 app.runExportMugViews = async function runExportMugViews() {
-  if (app.clientMode) { app.showToast("L'export direct est réservé à l'atelier. Cliquez sur 'Valider ma création'."); return; }
+  if (app.clientMode) { app.showToast("L'export direct est réservé au studio. Cliquez sur 'Valider ma création'."); return; }
   if (app.currentProductKey !== 'mug11oz') {
     document.querySelector('#productSelect').value = 'mug11oz';
     document.querySelector('#productSelect').dispatchEvent(new Event('change'));
@@ -118,7 +118,7 @@ app.runExportKeychainViews = async function runExportKeychainViews() {
 };
 
 app.runExportAll = async function runExportAll() {
-  if (app.clientMode) { app.showToast("L'export direct est réservé à l'atelier. Cliquez sur 'Valider ma création'."); return; }
+  if (app.clientMode) { app.showToast("L'export direct est réservé au studio. Cliquez sur 'Valider ma création'."); return; }
   const btn = document.querySelector('#exportAll');
   if (btn) btn.disabled = true;
   document.querySelector('#exportStatus').textContent = 'Export complet...';

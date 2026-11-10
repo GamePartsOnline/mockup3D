@@ -32,7 +32,7 @@ app.updateExportStatus = function updateExportStatus(text) {
 };
 
 app.runExportPng = function runExportPng() {
-  if (app.clientMode) { app.showToast("L'export direct est réservé à l'atelier. Cliquez sur 'Valider ma création'."); return; }
+  if (app.clientMode) { app.showToast("L'export direct est réservé au studio. Cliquez sur 'Valider ma création'."); return; }
   const overlayWasVisible = app.isOverlayVisible(), gridWasVisible = app.grid.visible;
   const scaleMultiplier = app.getSelectedResolution();
   app.setOverlayVisible(false);

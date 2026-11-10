@@ -3,7 +3,7 @@
   "info": {
     "title": "MockUp3D C3 Platform API",
     "version": "1.9.23",
-    "description": "Spécification OpenAPI 3.1 officielle de la plateforme MockUp3D C3 (Graph2Print / GamePartsOnline). Pilotage du studio 3D Three.js, transmission des commandes d'atelier, catalogue de visuels et espace client.",
+    "description": "Spécification OpenAPI 3.1 officielle de la plateforme MockUp3D C3 (Graph2Print / GamePartsOnline). Pilotage du studio 3D Three.js, transmission des commandes de studio, catalogue de visuels et espace client.",
     "contact": {
       "name": "Support Graph2Print",
       "url": "https://mockup3d.gposarl.com",
@@ -26,7 +26,7 @@
     { "name": "Commandes", "description": "Envoi et suivi des commandes physiques avec BAT 3D" },
     { "name": "Espace Client", "description": "Authentification, profil, messagerie et validation de BAT" },
     { "name": "Remises & Codes", "description": "Calculs des offres promotionnelles et codes cadeaux" },
-    { "name": "Atelier & Dépôt-Vente", "description": "Administration réservée à l'atelier de fabrication" }
+    { "name": "Studio & Dépôt-Vente", "description": "Administration réservée au studio de fabrication" }
   ],
   "paths": {
     "/api/products": {
@@ -121,7 +121,7 @@
     "/api/submissions/status": {
       "get": {
         "tags": ["Commandes"],
-        "summary": "État du module de messagerie atelier",
+        "summary": "État du module de messagerie studio",
         "responses": {
           "200": {
             "description": "Diagnostic du serveur d'envoi.",
@@ -264,18 +264,18 @@
     },
     "/api/admin/submissions": {
       "get": {
-        "tags": ["Atelier & Dépôt-Vente"],
-        "summary": "Tableau de bord des commandes d'atelier",
+        "tags": ["Studio & Dépôt-Vente"],
+        "summary": "Tableau de bord des commandes de studio",
         "security": [{ "AdminAuth": [] }],
         "responses": {
           "200": { "description": "Liste complète des commandes." },
-          "403": { "description": "Accès réservé à l'atelier." }
+          "403": { "description": "Accès réservé au studio." }
         }
       }
     },
     "/api/admin/clients": {
       "get": {
-        "tags": ["Atelier & Dépôt-Vente"],
+        "tags": ["Studio & Dépôt-Vente"],
         "summary": "Répertoire des fiches clients",
         "security": [{ "AdminAuth": [] }],
         "responses": {
@@ -285,7 +285,7 @@
     },
     "/api/admin/consignment": {
       "get": {
-        "tags": ["Atelier & Dépôt-Vente"],
+        "tags": ["Studio & Dépôt-Vente"],
         "summary": "État des stocks en dépôt-vente (Points partenaires)",
         "security": [{ "AdminAuth": [] }],
         "responses": {
@@ -305,7 +305,7 @@
         "type": "apiKey",
         "in": "cookie",
         "name": "mockup3d_admin",
-        "description": "Authentification de l'Atelier Graph2Print."
+        "description": "Authentification du Studio Graph2Print."
       }
     },
     "schemas": {

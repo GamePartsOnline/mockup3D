@@ -183,7 +183,7 @@ export function register(app) {
         </td>
         <td style="text-align:right; white-space:nowrap; min-width:260px;">
           <button type="button" class="btn-open-order-dossier" data-folder="${item.folder}" style="font-size:11.5px; padding:5px 12px; font-weight:700; background:#4f46e5; color:#ffffff; border:none; border-radius:6px; cursor:pointer; margin-right:6px; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; gap:4px; flex-shrink:0;" title="Ouvrir le dossier complet avec validation des visuels">📁 Dossier</button>
-          <a href="/api/admin/submissions/file?folder=${encodeURIComponent(item.folder)}&file=FICHE_ATELIER.html" target="_blank" class="admin-btn outline" style="font-size:11.5px; padding:5px 9px; font-weight:700; margin-right:6px; white-space:nowrap; flex-shrink:0;" title="Ouvrir la fiche atelier imprimable">📄 Fiche</a>
+          <a href="/api/admin/submissions/file?folder=${encodeURIComponent(item.folder)}&file=FICHE_ATELIER.html" target="_blank" class="admin-btn outline" style="font-size:11.5px; padding:5px 9px; font-weight:700; margin-right:6px; white-space:nowrap; flex-shrink:0;" title="Ouvrir la fiche studio imprimable">📄 Fiche</a>
           <a href="/api/admin/submissions/download-zip?folder=${encodeURIComponent(item.folder)}" class="admin-btn outline" style="font-size:11.5px; padding:5px 9px; font-weight:700; text-decoration:none; margin-right:12px; white-space:nowrap; flex-shrink:0;" title="Télécharger l'archive ZIP complète de fabrication">📦 ZIP</a>
           <button type="button" class="btn-delete-order" data-folder="${item.folder}" data-id="${item.id}" data-client="${clientName}" style="font-size:11px; padding:4px 8px; color:#dc2626; border:1px solid #fecaca; background:#fef2f2; border-radius:6px; cursor:pointer; font-weight:600; white-space:nowrap; flex-shrink:0;" title="Supprimer définitivement la commande">Suppr.</button>
         </td>
@@ -280,7 +280,7 @@ export function register(app) {
       const isResellerEligible = RESELLER_ELIGIBLE_KEYS.includes(prod.key);
       const resellerBadge = isResellerEligible
         ? `<span style="font-size:10.5px; font-weight:700; color:#047857; background:#ecfdf5; border:1px solid #a7f3d0; padding:2px 6px; border-radius:4px; margin-left:4px;" title="Disponible en dépôt-vente revendeur">Revendeur</span>`
-        : `<span style="font-size:10.5px; font-weight:600; color:#64748b; background:#f1f5f9; padding:2px 6px; border-radius:4px; margin-left:4px;" title="Vente atelier direct uniquement">Atelier direct</span>`;
+        : `<span style="font-size:10.5px; font-weight:600; color:#64748b; background:#f1f5f9; padding:2px 6px; border-radius:4px; margin-left:4px;" title="Vente studio direct uniquement">Studio direct</span>`;
 
       tr.innerHTML = `
         <td>
@@ -566,7 +566,7 @@ export function register(app) {
       if (item.status === 'non_conforme' || item.status === 'refuse' || item.rejectionReason) {
         rejectBanner.style.display = 'block';
         if (rejectReasonText) {
-          rejectReasonText.innerHTML = `<strong>Motif atelier :</strong> ${item.rejectionReason || 'Visuel non conforme aux contraintes d’impression.'}`;
+          rejectReasonText.innerHTML = `<strong>Motif studio :</strong> ${item.rejectionReason || 'Visuel non conforme aux contraintes d’impression.'}`;
         }
       } else {
         rejectBanner.style.display = 'none';
@@ -732,7 +732,7 @@ export function register(app) {
           return `
             <div style="background:${isAtelier ? '#ede9fe' : '#f1f5f9'}; border:1px solid ${isAtelier ? '#c4b5fd' : '#cbd5e1'}; border-radius:8px; padding:8px 12px; align-self:${isAtelier ? 'flex-end' : 'flex-start'}; max-width:85%; box-sizing:border-box;">
               <div style="display:flex; justify-content:space-between; gap:12px; margin-bottom:3px;">
-                <strong style="font-size:11.5px; color:${isAtelier ? '#5b21b6' : '#1e293b'};">${m.author || (isAtelier ? 'Atelier Graph2Print' : 'Client')}</strong>
+                <strong style="font-size:11.5px; color:${isAtelier ? '#5b21b6' : '#1e293b'};">${m.author || (isAtelier ? 'Studio Graph2Print' : 'Client')}</strong>
                 <small style="font-size:10.5px; color:#64748b;">${dStr}</small>
               </div>
               <div style="font-size:12.5px; color:#1e293b; line-height:1.4;">${m.text}</div>
@@ -811,7 +811,7 @@ export function register(app) {
         currentDossierItem.checks.presse = presse;
         currentDossierItem.checks.expedie = expedie;
         currentDossierItem.checks.atelierAutre = atelierAutre;
-        app.showToast?.('Vérifications et étapes atelier enregistrées.');
+        app.showToast?.('Vérifications et étapes studio enregistrées.');
         app.closeOrderDossierModal();
       }
     } catch (err) {
@@ -1097,7 +1097,7 @@ export function register(app) {
   };
 
   app.deleteAdminClient = async function(clientId, clientEmail, clientName) {
-    const confirmMsg = `Confirmez-vous la suppression définitive du client "${clientName}" (${clientEmail}) ?\n\nCette action retirera sa fiche du répertoire de l'atelier.`;
+    const confirmMsg = `Confirmez-vous la suppression définitive du client "${clientName}" (${clientEmail}) ?\n\nCette action retirera sa fiche du répertoire du studio.`;
     const ok = app.customConfirm
       ? await app.customConfirm(confirmMsg, { title: 'Suppression fiche client', danger: true, confirmText: 'Supprimer' })
       : window.confirm(confirmMsg);
@@ -2143,7 +2143,7 @@ export function register(app) {
         { val: 'all', label: `Tous les statuts (${allCount})` },
         { val: 'approved', label: `Publiés (${approvedCount})` },
         { val: 'pending', label: `En attente (${pendingCount})` },
-        { val: 'private', label: `Privés atelier (${privateCount})` },
+        { val: 'private', label: `Privés studio (${privateCount})` },
         { val: 'trash', label: `Corbeille (${trashCount})` }
       ];
 
@@ -3638,7 +3638,7 @@ export function initialize(app) {
     }
     banner.innerHTML = `
       <div style="font-size:13px;">
-        <strong style="color:#a7f3d0; display:block;">🎨 Mode Préparation de BAT Atelier</strong>
+        <strong style="color:#a7f3d0; display:block;">🎨 Mode Préparation de BAT Studio</strong>
         <span style="color:#cbd5e1; font-size:12px;">Positionnez le visuel en 3D puis validez l'envoi au client.</span>
       </div>
       <button type="button" id="btnConfirmStudioFloatingBat" style="background:#059669; color:#fff; border:none; padding:8px 16px; border-radius:8px; font-weight:700; font-size:12.5px; cursor:pointer;">

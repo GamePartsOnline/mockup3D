@@ -111,10 +111,10 @@ const isLocal = window.location.hostname === 'localhost' || window.location.host
 const clientLink = document.querySelector('#clientModeLink');
 if (clientLink) {
   clientLink.href = app.clientMode ? '/admin' : '/';
-  clientLink.textContent = app.clientMode ? 'Retour Atelier (Admin)' : 'Interface Client';
+  clientLink.textContent = app.clientMode ? 'Retour Studio (Admin)' : 'Interface Client';
   if (app.clientMode && !isLocal) clientLink.style.display = 'none';
 }
-document.querySelector('#modeLabel').textContent = app.clientMode ? 'Espace Client' : 'Atelier de création';
+document.querySelector('#modeLabel').textContent = app.clientMode ? 'Espace Client' : 'Studio de création';
 const btnDash = document.querySelector('#btnAdminDashboard');
 if (btnDash) btnDash.style.display = app.clientMode ? 'none' : 'inline-flex';
 if (app.clientMode) {

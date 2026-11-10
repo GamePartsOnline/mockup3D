@@ -106,7 +106,7 @@ export function initialize(app) {
     let html = `<option value="all">Tous les visuels (${scopedActive.length})</option>`;
     if (!app.clientMode) {
       html += `<option value="pending" ${curVal === 'pending' ? 'selected' : ''} style="color:#d97706;font-weight:700;">Nouveaux à valider (${pendingCount})</option>`;
-      html += `<option value="private" ${curVal === 'private' ? 'selected' : ''} style="color:#6366f1;font-weight:700;">Visuels privés atelier (${privateCount})</option>`;
+      html += `<option value="private" ${curVal === 'private' ? 'selected' : ''} style="color:#6366f1;font-weight:700;">Visuels privés studio (${privateCount})</option>`;
     }
 
     const cats = (app.catalogCategories || []).slice().sort((a, b) => (typeof a === 'string' ? a : a.name).localeCompare(typeof b === 'string' ? b : b.name, 'fr', { sensitivity: 'base' }));

@@ -6,12 +6,12 @@
       <div class="admin-brand">
         <span class="admin-logo-badge">Graph2Print</span>
         <div class="admin-brand-text">
-          <h2>Espace Administration & Atelier</h2>
+          <h2>Espace Administration & Studio</h2>
           <small>MockUp3D C3 • Gestion centralisée</small>
         </div>
       </div>
       <div class="admin-header-actions" style="display:flex; align-items:center; gap:8px;">
-        <span class="admin-status-pill"><span class="pill-dot"></span> Connecté (Atelier)</span>
+        <span class="admin-status-pill"><span class="pill-dot"></span> Connecté (Studio)</span>
         <span style="background:#ea580c; color:#ffffff; font-size:11px; font-weight:800; padding:4px 9px; border-radius:6px; display:inline-flex; align-items:center; gap:5px;" title="Mascotte officielle : Le Panda Roux">🦊 Panda Roux</span>
         <button type="button" id="btnAdminThemeToggle" class="admin-btn-header" style="background:#334155; color:#f8fafc; cursor:pointer;" title="Basculer entre Mode Nuit et Mode Jour">🌙 Mode Nuit</button>
         <button type="button" id="btnAdminExportCsvQuick" class="admin-btn-header" title="Exporter toutes les commandes en CSV">Export CSV</button>
@@ -79,7 +79,7 @@
         <!-- ONGLET 1 : VUE D'ENSEMBLE -->
         <section id="tab-overview" class="admin-tab-pane active">
           <div class="tab-header">
-            <h3>Tableau de bord de l'Atelier</h3>
+            <h3>Tableau de bord du Studio</h3>
             <p class="tab-subtitle">Indicateurs clés d'activité et raccourcis de production.</p>
           </div>
 
@@ -413,7 +413,7 @@
               <option value="all">Tous les statuts</option>
               <option value="approved">Publiés</option>
               <option value="pending">En attente</option>
-              <option value="private">Privés (atelier)</option>
+              <option value="private">Privés (studio)</option>
               <option value="trash">Corbeille</option>
             </select>
             <button type="button" id="btnAdminResetCatalogFilters" class="admin-btn secondary" style="font-size:12px; padding:6px 12px; white-space:nowrap; cursor:pointer;" title="Réinitialiser tous les filtres et afficher les 125 visuels">Afficher tout (125)</button>
@@ -436,7 +436,7 @@
                 <select id="batchStatusSelect" class="admin-select" style="border:0; padding:4px 6px; font-size:11.5px; font-weight:600; cursor:pointer; background:transparent;">
                   <option value="approved">Statut : Publié</option>
                   <option value="pending">Statut : En attente</option>
-                  <option value="private">Statut : Privé (atelier)</option>
+                  <option value="private">Statut : Privé (studio)</option>
                   <option value="trash">Statut : Corbeille</option>
                 </select>
                 <button type="button" id="btnBatchApplyStatus" class="admin-btn primary" style="font-size:11px; padding:4px 10px; font-weight:700; background:#4f46e5; border:0; cursor:pointer;">Appliquer</button>
@@ -472,7 +472,7 @@
             <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; box-shadow:0 2px 6px rgba(0,0,0,0.03);">
               <span style="font-size:12px; font-weight:700; color:#64748b; text-transform:uppercase;">Commandes personnalisées</span>
               <div id="statTotalPersonalizedOrders" style="font-size:24px; font-weight:800; color:#0f172a; margin:6px 0 2px 0;">0</div>
-              <small style="color:#10b981; font-weight:600;">Commandes atelier & stand</small>
+              <small style="color:#10b981; font-weight:600;">Commandes studio & stand</small>
             </div>
             <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; box-shadow:0 2px 6px rgba(0,0,0,0.03);">
               <span style="font-size:12px; font-weight:700; color:#64748b; text-transform:uppercase;">Visuel n°1 Plébiscité</span>
@@ -538,7 +538,7 @@
         <!-- ONGLET 6 : PARAMÈTRES & SÉCURITÉ -->
         <section id="tab-settings" class="admin-tab-pane">
           <div class="tab-header">
-            <h3>Paramètres de l'Atelier & Sécurité</h3>
+            <h3>Paramètres du Studio & Sécurité</h3>
             <p class="tab-subtitle">Gestion des sauvegardes automatiques et état des notifications.</p>
           </div>
 
@@ -572,7 +572,7 @@
 
             <div class="settings-card">
               <h4>Service de notifications par courriel (SMTP)</h4>
-              <p class="settings-desc">Envoi des demandes de création à l'adresse de l'atelier.</p>
+              <p class="settings-desc">Envoi des demandes de création à l'adresse du studio.</p>
               <div id="smtpStatusBox" class="smtp-status-box">
                 <span class="status-indicator"></span>
                 <span id="smtpStatusText">Vérification de la configuration...</span>
@@ -740,7 +740,7 @@
 
         <!-- BANDEAU DE STATUT NON CONFORME / REFUS -->
         <div id="dossierRejectBanner" style="display:none; background:#fef2f2; border:2px solid #ef4444; border-radius:10px; padding:14px 18px; color:#991b1b; font-size:13.5px;">
-          <div style="font-weight:800; font-size:14px; margin-bottom:4px;">✕ Commande signalée non conforme par l'atelier</div>
+          <div style="font-weight:800; font-size:14px; margin-bottom:4px;">✕ Commande signalée non conforme par le studio</div>
           <div id="dossierRejectReasonText" style="line-height:1.5;"></div>
         </div>
 
@@ -788,7 +788,7 @@
         <!-- SECTION ÉTAPES DE FABRICATION ATELIER & EXPÉDITION -->
         <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:10px; padding:16px;">
           <strong style="font-size:13px; font-weight:800; color:#065f46; display:block; margin-bottom:10px;">
-            Suivi des Étapes de Fabrication Atelier :
+            Suivi des Étapes de Fabrication Studio :
           </strong>
           <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(185px, 1fr)); gap:12px; margin-bottom:10px;">
             <label style="display:flex; align-items:center; gap:8px; background:#ffffff; padding:10px 12px; border-radius:8px; border:1px solid #a7f3d0; cursor:pointer; font-size:13px; font-weight:700; color:#047857;">
@@ -805,8 +805,8 @@
             </label>
           </div>
           <div>
-            <label style="font-size:11.5px; font-weight:700; color:#065f46; display:block; margin-bottom:4px;">Autre / Note atelier :</label>
-            <input type="text" id="txtDossierAtelierAutre" class="admin-input" placeholder="Notes complémentaires atelier..." style="width:100%; font-size:12.5px; padding:6px 10px;" />
+            <label style="font-size:11.5px; font-weight:700; color:#065f46; display:block; margin-bottom:4px;">Autre / Note studio :</label>
+            <input type="text" id="txtDossierAtelierAutre" class="admin-input" placeholder="Notes complémentaires studio..." style="width:100%; font-size:12.5px; padding:6px 10px;" />
           </div>
         </div>
 
@@ -846,7 +846,7 @@
             <strong style="font-size:13px; font-weight:800; color:#1e1b4b;">
               🖼️ Visuels sources prêts pour l'impression (cliquez pour ouvrir / télécharger) :
             </strong>
-            <small style="color:#64748b; font-size:11.5px;">Présents dans le dossier & le ZIP d'atelier</small>
+            <small style="color:#64748b; font-size:11.5px;">Présents dans le dossier & le ZIP du studio</small>
           </div>
           <div id="dossierAllVisualsStrip" style="display:flex; gap:12px; flex-wrap:wrap;"></div>
         </div>
@@ -879,7 +879,7 @@
 
       <div style="background:#f8fafc; padding:14px 22px; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
         <div style="display:flex; gap:8px;">
-          <a id="dossierFicheAtelierBtn" href="" target="_blank" class="admin-btn outline" style="font-size:12px; font-weight:700;">📄 Fiche Atelier Imprimable</a>
+          <a id="dossierFicheAtelierBtn" href="" target="_blank" class="admin-btn outline" style="font-size:12px; font-weight:700;">📄 Fiche Studio Imprimable</a>
           <a id="dossierZipBtn" href="" class="admin-btn" style="font-size:12px; font-weight:700; background:#4f46e5; color:#ffffff;">📦 Pack Fabrication ZIP</a>
         </div>
         <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
@@ -901,7 +901,7 @@
       </div>
       <div style="padding:20px; display:flex; flex-direction:column; gap:16px;">
         <p style="margin:0; font-size:13.5px; color:#475569; line-height:1.5;">
-          Veuillez indiquer la raison pour laquelle le visuel ou la commande ne peut pas être produite en atelier. Un message explicatif sera automatiquement transmis au client dans son espace.
+          Veuillez indiquer la raison pour laquelle le visuel ou la commande ne peut pas être produite en studio. Un message explicatif sera automatiquement transmis au client dans son espace.
         </p>
 
         <div>
@@ -932,7 +932,7 @@
     <div style="background:#ffffff; border-radius:14px; box-shadow:0 20px 45px rgba(0,0,0,0.35); max-width:680px; width:100%; border:1px solid #cbd5e1; overflow:hidden; display:flex; flex-direction:column; max-height:92vh;">
       <div style="background:#1e1b4b; color:#ffffff; padding:16px 20px; display:flex; justify-content:space-between; align-items:center;">
         <div>
-          <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#818cf8; letter-spacing:0.05em;">Édition Atelier</span>
+          <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#818cf8; letter-spacing:0.05em;">Édition Studio</span>
           <h3 style="margin:2px 0 0 0; font-size:16px; font-weight:800; color:#ffffff;">✏️ Modifier la commande initiale</h3>
         </div>
         <button type="button" id="closeOrderEditDetailsBtn" style="background:transparent; border:0; color:#cbd5e1; font-size:20px; cursor:pointer; font-weight:700;">✕</button>
@@ -1476,8 +1476,8 @@
 
         <!-- Message au client -->
         <div>
-          <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:6px;">4. Message d'accompagnement de l'Atelier :</label>
-          <textarea id="propoMessageText" class="admin-input" rows="3" style="width:100%; font-size:13px; line-height:1.45; padding:10px 12px;">Bonjour, voici votre maquette préparée par l'Atelier avec votre visuel recentré et calibré. Merci de valider votre BAT électronique directement dans cet espace pour lancer la fabrication.</textarea>
+          <label style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:6px;">4. Message d'accompagnement du Studio :</label>
+          <textarea id="propoMessageText" class="admin-input" rows="3" style="width:100%; font-size:13px; line-height:1.45; padding:10px 12px;">Bonjour, voici votre maquette préparée par le Studio avec votre visuel recentré et calibré. Merci de valider votre BAT électronique directement dans cet espace pour lancer la fabrication.</textarea>
         </div>
       </div>
 
@@ -1493,7 +1493,7 @@
     <div style="background:#ffffff; border-radius:14px; box-shadow:0 20px 45px rgba(0,0,0,0.35); max-width:580px; width:100%; border:1px solid #cbd5e1; overflow:hidden; display:flex; flex-direction:column; max-height:92vh;">
       <div style="background:#1e1b4b; color:#ffffff; padding:16px 22px; display:flex; justify-content:space-between; align-items:center;">
         <div>
-          <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#a5b4fc;">Répertoire Client Atelier</span>
+          <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#a5b4fc;">Répertoire Client Studio</span>
           <h3 id="editClientModalTitle" style="margin:2px 0 0 0; font-size:17px; color:#ffffff;">+ Nouveau Client</h3>
         </div>
         <button type="button" id="closeEditClientBtn" style="background:transparent; border:0; color:#cbd5e1; font-size:20px; cursor:pointer; font-weight:700;">✕</button>

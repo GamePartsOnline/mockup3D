@@ -212,7 +212,7 @@ export function register(app) {
                 <div>
                   <div style="display:flex; align-items:center; gap:8px;">
                     <span style="background:#dc2626; color:#ffffff; font-size:11px; font-weight:800; padding:2px 8px; border-radius:6px; text-transform:uppercase;">Visuel non conforme</span>
-                    <strong style="color:#991b1b; font-size:14.5px;">Correction requise par l'Atelier</strong>
+                    <strong style="color:#991b1b; font-size:14.5px;">Correction requise par le Studio</strong>
                   </div>
                   <p style="margin:4px 0 0 0; font-size:13px; color:#7f1d1d; line-height:1.4;">
                     ${order.rejectionReason || 'Votre fichier d’origine ne respecte pas les critères techniques de fabrication. Merci de fournir une nouvelle image en 300 DPI.'}
@@ -229,10 +229,10 @@ export function register(app) {
                 <div>
                   <div style="display:flex; align-items:center; gap:8px;">
                     <span style="background:#d97706; color:#ffffff; font-size:11px; font-weight:800; padding:2px 8px; border-radius:6px; text-transform:uppercase;">Action requise</span>
-                    <strong style="color:#92400e; font-size:14.5px;">Proposition de l'Atelier Graph2Print</strong>
+                    <strong style="color:#92400e; font-size:14.5px;">Proposition du Studio Graph2Print</strong>
                   </div>
                   <p style="margin:4px 0 0 0; font-size:13px; color:#78350f; line-height:1.4;">
-                    L'atelier a préparé votre visuel sur mesure. Vérifiez la maquette 3D ci-dessous et validez votre Bon à Tirer (BAT) pour lancer l'impression !
+                    Le studio a préparé votre visuel sur mesure. Vérifiez la maquette 3D ci-dessous et validez votre Bon à Tirer (BAT) pour lancer l'impression !
                   </p>
                 </div>
                 <button type="button" class="btn-client-approve-bat" data-folder="${order.folder}" style="background:#059669; color:#ffffff; border:none; padding:10px 20px; border-radius:8px; font-size:13.5px; font-weight:800; cursor:pointer; box-shadow:0 3px 10px rgba(5,150,105,0.35);">
@@ -247,7 +247,7 @@ export function register(app) {
               <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px; font-size:12px;">
                 <div style="display:flex; align-items:center; gap:6px; color:#059669; font-weight:700;">
                   <span style="background:#dcfce7; color:#15803d; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:11px;">✓</span>
-                  Reçu atelier
+                  Reçu studio
                 </div>
                 <div style="display:flex; align-items:center; gap:6px; color:${isBatApproved ? '#059669; font-weight:700;' : '#94a3b8;'}">
                   <span style="background:${isBatApproved ? '#dcfce7' : '#f1f5f9'}; color:${isBatApproved ? '#15803d' : '#94a3b8'}; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:11px;">${isBatApproved ? '✓' : '2'}</span>
@@ -313,7 +313,7 @@ export function register(app) {
                   🔄 Recharger dans le Studio 3D
                 </button>
                 <button type="button" class="btn-ask-order-msg" data-folder="${order.folder}" style="background:#f5f3ff; color:#7c3aed; border:1px solid #ddd6fe; border-radius:8px; padding:8px 14px; font-size:12.5px; font-weight:700; cursor:pointer;">
-                  💬 Contacter l'atelier
+                  💬 Contacter le studio
                 </button>
               </div>
             </div>
@@ -450,7 +450,7 @@ export function register(app) {
 
     // Remplir le sélecteur avec discussion générale + les commandes
     const orders = client.orders || [];
-    select.innerHTML = '<option value="general">Discussion générale avec l\'Atelier Graph2Print</option>' +
+    select.innerHTML = '<option value="general">Discussion générale avec le Studio Graph2Print</option>' +
       orders.map(o => `<option value="${o.folder}">Commande : ${o.id || o.folder} (${o.product || 'Objet'})</option>`).join('');
 
     // Collecter l'ensemble des messages
@@ -487,15 +487,15 @@ export function register(app) {
         <div style="background:#f0f9ff; border:1px solid #bae6fd; border-radius:10px; padding:12px 14px; margin-bottom:12px;">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
             <strong style="font-size:12.5px; color:#0369a1; display:flex; align-items:center; gap:6px;">
-              <span>🤖</span> Assistant IA Atelier (Réponse Instantanée) :
+              <span>🤖</span> Assistant IA Studio (Réponse Instantanée) :
             </strong>
             <small style="color:#0284c7; font-size:11px;">Disponible 24h/24</small>
           </div>
           <div style="display:flex; flex-wrap:wrap; gap:6px;">
-            <button type="button" class="btn-quick-ai-faq" data-question="Quels sont vos délais de fabrication à l'atelier ?" style="background:#ffffff; border:1px solid #7dd3fc; color:#0284c7; border-radius:16px; padding:4px 10px; font-size:11.5px; font-weight:600; cursor:pointer;">⏱ Délais de fabrication ?</button>
+            <button type="button" class="btn-quick-ai-faq" data-question="Quels sont vos délais de fabrication au studio ?" style="background:#ffffff; border:1px solid #7dd3fc; color:#0284c7; border-radius:16px; padding:4px 10px; font-size:11.5px; font-weight:600; cursor:pointer;">⏱ Délais de fabrication ?</button>
             <button type="button" class="btn-quick-ai-faq" data-question="Comment valider mon Bon à Tirer (BAT) électronique ?" style="background:#ffffff; border:1px solid #7dd3fc; color:#0284c7; border-radius:16px; padding:4px 10px; font-size:11.5px; font-weight:600; cursor:pointer;">✓ Comment valider mon BAT ?</button>
             <button type="button" class="btn-quick-ai-faq" data-question="Quelle résolution et quel format d'image fournir (300 DPI) ?" style="background:#ffffff; border:1px solid #7dd3fc; color:#0284c7; border-radius:16px; padding:4px 10px; font-size:11.5px; font-weight:600; cursor:pointer;">📐 Résolution & 300 DPI ?</button>
-            <button type="button" class="btn-quick-ai-faq" data-question="Comment retirer ma commande à l'atelier de Givry-en-Argonne ?" style="background:#ffffff; border:1px solid #7dd3fc; color:#0284c7; border-radius:16px; padding:4px 10px; font-size:11.5px; font-weight:600; cursor:pointer;">📍 Retrait à Givry-en-Argonne ?</button>
+            <button type="button" class="btn-quick-ai-faq" data-question="Comment retirer ma commande au studio de Givry-en-Argonne ?" style="background:#ffffff; border:1px solid #7dd3fc; color:#0284c7; border-radius:16px; padding:4px 10px; font-size:11.5px; font-weight:600; cursor:pointer;">📍 Retrait à Givry-en-Argonne ?</button>
             <button type="button" class="btn-quick-ai-faq" data-question="Comment bénéficier d'un code promo ou d'une remise cadeau ?" style="background:#ffffff; border:1px solid #7dd3fc; color:#0284c7; border-radius:16px; padding:4px 10px; font-size:11.5px; font-weight:600; cursor:pointer;">🎁 Codes cadeaux & Remises ?</button>
           </div>
         </div>
@@ -506,7 +506,7 @@ export function register(app) {
           ${aiFaqQuick}
           <div style="text-align:center; padding:24px 16px; color:#94a3b8;">
             <div style="font-size:28px; margin-bottom:8px;">💬</div>
-            <strong style="color:#475569; font-size:14px; display:block;">Bienvenue sur la messagerie de votre atelier</strong>
+            <strong style="color:#475569; font-size:14px; display:block;">Bienvenue sur la messagerie de votre studio</strong>
             <p style="margin:4px 0 0 0; font-size:12.5px;">Cliquez sur une question rapide ci-dessus ou écrivez votre message : notre assistant IA ou notre équipe vous répond immédiatement.</p>
           </div>
         `;
@@ -522,7 +522,7 @@ export function register(app) {
           <div style="background:${isAtelier ? (isAi ? '#f0f9ff' : '#ede9fe') : '#ffffff'}; border:1px solid ${isAtelier ? (isAi ? '#bae6fd' : '#c4b5fd') : '#cbd5e1'}; border-radius:10px; padding:10px 14px; align-self:${isAtelier ? 'flex-start' : 'flex-end'}; max-width:80%; box-sizing:border-box; box-shadow:0 2px 6px rgba(0,0,0,0.03);">
             <div style="display:flex; justify-content:space-between; gap:14px; margin-bottom:4px; align-items:center;">
               <div style="display:flex; align-items:center; gap:6px;">
-                <strong style="font-size:12px; color:${isAtelier ? (isAi ? '#0369a1' : '#5b21b6') : '#1e293b'};">${m.author || (isAtelier ? 'Atelier Graph2Print' : 'Vous')}</strong>
+                <strong style="font-size:12px; color:${isAtelier ? (isAi ? '#0369a1' : '#5b21b6') : '#1e293b'};">${m.author || (isAtelier ? 'Studio Graph2Print' : 'Vous')}</strong>
                 ${isAi ? '<span style="background:#0284c7; color:#ffffff; font-size:10px; font-weight:800; padding:1px 6px; border-radius:4px;">IA Instantanée</span>' : ''}
               </div>
               <small style="font-size:11px; color:#64748b;">${timeStr}</small>
@@ -803,7 +803,7 @@ export function initialize(app) {
       if (!res.ok || !data.ok) throw new Error(data.error || 'Erreur lors de l\'envoi du message.');
 
       if (input) input.value = '';
-      app.showToast?.('Message envoyé à l’atelier Graph2Print.');
+      app.showToast?.('Message envoyé au studio Graph2Print.');
       await app.checkClientSession(token);
     } catch (err) {
       app.showToast?.(err.message || 'Erreur lors de l’envoi.');
