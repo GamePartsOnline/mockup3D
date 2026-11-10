@@ -224,7 +224,10 @@ export function register(app) {
     tbody.querySelectorAll('.btn-delete-order').forEach(btn => {
       btn.addEventListener('click', async (e) => {
         const folder = e.target.dataset.folder;
-        if (!confirm(`Confirmez-vous la suppression définitive du dossier de commande "${folder}" ?`)) return;
+        const ok = app.customConfirm
+          ? await app.customConfirm(`Confirmez-vous la suppression définitive du dossier de commande "${folder}" ?`, { danger: true, confirmText: 'Supprimer' })
+          : confirm(`Confirmez-vous la suppression définitive du dossier de commande "${folder}" ?`);
+        if (!ok) return;
         try {
           const res = await fetch('/api/admin/submissions/delete', {
             method: 'POST',
@@ -976,7 +979,10 @@ export function register(app) {
 
   // Restauration des fiches clients depuis l'historique des commandes et la corbeille
   app.restoreClientsFromOrders = async function() {
-    if (!confirm('Voulez-vous synchroniser et restaurer toutes les fiches clients manquantes depuis la corbeille et l’historique des commandes ?')) return;
+    const ok = app.customConfirm
+      ? await app.customConfirm('Voulez-vous synchroniser et restaurer toutes les fiches clients manquantes depuis la corbeille et l’historique des commandes ?', { title: 'Restauration des fiches clients', confirmText: 'Restaurer' })
+      : confirm('Voulez-vous synchroniser et restaurer toutes les fiches clients manquantes depuis la corbeille et l’historique des commandes ?');
+    if (!ok) return;
     try {
       const res = await fetch('/api/admin/clients/restore', {
         method: 'POST',
@@ -1089,9 +1095,14 @@ export function register(app) {
 
   app.deleteAdminClient = async function(clientId, clientEmail, clientName) {
     const confirmMsg = `Confirmez-vous la suppression définitive du client "${clientName}" (${clientEmail}) ?\n\nCette action retirera sa fiche du répertoire de l'atelier.`;
-    if (!window.confirm(confirmMsg)) return;
+    const ok = app.customConfirm
+      ? await app.customConfirm(confirmMsg, { title: 'Suppression fiche client', danger: true, confirmText: 'Supprimer' })
+      : window.confirm(confirmMsg);
+    if (!ok) return;
 
-    const deleteOrders = window.confirm(`Souhaitez-vous également supprimer définitivement tous les dossiers de commandes et fichiers associés à ce client sur le disque ?\n\n- Cliquez sur OK pour TOUT supprimer (client + dossiers).\n- Cliquez sur Annuler pour supprimer la fiche client tout en conservant les dossiers.`);
+    const deleteOrders = app.customConfirm
+      ? await app.customConfirm(`Souhaitez-vous également supprimer définitivement tous les dossiers de commandes et fichiers associés à ce client sur le disque ?`, { title: 'Dossiers associés', danger: true, confirmText: 'Tout supprimer', cancelText: 'Conserver les dossiers' })
+      : window.confirm(`Souhaitez-vous également supprimer définitivement tous les dossiers de commandes et fichiers associés à ce client sur le disque ?\n\n- Cliquez sur OK pour TOUT supprimer (client + dossiers).\n- Cliquez sur Annuler pour supprimer la fiche client tout en conservant les dossiers.`);
 
     try {
       const res = await fetch('/api/admin/clients/delete', {
@@ -1108,12 +1119,16 @@ export function register(app) {
       await app.updateClientsTrashCount();
       if (deleteOrders && app.loadAdminSubmissions) await app.loadAdminSubmissions();
     } catch (err) {
-      alert(`Erreur : ${err.message}`);
+      if (app.customAlert) await app.customAlert(`Erreur : ${err.message}`, { title: 'Erreur' });
+      else alert(`Erreur : ${err.message}`);
     }
   };
 
   app.restoreLastClient = async function() {
-    if (!window.confirm("Restaurer uniquement le dernier client mis en corbeille ?")) return;
+    const ok = app.customConfirm
+      ? await app.customConfirm("Restaurer uniquement le dernier client mis en corbeille ?", { title: 'Restauration client', confirmText: 'Restaurer' })
+      : window.confirm("Restaurer uniquement le dernier client mis en corbeille ?");
+    if (!ok) return;
     try {
       const res = await fetch('/api/admin/clients/restore-last', { method: 'POST' });
       const data = await res.json();
@@ -1122,7 +1137,8 @@ export function register(app) {
       await app.loadAdminClients();
       await app.updateClientsTrashCount();
     } catch (err) {
-      alert(`Erreur : ${err.message}`);
+      if (app.customAlert) await app.customAlert(`Erreur : ${err.message}`, { title: 'Erreur' });
+      else alert(`Erreur : ${err.message}`);
     }
   };
 
@@ -1171,7 +1187,8 @@ export function register(app) {
             await app.openClientsTrashModal();
             await app.updateClientsTrashCount();
           } catch (e) {
-            alert(e.message);
+            if (app.customAlert) await app.customAlert(e.message, { title: 'Erreur de restauration' });
+            else alert(e.message);
             b.disabled = false;
             b.textContent = '↺ Restaurer';
           }
@@ -1258,7 +1275,9 @@ export function register(app) {
     const isTest = !!document.querySelector('#chkEditClientIsTest')?.checked;
 
     if (!nom || !email) {
-      return alert('Le nom et l\'adresse courriel sont obligatoires.');
+      if (app.customAlert) await app.customAlert('Le nom et l\'adresse courriel sont obligatoires.', { title: 'Champ obligatoire' });
+      else alert('Le nom et l\'adresse courriel sont obligatoires.');
+      return;
     }
 
     try {
@@ -1279,7 +1298,8 @@ export function register(app) {
       app.closeEditClientModal();
       await app.loadAdminClients();
     } catch (err) {
-      alert(`Erreur : ${err.message}`);
+      if (app.customAlert) await app.customAlert(`Erreur : ${err.message}`, { title: 'Erreur d’enregistrement' });
+      else alert(`Erreur : ${err.message}`);
     }
   };
 
@@ -1439,14 +1459,17 @@ export function register(app) {
             });
             app.showToast?.(`Code "${code}" ${!currentActive ? 'activé' : 'désactivé'}.`);
             await app.loadAdminDiscounts();
-          } catch (e) { alert(e.message); }
+          } catch (e) { app.showToast?.(e.message || 'Erreur'); }
         });
       });
 
       tbody.querySelectorAll('.btn-delete-coupon').forEach(b => {
         b.addEventListener('click', async () => {
           const code = b.dataset.code;
-          if (!confirm(`Supprimer le code cadeau "${code}" ?`)) return;
+          const ok = app.customConfirm
+            ? await app.customConfirm(`Supprimer le code cadeau "${code}" ?`, { danger: true, confirmText: 'Supprimer' })
+            : confirm(`Supprimer le code cadeau "${code}" ?`);
+          if (!ok) return;
           try {
             await fetch('/api/admin/discounts/coupon/delete', {
               method: 'POST',
@@ -1455,7 +1478,7 @@ export function register(app) {
             });
             app.showToast?.(`Code "${code}" supprimé.`);
             await app.loadAdminDiscounts();
-          } catch (e) { alert(e.message); }
+          } catch (e) { app.showToast?.(e.message || 'Erreur'); }
         });
       });
     } catch (err) {
@@ -1481,7 +1504,7 @@ export function register(app) {
       if (!res.ok || !data.ok) throw new Error(data.error || 'Erreur sauvegarde.');
       app.showToast?.('Remise globale enregistrée avec succès !');
       await app.loadAdminDiscounts();
-    } catch (e) { alert(e.message); }
+    } catch (e) { app.showToast?.(e.message || 'Erreur de sauvegarde'); }
   };
 
   app.saveNewCoupon = async function() {
@@ -1491,7 +1514,9 @@ export function register(app) {
     const label = document.querySelector('#newCouponLabel')?.value?.trim() || '';
 
     if (!code || value <= 0) {
-      return alert('Veuillez renseigner un code et une valeur supérieure à 0.');
+      if (app.customAlert) await app.customAlert('Veuillez renseigner un code et une valeur supérieure à 0.', { title: 'Code cadeau invalide' });
+      else alert('Veuillez renseigner un code et une valeur supérieure à 0.');
+      return;
     }
 
     try {
@@ -1506,7 +1531,7 @@ export function register(app) {
       const cInp = document.querySelector('#newCouponCode'); if (cInp) cInp.value = '';
       const lInp = document.querySelector('#newCouponLabel'); if (lInp) lInp.value = '';
       await app.loadAdminDiscounts();
-    } catch (e) { alert(e.message); }
+    } catch (e) { app.showToast?.(e.message || 'Erreur d’enregistrement'); }
   };
 
   // Logique du Dépôt-Vente Partenaires
@@ -1860,9 +1885,13 @@ export function register(app) {
       });
 
       tbody.querySelectorAll('.btn-remove-rs-item').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
           const idx = parseInt(btn.dataset.index, 10);
-          if (confirm(`Retirer l'article "${store.items[idx]?.productName}" du dépôt ?`)) {
+          const it = store.items[idx];
+          const ok = app.customConfirm
+            ? await app.customConfirm(`Retirer l'article "${it?.productName}" du dépôt ?`, { danger: true, confirmText: 'Retirer' })
+            : confirm(`Retirer l'article "${it?.productName}" du dépôt ?`);
+          if (ok) {
             store.items.splice(idx, 1);
             renderItemsTable();
           }
@@ -2598,7 +2627,8 @@ export function register(app) {
     if (catSelect.value === '__NEW__') {
       const val = newCatInput?.value?.trim();
       if (!val) {
-        alert('Veuillez entrer le nom de la nouvelle catégorie.');
+        if (app.customAlert) await app.customAlert('Veuillez entrer le nom de la nouvelle catégorie.', { title: 'Catégorie requise' });
+        else alert('Veuillez entrer le nom de la nouvelle catégorie.');
         newCatInput?.focus();
         return;
       }
@@ -2680,7 +2710,10 @@ export function register(app) {
   app.batchValidateAllPending = async function() {
     const pendings = (app.catalogImages || []).filter(v => v.status === 'pending');
     if (!pendings.length) return app.showToast?.('Aucun visuel en attente.');
-    if (!confirm(`Confirmez-vous la publication immédiate de tous les ${pendings.length} visuel(s) en attente ?`)) return;
+    const ok = app.customConfirm
+      ? await app.customConfirm(`Confirmez-vous la publication immédiate de tous les ${pendings.length} visuel(s) en attente ?`, { title: 'Publication par lot', confirmText: 'Publier tout' })
+      : confirm(`Confirmez-vous la publication immédiate de tous les ${pendings.length} visuel(s) en attente ?`);
+    if (!ok) return;
 
     pendings.forEach(v => { v.status = 'approved'; });
     await app.persistCatalog?.();
@@ -2821,7 +2854,9 @@ export function register(app) {
 
   // Création d'une nouvelle catégorie
   app.adminCreateNewCategory = async function() {
-    const val = prompt('Nom de la nouvelle catégorie :');
+    const val = app.customPrompt
+      ? await app.customPrompt('Nom de la nouvelle catégorie :', '', { title: 'Nouvelle catégorie' })
+      : prompt('Nom de la nouvelle catégorie :');
     if (!val || !val.trim()) return;
     const clean = val.trim().charAt(0).toUpperCase() + val.trim().slice(1);
     if (!Array.isArray(app.catalogCategories)) app.catalogCategories = [];
@@ -2946,7 +2981,9 @@ export function register(app) {
         if (catObj && Array.isArray(catObj.subs)) {
           const oldSub = catObj.subs[subIdx];
           const catName = typeof catObj === 'string' ? catObj : catObj.name;
-          const newSub = prompt(`Nouveau nom pour la sous-catégorie "${oldSub}" :`, oldSub);
+          const newSub = app.customPrompt
+            ? await app.customPrompt(`Nouveau nom pour la sous-catégorie "${oldSub}" :`, oldSub, { title: 'Renommer la sous-catégorie' })
+            : prompt(`Nouveau nom pour la sous-catégorie "${oldSub}" :`, oldSub);
           if (newSub && newSub.trim() && newSub.trim() !== oldSub) {
             const cleanSub = newSub.trim().charAt(0).toUpperCase() + newSub.trim().slice(1);
             catObj.subs[subIdx] = cleanSub;
@@ -2969,7 +3006,9 @@ export function register(app) {
         const idx = Number(b.dataset.idx);
         const catObj = cats[idx];
         const oldName = typeof catObj === 'string' ? catObj : catObj.name;
-        const newName = prompt(`Nouveau nom pour la catégorie "${oldName}" :`, oldName);
+        const newName = app.customPrompt
+          ? await app.customPrompt(`Nouveau nom pour la catégorie "${oldName}" :`, oldName, { title: 'Renommer la catégorie' })
+          : prompt(`Nouveau nom pour la catégorie "${oldName}" :`, oldName);
         if (newName && newName.trim() && newName.trim() !== oldName) {
           const clean = newName.trim().charAt(0).toUpperCase() + newName.trim().slice(1);
           if (typeof catObj === 'string') cats[idx] = { name: clean, subs: [] };
@@ -2991,7 +3030,9 @@ export function register(app) {
         const idx = Number(b.dataset.idx);
         const catObj = cats[idx];
         const catName = typeof catObj === 'string' ? catObj : catObj.name;
-        const subName = prompt(`Nom de la sous-catégorie à ajouter dans "${catName}" :`);
+        const subName = app.customPrompt
+          ? await app.customPrompt(`Nom de la sous-catégorie à ajouter dans "${catName}" :`, '', { title: 'Ajouter une sous-catégorie' })
+          : prompt(`Nom de la sous-catégorie à ajouter dans "${catName}" :`);
         if (subName && subName.trim()) {
           const clean = subName.trim().charAt(0).toUpperCase() + subName.trim().slice(1);
           if (typeof catObj === 'string') cats[idx] = { name: catName, subs: [clean] };
@@ -3017,7 +3058,10 @@ export function register(app) {
         const catObj = cats[catIdx];
         if (catObj && Array.isArray(catObj.subs)) {
           const subName = catObj.subs[subIdx];
-          if (confirm(`Supprimer la sous-catégorie "${subName}" ?`)) {
+          const ok = app.customConfirm
+            ? await app.customConfirm(`Supprimer la sous-catégorie "${subName}" ?`, { danger: true, confirmText: 'Supprimer' })
+            : confirm(`Supprimer la sous-catégorie "${subName}" ?`);
+          if (ok) {
             catObj.subs.splice(subIdx, 1);
             (app.catalogImages || []).forEach(it => {
               if (it.subcategory === subName) it.subcategory = '';
@@ -3037,7 +3081,10 @@ export function register(app) {
         const idx = Number(b.dataset.idx);
         const catObj = cats[idx];
         const catName = typeof catObj === 'string' ? catObj : catObj.name;
-        if (confirm(`Confirmez-vous la suppression de la catégorie "${catName}" ? Les visuels associés basculeront automatiquement dans "Illustrations".`)) {
+        const ok = app.customConfirm
+          ? await app.customConfirm(`Confirmez-vous la suppression de la catégorie "${catName}" ? Les visuels associés basculeront automatiquement dans "Illustrations".`, { danger: true, confirmText: 'Supprimer' })
+          : confirm(`Confirmez-vous la suppression de la catégorie "${catName}" ? Les visuels associés basculeront automatiquement dans "Illustrations".`);
+        if (ok) {
           cats.splice(idx, 1);
           (app.catalogImages || []).forEach(it => {
             if (it.category === catName) {
@@ -3252,7 +3299,10 @@ export function initialize(app) {
   document.querySelector('#btnAdminEmptyTrash')?.addEventListener('click', async () => {
     const trashItems = (app.catalogImages || []).filter(v => v.status === 'trash');
     if (!trashItems.length) return app.showToast?.('La corbeille est déjà vide.');
-    if (!confirm(`Supprimer définitivement ${trashItems.length} visuel(s) de la corbeille et du disque ? Cette action est irréversible.`)) return;
+    const ok = app.customConfirm
+      ? await app.customConfirm(`Supprimer définitivement ${trashItems.length} visuel(s) de la corbeille et du disque ? Cette action est irréversible.`, { title: 'Vider la corbeille', danger: true, confirmText: 'Supprimer définitivement' })
+      : confirm(`Supprimer définitivement ${trashItems.length} visuel(s) de la corbeille et du disque ? Cette action est irréversible.`);
+    if (!ok) return;
 
     try {
       const res = await fetch('/api/catalog-images/empty-trash', { method: 'POST' });
@@ -3614,7 +3664,8 @@ export function initialize(app) {
     const message = document.querySelector('#propoMessageText')?.value?.trim();
 
     if (!email || !email.includes('@')) {
-      alert('Veuillez sélectionner un client enregistré dans la liste.');
+      if (app.customAlert) await app.customAlert('Veuillez sélectionner un client enregistré dans la liste.', { title: 'Sélection client requise' });
+      else alert('Veuillez sélectionner un client enregistré dans la liste.');
       return;
     }
 
@@ -3649,7 +3700,8 @@ export function initialize(app) {
       closePropo();
       await app.loadAdminSubmissions?.();
     } catch (err) {
-      alert(err.message || 'Erreur de transmission.');
+      if (app.customAlert) await app.customAlert(err.message || 'Erreur de transmission.', { title: 'Erreur' });
+      else alert(err.message || 'Erreur de transmission.');
     } finally {
       confirmPropoBtn.disabled = false;
       confirmPropoBtn.textContent = '✓ Transmettre la proposition au client';

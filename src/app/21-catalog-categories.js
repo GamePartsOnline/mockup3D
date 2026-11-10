@@ -103,7 +103,9 @@ export function initialize(app) {
   }
 
   addCatBtn?.addEventListener('click', async () => {
-    const val = prompt('Nom de la nouvelle catégorie :');
+    const val = app.customPrompt
+      ? await app.customPrompt('Nom de la nouvelle catégorie :', '', { title: 'Nouvelle catégorie' })
+      : prompt('Nom de la nouvelle catégorie :');
     if (!val || !val.trim()) return;
     const clean = val.trim();
     if (app.getCategoryNames().some(c => c.toLowerCase() === clean.toLowerCase())) {
@@ -115,13 +117,15 @@ export function initialize(app) {
     app.showToast(`Catégorie "${clean}" créée`);
   });
 
-  function pickCategory(title, filterFn) {
+  async function pickCategory(title, filterFn) {
     const pool = app.getCategoryNames().filter(filterFn || (() => true));
     if (!pool.length) return null;
     const act = app.activeCatalogCategory;
     if (act && act !== 'all' && act !== 'pending' && act !== 'current_product' && pool.includes(act)) return act;
     const list = pool.map((c, i) => `${i + 1}. ${c}`).join('\n');
-    const input = prompt(`${title}\n\n${list}`);
+    const input = app.customPrompt
+      ? await app.customPrompt(`${title}\n\n${list}`, '', { title: 'Sélectionner une catégorie' })
+      : prompt(`${title}\n\n${list}`);
     if (!input || !input.trim()) return null;
     const num = parseInt(input.trim(), 10);
     if (!isNaN(num) && num >= 1 && num <= pool.length) return pool[num - 1];
@@ -129,9 +133,11 @@ export function initialize(app) {
   }
 
   editCatBtn?.addEventListener('click', async () => {
-    const target = pickCategory('Entrez le numéro ou le nom de la catégorie à modifier :');
+    const target = await pickCategory('Entrez le numéro ou le nom de la catégorie à modifier :');
     if (!target) return;
-    const val = prompt(`Renommer la catégorie "${target}" :`, target);
+    const val = app.customPrompt
+      ? await app.customPrompt(`Renommer la catégorie "${target}" :`, target, { title: 'Renommer la catégorie' })
+      : prompt(`Renommer la catégorie "${target}" :`, target);
     if (val === null) return;
     const clean = val.trim();
     if (clean && clean !== target) {
@@ -151,9 +157,11 @@ export function initialize(app) {
   });
 
   delCatBtn?.addEventListener('click', async () => {
-    const target = pickCategory('Entrez le numéro ou le nom de la catégorie à supprimer :');
+    const target = await pickCategory('Entrez le numéro ou le nom de la catégorie à supprimer :');
     if (!target) return;
-    const ok = confirm(`Confirmez-vous la suppression de la catégorie "${target}" ?`);
+    const ok = app.customConfirm
+      ? await app.customConfirm(`Confirmez-vous la suppression de la catégorie "${target}" ?`, { danger: true, confirmText: 'Supprimer' })
+      : confirm(`Confirmez-vous la suppression de la catégorie "${target}" ?`);
     if (!ok) return;
     app.catalogCategories = app.catalogCategories.filter(c => (typeof c === 'string' ? c : c.name) !== target);
     const fallback = app.catalogCategories[0] ? (typeof app.catalogCategories[0] === 'string' ? app.catalogCategories[0] : app.catalogCategories[0].name) : 'Général';

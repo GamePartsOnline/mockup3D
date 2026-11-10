@@ -134,7 +134,10 @@ export function register(app) {
     });
     list.querySelectorAll('.delete-sub-btn').forEach(btn => {
       btn.onclick = async () => {
-        if (!confirm('Voulez-vous supprimer définitivement ce dossier de commande ?')) return;
+        const ok = app.customConfirm
+          ? await app.customConfirm('Voulez-vous supprimer définitivement ce dossier de commande ?', { danger: true, confirmText: 'Supprimer' })
+          : confirm('Voulez-vous supprimer définitivement ce dossier de commande ?');
+        if (!ok) return;
         const folder = btn.dataset.folder;
         btn.disabled = true;
         try {

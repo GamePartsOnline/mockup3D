@@ -178,7 +178,10 @@ export function initialize(app) {
       if (!app.clientMode) {
         title.style.cursor = 'pointer'; title.title = 'Cliquer pour renommer rapidement';
         title.onclick = async e => {
-          e.stopPropagation(); const n = prompt(`Nouveau nom pour "${item.name}" :`, item.name);
+          e.stopPropagation();
+          const n = app.customPrompt
+            ? await app.customPrompt(`Nouveau nom pour "${item.name}" :`, item.name, { title: 'Renommer le visuel' })
+            : prompt(`Nouveau nom pour "${item.name}" :`, item.name);
           if (n && n.trim() && n.trim() !== item.name) { item.name = n.trim(); await persistCatalog(); app.showToast(`Renommé en "${item.name}"`); }
         };
       }
@@ -195,7 +198,13 @@ export function initialize(app) {
           const resBtn = document.createElement('button'); resBtn.className = 'cat-btn-sm'; resBtn.style.cssText = 'flex:1;background:#10b981;color:#fff;'; resBtn.textContent = 'Restaurer';
           resBtn.onclick = async e => { e.stopPropagation(); item.status = 'approved'; await persistCatalog(); app.showToast(`"${item.name}" restauré`); };
           const delBtn = document.createElement('button'); delBtn.className = 'cat-btn-sm cat-btn-danger'; delBtn.textContent = '✕'; delBtn.title = 'Supprimer';
-          delBtn.onclick = async e => { e.stopPropagation(); if (confirm(`Supprimer définitivement "${item.name}" ?`)) { app.catalogImages = app.catalogImages.filter(x => x.id !== item.id); await persistCatalog(); } };
+          delBtn.onclick = async e => {
+            e.stopPropagation();
+            const ok = app.customConfirm
+              ? await app.customConfirm(`Supprimer définitivement "${item.name}" ?`, { danger: true, confirmText: 'Supprimer' })
+              : confirm(`Supprimer définitivement "${item.name}" ?`);
+            if (ok) { app.catalogImages = app.catalogImages.filter(x => x.id !== item.id); await persistCatalog(); }
+          };
           act.append(resBtn, delBtn); card.appendChild(act);
         } else {
           const topActions = document.createElement('div'); topActions.style.cssText = 'position:absolute;top:6px;right:6px;display:flex;gap:4px;';
@@ -249,7 +258,11 @@ export function initialize(app) {
   });
   emptyTrashBtn?.addEventListener('click', async () => {
     const count = app.catalogImages.filter(x => x.status === 'trash').length;
-    if (confirm(`Supprimer définitivement les ${count} visuel(s) de la corbeille ?`)) {
+    if (count === 0) return;
+    const ok = app.customConfirm
+      ? await app.customConfirm(`Supprimer définitivement les ${count} visuel(s) de la corbeille ?`, { danger: true, confirmText: 'Vider la corbeille' })
+      : confirm(`Supprimer définitivement les ${count} visuel(s) de la corbeille ?`);
+    if (ok) {
       app.catalogImages = app.catalogImages.filter(x => x.status !== 'trash');
       app.activeCatalogCategory = 'all'; await persistCatalog(); app.showToast('Corbeille vidée');
     }

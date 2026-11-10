@@ -48,7 +48,9 @@ export function register(app) {
       if (catIdx > 0) actions.appendChild(btn('▲', 'Monter', async () => { [cats[catIdx], cats[catIdx - 1]] = [cats[catIdx - 1], cats[catIdx]]; await sync(); }));
       if (catIdx < cats.length - 1) actions.appendChild(btn('▼', 'Descendre', async () => { [cats[catIdx], cats[catIdx + 1]] = [cats[catIdx + 1], cats[catIdx]]; await sync(); }));
       actions.appendChild(btn('Renommer', 'Renommer', async () => {
-        const n = prompt(`Nouveau nom pour "${catName}" :`, catName);
+        const n = app.customPrompt
+          ? await app.customPrompt(`Nouveau nom pour "${catName}" :`, catName, { title: 'Renommer la catégorie' })
+          : prompt(`Nouveau nom pour "${catName}" :`, catName);
         if (n && n.trim() && n.trim() !== catName) {
           if (typeof catObj === 'string') cats[catIdx] = { name: n.trim(), subs: [] }; else catObj.name = n.trim();
           (app.catalogImages || []).forEach(it => { if (it.category === catName) it.category = n.trim(); });
@@ -58,7 +60,9 @@ export function register(app) {
       actions.appendChild(btn('Déplacer dans...', `Transformer "${catName}" en sous-catégorie`, async () => {
         const others = cats.map(c => typeof c === 'string' ? c : c.name).filter(n => n !== catName);
         if (!others.length) return app.showToast('Aucune autre catégorie disponible.');
-        const chosen = prompt(`Déplacer "${catName}" en tant que sous-catégorie dans :\n` + others.join(', '));
+        const chosen = app.customPrompt
+          ? await app.customPrompt(`Déplacer "${catName}" en tant que sous-catégorie dans :\n` + others.join(', '), '', { title: 'Déplacer la catégorie' })
+          : prompt(`Déplacer "${catName}" en tant que sous-catégorie dans :\n` + others.join(', '));
         if (!chosen) return;
         const targetObj = cats.find(c => (typeof c === 'string' ? c : c.name) === chosen);
         if (targetObj) {
@@ -70,7 +74,10 @@ export function register(app) {
         }
       }));
       actions.appendChild(btn('✕ Supprimer', `Supprimer "${catName}"`, async () => {
-        if (!confirm(`Supprimer la catégorie "${catName}" ? Les visuels basculeront dans "Illustrations".`)) return;
+        const ok = app.customConfirm
+          ? await app.customConfirm(`Supprimer la catégorie "${catName}" ? Les visuels basculeront dans "Illustrations".`, { danger: true, confirmText: 'Supprimer' })
+          : confirm(`Supprimer la catégorie "${catName}" ? Les visuels basculeront dans "Illustrations".`);
+        if (!ok) return;
         cats.splice(catIdx, 1);
         (app.catalogImages || []).forEach(it => { if (it.category === catName) { it.category = 'Illustrations'; it.subcategory = ''; } });
         await sync();
@@ -113,7 +120,9 @@ export function register(app) {
           sActions.appendChild(btn('Déplacer...', `Déplacer "${subName}" dans une autre catégorie`, async () => {
             const others = cats.map(c => typeof c === 'string' ? c : c.name).filter(n => n !== catName);
             if (!others.length) return;
-            const chosen = prompt(`Déplacer "${subName}" dans quelle catégorie ?\n` + others.join(', '));
+            const chosen = app.customPrompt
+              ? await app.customPrompt(`Déplacer "${subName}" dans quelle catégorie ?\n` + others.join(', '), '', { title: 'Déplacer la sous-catégorie' })
+              : prompt(`Déplacer "${subName}" dans quelle catégorie ?\n` + others.join(', '));
             if (!chosen) return;
             const targetObj = cats.find(c => (typeof c === 'string' ? c : c.name) === chosen);
             if (targetObj) {
@@ -125,7 +134,10 @@ export function register(app) {
             }
           }));
           sActions.appendChild(btn('✕', 'Supprimer sous-cat', async () => {
-            if (!confirm(`Supprimer la sous-catégorie "${subName}" ?`)) return;
+            const ok = app.customConfirm
+              ? await app.customConfirm(`Supprimer la sous-catégorie "${subName}" ?`, { danger: true, confirmText: 'Supprimer' })
+              : confirm(`Supprimer la sous-catégorie "${subName}" ?`);
+            if (!ok) return;
             catObj.subs = subs.filter(s => s !== subName);
             (app.catalogImages || []).forEach(it => { if (it.category === catName && it.subcategory === subName) it.subcategory = ''; });
             await sync();
@@ -154,7 +166,9 @@ export function initialize(app) {
   sortAlphaBtn?.addEventListener('click', () => app.sortCategoriesAlphabetically?.());
 
   addModalBtn?.addEventListener('click', async () => {
-    const val = prompt('Nom de la nouvelle catégorie principale :');
+    const val = app.customPrompt
+      ? await app.customPrompt('Nom de la nouvelle catégorie principale :', '', { title: 'Nouvelle catégorie' })
+      : prompt('Nom de la nouvelle catégorie principale :');
     if (!val || !val.trim()) return;
     if (!Array.isArray(app.catalogCategories)) app.catalogCategories = [];
     const clean = val.trim().charAt(0).toUpperCase() + val.trim().slice(1);

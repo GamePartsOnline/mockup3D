@@ -77,8 +77,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@700&family=Cinzel:wght@700&family=Dancing+Script:wght@700&family=Great+Vibes&family=Lobster&family=Montserrat:ital,wght@0,400;0,700;1,400&family=Oswald:wght@600&family=Pacifico&family=Playfair+Display:ital,wght@0,700;1,700&family=Righteous&family=Roboto:wght@400;700&family=Satisfy&display=swap" rel="stylesheet">
-  <script type="module" crossorigin src="/assets/index-CaikQ0Nu.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-Cmzh4iXt.css">
+  <script type="module" crossorigin src="/assets/index-Dz3WnScs.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-CJ22Q28F.css">
 </head>
 <body>
   <div id="app">
@@ -3194,6 +3194,24 @@
 </div>
 
     <div id="toast" role="status"></div>
+    <div id="customDialogOverlay" class="custom-dialog-overlay" hidden style="display:none;">
+      <div class="custom-dialog-box" role="dialog" aria-modal="true">
+        <div class="custom-dialog-header">
+          <h3 id="customDialogTitle" class="custom-dialog-title">Confirmation</h3>
+          <button type="button" id="customDialogCloseBtn" class="close-explorer-btn" aria-label="Fermer">✕</button>
+        </div>
+        <div class="custom-dialog-body">
+          <p id="customDialogMessage" class="custom-dialog-message"></p>
+          <div id="customDialogInputWrap" style="display:none; margin-top:12px;">
+            <input type="text" id="customDialogInput" class="custom-dialog-input" autocomplete="off" />
+          </div>
+        </div>
+        <div class="custom-dialog-footer">
+          <button type="button" id="customDialogCancelBtn" class="secondary">Annuler</button>
+          <button type="button" id="customDialogConfirmBtn" class="primary">Confirmer</button>
+        </div>
+      </div>
+    </div>
   </div>
 </body>
 </html>

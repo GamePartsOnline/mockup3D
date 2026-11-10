@@ -35,6 +35,7 @@ import * as feature32 from './app/34-products-config.js';
 import * as feature33 from './app/35-i18n.js';
 import * as feature34 from './app/36-admin-dashboard.js';
 import * as feature35 from './app/37-client-account.js';
+import * as feature36 from './app/38-custom-dialogs.js';
 
 const app = { ...dependencies };
 if (typeof window !== 'undefined') window.app = app;
@@ -74,7 +75,8 @@ const features = [
   feature32,
   feature33,
   feature34,
-  feature35
+  feature35,
+  feature36
 ];
 
 for (const feature of features) feature.register(app);

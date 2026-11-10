@@ -46,7 +46,9 @@ export function register(app) {
       addBtn.type = 'button'; addBtn.className = 'subcat-pill-action';
       addBtn.textContent = '+ Sous-cat'; addBtn.title = `Ajouter une sous-catégorie à ${cat}`;
       addBtn.onclick = async () => {
-        const val = prompt(`Nom de la sous-catégorie pour "${cat}" (ex: Chats, Chiens, Girafe, Licorne) :`);
+        const val = app.customPrompt
+          ? await app.customPrompt(`Nom de la sous-catégorie pour "${cat}" (ex: Chats, Chiens, Girafe, Licorne) :`, '', { title: 'Ajouter une sous-catégorie' })
+          : prompt(`Nom de la sous-catégorie pour "${cat}" (ex: Chats, Chiens, Girafe, Licorne) :`);
         if (!val || !val.trim()) return;
         const clean = val.trim();
         const obj = (app.catalogCategories || []).find(c => (typeof c === 'string' ? c : c.name) === cat);
@@ -68,14 +70,19 @@ export function register(app) {
         delBtn.textContent = '✕ Sous-cat'; delBtn.title = `Supprimer une sous-catégorie de ${cat}`;
         delBtn.onclick = async () => {
           const list = subs.map((s, i) => `${i + 1}. ${s}`).join('\n');
-          const input = prompt(`Entrez le numéro ou le nom de la sous-catégorie à supprimer de "${cat}" :\n\n${list}`);
+          const input = app.customPrompt
+            ? await app.customPrompt(`Entrez le numéro ou le nom de la sous-catégorie à supprimer de "${cat}" :\n\n${list}`, '', { title: 'Supprimer une sous-catégorie' })
+            : prompt(`Entrez le numéro ou le nom de la sous-catégorie à supprimer de "${cat}" :\n\n${list}`);
           if (!input || !input.trim()) return;
           let target = null;
           const num = parseInt(input.trim(), 10);
           if (!isNaN(num) && num >= 1 && num <= subs.length) target = subs[num - 1];
           else target = subs.find(s => s.toLowerCase() === input.trim().toLowerCase());
           if (!target) return app.showToast('Sous-catégorie introuvable.');
-          if (!confirm(`Supprimer la sous-catégorie "${target}" ?`)) return;
+          const ok = app.customConfirm
+            ? await app.customConfirm(`Supprimer la sous-catégorie "${target}" ?`, { danger: true, confirmText: 'Supprimer' })
+            : confirm(`Supprimer la sous-catégorie "${target}" ?`);
+          if (!ok) return;
           const obj = (app.catalogCategories || []).find(c => (typeof c === 'string' ? c : c.name) === cat);
           if (obj && Array.isArray(obj.subs)) obj.subs = obj.subs.filter(s => s !== target);
           app.catalogImages.forEach(it => { if (it.category === cat && it.subcategory === target) it.subcategory = ''; });

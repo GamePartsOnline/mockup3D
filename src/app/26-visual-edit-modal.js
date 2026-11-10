@@ -89,7 +89,9 @@ export function register(app) {
     const quickCatBtn = document.querySelector('#quickAddCatInEditBtn');
     if (quickCatBtn) {
       quickCatBtn.onclick = async () => {
-        const val = prompt('Nom de la nouvelle catégorie :');
+        const val = app.customPrompt
+          ? await app.customPrompt('Nom de la nouvelle catégorie :', '', { title: 'Nouvelle catégorie' })
+          : prompt('Nom de la nouvelle catégorie :');
         if (!val || !val.trim()) return;
         const clean = val.trim().charAt(0).toUpperCase() + val.trim().slice(1);
         if (!app.catalogCategories) app.catalogCategories = [];
@@ -108,7 +110,9 @@ export function register(app) {
       quickSubBtn.onclick = async () => {
         const curCat = catSel ? catSel.value : item.category;
         if (!curCat) return;
-        const val = prompt(`Nom de la sous-catégorie pour "${curCat}" :`);
+        const val = app.customPrompt
+          ? await app.customPrompt(`Nom de la sous-catégorie pour "${curCat}" :`, '', { title: 'Ajouter une sous-catégorie' })
+          : prompt(`Nom de la sous-catégorie pour "${curCat}" :`);
         if (!val || !val.trim()) return;
         const clean = val.trim().charAt(0).toUpperCase() + val.trim().slice(1);
         const obj = (app.catalogCategories || []).find(c => (typeof c === 'string' ? c : c.name) === curCat);
