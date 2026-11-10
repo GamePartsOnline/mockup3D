@@ -21,6 +21,12 @@ const server = http.createServer(async (req, res) => {
   secureHeaders(req, res);
   try {
     const route = req.url?.split('?')[0];
+    if ((route === '/api/openapi.json' || route === '/openapi.json') && req.method === 'GET') {
+      const openapiPath = path.join(root, 'public', 'openapi.json');
+      const data = await fs.promises.readFile(openapiPath, 'utf8');
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      return res.end(data);
+    }
     if (route === '/api/catalog-images' && req.method === 'GET') {
       return await getCatalog(req, res);
     }

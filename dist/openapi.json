@@ -1,0 +1,368 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "MockUp3D C3 Platform API",
+    "version": "1.9.23",
+    "description": "Spécification OpenAPI 3.1 officielle de la plateforme MockUp3D C3 (Graph2Print / GamePartsOnline). Pilotage du studio 3D Three.js, transmission des commandes d'atelier, catalogue de visuels et espace client.",
+    "contact": {
+      "name": "Support Graph2Print",
+      "url": "https://mockup3d.gposarl.com",
+      "email": "callisto.gfx@gmail.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://mockup3d.gposarl.com",
+      "description": "Serveur de production (Coolify / OVH)"
+    },
+    {
+      "url": "http://localhost:8088",
+      "description": "Serveur de développement local"
+    }
+  ],
+  "tags": [
+    { "name": "Produits", "description": "Gestion des objets 3D personnalisables et de leurs tarifs" },
+    { "name": "Catalogue", "description": "Bibliothèque de motifs, visuels et catégories" },
+    { "name": "Commandes", "description": "Envoi et suivi des commandes physiques avec BAT 3D" },
+    { "name": "Espace Client", "description": "Authentification, profil, messagerie et validation de BAT" },
+    { "name": "Remises & Codes", "description": "Calculs des offres promotionnelles et codes cadeaux" },
+    { "name": "Atelier & Dépôt-Vente", "description": "Administration réservée à l'atelier de fabrication" }
+  ],
+  "paths": {
+    "/api/products": {
+      "get": {
+        "tags": ["Produits"],
+        "summary": "Liste des produits 3D configurés",
+        "description": "Renvoie la configuration complète des objets 3D (clés, prix unitaires, statuts actif/inactif, dimensions d'impression).",
+        "responses": {
+          "200": {
+            "description": "Liste des produits récupérée avec succès.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/ProductItem" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/catalog-images": {
+      "get": {
+        "tags": ["Catalogue"],
+        "summary": "Catalogue des visuels disponibles",
+        "description": "Récupère l'ensemble des motifs validés pour l'impression textile et objet.",
+        "responses": {
+          "200": {
+            "description": "Catalogue chargé.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "images": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/CatalogVisual" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/catalog-categories": {
+      "get": {
+        "tags": ["Catalogue"],
+        "summary": "Arborescence des catégories et sous-catégories",
+        "responses": {
+          "200": {
+            "description": "Catégories chargées avec succès."
+          }
+        }
+      }
+    },
+    "/api/submissions": {
+      "post": {
+        "tags": ["Commandes"],
+        "summary": "Transmission d'une commande de création personnalisée",
+        "description": "Enregistre une commande avec aperçu BAT 3D, coordonnées de livraison et détails des articles.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/OrderSubmissionRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Commande enregistrée avec succès.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": { "type": "boolean" },
+                    "message": { "type": "string" },
+                    "folder": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Données incomplètes ou invalides." }
+        }
+      }
+    },
+    "/api/submissions/status": {
+      "get": {
+        "tags": ["Commandes"],
+        "summary": "État du module de messagerie atelier",
+        "responses": {
+          "200": {
+            "description": "Diagnostic du serveur d'envoi.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "configured": { "type": "boolean" },
+                    "mailConfigured": { "type": "boolean" },
+                    "mode": { "type": "string", "enum": ["smtp", "local"] }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/client/register": {
+      "post": {
+        "tags": ["Espace Client"],
+        "summary": "Création d'un compte client",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ClientRegisterRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Compte créé." },
+          "400": { "description": "Adresse courriel déjà existante ou formulaire incomplet." }
+        }
+      }
+    },
+    "/api/client/login": {
+      "post": {
+        "tags": ["Espace Client"],
+        "summary": "Connexion client",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": { "type": "string", "format": "email" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Authentification réussie, délivrance du token portail." },
+          "401": { "description": "Identifiants invalides." }
+        }
+      }
+    },
+    "/api/client/profile": {
+      "get": {
+        "tags": ["Espace Client"],
+        "summary": "Profil personnel du client connecté",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Données personnelles du profil." },
+          "401": { "description": "Session expirée." }
+        }
+      }
+    },
+    "/api/client/orders": {
+      "get": {
+        "tags": ["Espace Client"],
+        "summary": "Historique des commandes du client",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Liste des commandes avec statut de fabrication et BAT 3D." }
+        }
+      }
+    },
+    "/api/client/bat/approve": {
+      "post": {
+        "tags": ["Espace Client"],
+        "summary": "Validation électronique formelle du BAT",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["orderFolder"],
+                "properties": {
+                  "orderFolder": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "BAT approuvé, passage en statut fabrication." }
+        }
+      }
+    },
+    "/api/discounts": {
+      "get": {
+        "tags": ["Remises & Codes"],
+        "summary": "Remise globale active et informations promotionnelles",
+        "responses": {
+          "200": { "description": "Données des remises publiques." }
+        }
+      }
+    },
+    "/api/discounts/apply": {
+      "post": {
+        "tags": ["Remises & Codes"],
+        "summary": "Vérification et calcul d'un code cadeau",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["code", "subtotal"],
+                "properties": {
+                  "code": { "type": "string", "example": "CADEAU" },
+                  "subtotal": { "type": "number", "example": 25.0 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Montant de la remise et nouveau total." }
+        }
+      }
+    },
+    "/api/admin/submissions": {
+      "get": {
+        "tags": ["Atelier & Dépôt-Vente"],
+        "summary": "Tableau de bord des commandes d'atelier",
+        "security": [{ "AdminAuth": [] }],
+        "responses": {
+          "200": { "description": "Liste complète des commandes." },
+          "403": { "description": "Accès réservé à l'atelier." }
+        }
+      }
+    },
+    "/api/admin/clients": {
+      "get": {
+        "tags": ["Atelier & Dépôt-Vente"],
+        "summary": "Répertoire des fiches clients",
+        "security": [{ "AdminAuth": [] }],
+        "responses": {
+          "200": { "description": "Fiches clients avec historiques et coordonnées." }
+        }
+      }
+    },
+    "/api/admin/consignment": {
+      "get": {
+        "tags": ["Atelier & Dépôt-Vente"],
+        "summary": "État des stocks en dépôt-vente (Points partenaires)",
+        "security": [{ "AdminAuth": [] }],
+        "responses": {
+          "200": { "description": "Bilan des boutiques partenaires." }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Jeton d'authentification de l'Espace Client."
+      },
+      "AdminAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "mockup3d_admin",
+        "description": "Authentification de l'Atelier Graph2Print."
+      }
+    },
+    "schemas": {
+      "ProductItem": {
+        "type": "object",
+        "required": ["key", "name", "price", "active"],
+        "properties": {
+          "key": { "type": "string", "example": "mug11oz" },
+          "name": { "type": "string", "example": "Mug blanc 11 oz" },
+          "price": { "type": "string", "example": "13,00 €" },
+          "active": { "type": "boolean", "example": true },
+          "category": { "type": "string", "example": "art-de-la-table" },
+          "printableDimensions": { "type": "string", "example": "200 × 90 mm" }
+        }
+      },
+      "CatalogVisual": {
+        "type": "object",
+        "required": ["id", "title", "url"],
+        "properties": {
+          "id": { "type": "string", "example": "visuel_01" },
+          "title": { "type": "string", "example": "Cerf Polygonal" },
+          "url": { "type": "string", "example": "/visuels/cerf.png" },
+          "category": { "type": "string", "example": "Animaux" },
+          "tags": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "OrderSubmissionRequest": {
+        "type": "object",
+        "required": ["nom", "adresse", "email", "productKey", "quantity"],
+        "properties": {
+          "nom": { "type": "string", "example": "Merklen" },
+          "prenom": { "type": "string", "example": "Mathis" },
+          "adresse": { "type": "string", "example": "1 Rue de la remise à grouan" },
+          "codePostal": { "type": "string", "example": "93420" },
+          "ville": { "type": "string", "example": "Villepinte" },
+          "email": { "type": "string", "format": "email", "example": "mathispaysage@gmail.com" },
+          "telephone": { "type": "string", "example": "0650423587" },
+          "productKey": { "type": "string", "example": "mug11oz" },
+          "quantity": { "type": "integer", "minimum": 1, "example": 1 },
+          "note": { "type": "string" },
+          "batPreviewPng": { "type": "string", "description": "Chaîne base64 du rendu 3D Three.js." }
+        }
+      },
+      "ClientRegisterRequest": {
+        "type": "object",
+        "required": ["email", "password", "nom"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string", "minLength": 6 },
+          "nom": { "type": "string" },
+          "prenom": { "type": "string" },
+          "telephone": { "type": "string" },
+          "adresse": { "type": "string" },
+          "codePostal": { "type": "string" },
+          "ville": { "type": "string" }
+        }
+      }
+    }
+  }
+}
