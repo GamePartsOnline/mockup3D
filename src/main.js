@@ -36,6 +36,7 @@ import * as feature33 from './app/35-i18n.js';
 import * as feature34 from './app/36-admin-dashboard.js';
 import * as feature35 from './app/37-client-account.js';
 import * as feature36 from './app/38-custom-dialogs.js';
+import * as feature37 from './app/39-custom-dropdowns.js';
 
 const app = { ...dependencies };
 if (typeof window !== 'undefined') window.app = app;
@@ -76,7 +77,8 @@ const features = [
   feature33,
   feature34,
   feature35,
-  feature36
+  feature36,
+  feature37
 ];
 
 for (const feature of features) feature.register(app);
