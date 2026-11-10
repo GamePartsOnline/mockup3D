@@ -9,7 +9,7 @@ import { getCategories, saveCategories } from './server/categories.js';
 import { getSubmissions, serveSubmissionFile, updateSubmissionStatus, updateSubmissionChecks, deleteSubmission, downloadSubmissionZip, exportSubmissionsCsv, getClientOrders, addSubmissionMessage, adminCreateProposition, clientApproveBat, rejectSubmission, updateSubmissionDetails } from './server/admin-submissions.js';
 import { getProducts, updateProducts, toggleProductStatus } from './server/products-manager.js';
 import { getConsignment, saveConsignment } from './server/consignment-manager.js';
-import { adminGetClients, adminDeleteClient, adminSaveClient, adminRestoreClients, adminGetClientsTrash, adminRestoreLastClient, adminRestoreSpecificClient, clientRegister, clientLogin, clientGetProfile, clientUpdateProfile, clientSendMessage, initClientsData } from './server/clients-manager.js';
+import { adminGetClients, adminDeleteClient, adminPurgeTestClients, adminSaveClient, adminRestoreClients, adminGetClientsTrash, adminRestoreLastClient, adminRestoreSpecificClient, clientRegister, clientLogin, clientGetProfile, clientUpdateProfile, clientSendMessage, initClientsData } from './server/clients-manager.js';
 import { getDiscounts, adminGetDiscounts, adminUpdateGlobalDiscount, adminSaveCoupon, adminDeleteCoupon, applyDiscountCheck } from './server/discounts.js';
 import { serveStatic } from './server/static.js';
 
@@ -87,6 +87,9 @@ const server = http.createServer(async (req, res) => {
     }
     if (route === '/api/admin/clients/delete' && req.method === 'POST') {
       return await adminDeleteClient(req, res);
+    }
+    if (route === '/api/admin/clients/purge-tests' && req.method === 'POST') {
+      return await adminPurgeTestClients(req, res);
     }
     if (route === '/api/admin/clients/restore' && req.method === 'POST') {
       return await adminRestoreClients(req, res);

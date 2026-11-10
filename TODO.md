@@ -20,6 +20,7 @@ Dernière mise à jour : 2026-11-10
 ---
 
 ## Tâches Terminées (Récents jalons)
+- [x] Transmission de l'indicateur isTest dans l'API admin, affichage haute visibilité du badge CLIENT TEST et ajout de l'action de purge en 1 clic (2026-11-10)
 - [x] Enregistrement et réconciliation automatiques des fiches clients lors des soumissions de commande + Création fiche client réel Merklen Mathis (2026-11-10)
 - [x] Menus déroulants personnalisés (Custom Dropdowns) remplaçant les selects natifs du navigateur avec filtrage, micro-animations et support du mode sombre (2026-11-10)
 - [x] Remplacement intégral des boîtes de dialogue système du navigateur (confirm, prompt, alert) par des composants métiers thémés et neutralisation contextmenu 3D (2026-11-10)

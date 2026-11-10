@@ -316,6 +316,7 @@ export async function adminGetClients(req, res) {
         pays: c.pays || 'France',
         dateInscription: c.dateInscription,
         notes: c.notes || '',
+        isTest: !!c.isTest,
         ordersCount: stats.ordersCount,
         totalSpent: stats.totalSpent,
         firstDate: stats.firstDate || c.dateInscription,
@@ -328,6 +329,36 @@ export async function adminGetClients(req, res) {
   } catch (err) {
     console.error('adminGetClients error:', err);
     return json(res, 500, { error: 'Erreur lors du chargement des clients.' });
+  }
+}
+
+export async function adminPurgeTestClients(req, res) {
+  if (!authorizeAdmin(req, res)) return;
+  try {
+    let clients = await loadClients();
+    const testClients = clients.filter(c => c.isTest);
+    const retained = clients.filter(c => !c.isTest);
+
+    if (testClients.length === 0) {
+      return json(res, 200, { ok: true, purgedCount: 0, message: 'Aucun client test à purger.' });
+    }
+
+    let trash = [];
+    try {
+      if (fsSync.existsSync(clientsTrashFile)) {
+        trash = JSON.parse(await fs.readFile(clientsTrashFile, 'utf8'));
+      }
+    } catch {}
+    testClients.forEach(tc => {
+      trash.push({ ...tc, deletedAt: new Date().toISOString(), reason: 'purge_tests' });
+    });
+    await fs.writeFile(clientsTrashFile, JSON.stringify(trash, null, 2), 'utf8');
+    await saveClients(retained);
+
+    return json(res, 200, { ok: true, purgedCount: testClients.length, message: `${testClients.length} client(s) test purgé(s) et archivé(s) en corbeille.` });
+  } catch (err) {
+    console.error('adminPurgeTestClients error:', err);
+    return json(res, 500, { error: 'Erreur lors de la purge des clients tests.' });
   }
 }
 

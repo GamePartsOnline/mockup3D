@@ -1042,6 +1042,9 @@ export function register(app) {
 
     filtered.forEach(c => {
       const tr = document.createElement('tr');
+      if (c.isTest) {
+        tr.style.background = '#fff8f8';
+      }
       const lastStr = c.lastDate ? new Date(c.lastDate).toLocaleDateString('fr-FR') : '—';
       const cOrders = Array.isArray(c.orders) ? c.orders : [];
       const spent = typeof c.totalSpent === 'number' ? c.totalSpent : 0;
@@ -1049,7 +1052,7 @@ export function register(app) {
       tr.innerHTML = `
         <td>
           <strong style="font-size:13px; color:#0f172a;">${c.nom || 'Client'} ${c.prenom || ''}</strong>
-          ${c.isTest ? `<span style="background:#fee2e2; color:#dc2626; border:1px solid #fca5a5; font-size:10px; font-weight:800; padding:2px 6px; border-radius:4px; margin-left:6px; letter-spacing:0.04em;">TEST</span>` : ''}
+          ${c.isTest ? `<span style="background:#dc2626; color:#ffffff; font-size:10px; font-weight:900; padding:2px 7px; border-radius:4px; margin-left:8px; letter-spacing:0.05em; display:inline-block; vertical-align:middle; box-shadow:0 1px 2px rgba(220,38,38,0.25);">CLIENT TEST</span>` : ''}
           ${c.id ? `<br><small style="color:#94a3b8; font-size:11px;">Réf: ${c.id}</small>` : ''}
         </td>
         <td>
@@ -1121,6 +1124,29 @@ export function register(app) {
     } catch (err) {
       if (app.customAlert) await app.customAlert(`Erreur : ${err.message}`, { title: 'Erreur' });
       else alert(`Erreur : ${err.message}`);
+    }
+  };
+
+  app.purgeTestClients = async function() {
+    const testClients = (app.adminClientsList || []).filter(c => c.isTest);
+    if (testClients.length === 0) return app.showToast?.('Aucun client test à purger.');
+    const ok = app.customConfirm
+      ? await app.customConfirm(`Supprimer définitivement les ${testClients.length} client(s) test du répertoire ?\n(Ils seront archivés dans la corbeille)`, { title: 'Purger les clients tests', danger: true, confirmText: 'Purger les tests' })
+      : confirm(`Supprimer définitivement les ${testClients.length} client(s) test du répertoire ?`);
+    if (!ok) return;
+
+    try {
+      const res = await fetch('/api/admin/clients/purge-tests', { method: 'POST' });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        app.showToast?.(data.message || 'Clients tests purgés avec succès.');
+        await app.loadAdminClients();
+        await app.updateClientsTrashCount();
+      } else {
+        app.showToast?.(data.error || 'Erreur lors de la purge.');
+      }
+    } catch (err) {
+      app.showToast?.('Erreur réseau lors de la purge.');
     }
   };
 
@@ -3370,9 +3396,10 @@ export function initialize(app) {
   document.querySelector('#cancelOrderEditDetailsBtn')?.addEventListener('click', () => app.closeOrderEditDetailsModal());
   document.querySelector('#saveOrderEditDetailsBtn')?.addEventListener('click', () => app.saveOrderEditDetails());
 
-  // Restauration des clients
+  // Restauration et purge des clients
   document.querySelector('#btnRestoreClients')?.addEventListener('click', () => app.restoreClientsFromOrders());
   document.querySelector('#btnRestoreLastClient')?.addEventListener('click', () => app.restoreLastClient());
+  document.querySelector('#btnPurgeTestClients')?.addEventListener('click', () => app.purgeTestClients());
   document.querySelector('#btnOpenClientsTrash')?.addEventListener('click', () => app.openClientsTrashModal());
   document.querySelector('#closeClientsTrashBtn')?.addEventListener('click', () => {
     const m = document.querySelector('#clientsTrashModal'); if (m) m.style.display = 'none';
